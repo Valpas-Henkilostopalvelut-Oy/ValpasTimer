@@ -1,0 +1,87 @@
+type UserSettings {
+  timeFormat: String
+  timeZone: String
+  dateFormat: String
+}
+
+type CostRate {
+  amount: Int
+  currency: String
+}
+
+type UserMemberships {
+  hourlyRate: HourlyRate
+  costRate: CostRate
+  membershipStatus: String
+  membershipType: String
+  userId: ID
+}
+
+type TimeInterval {
+  duration: String
+  end: AWSDateTime
+  start: AWSDateTime
+}
+
+type TimeEntry @model @auth(rules: [{allow: owner}, {allow: groups, groups: ["Editors"], operations: [read, create, update, delete]}]) {
+  id: ID!
+  billable: Boolean
+  description: String
+  userId: ID
+  workspaceId: ID
+  timeInterval: TimeInterval
+  isActive: Boolean
+}
+
+type WorkspaceSettings {
+  shortBreak: Int
+  dinnerBreak: Int
+}
+
+type Membership {
+  NewField: String
+  hourlyRate: HourlyRate
+  membershipType: String
+  membershipStatus: String
+  userId: ID
+}
+
+type HourlyRate {
+  amount: String
+  currency: Int
+}
+
+type AllWorkSpaces @model @auth(rules: [{allow: private, operations: [read]}, {allow: groups, groups: ["Editors"], operations: [read, create, update, delete]}]) {
+  id: ID!
+  hourlyRate: HourlyRate
+  imageUrl: AWSURL
+  memberships: [Membership]
+  name: String
+  workspaceSettings: WorkspaceSettings
+}
+
+type UserCredentials @model @auth(rules: [{allow: owner}, {allow: groups, groups: ["Editors"], operations: [read, create, update, delete]}]) {
+  id: ID!
+  username: ID
+  formChecked: [String]
+  email: String
+  memberships: [UserMemberships]
+  name: String
+  activeTimeEntry: ID
+  profilePicture: AWSURL
+  settings: UserSettings
+  status: String
+  defaultWorkspace: ID
+}
+
+type OnBoardingForm @model @auth(rules: [{allow: groups, groups: ["Editors"], operations: [read, create, update, delete]}, {allow: private, operations: [read]}]) {
+  id: ID!
+  title: String
+  data: [FormItem]
+}
+
+type FormItem {
+  name: String
+  text: String
+}
+ 

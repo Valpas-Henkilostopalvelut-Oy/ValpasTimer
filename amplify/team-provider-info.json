@@ -1,0 +1,20 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-valpasapp-dev-100646-authRole",
+      "UnauthRoleArn": "arn:aws:iam::988281547160:role/amplify-valpasapp-dev-100646-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::988281547160:role/amplify-valpasapp-dev-100646-authRole",
+      "Region": "eu-central-1",
+      "DeploymentBucketName": "amplify-valpasapp-dev-100646-deployment",
+      "UnauthRoleName": "amplify-valpasapp-dev-100646-unauthRole",
+      "StackName": "amplify-valpasapp-dev-100646",
+      "StackId": "arn:aws:cloudformation:eu-central-1:988281547160:stack/amplify-valpasapp-dev-100646/fdd31750-4133-11ec-9f56-065f02032158",
+      "AmplifyAppId": "d3ly887lqey48k"
+    },
+    "categories": {
+      "auth": {
+        "valpasappca37c128": {}
+      }
+    }
+  }
+}
