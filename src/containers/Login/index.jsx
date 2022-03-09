@@ -3,21 +3,35 @@ import Form from "react-bootstrap/Form";
 import "./login.css";
 import { Auth, DataStore } from "aws-amplify";
 import { useAppContext } from "../../services/contextLib";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import LoaderButton from "../../components/LoaderButton";
 import { onError } from "../../services/errorLib";
 import { useFormFields } from "../../services/hooksLib";
+import { createUser } from "../../services/createUser";
+import { UserCredentials } from "../../models";
 
 const Login = () => {
   const { userHasAuthenticated } = useAppContext();
-  const history = useHistory();
   const [isLoading, setIsLoading] = useState(false);
   const [fields, handleFieldChange] = useFormFields({
     email: "",
     password: "",
   });
+  const navigate = useNavigate();
 
-  const validateForm = () => fields.email.length > 0 && fields.password.length > 0;
+  const checkUserProfile = async () => {
+    try {
+      const currentuser = await DataStore.query(UserCredentials);
+      if (currentuser.length === 0) {
+        createUser();
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const validateForm = () =>
+    fields.email.length > 0 && fields.password.length > 0;
   const handleSubmit = async (event) => {
     event.preventDefault();
 
@@ -25,11 +39,15 @@ const Login = () => {
 
     try {
       await Auth.signIn(fields.email, fields.password);
-      DataStore.start()
-      userHasAuthenticated(true);
-      history.push("/timer");
+      await DataStore.start();
+      setTimeout(() => {
+        checkUserProfile();
+        navigate("timer");
+        userHasAuthenticated(true);
+        setIsLoading(false);
+      }, 1000);
     } catch (e) {
-      setIsLoading(false)
+      setIsLoading(false);
       onError(e);
     }
   };
@@ -55,7 +73,6 @@ const Login = () => {
           />
         </Form.Group>
         <LoaderButton
-          block
           size="lg"
           type="submit"
           isLoading={isLoading}

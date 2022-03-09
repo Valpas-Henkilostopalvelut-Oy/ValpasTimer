@@ -300,7 +300,9 @@ export const schema = {
                 "defaultWorkspace": {
                     "name": "defaultWorkspace",
                     "isArray": false,
-                    "type": "ID",
+                    "type": {
+                        "nonModel": "LastWorkspace"
+                    },
                     "isRequired": false,
                     "attributes": []
                 },
@@ -446,6 +448,32 @@ export const schema = {
     },
     "enums": {},
     "nonModels": {
+        "LastWorkspace": {
+            "name": "LastWorkspace",
+            "fields": {
+                "value": {
+                    "name": "value",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "label": {
+                    "name": "label",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "id": {
+                    "name": "id",
+                    "isArray": false,
+                    "type": "ID",
+                    "isRequired": false,
+                    "attributes": []
+                }
+            }
+        },
         "UserSettings": {
             "name": "UserSettings",
             "fields": {
@@ -528,6 +556,13 @@ export const schema = {
                 },
                 "userId": {
                     "name": "userId",
+                    "isArray": false,
+                    "type": "ID",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "targetId": {
+                    "name": "targetId",
                     "isArray": false,
                     "type": "ID",
                     "isRequired": false,
@@ -661,5 +696,5 @@ export const schema = {
             }
         }
     },
-    "version": "1a3cf50a7e7fadacf814555c324c7529"
+    "version": "a3f7963df09945dc14b74ece5d4fb6fe"
 };

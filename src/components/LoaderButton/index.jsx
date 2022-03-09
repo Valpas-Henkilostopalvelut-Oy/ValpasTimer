@@ -1,6 +1,6 @@
 import React from "react";
-import Button from "react-bootstrap/Button";
-import { BsArrowRepeat } from "react-icons/bs";
+import { Button } from "@chakra-ui/react";
+import LoopIcon from "@mui/icons-material/Loop";
 import "./LoaderButton.css";
 
 const LoaderButton = ({
@@ -15,7 +15,7 @@ const LoaderButton = ({
       className={`LoaderButton ${className}`}
       {...props}
     >
-      {isLoading && <BsArrowRepeat className="spinning" />}
+      {isLoading && <LoopIcon className="spinning" />}
       {props.children}
     </Button>
   );

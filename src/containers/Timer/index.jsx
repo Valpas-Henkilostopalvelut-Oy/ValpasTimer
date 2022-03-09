@@ -1,35 +1,45 @@
 import React, { useEffect, useState } from "react";
 import "./timer.css";
-import { DataStore, Auth } from "aws-amplify";
-import { ListGroup, Button } from "react-bootstrap";
-import { TimeEntry, UserCredentials, AllWorkSpaces } from "../../models";
+import { DataStore } from "aws-amplify";
+import { ListGroup } from "react-bootstrap";
+import { TimeEntry, AllWorkSpaces } from "../../models";
 import { onError } from "../../services/errorLib";
 import { useAppContext } from "../../services/contextLib";
 import Recorder from "./timerComponents/timeTrackerRecorder";
+import DeleteIcon from "@mui/icons-material/Delete";
+import { AppContext } from "../../services/contextLib";
 
-const Home = () => {
+const Timer = () => {
   const [timeList, setTimeList] = useState([]);
   const [workList, setWorkList] = useState([]);
-  const [descriptionList, setDescriptionList] = useState([]);
   const { isAuthenticated } = useAppContext();
-  const [timer, setTimer] = useState(1);
 
-  const updateDescription = (id, newDescription) => {};
+  const deleteItem = async (id) => {
+    try {
+      const itemToDelete = await DataStore.query(TimeEntry, id);
+      await DataStore.delete(itemToDelete);
+      loadTimeList();
+      alert("Deleted");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const loadTimeList = async () => {
+    if (isAuthenticated) {
+      try {
+        const databaseTimeList = await DataStore.query(TimeEntry);
+
+        setTimeList(databaseTimeList);
+      } catch (error) {
+        onError(error);
+      }
+    }
+  };
 
   useEffect(() => {
-    const loadTimeList = async () => {
-      if (isAuthenticated) {
-        try {
-          const databaseTimeList = await DataStore.query(TimeEntry);
-
-          setTimeList(databaseTimeList);
-        } catch (error) {
-          onError(error);
-        }
-      }
-    };
     loadTimeList();
-  }, []);
+  }, [isAuthenticated]);
 
   useEffect(() => {
     const loadWorkList = async () => {
@@ -44,28 +54,25 @@ const Home = () => {
       }
     };
     loadWorkList();
-  }, []);
-
-  useEffect(() => {
-    setTimeout(() => {
-      console.log("Ref");
-    }, 1000);
-  }, []);
+  }, [isAuthenticated]);
 
   return (
     <div className="Home">
-      <Recorder />
+      <AppContext.Provider value={{ loadTimeList }}>
+        <Recorder />
+      </AppContext.Provider>
       {timeList != null && (
         <ListGroup>
           {timeList
-            .sort((a, b) => new Date(b.createAt) - new Date(a.createAt))
-            .map((data, i) => {
+            .sort((date1, date2) => date1.createdAt - date2.createdAt)
+            .map((data, key) => {
+              if (data.isActive) return;
               const total = new Date(
                 Date.parse(data.timeInterval.end) -
                   Date.parse(data.timeInterval.start)
               );
               return (
-                <ListGroup.Item className="card">
+                <ListGroup.Item className="card" key={key}>
                   <div className="cardDateTotal">
                     <div className="cardDate">
                       <p>{new Date(data.timeInterval.start).toDateString()}</p>
@@ -85,9 +92,7 @@ const Home = () => {
 
                     <div className="cardWorkStatus">
                       {workList.length !== 0 && data.workspaceId !== null ? (
-                        <p>
-                          {workList.find((w) => w.id === data.workspaceId).name}
-                        </p>
+                        <p>{data.workspaceId.name}</p>
                       ) : (
                         <p>Without work</p>
                       )}
@@ -96,18 +101,25 @@ const Home = () => {
                     <div className="cardTimeBillable">
                       <div className="timeEndStart">
                         <p className="timeStart">
-                          {new Date(data.timeInterval.start).getUTCHours()}:
-                          {new Date(data.timeInterval.start).getUTCMinutes()}
+                          {new Date(data.timeInterval.start).getHours()}:
+                          {new Date(data.timeInterval.start).getMinutes()}
                         </p>
                         <p>-</p>
                         <p className="timeEnd">
-                          {new Date(data.timeInterval.end).getUTCHours()}:
-                          {new Date(data.timeInterval.end).getUTCMinutes()}
+                          {new Date(data.timeInterval.end).getHours()}:
+                          {new Date(data.timeInterval.end).getMinutes()}
                         </p>
                       </div>
 
                       <div>
-                        {data.billable != "" ? <p>Paid</p> : <p>Unpaid</p>}
+                        {data.billable !== "" ? <p>Paid</p> : <p>Unpaid</p>}
+                      </div>
+                      <div
+                        onClick={() => {
+                          deleteItem(data.id);
+                        }}
+                      >
+                        <DeleteIcon />
                       </div>
                     </div>
                   </div>
@@ -120,4 +132,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default Timer;

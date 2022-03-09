@@ -6,14 +6,14 @@ export async function createUser() {
   try {
     const userAuth = await Auth.currentAuthenticatedUser();
 
-    await DataStore.save(
+    const createdUserSettings = await DataStore.save(
       new UserCredentials({
         username: userAuth.username,
         formChecked: [],
         email: userAuth.attributes.email,
         memberships: [],
         name: userAuth.attributes.name,
-        activeTimeEntry: "a3f4095e-39de-43d2-baf4-f8c16f0f6f4d",
+        activeTimeEntry: "null",
         profilePicture: "http://undefined.name",
         settings: {
           timeFormat: "",
@@ -21,9 +21,17 @@ export async function createUser() {
           dateFormat: "",
         },
         status: "ACTIVE",
-        defaultWorkspace: "a3f4095e-39de-43d2-baf4-f8c16f0f6f4d",
+        defaultWorkspace: {
+          value: "value",
+          label: "label",
+          id: "id",
+        },
       })
     );
+
+    await Auth.updateUserAttributes(userAuth, {
+      "custom:UserCreditails": createdUserSettings.id,
+    });
   } catch (error) {
     onError(error);
   }

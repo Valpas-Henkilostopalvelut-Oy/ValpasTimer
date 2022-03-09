@@ -1,3 +1,9 @@
+type LastWorkspace {
+  value: String
+  label: String
+  id: ID
+}
+
 type UserSettings {
   timeFormat: String
   timeZone: String
@@ -15,6 +21,7 @@ type UserMemberships {
   membershipStatus: String
   membershipType: String
   userId: ID
+  targetId: ID
 }
 
 type TimeInterval {
@@ -71,7 +78,7 @@ type UserCredentials @model @auth(rules: [{allow: owner}, {allow: groups, groups
   profilePicture: AWSURL
   settings: UserSettings
   status: String
-  defaultWorkspace: ID
+  defaultWorkspace: LastWorkspace
 }
 
 type OnBoardingForm @model @auth(rules: [{allow: groups, groups: ["Editors"], operations: [read, create, update, delete]}, {allow: private, operations: [read]}]) {

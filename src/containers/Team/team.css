@@ -1,0 +1,47 @@
+.teamList .teamItem {
+  border: 1px solid gray;
+  display: flex;
+  justify-content: space-between;
+}
+
+.teamItem {
+  display: flex;
+  justify-content: space-between;
+}
+
+.membersText {
+  color: #333;
+  background-color: #e4eaee;
+  padding: 10px 20px;
+  border: 1px solid #c6d2d9;
+}
+
+.memberInfo {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 20px;
+  border-left: 1px solid #c6d2d9;
+  border-right: 1px solid #c6d2d9;
+}
+
+.managmentContainer {
+  display: flex;
+  justify-content: space-between;
+  padding-bottom: 20px;
+}
+
+.members #name {
+  flex: 12%;
+}
+.members #email {
+  flex: 27%;
+}
+.members #rate {
+  flex: 15%;
+}
+.members #role {
+  flex: 20%;
+}
+.members #group {
+  flex: 20%;
+}

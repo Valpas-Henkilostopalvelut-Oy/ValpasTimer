@@ -2,6 +2,13 @@ import { ModelInit, MutableModel, PersistentModelConstructor } from "@aws-amplif
 
 
 
+export declare class LastWorkspace {
+  readonly value?: string;
+  readonly label?: string;
+  readonly id?: string;
+  constructor(init: ModelInit<LastWorkspace>);
+}
+
 export declare class UserSettings {
   readonly timeFormat?: string;
   readonly timeZone?: string;
@@ -21,6 +28,7 @@ export declare class UserMemberships {
   readonly membershipStatus?: string;
   readonly membershipType?: string;
   readonly userId?: string;
+  readonly targetId?: string;
   constructor(init: ModelInit<UserMemberships>);
 }
 
@@ -112,7 +120,7 @@ export declare class UserCredentials {
   readonly profilePicture?: string;
   readonly settings?: UserSettings;
   readonly status?: string;
-  readonly defaultWorkspace?: string;
+  readonly defaultWorkspace?: LastWorkspace;
   readonly createdAt?: string;
   readonly updatedAt?: string;
   constructor(init: ModelInit<UserCredentials, UserCredentialsMetaData>);

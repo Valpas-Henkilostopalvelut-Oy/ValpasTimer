@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import Form from "react-bootstrap/Form";
-import { useHistory } from "react-router-dom";
+import { Form } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
 import LoaderButton from "../../components/LoaderButton";
 import { useAppContext } from "../../services/contextLib";
 import { useFormFields } from "../../services/hooksLib";
@@ -12,19 +12,22 @@ import { createUser } from "../../services/createUser";
 const Signup = () => {
   const [fields, handleFieldChange] = useFormFields({
     email: "",
+    name: "",
     password: "",
     confirmPassword: "",
     confirmationCode: "",
   });
-  const history = useHistory();
   const [newUser, setNewUser] = useState(null);
   const { userHasAuthenticated } = useAppContext();
   const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
 
   const validateForm = () =>
     fields.email.length > 0 &&
     fields.password.length &&
-    fields.password === fields.confirmPassword;
+    fields.password === fields.confirmPassword &&
+    fields.name.length > 0;
+
   const validateConfirmationForm = () => fields.confirmationCode.length > 0;
 
   const handleSubmit = async (event) => {
@@ -36,6 +39,10 @@ const Signup = () => {
       const newUser = await Auth.signUp({
         username: fields.email,
         password: fields.password,
+        attributes: {
+          name: fields.name,
+          "custom:RuningTimeEntry": "null",
+        },
       });
       setIsLoading(false);
       setNewUser(newUser);
@@ -43,7 +50,7 @@ const Signup = () => {
       //An account with the given email already exists.
       setIsLoading(false);
       console.log(e);
-      alert(e)
+      alert(e);
       onError(e);
     }
   };
@@ -59,7 +66,7 @@ const Signup = () => {
       createUser();
 
       userHasAuthenticated(true);
-      history.push("/");
+      navigate("");
     } catch (e) {
       onError(e);
       setIsLoading(false);
@@ -95,9 +102,16 @@ const Signup = () => {
       <Form.Group controlId="email" size="lg">
         <Form.Label>Email</Form.Label>
         <Form.Control
-          autoFocus
           type="email"
           value={fields.email}
+          onChange={handleFieldChange}
+        />
+      </Form.Group>
+      <Form.Group controlId="name" size="lg">
+        <Form.Label>Your name</Form.Label>
+        <Form.Control
+          type="text"
+          value={fields.name}
           onChange={handleFieldChange}
         />
       </Form.Group>
@@ -118,7 +132,6 @@ const Signup = () => {
         />
       </Form.Group>
       <LoaderButton
-        block
         size="lg"
         type="submit"
         variant="success"
