@@ -1,5 +1,5 @@
 import React from "react";
-import "./Sidebar.css";
+import "../../App.css";
 import { SidebarData } from "./SidebarDate";
 import { List, ListItem } from "@chakra-ui/react";
 import { LinkContainer } from "react-router-bootstrap";

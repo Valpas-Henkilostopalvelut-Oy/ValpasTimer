@@ -1,6 +1,7 @@
 import { Auth } from "aws-amplify";
 import React, { useEffect, useState } from "react";
 import { useAppContext } from "../../services/contextLib";
+import "../../App.css"
 
 const Home = () => {
   const { isAuthenticated } = useAppContext();
@@ -15,7 +16,7 @@ const Home = () => {
   }, []);
 
   return (
-    <div>
+    <div className="main">
       {isAuthenticated ? (
         <div>
           <div>Welcome to Valpas application</div>

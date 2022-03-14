@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "./timer.css";
+import "../../App.css"
 import { DataStore } from "aws-amplify";
 import { ListGroup } from "react-bootstrap";
 import { TimeEntry, AllWorkSpaces } from "../../models";
@@ -12,7 +13,7 @@ import { AppContext } from "../../services/contextLib";
 const Timer = () => {
   const [timeList, setTimeList] = useState([]);
   const [workList, setWorkList] = useState([]);
-  const { isAuthenticated } = useAppContext();
+  const { isAuthenticated, selectedOption } = useAppContext();
 
   const deleteItem = async (id) => {
     try {
@@ -57,8 +58,8 @@ const Timer = () => {
   }, [isAuthenticated]);
 
   return (
-    <div className="Home">
-      <AppContext.Provider value={{ loadTimeList }}>
+    <div className="Home main">
+      <AppContext.Provider value={{ loadTimeList, selectedOption }}>
         <Recorder />
       </AppContext.Provider>
       {timeList != null && (
@@ -67,6 +68,7 @@ const Timer = () => {
             .sort((date1, date2) => date1.createdAt - date2.createdAt)
             .map((data, key) => {
               if (data.isActive) return;
+              if (data.workspaceId !== selectedOption.id) return;
               const total = new Date(
                 Date.parse(data.timeInterval.end) -
                   Date.parse(data.timeInterval.start)

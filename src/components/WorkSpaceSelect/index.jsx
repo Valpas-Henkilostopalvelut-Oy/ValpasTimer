@@ -5,18 +5,11 @@ import { AllWorkSpaces, UserCredentials } from "../../models";
 import Select from "react-select";
 import { Button } from "@chakra-ui/react";
 import { LinkContainer } from "react-router-bootstrap";
+import { useAppContext } from "../../services/contextLib";
 
 const WorkspaceSelect = () => {
   const [options, setOptions] = useState([]);
-  const [selectedOption, setSelectedOption] = useState(null);
-  const [lastWorkspace, setLastWorkspace] = useState(null);
-
-  useEffect(() => {
-    const userDefaultWorkspace = async () => {
-      const user = await DataStore.query(UserCredentials);
-      setSelectedOption(user[0].defaultWorkspace);
-    };
-  }, [options, selectedOption]);
+  const { selectedOption, setSelectedOption } = useAppContext();
 
   useEffect(() => {
     const makeList = async () => {
@@ -69,7 +62,14 @@ const WorkspaceSelect = () => {
         placeholder={"Workspace"}
       />
       <LinkContainer to="/workspaces">
-        <Button>Manage Workspace</Button>
+        <Button
+          onClick={async () => {
+            const workspaces = await DataStore.query(AllWorkSpaces);
+            console.log(workspaces);
+          }}
+        >
+          Manage Workspace
+        </Button>
       </LinkContainer>
     </div>
   );

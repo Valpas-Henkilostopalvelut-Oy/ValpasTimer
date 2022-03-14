@@ -57,6 +57,7 @@ export declare class Membership {
   readonly membershipType?: string;
   readonly membershipStatus?: string;
   readonly userId?: string;
+  readonly targetId?: string;
   constructor(init: ModelInit<Membership>);
 }
 
@@ -103,6 +104,7 @@ export declare class AllWorkSpaces {
   readonly memberships?: (Membership | null)[];
   readonly name?: string;
   readonly workspaceSettings?: WorkspaceSettings;
+  readonly customOwner?: string;
   readonly createdAt?: string;
   readonly updatedAt?: string;
   constructor(init: ModelInit<AllWorkSpaces, AllWorkSpacesMetaData>);

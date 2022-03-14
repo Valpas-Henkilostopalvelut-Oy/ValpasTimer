@@ -6,6 +6,7 @@ import { useAppContext } from "../../services/contextLib";
 import { useFormFields } from "../../services/hooksLib";
 import { onError } from "../../services/errorLib";
 import "./Signup.css";
+import "../../App.css"
 import { Auth } from "aws-amplify";
 import { createUser } from "../../services/createUser";
 
@@ -144,7 +145,7 @@ const Signup = () => {
   );
 
   return (
-    <div className="Signup">
+    <div className="Signup main">
       {newUser === null ? renderForm() : renderConfirmationForm()}
     </div>
   );

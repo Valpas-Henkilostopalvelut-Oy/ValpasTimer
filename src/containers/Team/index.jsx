@@ -3,6 +3,7 @@ import { DataStore, Auth } from "aws-amplify";
 import { UserCredentials } from "../../models";
 import { Tabs, ListGroup, Tab } from "react-bootstrap";
 import "./team.css";
+import "../../App.css"
 
 const Team = () => {
   const [userList, setUserList] = useState(null);
@@ -20,7 +21,7 @@ const Team = () => {
   }, []);
 
   return (
-    <div>
+    <div className="main">
         <div>
             <div>
                 <h1>Team</h1>

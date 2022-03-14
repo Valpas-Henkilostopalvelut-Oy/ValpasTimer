@@ -17,6 +17,6 @@
       }
     },
     "apiName": "valpasapp",
-    "gqlSchemaPath": "/tmp/amplify-91dbbbbf-b71c-4a2a-bcea-a3d43fb7d16e/amplify/backend/api/valpasapp/schema.graphql"
+    "gqlSchemaPath": "/tmp/amplify-07f8c438-01d0-44df-a2da-e3d6cb1d943d/amplify/backend/api/valpasapp/schema.graphql"
   }
 }

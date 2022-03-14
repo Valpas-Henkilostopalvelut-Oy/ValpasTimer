@@ -16,6 +16,11 @@ import Profile from "./components/Profile";
 function App() {
   const [isAuthenticated, userHasAuthenticated] = useState(false);
   const [isAuthenticating, setIsAuthenticating] = useState(true);
+  const [selectedOption, setSelectedOption] = useState({
+    value: "Valpas",
+    label: "Valpas",
+    id: "19901959-5e27-49da-b588-92b269dbdf49",
+  });
 
   Hub.listen("auth", async (data) => {
     switch (data.payload.event) {
@@ -46,46 +51,47 @@ function App() {
 
   return (
     !isAuthenticating && (
-      <div className="main">
-        {isAuthenticated && <Sidebar />}
-        <div className="App">
-          <AppContext.Provider
-            value={{
-              isAuthenticated,
-              userHasAuthenticated,
-            }}
-          >
-            <Navbar collapseOnSelect bg="light" expand="md" className="mb-3">
-              <LinkContainer to="home">
-                <Navbar.Brand className="font-weight-bold text-muted">
-                  Valpas tracker
-                </Navbar.Brand>
-              </LinkContainer>
-              <Navbar.Toggle />
-              <Navbar.Collapse className="justify-content-end">
-                <Nav activeKey={window.location.pathname}>
-                  {isAuthenticated ? (
-                    <>
-                      <WorkspaceSelect />
-
-                      <Profile />
-                    </>
-                  ) : (
-                    <>
-                      <LinkContainer to="/signup">
-                        <Nav.Link>Signup</Nav.Link>
-                      </LinkContainer>
-                      <LinkContainer to="/login">
-                        <Nav.Link>Login</Nav.Link>
-                      </LinkContainer>
-                    </>
-                  )}
-                </Nav>
-              </Navbar.Collapse>
-            </Navbar>
+      <div className="App">
+        <AppContext.Provider
+          value={{
+            isAuthenticated,
+            userHasAuthenticated,
+            selectedOption,
+            setSelectedOption,
+          }}
+        >
+          <Navbar collapseOnSelect bg="light" expand="md">
+            <LinkContainer to="home">
+              <Navbar.Brand className="font-weight-bold text-muted">
+                Valpas tracker
+              </Navbar.Brand>
+            </LinkContainer>
+            <Navbar.Toggle />
+            <Navbar.Collapse className="justify-content-end">
+              <Nav activeKey={window.location.pathname}>
+                {isAuthenticated ? (
+                  <>
+                    <WorkspaceSelect />
+                    <Profile />
+                  </>
+                ) : (
+                  <>
+                    <LinkContainer to="signup">
+                      <Nav.Link>Signup</Nav.Link>
+                    </LinkContainer>
+                    <LinkContainer to="login">
+                      <Nav.Link>Login</Nav.Link>
+                    </LinkContainer>
+                  </>
+                )}
+              </Nav>
+            </Navbar.Collapse>
+          </Navbar>
+          <div className="main-and-sidebar">
+            {isAuthenticated && <Sidebar />}
             <Navigation />
-          </AppContext.Provider>
-        </div>
+          </div>
+        </AppContext.Provider>
       </div>
     )
   );

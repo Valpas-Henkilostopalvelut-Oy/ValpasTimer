@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Form from "react-bootstrap/Form";
 import "./login.css";
+import "../../App.css"
 import { Auth, DataStore } from "aws-amplify";
 import { useAppContext } from "../../services/contextLib";
 import { useNavigate } from "react-router-dom";
@@ -53,7 +54,7 @@ const Login = () => {
   };
 
   return (
-    <div className="Login">
+    <div className="Login main">
       <Form onSubmit={handleSubmit}>
         <Form.Group size="lg" controlId="email">
           <Form.Label>Email</Form.Label>

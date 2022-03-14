@@ -165,6 +165,13 @@ export const schema = {
                     "isRequired": false,
                     "attributes": []
                 },
+                "customOwner": {
+                    "name": "customOwner",
+                    "isArray": false,
+                    "type": "ID",
+                    "isRequired": false,
+                    "attributes": []
+                },
                 "createdAt": {
                     "name": "createdAt",
                     "isArray": false,
@@ -211,6 +218,18 @@ export const schema = {
                                     "create",
                                     "update",
                                     "delete"
+                                ]
+                            },
+                            {
+                                "provider": "userPools",
+                                "ownerField": "owner",
+                                "allow": "owner",
+                                "identityClaim": "cognito:username",
+                                "operations": [
+                                    "create",
+                                    "update",
+                                    "delete",
+                                    "read"
                                 ]
                             }
                         ]
@@ -673,6 +692,13 @@ export const schema = {
                     "type": "ID",
                     "isRequired": false,
                     "attributes": []
+                },
+                "targetId": {
+                    "name": "targetId",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
                 }
             }
         },
@@ -696,5 +722,5 @@ export const schema = {
             }
         }
     },
-    "version": "a3f7963df09945dc14b74ece5d4fb6fe"
+    "version": "5e9e29379608cab476eab5bb330f0f96"
 };

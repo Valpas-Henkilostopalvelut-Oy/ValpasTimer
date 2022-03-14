@@ -17,7 +17,7 @@ const Recorder = () => {
   const [description, setDescription] = useState("");
   const handleChange = (event) => setDescription(event.target.value);
 
-  const { loadTimeList } = useAppContext();
+  const { loadTimeList, selectedOption } = useAppContext();
 
   useEffect(async () => {
     const user = await Auth.currentAuthenticatedUser();
@@ -58,7 +58,7 @@ const Recorder = () => {
             billable: true,
             description: description,
             userId: user.username,
-            workspaceId: null,
+            workspaceId: selectedOption.id,
             timeInterval: {
               duration: "",
               end: new Date().toISOString(),
@@ -67,6 +67,7 @@ const Recorder = () => {
             isActive: true,
           })
         );
+
         const original = await DataStore.query(
           UserCredentials,
           user.attributes["custom:UserCreditails"]

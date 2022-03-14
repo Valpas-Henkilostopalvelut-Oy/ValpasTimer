@@ -51,6 +51,7 @@ type Membership {
   membershipType: String
   membershipStatus: String
   userId: ID
+  targetId: String
 }
 
 type HourlyRate {
@@ -58,13 +59,14 @@ type HourlyRate {
   currency: Int
 }
 
-type AllWorkSpaces @model @auth(rules: [{allow: private, operations: [read]}, {allow: groups, groups: ["Editors"], operations: [read, create, update, delete]}]) {
+type AllWorkSpaces @model @auth(rules: [{allow: private, operations: [read]}, {allow: groups, groups: ["Editors"], operations: [read, create, update, delete]}, {allow: owner}]) {
   id: ID!
   hourlyRate: HourlyRate
   imageUrl: AWSURL
   memberships: [Membership]
   name: String
   workspaceSettings: WorkspaceSettings
+  customOwner: ID
 }
 
 type UserCredentials @model @auth(rules: [{allow: owner}, {allow: groups, groups: ["Editors"], operations: [read, create, update, delete]}]) {

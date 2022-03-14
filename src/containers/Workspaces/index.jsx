@@ -4,6 +4,7 @@ import { AllWorkSpaces } from "../../models";
 import { List, ListItem } from "@chakra-ui/react";
 import CloseIcon from "@mui/icons-material/Close";
 import "./Workspaces.css";
+import "../../App.css"
 import { LinkContainer } from "react-router-bootstrap";
 
 const Workspaces = () => {
@@ -39,7 +40,7 @@ const Workspaces = () => {
   };
 
   return (
-    <div>
+    <div className="main">
       <div className="heading">Workspaces</div>
       <List>
         {works.map((val, key) => {
