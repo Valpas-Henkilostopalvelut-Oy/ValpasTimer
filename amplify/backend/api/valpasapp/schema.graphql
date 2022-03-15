@@ -1,3 +1,16 @@
+type Profile {
+  profile_picture: AWSURL
+  first_name: String
+  last_name: String
+  username: String
+  phone_number: String
+  address: String
+  zip_code: Int
+  contry: String
+  other_settings: UserSettings
+  email: AWSEmail
+}
+
 type LastWorkspace {
   value: String
   label: String
@@ -71,16 +84,12 @@ type AllWorkSpaces @model @auth(rules: [{allow: private, operations: [read]}, {a
 
 type UserCredentials @model @auth(rules: [{allow: owner}, {allow: groups, groups: ["Editors"], operations: [read, create, update, delete]}]) {
   id: ID!
-  username: ID
   formChecked: [String]
-  email: String
-  memberships: [UserMemberships]
-  name: String
   activeTimeEntry: ID
-  profilePicture: AWSURL
-  settings: UserSettings
   status: String
   defaultWorkspace: LastWorkspace
+  memberships: [UserMemberships]
+  profile: Profile
 }
 
 type OnBoardingForm @model @auth(rules: [{allow: groups, groups: ["Editors"], operations: [read, create, update, delete]}, {allow: private, operations: [read]}]) {

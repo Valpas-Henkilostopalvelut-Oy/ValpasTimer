@@ -247,13 +247,6 @@ export const schema = {
                     "isRequired": true,
                     "attributes": []
                 },
-                "username": {
-                    "name": "username",
-                    "isArray": false,
-                    "type": "ID",
-                    "isRequired": false,
-                    "attributes": []
-                },
                 "formChecked": {
                     "name": "formChecked",
                     "isArray": true,
@@ -262,50 +255,10 @@ export const schema = {
                     "attributes": [],
                     "isArrayNullable": true
                 },
-                "email": {
-                    "name": "email",
-                    "isArray": false,
-                    "type": "String",
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "memberships": {
-                    "name": "memberships",
-                    "isArray": true,
-                    "type": {
-                        "nonModel": "UserMemberships"
-                    },
-                    "isRequired": false,
-                    "attributes": [],
-                    "isArrayNullable": true
-                },
-                "name": {
-                    "name": "name",
-                    "isArray": false,
-                    "type": "String",
-                    "isRequired": false,
-                    "attributes": []
-                },
                 "activeTimeEntry": {
                     "name": "activeTimeEntry",
                     "isArray": false,
                     "type": "ID",
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "profilePicture": {
-                    "name": "profilePicture",
-                    "isArray": false,
-                    "type": "AWSURL",
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "settings": {
-                    "name": "settings",
-                    "isArray": false,
-                    "type": {
-                        "nonModel": "UserSettings"
-                    },
                     "isRequired": false,
                     "attributes": []
                 },
@@ -321,6 +274,25 @@ export const schema = {
                     "isArray": false,
                     "type": {
                         "nonModel": "LastWorkspace"
+                    },
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "memberships": {
+                    "name": "memberships",
+                    "isArray": true,
+                    "type": {
+                        "nonModel": "UserMemberships"
+                    },
+                    "isRequired": false,
+                    "attributes": [],
+                    "isArrayNullable": true
+                },
+                "profile": {
+                    "name": "profile",
+                    "isArray": false,
+                    "type": {
+                        "nonModel": "Profile"
                     },
                     "isRequired": false,
                     "attributes": []
@@ -467,27 +439,78 @@ export const schema = {
     },
     "enums": {},
     "nonModels": {
-        "LastWorkspace": {
-            "name": "LastWorkspace",
+        "Profile": {
+            "name": "Profile",
             "fields": {
-                "value": {
-                    "name": "value",
+                "profile_picture": {
+                    "name": "profile_picture",
+                    "isArray": false,
+                    "type": "AWSURL",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "first_name": {
+                    "name": "first_name",
                     "isArray": false,
                     "type": "String",
                     "isRequired": false,
                     "attributes": []
                 },
-                "label": {
-                    "name": "label",
+                "last_name": {
+                    "name": "last_name",
                     "isArray": false,
                     "type": "String",
                     "isRequired": false,
                     "attributes": []
                 },
-                "id": {
-                    "name": "id",
+                "username": {
+                    "name": "username",
                     "isArray": false,
-                    "type": "ID",
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "phone_number": {
+                    "name": "phone_number",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "address": {
+                    "name": "address",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "zip_code": {
+                    "name": "zip_code",
+                    "isArray": false,
+                    "type": "Int",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "contry": {
+                    "name": "contry",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "other_settings": {
+                    "name": "other_settings",
+                    "isArray": false,
+                    "type": {
+                        "nonModel": "UserSettings"
+                    },
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "email": {
+                    "name": "email",
+                    "isArray": false,
+                    "type": "AWSEmail",
                     "isRequired": false,
                     "attributes": []
                 }
@@ -514,6 +537,32 @@ export const schema = {
                     "name": "dateFormat",
                     "isArray": false,
                     "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                }
+            }
+        },
+        "LastWorkspace": {
+            "name": "LastWorkspace",
+            "fields": {
+                "value": {
+                    "name": "value",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "label": {
+                    "name": "label",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "id": {
+                    "name": "id",
+                    "isArray": false,
+                    "type": "ID",
                     "isRequired": false,
                     "attributes": []
                 }
@@ -722,5 +771,5 @@ export const schema = {
             }
         }
     },
-    "version": "5e9e29379608cab476eab5bb330f0f96"
+    "version": "4cce5c02b86ca1fdb83c01afe303f052"
 };

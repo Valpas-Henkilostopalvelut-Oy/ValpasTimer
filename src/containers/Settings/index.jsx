@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Button, Col, Form, Row, InputGroup } from "react-bootstrap";
 import { Auth } from "aws-amplify";
 import { useAppContext } from "../../services/contextLib";
@@ -51,16 +51,40 @@ const Settings = () => {
     city: yup
       .string()
       .min(3, "*City must have at least 2 characters")
-      .max(100, "*City can't be longer than 100 characters"),
+      .max(100, "*City can't be longer than 100 characters")
+      .required("*City required"),
+
     zipCode: yup
       .string()
       .min(3, "*Zip code must have at least 3 characters")
-      .max(100, "*Zip code can't be longer than 100 characters"),
+      .max(100, "*Zip code can't be longer than 100 characters")
+      .required("*Zip code required"),
     contry: yup
       .string()
       .min(3, "*Contry must have at least 2 characters")
-      .max(100, "*Contry can't be longer than 100 characters"),
+      .max(100, "*Contry can't be longer than 100 characters")
+      .required("*Contry required"),
   });
+
+  const [initValues, setIniValues] = useState(null)
+
+  useEffect(() => {
+    const loadSettings = async () => {
+      let loggedUser = await Auth.currentAuthenticatedUser()
+      setIniValues({
+        lastName: loggedUser.attributes.family_name,
+        firstName: loggedUser.attributes.name,
+        username: "",
+        email: loggedUser.attributes.email,
+        phoneNumber: loggedUser.attributes.phone_number.slice(4),
+        address: loggedUser.attributes.address,
+        city: loggedUser.attributes["custom:location"],
+        zipCode: "",
+        contry: "",
+      })
+    }
+    if (initValues === null) loadSettings()
+  })
 
   const updateAttributes = async (formVal) => {
     try {
@@ -74,7 +98,7 @@ const Settings = () => {
         name: formVal.firstName,
         family_name: formVal.lastName,
 
-        //phone_number: Number(formVal.phoneNumber),
+        phone_number: `+358${formVal.phoneNumber}`,
         email: formVal.email,
       });
     } catch (error) {
@@ -92,7 +116,7 @@ const Settings = () => {
 
   return (
     <div className="settings main container">
-      <div>
+      {initValues != null && <div>
         <div>
           <div>Profile settings</div>
         </div>
@@ -107,17 +131,7 @@ const Settings = () => {
           </div>
 
           <Formik
-            initialValues={{
-              lastName: "",
-              firstName: "",
-              username: "",
-              email: "",
-              phoneNumber: "",
-              address: "",
-              city: "",
-              zipCode: "",
-              contry: "",
-            }}
+            initialValues={initValues}
             validationSchema={valSchema}
             onSubmit={async (values) => {
               updateAttributes(values);
@@ -200,16 +214,21 @@ const Settings = () => {
                 <Row className="mb-3">
                   <Form.Group as={Col} controlId="phoneNumber">
                     <Form.Label>Phone number</Form.Label>
-                    <Form.Control
-                      type="number"
-                      name="phoneNumber"
-                      placeholder="Phone number"
-                      onChange={handleChange}
-                      isInvalid={!!errors.phoneNumber}
-                    />
-                    <Form.Control.Feedback type="invalid">
-                      {errors.phoneNumber}
-                    </Form.Control.Feedback>
+                    <InputGroup>
+                      <InputGroup.Text id="inputGroupPrepend">
+                        +358
+                      </InputGroup.Text>
+                      <Form.Control
+                        type="number"
+                        name="phoneNumber"
+                        placeholder="Phone number"
+                        onChange={handleChange}
+                        value={values.phoneNumber}
+                        isInvalid={!!errors.phoneNumber}
+                      />
+                      <Form.Control.Feedback type="invalid">
+                        {errors.phoneNumber}
+                      </Form.Control.Feedback></InputGroup>
                   </Form.Group>
                 </Row>
 
@@ -263,7 +282,8 @@ const Settings = () => {
             )}
           </Formik>
         </div>
-      </div>
+      </div>}
+
     </div>
   );
 };

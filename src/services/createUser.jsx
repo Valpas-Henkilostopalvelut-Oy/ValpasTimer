@@ -8,24 +8,26 @@ export async function createUser() {
 
     const createdUserSettings = await DataStore.save(
       new UserCredentials({
-        username: userAuth.username,
-        formChecked: [],
-        email: userAuth.attributes.email,
-        memberships: [],
-        name: userAuth.attributes.name,
-        activeTimeEntry: "null",
-        profilePicture: "http://undefined.name",
-        settings: {
-          timeFormat: "",
-          timeZone: "",
-          dateFormat: "",
-        },
-        status: "ACTIVE",
+        "formChecked": [],
+        "activeTimeEntry": "a3f4095e-39de-43d2-baf4-f8c16f0f6f4d",
+        "status": "Lorem ipsum dolor sit amet",
         defaultWorkspace: {
           value: "value",
           label: "label",
           id: "id",
         },
+        "memberships": [],
+        "profile": {
+          profile_picture: "http://undefined.name",
+          first_name: userAuth.attributes.name,
+          last_name: userAuth.attributes.last_name,
+          username: userAuth.attributes.username,
+          phone_number: userAuth.attributes.phone_number,
+          address: null,
+          zip_code: 0,
+          contry: null,
+          email: userAuth.attributes.email
+        }
       })
     );
 

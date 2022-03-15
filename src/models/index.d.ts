@@ -2,11 +2,18 @@ import { ModelInit, MutableModel, PersistentModelConstructor } from "@aws-amplif
 
 
 
-export declare class LastWorkspace {
-  readonly value?: string;
-  readonly label?: string;
-  readonly id?: string;
-  constructor(init: ModelInit<LastWorkspace>);
+export declare class Profile {
+  readonly profile_picture?: string;
+  readonly first_name?: string;
+  readonly last_name?: string;
+  readonly username?: string;
+  readonly phone_number?: string;
+  readonly address?: string;
+  readonly zip_code?: number;
+  readonly contry?: string;
+  readonly other_settings?: UserSettings;
+  readonly email?: string;
+  constructor(init: ModelInit<Profile>);
 }
 
 export declare class UserSettings {
@@ -14,6 +21,13 @@ export declare class UserSettings {
   readonly timeZone?: string;
   readonly dateFormat?: string;
   constructor(init: ModelInit<UserSettings>);
+}
+
+export declare class LastWorkspace {
+  readonly value?: string;
+  readonly label?: string;
+  readonly id?: string;
+  constructor(init: ModelInit<LastWorkspace>);
 }
 
 export declare class CostRate {
@@ -113,16 +127,12 @@ export declare class AllWorkSpaces {
 
 export declare class UserCredentials {
   readonly id: string;
-  readonly username?: string;
   readonly formChecked?: (string | null)[];
-  readonly email?: string;
-  readonly memberships?: (UserMemberships | null)[];
-  readonly name?: string;
   readonly activeTimeEntry?: string;
-  readonly profilePicture?: string;
-  readonly settings?: UserSettings;
   readonly status?: string;
   readonly defaultWorkspace?: LastWorkspace;
+  readonly memberships?: (UserMemberships | null)[];
+  readonly profile?: Profile;
   readonly createdAt?: string;
   readonly updatedAt?: string;
   constructor(init: ModelInit<UserCredentials, UserCredentialsMetaData>);

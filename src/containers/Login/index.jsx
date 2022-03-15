@@ -43,7 +43,7 @@ const Login = () => {
       await DataStore.start();
       setTimeout(() => {
         checkUserProfile();
-        navigate("timer");
+        navigate("");
         userHasAuthenticated(true);
         setIsLoading(false);
       }, 1000);
