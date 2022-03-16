@@ -29,19 +29,36 @@
   justify-content: space-between;
   padding-bottom: 20px;
 }
-
-.members #name {
-  flex: 12%;
+.modal {
+  font-size: 12px;
 }
-.members #email {
-  flex: 27%;
+.modal > .header {
+  width: 100%;
+  border-bottom: 1px solid gray;
+  font-size: 18px;
+  text-align: center;
+  padding: 5px;
 }
-.members #rate {
-  flex: 15%;
+.modal > .content {
+  width: 100%;
+  padding: 10px 5px;
 }
-.members #role {
-  flex: 20%;
+.modal > .actions {
+  width: 100%;
+  padding: 10px 5px;
+  margin: auto;
+  text-align: center;
 }
-.members #group {
-  flex: 20%;
+.modal > .close {
+  cursor: pointer;
+  position: absolute;
+  display: block;
+  padding: 2px 5px;
+  line-height: 20px;
+  right: -10px;
+  top: -10px;
+  font-size: 24px;
+  background: #ffffff;
+  border-radius: 18px;
+  border: 1px solid #cfcece;
 }

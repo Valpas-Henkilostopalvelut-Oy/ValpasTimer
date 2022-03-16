@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import Form from "react-bootstrap/Form";
+import { Form, Row, Col } from "react-bootstrap";
 import "./login.css";
-import "../../App.css"
+import "../../App.css";
 import { Auth, DataStore } from "aws-amplify";
 import { useAppContext } from "../../services/contextLib";
 import { useNavigate } from "react-router-dom";
@@ -10,6 +10,7 @@ import { onError } from "../../services/errorLib";
 import { useFormFields } from "../../services/hooksLib";
 import { createUser } from "../../services/createUser";
 import { UserCredentials } from "../../models";
+import { Formik } from "formik";
 
 const Login = () => {
   const { userHasAuthenticated } = useAppContext();
@@ -33,55 +34,79 @@ const Login = () => {
 
   const validateForm = () =>
     fields.email.length > 0 && fields.password.length > 0;
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-
-    setIsLoading(true);
-
-    try {
-      await Auth.signIn(fields.email, fields.password);
-      await DataStore.start();
-      setTimeout(() => {
-        checkUserProfile();
-        navigate("");
-        userHasAuthenticated(true);
-        setIsLoading(false);
-      }, 1000);
-    } catch (e) {
-      setIsLoading(false);
-      onError(e);
-    }
-  };
+  const handleSubmitt = async (event) => {};
 
   return (
     <div className="Login main">
-      <Form onSubmit={handleSubmit}>
-        <Form.Group size="lg" controlId="email">
-          <Form.Label>Email</Form.Label>
-          <Form.Control
-            autoFocus
-            type="email"
-            value={fields.email}
-            onChange={handleFieldChange}
-          />
-        </Form.Group>
-        <Form.Group size="lg" controlId="password">
-          <Form.Label>Password</Form.Label>
-          <Form.Control
-            type="password"
-            value={fields.password}
-            onChange={handleFieldChange}
-          />
-        </Form.Group>
-        <LoaderButton
-          size="lg"
-          type="submit"
-          isLoading={isLoading}
-          disabled={!validateForm()}
-        >
-          Login
-        </LoaderButton>
-      </Form>
+      <Formik
+        initialValues={{
+          email: "",
+          password: "",
+        }}
+        onSubmit={async (val) => {
+          setIsLoading(true);
+
+          try {
+            await Auth.signIn(val.email, val.password);
+            await DataStore.start();
+            setTimeout(() => {
+              checkUserProfile();
+              navigate("");
+              userHasAuthenticated(true);
+              setIsLoading(false);
+            }, 1000);
+          } catch (e) {
+            setIsLoading(false);
+            onError(e);
+          }
+        }}
+      >
+        {({
+          values,
+          errors,
+          touched,
+          handleChange,
+          handleSubmit,
+          isSubmitting,
+        }) => (
+          <Form>
+            <Row className="mb-3">
+              <Form.Group as={Col} size="lg" controlId="email">
+                <Form.Label>Email</Form.Label>
+                <Form.Control
+                  type="email"
+                  name="email"
+                  value={values.email}
+                  onChange={handleChange}
+                />
+              </Form.Group>
+            </Row>
+
+            <Row className="mb-3">
+              <Form.Group as={Col} size="lg" controlId="password">
+                <Form.Label>Password</Form.Label>
+                <Form.Control
+                  type="password"
+                  value={values.password}
+                  onChange={handleChange}
+                />
+              </Form.Group>
+            </Row>
+
+            <LoaderButton
+              size="lg"
+              type="submit"
+              variant="success"
+              isLoading={isLoading}
+              //disabled={!validateForm()}
+              as={Col}
+              onClick={handleSubmit}
+            >
+              Login
+            </LoaderButton>
+          </Form>
+        )}
+      </Formik>
     </div>
   );
 };

@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 import "./Signup.css";
-import "../../App.css"
+import "../../App.css";
 
-import SingUpForm from "./SingUp/SingUp";
-import ConfirmationForm from "./ConfirmForm/ConfirmForm"
+import SingUpForm from "./SingUp";
+import ConfirmationForm from "./ConfirmForm";
 import { AppContext, useAppContext } from "../../services/contextLib";
 
 const Signup = () => {
-  const { userHasAuthenticated } = useAppContext()
+  const { userHasAuthenticated } = useAppContext();
   const userForm = {
     email: "",
     phoneNumber: "",
@@ -16,14 +16,15 @@ const Signup = () => {
     password: "",
     confirmPassword: "",
     confirmationCode: "",
-  }
+  };
 
   const [newUser, setNewUser] = useState(null);
 
-
   return (
     <div className="Signup main">
-      <AppContext.Provider value={{ userForm, setNewUser, newUser, userHasAuthenticated }}>
+      <AppContext.Provider
+        value={{ userForm, setNewUser, newUser, userHasAuthenticated }}
+      >
         {newUser == null ? <SingUpForm /> : <ConfirmationForm />}
       </AppContext.Provider>
     </div>
