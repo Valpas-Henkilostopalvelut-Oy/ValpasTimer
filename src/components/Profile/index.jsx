@@ -14,7 +14,6 @@ const Profile = () => {
     const loadUser = async () => {
       const currentUser = await Auth.currentAuthenticatedUser();
 
-      console.log(currentUser);
       setLoadedUser(currentUser);
     };
 
@@ -29,17 +28,17 @@ const Profile = () => {
 
   return (
     <DropdownButton align="end" title="Profile">
-        <Dropdown.ItemText>
-          {loadedUser != null ? loadedUser.attributes.name : "Loading"}
-        </Dropdown.ItemText>
-        <Dropdown.ItemText>
-          {loadedUser != null ? loadedUser.attributes.email : "Loading"}
-        </Dropdown.ItemText>
-        <Dropdown.Divider />
-        <LinkContainer to="/settings">
-          <Dropdown.Item>Profile settings</Dropdown.Item>
-        </LinkContainer>
-        <Dropdown.Item onClick={handleLogout}>Logout</Dropdown.Item>
+      <Dropdown.ItemText>
+        {loadedUser != null ? loadedUser.attributes.name : "Loading"}
+      </Dropdown.ItemText>
+      <Dropdown.ItemText>
+        {loadedUser != null ? loadedUser.attributes.email : "Loading"}
+      </Dropdown.ItemText>
+      <Dropdown.Divider />
+      <LinkContainer to="/settings">
+        <Dropdown.Item>Profile settings</Dropdown.Item>
+      </LinkContainer>
+      <Dropdown.Item onClick={handleLogout}>Logout</Dropdown.Item>
     </DropdownButton>
   );
 };

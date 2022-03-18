@@ -59,7 +59,6 @@ type WorkspaceSettings {
 }
 
 type Membership {
-  NewField: String
   hourlyRate: HourlyRate
   membershipType: String
   membershipStatus: String
@@ -68,8 +67,8 @@ type Membership {
 }
 
 type HourlyRate {
-  amount: String
-  currency: Int
+  amount: Int
+  currency: String
 }
 
 type AllWorkSpaces @model @auth(rules: [{allow: private, operations: [read]}, {allow: groups, groups: ["Editors"], operations: [read, create, update, delete]}, {allow: owner}]) {
@@ -92,7 +91,7 @@ type UserCredentials @model @auth(rules: [{allow: owner}, {allow: groups, groups
   profile: Profile
 }
 
-type OnBoardingForm @model @auth(rules: [{allow: groups, groups: ["Editors"], operations: [read, create, update, delete]}, {allow: private, operations: [read]}]) {
+type OnBoardingForm @model @auth(rules: [{allow: groups, groups: ["Editors"], operations: [read, create, update, delete]}, {allow: private, operations: [read]}, {allow: owner}]) {
   id: ID!
   title: String
   data: [FormItem]

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import "./App.css";
 
 //Custom
-import { Navbar } from "react-bootstrap";
+import { Navbar, Row, Col } from "react-bootstrap";
 import Navigation from "./Navigation";
 import { Nav } from "react-bootstrap";
 import { AppContext } from "./services/contextLib";
@@ -16,11 +16,7 @@ import Profile from "./components/Profile";
 function App() {
   const [isAuthenticated, userHasAuthenticated] = useState(false);
   const [isAuthenticating, setIsAuthenticating] = useState(true);
-  const [selectedOption, setSelectedOption] = useState({
-    value: "Valpas",
-    label: "Valpas",
-    id: "19901959-5e27-49da-b588-92b269dbdf49",
-  });
+  const [selectedOption, setSelectedOption] = useState(null);
 
   Hub.listen("auth", async (data) => {
     switch (data.payload.event) {

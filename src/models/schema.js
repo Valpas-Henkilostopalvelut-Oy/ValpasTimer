@@ -430,6 +430,18 @@ export const schema = {
                                 "operations": [
                                     "read"
                                 ]
+                            },
+                            {
+                                "provider": "userPools",
+                                "ownerField": "owner",
+                                "allow": "owner",
+                                "identityClaim": "cognito:username",
+                                "operations": [
+                                    "create",
+                                    "update",
+                                    "delete",
+                                    "read"
+                                ]
                             }
                         ]
                     }
@@ -644,14 +656,14 @@ export const schema = {
                 "amount": {
                     "name": "amount",
                     "isArray": false,
-                    "type": "String",
+                    "type": "Int",
                     "isRequired": false,
                     "attributes": []
                 },
                 "currency": {
                     "name": "currency",
                     "isArray": false,
-                    "type": "Int",
+                    "type": "String",
                     "isRequired": false,
                     "attributes": []
                 }
@@ -705,13 +717,6 @@ export const schema = {
         "Membership": {
             "name": "Membership",
             "fields": {
-                "NewField": {
-                    "name": "NewField",
-                    "isArray": false,
-                    "type": "String",
-                    "isRequired": false,
-                    "attributes": []
-                },
                 "hourlyRate": {
                     "name": "hourlyRate",
                     "isArray": false,
@@ -771,5 +776,5 @@ export const schema = {
             }
         }
     },
-    "version": "4cce5c02b86ca1fdb83c01afe303f052"
+    "version": "9569cc6d8c98fc7286eb6580a317c5cb"
 };

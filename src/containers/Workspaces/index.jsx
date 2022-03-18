@@ -1,14 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { DataStore } from "aws-amplify";
-import { AllWorkSpaces } from "../../models";
-import { List, ListItem } from "@chakra-ui/react";
+import { AllWorkSpaces, UserCredentials } from "../../models";
+import { List, ListItem, Button } from "@chakra-ui/react";
 import CloseIcon from "@mui/icons-material/Close";
 import "./Workspaces.css";
-import "../../App.css"
+import "../../App.css";
 import { LinkContainer } from "react-router-bootstrap";
+
+import { useAppContext } from "../../services/contextLib";
 
 const Workspaces = () => {
   const [works, setWorks] = useState([]);
+  const { selectedOption } = useAppContext();
 
   const loadWorks = async () => {
     const AllWorks = await DataStore.query(AllWorkSpaces);
@@ -41,6 +44,13 @@ const Workspaces = () => {
 
   return (
     <div className="main">
+      <Button
+        onClick={async () => {
+          console.log(selectedOption);
+        }}
+      >
+        log
+      </Button>
       <div className="heading">Workspaces</div>
       <List>
         {works.map((val, key) => {

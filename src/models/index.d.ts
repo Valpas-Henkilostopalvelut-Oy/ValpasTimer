@@ -47,8 +47,8 @@ export declare class UserMemberships {
 }
 
 export declare class HourlyRate {
-  readonly amount?: string;
-  readonly currency?: number;
+  readonly amount?: number;
+  readonly currency?: string;
   constructor(init: ModelInit<HourlyRate>);
 }
 
@@ -66,7 +66,6 @@ export declare class WorkspaceSettings {
 }
 
 export declare class Membership {
-  readonly NewField?: string;
   readonly hourlyRate?: HourlyRate;
   readonly membershipType?: string;
   readonly membershipStatus?: string;

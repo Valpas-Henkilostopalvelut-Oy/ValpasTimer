@@ -30,6 +30,23 @@ const WorkspaceSelect = () => {
     makeList();
   }, []);
 
+  useEffect(() => {
+    const lastWorkspaceLoad = async () => {
+      const loggedUser = await Auth.currentAuthenticatedUser();
+      const creditails = await DataStore.query(
+        UserCredentials,
+        loggedUser.attributes["custom:UserCreditails"]
+      );
+      setSelectedOption({
+        value: creditails.defaultWorkspace.value,
+        label: creditails.defaultWorkspace.label,
+        id: creditails.defaultWorkspace.id,
+      });
+    };
+
+    selectedOption === null && lastWorkspaceLoad();
+  }, [options]);
+
   const changeValue = async (value) => {
     setSelectedOption(value);
 
