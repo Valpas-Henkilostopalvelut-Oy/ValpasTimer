@@ -8,6 +8,8 @@ import { onError } from "../../services/errorLib";
 import { useAppContext } from "../../services/contextLib";
 import Recorder from "./timerComponents/timeTrackerRecorder";
 import DeleteIcon from "@mui/icons-material/Delete";
+import CheckCircleOutlinedIcon from "@mui/icons-material/CheckCircleOutlined";
+import CheckCircleRoundedIcon from "@mui/icons-material/CheckCircleRounded";
 import { AppContext } from "../../services/contextLib";
 
 const Timer = () => {
@@ -57,6 +59,19 @@ const Timer = () => {
     loadWorkList();
   }, [isAuthenticated]);
 
+  const lockTimeEntry = async (d) => {
+    try {
+      await DataStore.save(
+        TimeEntry.copyOf(d, (updated) => {
+          updated.isLocked = true;
+        })
+      );
+      loadTimeList();
+    } catch (error) {
+      onError(error);
+    }
+  };
+
   return (
     <Container fluid>
       <Row md={1} xs={1}>
@@ -80,59 +95,72 @@ const Timer = () => {
                   );
                   return (
                     <ListGroup.Item className="card" key={key}>
-                      <div className="cardDateTotal">
-                        <div className="cardDate">
-                          <p>
-                            {new Date(data.timeInterval.start).toDateString()}
-                          </p>
-                        </div>
+                      <Row md={1}>
+                        <Col>
+                          {new Date(data.timeInterval.start).toDateString()}
+                        </Col>
+                        <Col>
+                          <Row>
+                            <Col>Description</Col>
+                            <Col>Send</Col>
+                            <Col>
+                              {data.billable !== "" ? (
+                                <p>Paid</p>
+                              ) : (
+                                <p>Unpaid</p>
+                              )}
+                            </Col>
+                            <Col>
+                              {workList.length !== 0 &&
+                              data.workspaceId !== null ? (
+                                <p>{data.workspaceId.name}</p>
+                              ) : (
+                                <p>Without work</p>
+                              )}
+                            </Col>
+                            <Col>
+                              <Row xs={3}>
+                                <Col>
+                                  {new Date(data.timeInterval.start).getHours()}
+                                  :
+                                  {new Date(
+                                    data.timeInterval.start
+                                  ).getMinutes()}
+                                </Col>
+                                <Col>-</Col>
+                                <Col>
+                                  {new Date(data.timeInterval.end).getHours()}:
+                                  {new Date(data.timeInterval.end).getMinutes()}
+                                </Col>
+                              </Row>
+                            </Col>
 
-                        <div className="cardTotal">
-                          <p>
-                            {total.getUTCHours()}:
-                            {String("0" + total.getUTCMinutes()).slice(-2)}:
-                            {String("0" + total.getUTCSeconds()).slice(-2)}
-                          </p>
-                        </div>
-                      </div>
-
-                      <div className="cardTrackerEntry">
-                        <p className="cardDescription">{data.description}</p>
-
-                        <div className="cardWorkStatus">
-                          {workList.length !== 0 &&
-                          data.workspaceId !== null ? (
-                            <p>{data.workspaceId.name}</p>
-                          ) : (
-                            <p>Without work</p>
-                          )}
-                        </div>
-
-                        <div className="cardTimeBillable">
-                          <div className="timeEndStart">
-                            <p className="timeStart">
-                              {new Date(data.timeInterval.start).getHours()}:
-                              {new Date(data.timeInterval.start).getMinutes()}
-                            </p>
-                            <p>-</p>
-                            <p className="timeEnd">
-                              {new Date(data.timeInterval.end).getHours()}:
-                              {new Date(data.timeInterval.end).getMinutes()}
-                            </p>
-                          </div>
-
-                          <div>
-                            {data.billable !== "" ? <p>Paid</p> : <p>Unpaid</p>}
-                          </div>
-                          <div
-                            onClick={() => {
-                              deleteItem(data.id);
-                            }}
-                          >
-                            <DeleteIcon />
-                          </div>
-                        </div>
-                      </div>
+                            <Col>
+                              {total.getUTCHours()}:
+                              {String("0" + total.getUTCMinutes()).slice(-2)}:
+                              {String("0" + total.getUTCSeconds()).slice(-2)}
+                            </Col>
+                            <Col
+                              onClick={() => {
+                                deleteItem(data.id);
+                              }}
+                            >
+                              <DeleteIcon />
+                            </Col>
+                            <Col>
+                              {data.isLocked !== true ? (
+                                <CheckCircleOutlinedIcon
+                                  onClick={() => lockTimeEntry(data)}
+                                />
+                              ) : (
+                                <CheckCircleRoundedIcon
+                                  color="primary"
+                                />
+                              )}
+                            </Col>
+                          </Row>
+                        </Col>
+                      </Row>
                     </ListGroup.Item>
                   );
                 })}

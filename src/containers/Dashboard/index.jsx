@@ -7,28 +7,40 @@ import { DataStore } from "aws-amplify";
 import { TimeEntry, UserCredentials } from "../../models";
 
 const Dashboard = () => {
-  const [usersInWorkspace, setUsers] = useState(null);
+  const [data, setData] = useState(null);
   const { selectedOption } = useAppContext();
 
   useEffect(() => {
-    const loadUsers = async () => {
+    const loadTeamActivities = async () => {
       const timeEntry = await DataStore.query(TimeEntry);
-      const users = await DataStore.query(UserCredentials);
+      const usersCredentials = await DataStore.query(UserCredentials);
 
       let q = [];
-      const timeEntryOfWorkspace = timeEntry.filter(
-        (t) => t.workspaceId === selectedOption.id
-      );
 
-      for (let i = 0; i < timeEntryOfWorkspace.length; i++) {
-        console.log(timeEntryOfWorkspace[i].userId);
-        if (true) {
-          console.log(user);
+      for (let i = 0; i < usersCredentials.length; i++) {
+        if (
+          usersCredentials[i].memberships.filter(
+            (m) => m.targetId === selectedOption.id
+          ).length > 0
+        ) {
+          q.push({
+            id: usersCredentials[i].owner,
+            profile: usersCredentials[i].profile,
+            times: [],
+          });
         }
       }
+
+      for (let i = 0; i < q.length; i++) {
+        q[i].times = timeEntry
+          .filter((t) => t.userId === q[i].id)
+      }
+
+      console.log(q);
+      setData(q);
     };
 
-    loadUsers();
+    loadTeamActivities();
   }, [selectedOption]);
 
   return (
@@ -45,7 +57,7 @@ const Dashboard = () => {
                 <Col>Total tracked</Col>
               </Row>
             </ListGroup.Item>
-            {usersInWorkspace !== null && <ListGroup.Item>ddd</ListGroup.Item>}
+            {data !== null && <ListGroup.Item>ddd</ListGroup.Item>}
           </ListGroup>
         </Col>
       </Row>

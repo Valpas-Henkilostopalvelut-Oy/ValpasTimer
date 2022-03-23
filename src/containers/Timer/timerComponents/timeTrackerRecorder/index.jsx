@@ -55,7 +55,6 @@ const Recorder = () => {
       const startTimeEntry = async () => {
         const newStartTime = await DataStore.save(
           new TimeEntry({
-            billable: true,
             description: description,
             userId: user.username,
             workspaceId: selectedOption.id,
@@ -65,6 +64,8 @@ const Recorder = () => {
               start: new Date().toISOString(),
             },
             isActive: true,
+            isLocked: false,
+            billable: true,
           })
         );
 
