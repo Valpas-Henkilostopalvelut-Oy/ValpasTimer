@@ -32,12 +32,14 @@ const Dashboard = () => {
       }
 
       for (let i = 0; i < q.length; i++) {
-        q[i].times = timeEntry
-          .filter((t) => t.userId === q[i].id)
-      }
+        q[i].times = timeEntry.filter(u => u.owner === q[i].id)
+          .filter((t) => t.workspaceId === selectedOption.id)
 
-      console.log(q);
+
+      }
       setData(q);
+      console.log(q);
+
     };
 
     loadTeamActivities();

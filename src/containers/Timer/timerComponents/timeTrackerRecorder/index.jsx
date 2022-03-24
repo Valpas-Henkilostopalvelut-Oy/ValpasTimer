@@ -5,6 +5,8 @@ import { Auth, DataStore } from "aws-amplify";
 import { UserCredentials, TimeEntry } from "../../../../models";
 import { useAppContext } from "../../../../services/contextLib";
 
+import { DatePicker, LocalizationProvider, AdapterDateFns } from '@mui/material';
+
 const Recorder = () => {
   const [manual, setManual] = useState(false);
   const [time, setTime] = useState({
@@ -180,7 +182,18 @@ const Recorder = () => {
     </div>
   );
 
-  return <div>{!manual && <StartForm />}</div>;
+  const AddForm = () => (
+    <div>
+      <Switch
+          size={"sm"}
+          className="formSwitch"
+          value={manual}
+          onChange={() => setManual(!manual)}
+        />
+    </div>
+  )
+
+  return <div>{!manual ? <StartForm /> : <AddForm/>}</div>;
 };
 
 export default Recorder;
