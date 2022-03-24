@@ -1,14 +1,10 @@
 import React, { useEffect, useState } from "react";
 import "./timeRecorder.css";
-import { Switch, Input, InputGroup, Button } from "@chakra-ui/react";
+import { TextField, Button, Box, Grid } from "@mui/material";
 import { Auth, DataStore } from "aws-amplify";
-import { UserCredentials, TimeEntry } from "../../../../models";
-import { useAppContext } from "../../../../services/contextLib";
+import { UserCredentials, TimeEntry } from "../../../models";
 
-import { DatePicker, LocalizationProvider, AdapterDateFns } from '@mui/material';
-
-const Recorder = () => {
-  const [manual, setManual] = useState(false);
+const Recorder = ({ loadTimeList, selectedOption }) => {
   const [time, setTime] = useState({
     seconds: 0,
     minutes: 0,
@@ -18,8 +14,6 @@ const Recorder = () => {
 
   const [description, setDescription] = useState("");
   const handleChange = (event) => setDescription(event.target.value);
-
-  const { loadTimeList, selectedOption } = useAppContext();
 
   useEffect(async () => {
     const user = await Auth.currentAuthenticatedUser();
@@ -155,45 +149,44 @@ const Recorder = () => {
     started && advanceTime();
   }, [time, started]);
 
-  const StartForm = () => (
-    <div className="startForm">
-      <InputGroup>
-        <Input
-          placeholder="Description"
-          onChange={handleChange}
-          value={description}
-          size="md"
-        />
-      </InputGroup>
-      <div className="formTimeStartSwitch">
-        <p className="formTime">
+  return (
+    <Box
+      component="form"
+      sx={{
+        maxWidth: "100%",
+        marginBottom: "10px",
+        marginTop: "10px",
+      }}
+      noValidate
+      autoComplete="off"
+    >
+      <Grid container spacing={3} alignItems="center">
+        <Grid item md={10}>
+          <TextField
+            TextField
+            fullWidth
+            label="fullWidth"
+            id="fullWidth"
+            placeholder="Description"
+            onChange={handleChange}
+            value={description}
+          />
+        </Grid>
+
+        <Grid item md={1}>
           {String("0" + time.hours).slice(-2)}:
           {String("0" + time.minutes).slice(-2)}:
           {String("0" + time.seconds).slice(-2)}
-        </p>
-        <Button onClick={addItem}>{!started ? "Start" : "Stop"}</Button>
-        <Switch
-          size={"sm"}
-          className="formSwitch"
-          value={manual}
-          onChange={() => setManual(!manual)}
-        />
-      </div>
-    </div>
+        </Grid>
+
+        <Grid item md={1}>
+          <Button onClick={addItem} variant="contained">
+            {!started ? "Start" : "Stop"}
+          </Button>
+        </Grid>
+      </Grid>
+    </Box>
   );
-
-  const AddForm = () => (
-    <div>
-      <Switch
-          size={"sm"}
-          className="formSwitch"
-          value={manual}
-          onChange={() => setManual(!manual)}
-        />
-    </div>
-  )
-
-  return <div>{!manual ? <StartForm /> : <AddForm/>}</div>;
 };
 
 export default Recorder;

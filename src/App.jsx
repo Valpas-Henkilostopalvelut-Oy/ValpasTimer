@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import "./App.css";
 
 //Custom
-import { Navbar, Row, Col } from "react-bootstrap";
+import { Navbar } from "react-bootstrap";
 import Navigation from "./Navigation";
 import { Nav } from "react-bootstrap";
 import { AppContext } from "./services/contextLib";

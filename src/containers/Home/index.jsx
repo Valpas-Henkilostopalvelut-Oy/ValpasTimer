@@ -1,7 +1,10 @@
 import { Auth } from "aws-amplify";
 import React, { useEffect, useState } from "react";
 import { useAppContext } from "../../services/contextLib";
-import "../../App.css"
+import "../../App.css";
+import Switch from "@mui/material/Switch";
+
+const label = { inputProps: { "aria-label": "Switch demo" } };
 
 const Home = () => {
   const { isAuthenticated } = useAppContext();
@@ -17,6 +20,8 @@ const Home = () => {
 
   return (
     <div className="main">
+      <Switch {...label} />
+
       {isAuthenticated ? (
         <div>
           <div>Welcome to Valpas application</div>

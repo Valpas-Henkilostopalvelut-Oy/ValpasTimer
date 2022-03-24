@@ -1,18 +1,18 @@
 import React, { useEffect, useState } from "react";
 import { Container, Row, Col, ListGroup } from "react-bootstrap";
 import "./style.css";
-import { useAppContext } from "../../services/contextLib";
+import { useAppContext, AppContext } from "../../services/contextLib";
+import TotalLatest from "./TotalTracked";
 
 import { DataStore } from "aws-amplify";
-import { TimeEntry, UserCredentials } from "../../models";
+import { UserCredentials } from "../../models";
 
 const Dashboard = () => {
-  const [data, setData] = useState(null);
+  const [users, setUsers] = useState(null);
   const { selectedOption } = useAppContext();
 
   useEffect(() => {
     const loadTeamActivities = async () => {
-      const timeEntry = await DataStore.query(TimeEntry);
       const usersCredentials = await DataStore.query(UserCredentials);
 
       let q = [];
@@ -23,23 +23,11 @@ const Dashboard = () => {
             (m) => m.targetId === selectedOption.id
           ).length > 0
         ) {
-          q.push({
-            id: usersCredentials[i].owner,
-            profile: usersCredentials[i].profile,
-            times: [],
-          });
+          q.push(usersCredentials[i]);
         }
       }
 
-      for (let i = 0; i < q.length; i++) {
-        q[i].times = timeEntry.filter(u => u.owner === q[i].id)
-          .filter((t) => t.workspaceId === selectedOption.id)
-
-
-      }
-      setData(q);
-      console.log(q);
-
+      setUsers(q);
     };
 
     loadTeamActivities();
@@ -56,10 +44,13 @@ const Dashboard = () => {
               <Row>
                 <Col>Team member</Col>
                 <Col>Latest activity</Col>
-                <Col>Total tracked</Col>
+                <Col>Total tracked (This week)</Col>
               </Row>
             </ListGroup.Item>
-            {data !== null && <ListGroup.Item>ddd</ListGroup.Item>}
+            {users !== null &&
+              users.map((data, key) => (
+                <TotalLatest data={data} selOption={selectedOption} key={key}/>
+              ))}
           </ListGroup>
         </Col>
       </Row>

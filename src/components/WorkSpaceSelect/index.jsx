@@ -3,8 +3,6 @@ import "./WorkspaceSelect.css";
 import { Auth, DataStore } from "aws-amplify";
 import { AllWorkSpaces, UserCredentials } from "../../models";
 import Select from "react-select";
-import { Button } from "@chakra-ui/react";
-import { LinkContainer } from "react-router-bootstrap";
 import { useAppContext } from "../../services/contextLib";
 
 const WorkspaceSelect = () => {
@@ -78,16 +76,7 @@ const WorkspaceSelect = () => {
         options={options}
         placeholder={"Workspace"}
       />
-      <LinkContainer to="/workspaces">
-        <Button
-          onClick={async () => {
-            const workspaces = await DataStore.query(AllWorkSpaces);
-            console.log(workspaces);
-          }}
-        >
-          Manage Workspace
-        </Button>
-      </LinkContainer>
+
     </div>
   );
 };

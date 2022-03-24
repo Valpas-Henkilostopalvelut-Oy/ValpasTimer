@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { DataStore } from "aws-amplify";
 import { AllWorkSpaces, UserCredentials } from "../../models";
-import { List, ListItem, Button } from "@chakra-ui/react";
 import CloseIcon from "@mui/icons-material/Close";
 import "./Workspaces.css";
 import "../../App.css";
@@ -44,18 +43,11 @@ const Workspaces = () => {
 
   return (
     <div className="main">
-      <Button
-        onClick={async () => {
-          console.log(selectedOption);
-        }}
-      >
-        log
-      </Button>
       <div className="heading">Workspaces</div>
-      <List>
+      <div>
         {works.map((val, key) => {
           return (
-            <ListItem key={key} className="itemInList">
+            <div key={key} className="itemInList">
               <div>{val.name}</div>
               <div className="itemInListLeft">
                 <LinkContainer to="/workspaces/settings">
@@ -66,10 +58,10 @@ const Workspaces = () => {
                   <CloseIcon />
                 </div>
               </div>
-            </ListItem>
+            </div>
           );
         })}
-      </List>
+      </div>
     </div>
   );
 };

@@ -6,8 +6,7 @@ import reportWebVitals from "./reportWebVitals";
 
 //Custom imports
 import { BrowserRouter } from "react-router-dom";
-import { ChakraProvider } from "@chakra-ui/react";
-
+import { StyledEngineProvider } from "@mui/material/styles";
 import Amplify from "aws-amplify";
 import awsconfig from "./aws-exports";
 
@@ -16,9 +15,9 @@ Amplify.configure(awsconfig);
 ReactDOM.render(
   <React.StrictMode>
     <BrowserRouter>
-      <ChakraProvider>
+      <StyledEngineProvider>
         <App />
-      </ChakraProvider>
+      </StyledEngineProvider>
     </BrowserRouter>
   </React.StrictMode>,
   document.getElementById("root")
