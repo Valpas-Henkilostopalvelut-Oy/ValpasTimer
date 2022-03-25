@@ -9,7 +9,6 @@ import {
   Switch,
   Container,
   Grid,
-  List,
   Table,
   TableContainer,
   TableBody,
@@ -17,9 +16,12 @@ import {
   TableHead,
   TableRow,
   Paper,
+  Checkbox,
 } from "@mui/material";
 import Recorder from "./Recorder";
 import AddTime from "./AddTime";
+import TableToolBar from "./ListTableToolbar";
+import CustomTableHead from "./ListTableHead";
 
 import DeleteIcon from "@mui/icons-material/Delete";
 import CheckCircleOutlinedIcon from "@mui/icons-material/CheckCircleOutlined";
@@ -30,6 +32,7 @@ const Timer = () => {
   const [timeList, setTimeList] = useState(null);
   const [workList, setWorkList] = useState([]);
   const { isAuthenticated, selectedOption } = useAppContext();
+  const [selected, setSelected] = useState([]);
 
   const deleteItem = async (id) => {
     try {
@@ -48,7 +51,6 @@ const Timer = () => {
         const databaseTimeList = await DataStore.query(TimeEntry);
 
         setTimeList(databaseTimeList);
-        console.log(timeList);
       } catch (error) {
         onError(error);
       }
@@ -87,10 +89,8 @@ const Timer = () => {
     }
   };
 
-  const label = { inputProps: { "aria-label": "Switch demo" } };
-
   return (
-    <Container maxWidth="100%">
+    <Container>
       <Grid container alignItems="center" spacing={2}>
         <Grid item md={11}>
           {!manual ? (
@@ -113,71 +113,75 @@ const Timer = () => {
       </Grid>
 
       {timeList != null && (
-        <TableContainer component={Paper}>
-          <Table sx={{ minWidth: 650 }} aria-label="simple table">
-            <TableHead>
-              <TableRow>
-                <TableCell>Description</TableCell>
-                <TableCell align="right">Start</TableCell>
-                <TableCell align="right">End</TableCell>
-                <TableCell align="right">Date</TableCell>
-                <TableCell align="right">Total</TableCell>
-                <TableCell align="right">Delete</TableCell>
-                <TableCell align="right" size="small">Send</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {timeList
-                .sort((date1, date2) => date1.createdAt - date2.createdAt)
-                .map((data, key) => {
-                  if (selectedOption === null) return;
-                  if (data.isActive) return;
-                  if (data.workspaceId !== selectedOption.id) return;
+        <Paper>
+          <TableToolBar numSelected={selected.length} />
+          <TableContainer>
+            <Table sx={{ minWidth: 650 }} aria-label="simple table">
+              <CustomTableHead />
+              <TableBody>
+                {timeList
+                  .sort((date1, date2) => date1.createdAt - date2.createdAt)
+                  .map((data, key) => {
+                    if (selectedOption === null) return;
+                    if (data.isActive) return;
+                    if (data.workspaceId !== selectedOption.id) return;
 
-                  const total = new Date(
-                    Date.parse(data.timeInterval.end) -
-                      Date.parse(data.timeInterval.start)
-                  );
+                    const total = new Date(
+                      Date.parse(data.timeInterval.end) -
+                        Date.parse(data.timeInterval.start)
+                    );
 
-                  return (
-                    <TableRow
-                      key={data.name}
-                      sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                    >
-                      <TableCell component="th" scope="row">
-                        {data.description == ""
-                          ? "Add description"
-                          : data.description}
-                      </TableCell>
+                    return (
+                      <TableRow
+                        key={key}
+                        sx={{
+                          "&:last-child td, &:last-child th": { border: 0 },
+                        }}
+                      >
+                        <TableCell>
+                          <Checkbox />
+                        </TableCell>
 
-                      <TableCell align="right">
-                        {new Date(data.timeInterval.start).getHours()}:
-                        {new Date(data.timeInterval.start).getMinutes()}
-                      </TableCell>
+                        <TableCell component="th" scope="row">
+                          {data.description == ""
+                            ? "Add description"
+                            : data.description}
+                        </TableCell>
 
-                      <TableCell align="right">
-                        {new Date(data.timeInterval.end).getHours()}:
-                        {new Date(data.timeInterval.end).getMinutes()}
-                      </TableCell>
+                        <TableCell align="right">
+                          {new Date(data.timeInterval.start).getHours()}:
+                          {String(
+                            "0" + new Date(data.timeInterval.start).getMinutes()
+                          ).slice(-2)}
+                        </TableCell>
 
-                      <TableCell align="right">
-                        {new Date(data.timeInterval.start).toDateString()}
-                      </TableCell>
+                        <TableCell align="right">
+                          {new Date(data.timeInterval.end).getHours()}:
+                          {String(
+                            "0" + new Date(data.timeInterval.end).getMinutes()
+                          ).slice(-2)}
+                        </TableCell>
 
-                      <TableCell align="right">
-                        {total.getUTCHours()}:
-                        {String("0" + total.getUTCMinutes()).slice(-2)}:
-                        {String("0" + total.getUTCSeconds()).slice(-2)}
-                      </TableCell>
+                        <TableCell align="right">
+                          {new Date(data.timeInterval.start).toDateString()}
+                        </TableCell>
 
-                      <TableCell align="right"><DeleteIcon/></TableCell>
-                      <TableCell align="right"><CheckCircleOutlinedIcon/></TableCell>
-                    </TableRow>
-                  );
-                })}
-            </TableBody>
-          </Table>
-        </TableContainer>
+                        <TableCell align="right">
+                          {total.getUTCHours()}:
+                          {String("0" + total.getUTCMinutes()).slice(-2)}:
+                          {String("0" + total.getUTCSeconds()).slice(-2)}
+                        </TableCell>
+
+                        <TableCell align="right">
+                          <CheckCircleOutlinedIcon />
+                        </TableCell>
+                      </TableRow>
+                    );
+                  })}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </Paper>
       )}
     </Container>
   );

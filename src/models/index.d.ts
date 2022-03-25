@@ -105,6 +105,7 @@ export declare class TimeEntry {
   readonly timeInterval?: TimeInterval;
   readonly isActive?: boolean;
   readonly isLocked?: boolean;
+  readonly isSent?: boolean;
   readonly createdAt?: string;
   readonly updatedAt?: string;
   constructor(init: ModelInit<TimeEntry, TimeEntryMetaData>);

@@ -1,8 +1,22 @@
 import React, { useEffect, useState } from "react";
-import { Container, Row, Col, ListGroup } from "react-bootstrap";
 import "./style.css";
 import { useAppContext, AppContext } from "../../services/contextLib";
 import TotalLatest from "./TotalTracked";
+import {
+  Switch,
+  Container,
+  Grid,
+  List,
+  Table,
+  TableContainer,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableRow,
+  Paper,
+  Stack,
+  Box,
+} from "@mui/material";
 
 import { DataStore } from "aws-amplify";
 import { UserCredentials } from "../../models";
@@ -34,26 +48,31 @@ const Dashboard = () => {
   }, [selectedOption]);
 
   return (
-    <Container fluid={true}>
-      <Row md={1} xs={1}>
-        <Col>Dashboard-first</Col>
-        <Col>
-          <ListGroup>
-            <ListGroup.Item>Team activities</ListGroup.Item>
-            <ListGroup.Item>
-              <Row>
-                <Col>Team member</Col>
-                <Col>Latest activity</Col>
-                <Col>Total tracked (This week)</Col>
-              </Row>
-            </ListGroup.Item>
-            {users !== null &&
-              users.map((data, key) => (
-                <TotalLatest data={data} selOption={selectedOption} key={key}/>
-              ))}
-          </ListGroup>
-        </Col>
-      </Row>
+    <Container>
+      <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+        {users != null && (
+          <TableContainer component={Paper}>
+            <Table aria-label="collapsible table">
+              <TableHead>
+                <TableRow>
+                  <TableCell />
+                  <TableCell>Worker</TableCell>
+                  <TableCell>Total Hours</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {users.map((data, key) => (
+                  <TotalLatest
+                    data={data}
+                    key={key}
+                    selOption={selectedOption}
+                  />
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        )}
+      </Box>
     </Container>
   );
 };

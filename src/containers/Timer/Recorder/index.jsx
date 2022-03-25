@@ -61,6 +61,7 @@ const Recorder = ({ loadTimeList, selectedOption }) => {
             },
             isActive: true,
             isLocked: false,
+            isSent: false,
             billable: true,
           })
         );
@@ -163,10 +164,8 @@ const Recorder = ({ loadTimeList, selectedOption }) => {
       <Grid container spacing={3} alignItems="center">
         <Grid item md={10}>
           <TextField
-            TextField
             fullWidth
-            label="fullWidth"
-            id="fullWidth"
+            label="Description"
             placeholder="Description"
             onChange={handleChange}
             value={description}

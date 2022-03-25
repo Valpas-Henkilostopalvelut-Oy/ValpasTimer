@@ -17,7 +17,7 @@ export const SidebarData = [
     link: "/timer",
   },
   {
-    title: "Dashboard",
+    title: "Oma työaika",
     icon: <DashboardIcon />,
     link: "/dashboard",
   },

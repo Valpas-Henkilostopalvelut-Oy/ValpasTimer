@@ -2,12 +2,20 @@ import React, { useState, useEffect } from "react";
 import "./WorkspaceSelect.css";
 import { Auth, DataStore } from "aws-amplify";
 import { AllWorkSpaces, UserCredentials } from "../../models";
-import Select from "react-select";
 import { useAppContext } from "../../services/contextLib";
+import {
+  Box,
+  InputLabel,
+  MenuItem,
+  FormControl,
+  IconButton,
+  Select,
+} from "@mui/material";
 
 const WorkspaceSelect = () => {
   const [options, setOptions] = useState([]);
-  const { selectedOption, setSelectedOption } = useAppContext();
+  const { selectedOption, setSelectedOption, isAuthenticated } =
+    useAppContext();
 
   useEffect(() => {
     const makeList = async () => {
@@ -26,7 +34,7 @@ const WorkspaceSelect = () => {
     };
 
     makeList();
-  }, []);
+  }, [isAuthenticated]);
 
   useEffect(() => {
     const lastWorkspaceLoad = async () => {
@@ -36,8 +44,6 @@ const WorkspaceSelect = () => {
         loggedUser.attributes["custom:UserCreditails"]
       );
       setSelectedOption({
-        value: creditails.defaultWorkspace.value,
-        label: creditails.defaultWorkspace.label,
         id: creditails.defaultWorkspace.id,
       });
     };
@@ -45,9 +51,7 @@ const WorkspaceSelect = () => {
     selectedOption === null && lastWorkspaceLoad();
   }, [options]);
 
-  const changeValue = async (value) => {
-    setSelectedOption(value);
-
+  const changeLastValue = async (val) => {
     try {
       const userAtributes = await Auth.currentAuthenticatedUser();
       const original = await DataStore.query(
@@ -57,27 +61,41 @@ const WorkspaceSelect = () => {
       await DataStore.save(
         UserCredentials.copyOf(original, (newValue) => {
           newValue.defaultWorkspace = {
-            value: value.value,
-            label: value.label,
-            id: value.id,
+            value: "",
+            label: "",
+            id: val,
           };
         })
       );
     } catch (error) {
-      console.warn(error);
+      console.log(error);
     }
   };
 
   return (
-    <div className="WorkspaceSelect">
-      <Select
-        defaultValue={selectedOption}
-        onChange={changeValue}
-        options={options}
-        placeholder={"Workspace"}
-      />
-
-    </div>
+    <Box sx={{ minWidth: 120 }}>
+      {selectedOption !== null && (
+        <FormControl fullWidth>
+          <InputLabel>Workspaces</InputLabel>
+          <Select
+            labelId="demo-simple-select-label"
+            id="demo-simple-select"
+            value={selectedOption.id}
+            label="Workspaces"
+            onChange={(event) => {
+              setSelectedOption({ id: event.target.value });
+              changeLastValue(event.target.value);
+            }}
+          >
+            {options.map((option, key) => (
+              <MenuItem value={option.id} key={key}>
+                {option.value}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+      )}
+    </Box>
   );
 };
 
