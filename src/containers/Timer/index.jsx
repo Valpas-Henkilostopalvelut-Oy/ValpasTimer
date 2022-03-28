@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "./timer.css";
 import "../../App.css";
-import { DataStore } from "aws-amplify";
+import { DataStore, Auth } from "aws-amplify";
 import { TimeEntry, AllWorkSpaces } from "../../models";
 import { onError } from "../../services/errorLib";
 import { useAppContext } from "../../services/contextLib";
@@ -13,19 +13,18 @@ import {
   TableContainer,
   TableBody,
   TableCell,
-  TableHead,
   TableRow,
   Paper,
   Checkbox,
+  Button,
 } from "@mui/material";
 import Recorder from "./Recorder";
 import AddTime from "./AddTime";
 import TableToolBar from "./ListTableToolbar";
 import CustomTableHead from "./ListTableHead";
 
-import DeleteIcon from "@mui/icons-material/Delete";
-import CheckCircleOutlinedIcon from "@mui/icons-material/CheckCircleOutlined";
-import CheckCircleRoundedIcon from "@mui/icons-material/CheckCircleRounded";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import RadioButtonUncheckedIcon from "@mui/icons-material/RadioButtonUnchecked";
 
 const Timer = () => {
   const [manual, setManual] = useState(false);
@@ -34,23 +33,18 @@ const Timer = () => {
   const { isAuthenticated, selectedOption } = useAppContext();
   const [selected, setSelected] = useState([]);
 
-  const deleteItem = async (id) => {
-    try {
-      const itemToDelete = await DataStore.query(TimeEntry, id);
-      await DataStore.delete(itemToDelete);
-      loadTimeList();
-      alert("Deleted");
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
   const loadTimeList = async () => {
     if (isAuthenticated) {
       try {
         const databaseTimeList = await DataStore.query(TimeEntry);
+        const currentUser = await Auth.currentAuthenticatedUser();
 
-        setTimeList(databaseTimeList);
+        setTimeList(
+          databaseTimeList
+            .filter((t) => t.workspaceId === selectedOption.id)
+            .filter((a) => !a.isActive)
+            .filter((u) => u.userId === currentUser.username)
+        );
       } catch (error) {
         onError(error);
       }
@@ -59,7 +53,8 @@ const Timer = () => {
 
   useEffect(() => {
     loadTimeList();
-  }, [isAuthenticated]);
+    setSelected([]);
+  }, [isAuthenticated, selectedOption]);
 
   useEffect(() => {
     const loadWorkList = async () => {
@@ -76,18 +71,36 @@ const Timer = () => {
     loadWorkList();
   }, [isAuthenticated]);
 
-  const lockTimeEntry = async (d) => {
-    try {
-      await DataStore.save(
-        TimeEntry.copyOf(d, (updated) => {
-          updated.isLocked = true;
-        })
-      );
-      loadTimeList();
-    } catch (error) {
-      onError(error);
+  const handleSelectAllClick = (event) => {
+    if (event.target.checked) {
+      const newSelecteds = timeList.map((n) => n.id);
+      setSelected(newSelecteds);
+      return;
     }
+    setSelected([]);
   };
+
+  const handleClick = (event, name) => {
+    const selectedIndex = selected.indexOf(name);
+    let newSelected = [];
+
+    if (selectedIndex === -1) {
+      newSelected = newSelected.concat(selected, name);
+    } else if (selectedIndex === 0) {
+      newSelected = newSelected.concat(selected.slice(1));
+    } else if (selectedIndex === selected.length - 1) {
+      newSelected = newSelected.concat(selected.slice(0, -1));
+    } else if (selectedIndex > 0) {
+      newSelected = newSelected.concat(
+        selected.slice(0, selectedIndex),
+        selected.slice(selectedIndex + 1)
+      );
+    }
+
+    setSelected(newSelected);
+  };
+
+  const isSelected = (name) => selected.indexOf(name) !== -1;
 
   return (
     <Container>
@@ -112,34 +125,56 @@ const Timer = () => {
         </Grid>
       </Grid>
 
-      {timeList != null && (
+      {timeList != null && selectedOption != null && (
         <Paper>
-          <TableToolBar numSelected={selected.length} />
+          <TableToolBar
+            numSelected={selected.length}
+            selected={selected}
+            loadUpdate={loadTimeList}
+            clearSelected={setSelected}
+          />
           <TableContainer>
             <Table sx={{ minWidth: 650 }} aria-label="simple table">
-              <CustomTableHead />
+              <CustomTableHead
+                numSelected={selected.length}
+                onSelectAllClick={handleSelectAllClick}
+                rowCount={timeList.length}
+              />
               <TableBody>
                 {timeList
-                  .sort((date1, date2) => date1.createdAt - date2.createdAt)
+                  .sort((date1, date2) => {
+                    let d1 = new Date(date2.timeInterval.start);
+                    let d2 = new Date(date1.timeInterval.start);
+                    return d1 - d2;
+                  })
                   .map((data, key) => {
-                    if (selectedOption === null) return;
-                    if (data.isActive) return;
-                    if (data.workspaceId !== selectedOption.id) return;
-
                     const total = new Date(
                       Date.parse(data.timeInterval.end) -
                         Date.parse(data.timeInterval.start)
                     );
+                    const isItemSelected = isSelected(data.id);
+                    const labelId = `enhanced-table-checkbox-${key}`;
 
                     return (
                       <TableRow
                         key={key}
-                        sx={{
-                          "&:last-child td, &:last-child th": { border: 0 },
-                        }}
+                        hover
+                        role="checkbox"
+                        selected={isItemSelected}
+                        aria-checked={isItemSelected}
+                        tabIndex={-1}
+                        onClick={(event) =>
+                          !data.isSent && handleClick(event, data.id)
+                        }
                       >
                         <TableCell>
-                          <Checkbox />
+                          {!data.isSent && (
+                            <Checkbox
+                              color="primary"
+                              checked={isItemSelected}
+                              inputProps={{ "aria-labelledby": labelId }}
+                            />
+                          )}
                         </TableCell>
 
                         <TableCell component="th" scope="row">
@@ -173,7 +208,19 @@ const Timer = () => {
                         </TableCell>
 
                         <TableCell align="right">
-                          <CheckCircleOutlinedIcon />
+                          {!data.isConfirmed ? (
+                            <RadioButtonUncheckedIcon color="primary" />
+                          ) : (
+                            <CheckCircleIcon color="success" />
+                          )}
+                        </TableCell>
+
+                        <TableCell align="right">
+                          {!data.isSent ? (
+                            <RadioButtonUncheckedIcon color="primary" />
+                          ) : (
+                            <CheckCircleIcon color="success" />
+                          )}
                         </TableCell>
                       </TableRow>
                     );

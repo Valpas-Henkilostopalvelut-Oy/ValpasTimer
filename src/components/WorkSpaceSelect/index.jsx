@@ -44,7 +44,7 @@ const WorkspaceSelect = () => {
         loggedUser.attributes["custom:UserCreditails"]
       );
       setSelectedOption({
-        id: creditails.defaultWorkspace.id,
+        id: creditails.defaultWorkspace,
       });
     };
 
@@ -60,11 +60,7 @@ const WorkspaceSelect = () => {
       );
       await DataStore.save(
         UserCredentials.copyOf(original, (newValue) => {
-          newValue.defaultWorkspace = {
-            value: "",
-            label: "",
-            id: val,
-          };
+          newValue.defaultWorkspace = val;
         })
       );
     } catch (error) {

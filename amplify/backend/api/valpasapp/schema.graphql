@@ -11,12 +11,6 @@ type Profile {
   email: AWSEmail
 }
 
-type LastWorkspace {
-  value: String
-  label: String
-  id: ID
-}
-
 type UserSettings {
   timeFormat: String
   timeZone: String
@@ -43,9 +37,24 @@ type TimeInterval {
   start: AWSDateTime
 }
 
-type TimeEntry @model @auth(rules: [{allow: owner}, {allow: groups, groups: ["Editors"], operations: [read, create, update, delete]}]) {
+type TimeEntry
+  @model
+  @auth(
+    rules: [
+      { allow: owner }
+      {
+        allow: groups
+        groups: ["Editors"]
+        operations: [read, create, update, delete]
+      }
+      {
+        allow: groups
+        groups: ["Applicants"]
+        operations: [read, create, update]
+      }
+    ]
+  ) {
   id: ID!
-  billable: Boolean
   description: String
   userId: ID
   workspaceId: ID
@@ -53,6 +62,8 @@ type TimeEntry @model @auth(rules: [{allow: owner}, {allow: groups, groups: ["Ed
   isActive: Boolean
   isLocked: Boolean
   isSent: Boolean
+  isConfirmed: Boolean
+  billable: Boolean
 }
 
 type WorkspaceSettings {
@@ -73,7 +84,23 @@ type HourlyRate {
   currency: String
 }
 
-type AllWorkSpaces @model @auth(rules: [{allow: private, operations: [read]}, {allow: groups, groups: ["Editors"], operations: [read, create, update, delete]}, {allow: owner}]) {
+type AllWorkSpaces
+  @model
+  @auth(
+    rules: [
+      { allow: private, operations: [read] }
+      {
+        allow: groups
+        groups: ["Editors"]
+        operations: [read, create, update, delete]
+      }
+      {
+        allow: groups
+        groups: ["Applicants"]
+        operations: [read, create, update]
+      }
+    ]
+  ) {
   id: ID!
   hourlyRate: HourlyRate
   imageUrl: AWSURL
@@ -83,24 +110,34 @@ type AllWorkSpaces @model @auth(rules: [{allow: private, operations: [read]}, {a
   customOwner: ID
 }
 
-type UserCredentials @model @auth(rules: [{allow: owner}, {allow: groups, groups: ["Editors"], operations: [read, create, update, delete]}]) {
+type UserCredentials
+  @model
+  @auth(
+    rules: [
+      { allow: owner }
+      {
+        allow: groups
+        groups: ["Editors"]
+        operations: [read, create, update, delete]
+      }
+      {
+        allow: groups
+        groups: ["Applicants"]
+        operations: [read, create]
+      }
+    ]
+  ) {
   id: ID!
-  formChecked: [String]
+  userId: ID!
   activeTimeEntry: ID
   status: String
-  defaultWorkspace: LastWorkspace
+  defaultWorkspace: ID
   memberships: [UserMemberships]
   profile: Profile
-}
-
-type OnBoardingForm @model @auth(rules: [{allow: groups, groups: ["Editors"], operations: [read, create, update, delete]}, {allow: private, operations: [read]}, {allow: owner}]) {
-  id: ID!
-  title: String
-  data: [FormItem]
+  formChecked: [String]
 }
 
 type FormItem {
   name: String
   text: String
 }
- 

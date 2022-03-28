@@ -1,8 +1,9 @@
 import React from "react";
-import { TableHead, TableRow, TableCell, Checkbox } from "@mui/material";
+import { TableRow, TableHead, TableCell, Checkbox } from "@mui/material";
 
-const CustomTableHead = (props) => {
+const ListHead = (props) => {
   const { onSelectAllClick, numSelected, rowCount } = props;
+
   return (
     <TableHead>
       <TableRow>
@@ -17,16 +18,16 @@ const CustomTableHead = (props) => {
             }}
           />
         </TableCell>
-        <TableCell>Description</TableCell>
-        <TableCell align="right">Start</TableCell>
-        <TableCell align="right">End</TableCell>
-        <TableCell align="right">Date</TableCell>
-        <TableCell align="right">Total</TableCell>
+
+        <TableCell>Date</TableCell>
+        <TableCell align="right">Description</TableCell>
+        <TableCell align="right">Start time</TableCell>
+        <TableCell align="right">End time</TableCell>
+        <TableCell align="right">Total time</TableCell>
         <TableCell align="right">Confirmed</TableCell>
-        <TableCell align="right">Sent</TableCell>
       </TableRow>
     </TableHead>
   );
 };
 
-export default CustomTableHead;
+export default ListHead;

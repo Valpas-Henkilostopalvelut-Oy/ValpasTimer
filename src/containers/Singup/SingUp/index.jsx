@@ -116,6 +116,7 @@ const SingUpForm = () => {
             isLoading={isLoading}
             //disabled={!validateForm()}
             as={Col}
+            onClick={handleSubmit}
           >
             Signup
           </LoaderButton>

@@ -56,12 +56,13 @@ const Recorder = ({ loadTimeList, selectedOption }) => {
             workspaceId: selectedOption.id,
             timeInterval: {
               duration: "",
-              end: new Date().toISOString(),
-              start: new Date().toISOString(),
+              end: new Date(new Date().setMilliseconds(0)).toISOString(),
+              start: new Date(new Date().setMilliseconds(0)).toISOString(),
             },
             isActive: true,
             isLocked: false,
             isSent: false,
+            isConfirmed: false,
             billable: true,
           })
         );

@@ -10,13 +10,6 @@ export const schema = {
                     "isRequired": true,
                     "attributes": []
                 },
-                "billable": {
-                    "name": "billable",
-                    "isArray": false,
-                    "type": "Boolean",
-                    "isRequired": false,
-                    "attributes": []
-                },
                 "description": {
                     "name": "description",
                     "isArray": false,
@@ -63,6 +56,20 @@ export const schema = {
                 },
                 "isSent": {
                     "name": "isSent",
+                    "isArray": false,
+                    "type": "Boolean",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "isConfirmed": {
+                    "name": "isConfirmed",
+                    "isArray": false,
+                    "type": "Boolean",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "billable": {
+                    "name": "billable",
                     "isArray": false,
                     "type": "Boolean",
                     "isRequired": false,
@@ -235,15 +242,16 @@ export const schema = {
                                 ]
                             },
                             {
+                                "groupClaim": "cognito:groups",
                                 "provider": "userPools",
-                                "ownerField": "owner",
-                                "allow": "owner",
-                                "identityClaim": "cognito:username",
+                                "allow": "groups",
+                                "groups": [
+                                    "Applicants"
+                                ],
                                 "operations": [
+                                    "read",
                                     "create",
-                                    "update",
-                                    "delete",
-                                    "read"
+                                    "update"
                                 ]
                             }
                         ]
@@ -261,13 +269,12 @@ export const schema = {
                     "isRequired": true,
                     "attributes": []
                 },
-                "formChecked": {
-                    "name": "formChecked",
-                    "isArray": true,
-                    "type": "String",
-                    "isRequired": false,
-                    "attributes": [],
-                    "isArrayNullable": true
+                "userId": {
+                    "name": "userId",
+                    "isArray": false,
+                    "type": "ID",
+                    "isRequired": true,
+                    "attributes": []
                 },
                 "activeTimeEntry": {
                     "name": "activeTimeEntry",
@@ -286,9 +293,7 @@ export const schema = {
                 "defaultWorkspace": {
                     "name": "defaultWorkspace",
                     "isArray": false,
-                    "type": {
-                        "nonModel": "LastWorkspace"
-                    },
+                    "type": "ID",
                     "isRequired": false,
                     "attributes": []
                 },
@@ -310,6 +315,14 @@ export const schema = {
                     },
                     "isRequired": false,
                     "attributes": []
+                },
+                "formChecked": {
+                    "name": "formChecked",
+                    "isArray": true,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": [],
+                    "isArrayNullable": true
                 },
                 "createdAt": {
                     "name": "createdAt",
@@ -363,98 +376,6 @@ export const schema = {
                                     "create",
                                     "update",
                                     "delete"
-                                ]
-                            }
-                        ]
-                    }
-                }
-            ]
-        },
-        "OnBoardingForm": {
-            "name": "OnBoardingForm",
-            "fields": {
-                "id": {
-                    "name": "id",
-                    "isArray": false,
-                    "type": "ID",
-                    "isRequired": true,
-                    "attributes": []
-                },
-                "title": {
-                    "name": "title",
-                    "isArray": false,
-                    "type": "String",
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "data": {
-                    "name": "data",
-                    "isArray": true,
-                    "type": {
-                        "nonModel": "FormItem"
-                    },
-                    "isRequired": false,
-                    "attributes": [],
-                    "isArrayNullable": true
-                },
-                "createdAt": {
-                    "name": "createdAt",
-                    "isArray": false,
-                    "type": "AWSDateTime",
-                    "isRequired": false,
-                    "attributes": [],
-                    "isReadOnly": true
-                },
-                "updatedAt": {
-                    "name": "updatedAt",
-                    "isArray": false,
-                    "type": "AWSDateTime",
-                    "isRequired": false,
-                    "attributes": [],
-                    "isReadOnly": true
-                }
-            },
-            "syncable": true,
-            "pluralName": "OnBoardingForms",
-            "attributes": [
-                {
-                    "type": "model",
-                    "properties": {}
-                },
-                {
-                    "type": "auth",
-                    "properties": {
-                        "rules": [
-                            {
-                                "groupClaim": "cognito:groups",
-                                "provider": "userPools",
-                                "allow": "groups",
-                                "groups": [
-                                    "Editors"
-                                ],
-                                "operations": [
-                                    "read",
-                                    "create",
-                                    "update",
-                                    "delete"
-                                ]
-                            },
-                            {
-                                "allow": "private",
-                                "operations": [
-                                    "read"
-                                ]
-                            },
-                            {
-                                "provider": "userPools",
-                                "ownerField": "owner",
-                                "allow": "owner",
-                                "identityClaim": "cognito:username",
-                                "operations": [
-                                    "create",
-                                    "update",
-                                    "delete",
-                                    "read"
                                 ]
                             }
                         ]
@@ -563,32 +484,6 @@ export const schema = {
                     "name": "dateFormat",
                     "isArray": false,
                     "type": "String",
-                    "isRequired": false,
-                    "attributes": []
-                }
-            }
-        },
-        "LastWorkspace": {
-            "name": "LastWorkspace",
-            "fields": {
-                "value": {
-                    "name": "value",
-                    "isArray": false,
-                    "type": "String",
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "label": {
-                    "name": "label",
-                    "isArray": false,
-                    "type": "String",
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "id": {
-                    "name": "id",
-                    "isArray": false,
-                    "type": "ID",
                     "isRequired": false,
                     "attributes": []
                 }
@@ -790,5 +685,5 @@ export const schema = {
             }
         }
     },
-    "version": "cf91f1393abc027bdaf43cdaf9587f3f"
+    "version": "b06e21bb59585712cd91018bab588d9c"
 };

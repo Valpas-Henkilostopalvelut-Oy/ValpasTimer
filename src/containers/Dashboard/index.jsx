@@ -44,7 +44,7 @@ const Dashboard = () => {
       setUsers(q);
     };
 
-    loadTeamActivities();
+    selectedOption !== null && loadTeamActivities();
   }, [selectedOption]);
 
   return (

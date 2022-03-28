@@ -3,80 +3,73 @@ import { ModelInit, MutableModel, PersistentModelConstructor } from "@aws-amplif
 
 
 export declare class Profile {
-  readonly profile_picture?: string;
-  readonly first_name?: string;
-  readonly last_name?: string;
-  readonly username?: string;
-  readonly phone_number?: string;
-  readonly address?: string;
-  readonly zip_code?: number;
-  readonly contry?: string;
-  readonly other_settings?: UserSettings;
-  readonly email?: string;
+  readonly profile_picture?: string | null;
+  readonly first_name?: string | null;
+  readonly last_name?: string | null;
+  readonly username?: string | null;
+  readonly phone_number?: string | null;
+  readonly address?: string | null;
+  readonly zip_code?: number | null;
+  readonly contry?: string | null;
+  readonly other_settings?: UserSettings | null;
+  readonly email?: string | null;
   constructor(init: ModelInit<Profile>);
 }
 
 export declare class UserSettings {
-  readonly timeFormat?: string;
-  readonly timeZone?: string;
-  readonly dateFormat?: string;
+  readonly timeFormat?: string | null;
+  readonly timeZone?: string | null;
+  readonly dateFormat?: string | null;
   constructor(init: ModelInit<UserSettings>);
 }
 
-export declare class LastWorkspace {
-  readonly value?: string;
-  readonly label?: string;
-  readonly id?: string;
-  constructor(init: ModelInit<LastWorkspace>);
-}
-
 export declare class CostRate {
-  readonly amount?: number;
-  readonly currency?: string;
+  readonly amount?: number | null;
+  readonly currency?: string | null;
   constructor(init: ModelInit<CostRate>);
 }
 
 export declare class UserMemberships {
-  readonly hourlyRate?: HourlyRate;
-  readonly costRate?: CostRate;
-  readonly membershipStatus?: string;
-  readonly membershipType?: string;
-  readonly userId?: string;
-  readonly targetId?: string;
+  readonly hourlyRate?: HourlyRate | null;
+  readonly costRate?: CostRate | null;
+  readonly membershipStatus?: string | null;
+  readonly membershipType?: string | null;
+  readonly userId?: string | null;
+  readonly targetId?: string | null;
   constructor(init: ModelInit<UserMemberships>);
 }
 
 export declare class HourlyRate {
-  readonly amount?: number;
-  readonly currency?: string;
+  readonly amount?: number | null;
+  readonly currency?: string | null;
   constructor(init: ModelInit<HourlyRate>);
 }
 
 export declare class TimeInterval {
-  readonly duration?: string;
-  readonly end?: string;
-  readonly start?: string;
+  readonly duration?: string | null;
+  readonly end?: string | null;
+  readonly start?: string | null;
   constructor(init: ModelInit<TimeInterval>);
 }
 
 export declare class WorkspaceSettings {
-  readonly shortBreak?: number;
-  readonly dinnerBreak?: number;
+  readonly shortBreak?: number | null;
+  readonly dinnerBreak?: number | null;
   constructor(init: ModelInit<WorkspaceSettings>);
 }
 
 export declare class Membership {
-  readonly hourlyRate?: HourlyRate;
-  readonly membershipType?: string;
-  readonly membershipStatus?: string;
-  readonly userId?: string;
-  readonly targetId?: string;
+  readonly hourlyRate?: HourlyRate | null;
+  readonly membershipType?: string | null;
+  readonly membershipStatus?: string | null;
+  readonly userId?: string | null;
+  readonly targetId?: string | null;
   constructor(init: ModelInit<Membership>);
 }
 
 export declare class FormItem {
-  readonly name?: string;
-  readonly text?: string;
+  readonly name?: string | null;
+  readonly text?: string | null;
   constructor(init: ModelInit<FormItem>);
 }
 
@@ -92,60 +85,48 @@ type UserCredentialsMetaData = {
   readOnlyFields: 'createdAt' | 'updatedAt';
 }
 
-type OnBoardingFormMetaData = {
-  readOnlyFields: 'createdAt' | 'updatedAt';
-}
-
 export declare class TimeEntry {
   readonly id: string;
-  readonly billable?: boolean;
-  readonly description?: string;
-  readonly userId?: string;
-  readonly workspaceId?: string;
-  readonly timeInterval?: TimeInterval;
-  readonly isActive?: boolean;
-  readonly isLocked?: boolean;
-  readonly isSent?: boolean;
-  readonly createdAt?: string;
-  readonly updatedAt?: string;
+  readonly description?: string | null;
+  readonly userId?: string | null;
+  readonly workspaceId?: string | null;
+  readonly timeInterval?: TimeInterval | null;
+  readonly isActive?: boolean | null;
+  readonly isLocked?: boolean | null;
+  readonly isSent?: boolean | null;
+  readonly isConfirmed?: boolean | null;
+  readonly billable?: boolean | null;
+  readonly createdAt?: string | null;
+  readonly updatedAt?: string | null;
   constructor(init: ModelInit<TimeEntry, TimeEntryMetaData>);
   static copyOf(source: TimeEntry, mutator: (draft: MutableModel<TimeEntry, TimeEntryMetaData>) => MutableModel<TimeEntry, TimeEntryMetaData> | void): TimeEntry;
 }
 
 export declare class AllWorkSpaces {
   readonly id: string;
-  readonly hourlyRate?: HourlyRate;
-  readonly imageUrl?: string;
-  readonly memberships?: (Membership | null)[];
-  readonly name?: string;
-  readonly workspaceSettings?: WorkspaceSettings;
-  readonly customOwner?: string;
-  readonly createdAt?: string;
-  readonly updatedAt?: string;
+  readonly hourlyRate?: HourlyRate | null;
+  readonly imageUrl?: string | null;
+  readonly memberships?: (Membership | null)[] | null;
+  readonly name?: string | null;
+  readonly workspaceSettings?: WorkspaceSettings | null;
+  readonly customOwner?: string | null;
+  readonly createdAt?: string | null;
+  readonly updatedAt?: string | null;
   constructor(init: ModelInit<AllWorkSpaces, AllWorkSpacesMetaData>);
   static copyOf(source: AllWorkSpaces, mutator: (draft: MutableModel<AllWorkSpaces, AllWorkSpacesMetaData>) => MutableModel<AllWorkSpaces, AllWorkSpacesMetaData> | void): AllWorkSpaces;
 }
 
 export declare class UserCredentials {
   readonly id: string;
-  readonly formChecked?: (string | null)[];
-  readonly activeTimeEntry?: string;
-  readonly status?: string;
-  readonly defaultWorkspace?: LastWorkspace;
-  readonly memberships?: (UserMemberships | null)[];
-  readonly profile?: Profile;
-  readonly createdAt?: string;
-  readonly updatedAt?: string;
+  readonly userId: string;
+  readonly activeTimeEntry?: string | null;
+  readonly status?: string | null;
+  readonly defaultWorkspace?: string | null;
+  readonly memberships?: (UserMemberships | null)[] | null;
+  readonly profile?: Profile | null;
+  readonly formChecked?: (string | null)[] | null;
+  readonly createdAt?: string | null;
+  readonly updatedAt?: string | null;
   constructor(init: ModelInit<UserCredentials, UserCredentialsMetaData>);
   static copyOf(source: UserCredentials, mutator: (draft: MutableModel<UserCredentials, UserCredentialsMetaData>) => MutableModel<UserCredentials, UserCredentialsMetaData> | void): UserCredentials;
-}
-
-export declare class OnBoardingForm {
-  readonly id: string;
-  readonly title?: string;
-  readonly data?: (FormItem | null)[];
-  readonly createdAt?: string;
-  readonly updatedAt?: string;
-  constructor(init: ModelInit<OnBoardingForm, OnBoardingFormMetaData>);
-  static copyOf(source: OnBoardingForm, mutator: (draft: MutableModel<OnBoardingForm, OnBoardingFormMetaData>) => MutableModel<OnBoardingForm, OnBoardingFormMetaData> | void): OnBoardingForm;
 }
