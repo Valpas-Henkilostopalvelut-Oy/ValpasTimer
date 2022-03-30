@@ -36,6 +36,38 @@ const Recorder = ({ loadTimeList, selectedOption }) => {
     }
   }, []);
 
+  useEffect(() => {
+    let isCanceled = false;
+
+    const advanceTime = () => {
+      setTimeout(() => {
+        let nSeconds = time.seconds;
+        let nMinutes = time.minutes;
+        let nHours = time.hours;
+
+        nSeconds++;
+
+        if (nSeconds > 59) {
+          nMinutes++;
+          nSeconds = 0;
+        }
+        if (nMinutes > 59) {
+          nHours++;
+          nMinutes = 0;
+        }
+        if (nHours > 24) {
+          nHours = 0;
+        }
+
+        !isCanceled &&
+          setTime({ seconds: nSeconds, minutes: nMinutes, hours: nHours });
+      }, 1000);
+    };
+    started && advanceTime();
+
+    return () => (isCanceled = true);
+  }, [time, started]);
+
   const addItem = async () => {
     setStarted(!started);
     setTimeout(() => {
@@ -123,33 +155,6 @@ const Recorder = ({ loadTimeList, selectedOption }) => {
       console.log(err);
     }
   };
-
-  useEffect(() => {
-    const advanceTime = () => {
-      setTimeout(() => {
-        let nSeconds = time.seconds;
-        let nMinutes = time.minutes;
-        let nHours = time.hours;
-
-        nSeconds++;
-
-        if (nSeconds > 59) {
-          nMinutes++;
-          nSeconds = 0;
-        }
-        if (nMinutes > 59) {
-          nHours++;
-          nMinutes = 0;
-        }
-        if (nHours > 24) {
-          nHours = 0;
-        }
-
-        setTime({ seconds: nSeconds, minutes: nMinutes, hours: nHours });
-      }, 1000);
-    };
-    started && advanceTime();
-  }, [time, started]);
 
   return (
     <Box

@@ -10,7 +10,7 @@ import { useNavigate } from "react-router-dom";
 
 const ConfirmationForm = () => {
   const [isLoading, setIsLoading] = useState(false);
-  const { userForm, userHasAuthenticated, newUser } = useAppContext();
+  const { userHasAuthenticated, newUser } = useAppContext();
   const navigate = useNavigate();
 
   return (
@@ -63,6 +63,7 @@ const ConfirmationForm = () => {
             isLoading={isLoading}
             disabled={false}
             as={Col}
+            onClick={handleSubmit}
           >
             Verify
           </LoaderButton>

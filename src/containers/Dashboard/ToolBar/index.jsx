@@ -41,7 +41,7 @@ const HeadToolBar = (props) => {
       )}
 
       {numSelected > 0 && (
-        <Tooltip>
+        <Tooltip title="Confirm">
           <IconButton onClick={confirmSelected}>
             <ThumbUpOffAltRoundedIcon />
           </IconButton>

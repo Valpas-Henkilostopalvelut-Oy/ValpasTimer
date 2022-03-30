@@ -10,31 +10,60 @@ import {
   FormControl,
   IconButton,
   Select,
+  Typography,
 } from "@mui/material";
 
 const WorkspaceSelect = () => {
   const [options, setOptions] = useState([]);
-  const { selectedOption, setSelectedOption, isAuthenticated } =
-    useAppContext();
+  const {
+    selectedOption,
+    setSelectedOption,
+    admin,
+  } = useAppContext();
 
   useEffect(() => {
     const makeList = async () => {
-      const workspaceList = await DataStore.query(AllWorkSpaces);
-      let q = [];
+      if (!admin) {
+        const user = await Auth.currentAuthenticatedUser();
+        const creditails = await DataStore.query(
+          UserCredentials,
+          user.attributes["custom:UserCreditails"]
+        );
 
-      for (let i = 0; i < workspaceList.length; i++) {
-        q.push({
-          value: workspaceList[i].name,
-          label: workspaceList[i].name,
-          id: workspaceList[i].id,
-        });
+        let q = [];
+
+        for (let i = 0; i < creditails.memberships.length; i++) {
+          const workspaceList = await DataStore.query(
+            AllWorkSpaces,
+            creditails.memberships[i].targetId
+          );
+          q.push({
+            value: workspaceList.name,
+            label: workspaceList.name,
+            id: workspaceList.id,
+          });
+        }
+
+        setOptions(q);
+      } else {
+        const workspaceAllList = await DataStore.query(AllWorkSpaces);
+
+        let w = [];
+
+        for (let i = 0; i < workspaceAllList.length; i++) {
+          w.push({
+            value: workspaceAllList[i].name,
+            label: workspaceAllList[i].name,
+            id: workspaceAllList[i].id,
+          });
+        }
+
+        setOptions(w);
       }
-
-      setOptions(q);
     };
 
     makeList();
-  }, [isAuthenticated]);
+  }, [admin]);
 
   useEffect(() => {
     const lastWorkspaceLoad = async () => {
@@ -70,8 +99,8 @@ const WorkspaceSelect = () => {
 
   return (
     <Box sx={{ minWidth: 120 }}>
-      {selectedOption !== null && (
-        <FormControl fullWidth>
+      {selectedOption !== null && admin !== null && (
+        <FormControl>
           <InputLabel>Workspaces</InputLabel>
           <Select
             labelId="demo-simple-select-label"

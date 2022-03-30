@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { Auth } from "aws-amplify";
-import { Menu, MenuItem, Button, Fade } from "@mui/material";
+import { Menu, MenuItem, Button, Fade, Box } from "@mui/material";
 import { useAppContext } from "../../services/contextLib";
 import { useNavigate } from "react-router-dom";
 import { LinkContainer } from "react-router-bootstrap";
 
 const Profile = () => {
-  const { userHasAuthenticated } = useAppContext();
+  const { userHasAuthenticated, setAdmin } = useAppContext();
   const navigate = useNavigate();
   const [loadedUser, setLoadedUser] = useState(null);
 
@@ -22,7 +22,6 @@ const Profile = () => {
   useEffect(() => {
     const loadUser = async () => {
       const currentUser = await Auth.currentAuthenticatedUser();
-      console.log(currentUser);
 
       setLoadedUser(currentUser);
     };
@@ -38,7 +37,7 @@ const Profile = () => {
   };
 
   return (
-    <>
+    <Box>
       <Button
         variant="contained"
         aria-controls={open ? "demo-positioned-menu" : undefined}
@@ -73,7 +72,7 @@ const Profile = () => {
         </LinkContainer>
         <MenuItem onClick={handleLogout}>Logout</MenuItem>
       </Menu>
-    </>
+    </Box>
   );
 };
 

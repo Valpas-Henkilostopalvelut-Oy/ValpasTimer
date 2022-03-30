@@ -2,9 +2,8 @@ import React, { useEffect, useState } from "react";
 import "./App.css";
 
 //Custom
-import { Navbar } from "react-bootstrap";
+import { Navbar, Nav } from "react-bootstrap";
 import Navigation from "./Navigation";
-import { Nav } from "react-bootstrap";
 import { AppContext } from "./services/contextLib";
 import { Auth, DataStore, Hub } from "aws-amplify";
 import { onError } from "./services/errorLib";
@@ -18,10 +17,17 @@ function App() {
   const [isAuthenticating, setIsAuthenticating] = useState(true);
   const [selectedOption, setSelectedOption] = useState(null);
 
+  const [admin, setAdmin] = useState(false);
+  const [editor, setEditor] = useState(false);
+  const [applicant, setAplicant] = useState(false);
+
   Hub.listen("auth", async (data) => {
     switch (data.payload.event) {
       case "signOut":
         await DataStore.clear();
+        setAdmin(false);
+        setEditor(false)
+        setAplicant(false)
         break;
       case "signIn":
         await DataStore.start();
@@ -30,20 +36,62 @@ function App() {
   });
 
   useEffect(() => {
+    const onLoad = async () => {
+      try {
+        await Auth.currentSession();
+        userHasAuthenticated(true);
+      } catch (e) {
+        if (e !== "No current user") {
+          onError(e);
+        }
+      }
+      setIsAuthenticating(false);
+    };
+
     onLoad();
   }, []);
 
-  const onLoad = async () => {
-    try {
-      await Auth.currentSession();
-      userHasAuthenticated(true);
-    } catch (e) {
-      if (e !== "No current user") {
-        onError(e);
+  useEffect(() => {
+    const loadAdmin = async () => {
+      try {
+        const user = await Auth.currentAuthenticatedUser();
+        const groups =
+          user.signInUserSession.accessToken.payload["cognito:groups"];
+
+        groups !== undefined && setAdmin(groups.includes("Admins"));
+      } catch (error) {
+        onError(error);
       }
-    }
-    setIsAuthenticating(false);
-  };
+    };
+
+    const loadEditor = async () => {
+      try {
+        const user = await Auth.currentAuthenticatedUser();
+        const groups =
+          user.signInUserSession.accessToken.payload["cognito:groups"];
+
+        groups !== undefined && setEditor(groups.includes("Editors"));
+      } catch (error) {
+        onError(error);
+      }
+    };
+
+    const loadApplicant = async () => {
+      try {
+        const user = await Auth.currentAuthenticatedUser();
+        const groups =
+          user.signInUserSession.accessToken.payload["cognito:groups"];
+
+        groups !== undefined && setAplicant(groups.includes("Applicants"));
+      } catch (error) {
+        onError(error);
+      }
+    };
+
+    isAuthenticated && loadAdmin();
+    isAuthenticated && loadEditor();
+    isAuthenticated && loadApplicant();
+  }, [isAuthenticated]);
 
   return (
     !isAuthenticating && (
@@ -54,6 +102,12 @@ function App() {
             userHasAuthenticated,
             selectedOption,
             setSelectedOption,
+            admin,
+            setAdmin,
+            editor,
+            setEditor,
+            applicant,
+            setAplicant,
           }}
         >
           <Navbar collapseOnSelect bg="light" expand="md">

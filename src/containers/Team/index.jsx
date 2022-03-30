@@ -1,146 +1,148 @@
 import React, { useEffect, useState } from "react";
-import { Auth, DataStore } from "aws-amplify";
-import { AllWorkSpaces, UserCredentials } from "../../models";
+import { DataStore } from "aws-amplify";
+import { UserCredentials } from "../../models";
 import {
-  Tabs,
-  ListGroup,
-  Tab,
-  Row,
-  Col,
   Container,
   Button,
-} from "react-bootstrap";
-import { useAppContext, AppContext } from "../../services/contextLib";
+  TableContainer,
+  Table,
+  TableHead,
+  TableRow,
+  TableBody,
+  TableCell,
+  Paper,
+  Typography,
+  Checkbox,
+  Divider,
+} from "@mui/material";
+import { useAppContext } from "../../services/contextLib";
 import "./team.css";
 import "../../App.css";
-import { onError } from "../../services/errorLib";
-import PopupAddUser from "./PopupAddUser";
+import TeamToolbar from "./Toolbar";
 
 const Team = () => {
-  const [currentWorkspace, setCurrentWorkspace] = useState(null);
   const [users, setUsers] = useState(null);
-  const { selectedOption } = useAppContext();
+  const [selected, setSelected] = useState([]);
+  const { selectedOption, admin, editor, applicant } = useAppContext();
 
-  useEffect(() => {
-    const queue = async () => {
-      try {
-        const workspace = await DataStore.query(
-          AllWorkSpaces,
-          selectedOption.id
-        );
-        setCurrentWorkspace(workspace);
-      } catch (error) {
-        onError(error);
-      }
-    };
-  }, [selectedOption]);
+  const loadUsers = async () => {
+    try {
+      const userCredentials = await DataStore.query(UserCredentials);
 
-  useEffect(() => {
-    const loadUsers = async () => {
-      try {
-        const userCredentials = await DataStore.query(UserCredentials);
+      let q = [];
 
-        let q = [];
-
-        for (let i = 0; i < userCredentials.length; i++) {
-          for (let ii = 0; ii < userCredentials[i].memberships.length; ii++) {
-            if (
-              userCredentials[i].memberships[ii].targetId === selectedOption.id
-            ) {
-              q.push(userCredentials[i]);
-            }
+      for (let i = 0; i < userCredentials.length; i++) {
+        for (let ii = 0; ii < userCredentials[i].memberships.length; ii++) {
+          if (
+            userCredentials[i].memberships[ii].targetId === selectedOption.id
+          ) {
+            q.push(userCredentials[i]);
           }
         }
-
-        if (q.length !== 0) {
-          setUsers(q);
-        } else {
-          setUsers(null);
-        }
-      } catch (error) {
-        console.log(error);
       }
-    };
 
-    loadUsers();
+      if (q.length !== 0) {
+        setUsers(q);
+      } else {
+        setUsers(null);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    selectedOption !== null && loadUsers();
   }, [selectedOption]);
 
+  const isSelected = (name) => selected.indexOf(name) !== -1;
+
+  const handleClick = (event, name) => {
+    const selectedIndex = selected.indexOf(name);
+    let newSelected = [];
+
+    if (selectedIndex === -1) {
+      newSelected = newSelected.concat(selected, name);
+    } else if (selectedIndex === 0) {
+      newSelected = newSelected.concat(selected.slice(1));
+    } else if (selectedIndex === selected.length - 1) {
+      newSelected = newSelected.concat(selected.slice(0, -1));
+    } else if (selectedIndex > 0) {
+      newSelected = newSelected.concat(
+        selected.slice(0, selectedIndex),
+        selected.slice(selectedIndex + 1)
+      );
+    }
+
+    setSelected(newSelected);
+  };
+
   return (
-    <div className="main">
-      <Container fluid={true}>
-        <div>
-          <div>
-            <h1>Team</h1>
-          </div>
-        </div>
-        <Tabs className="mb-3">
-          <Tab eventKey="users" title="Members" className="members">
-            <Row>
-              <Col>
-                <Button
-                  onClick={async () => {
-                    const loggedUser = await Auth.currentAuthenticatedUser();
-                    const credentails = await DataStore.query(
-                      UserCredentials,
-                      loggedUser.attributes["custom:UserCreditails"]
-                    );
-                    const currentWorkspace = await DataStore.query(
-                      AllWorkSpaces,
-                      selectedOption.id
-                    );
+    <Container>
+      <Typography variant="h3">Team</Typography>
+      <TableContainer component={Paper}>
+        <TeamToolbar
+          numSelected={selected.length}
+          reload={loadUsers}
+          selected={selected}
+          isAdmin={admin}
+          isEditor={editor}
+          option={selectedOption}
+        />
+        <Divider />
+        {users !== null && (
+          <Table sx={{ minWidth: 650 }} aria-label="simple table">
+            <TableHead>
+              <TableRow>
+                <TableCell></TableCell>
+                <TableCell>Name</TableCell>
+                <TableCell align="right">Email</TableCell>
+                {(admin || editor) && <TableCell align="right">Rate</TableCell>}
+                <TableCell align="right">Role</TableCell>
+                <TableCell align="right">Phone number</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {users.map((row, index) => {
+                const isItemSelected = isSelected(row.id);
+                const labelId = `enhanced-table-checkbox-${index}`;
 
-                    console.log(loggedUser);
-                    console.log(credentails);
-                  }}
-                >
-                  log
-                </Button>
-              </Col>
-              <Col>Search</Col>
-              <AppContext.Provider value={{ selectedOption }}>
-                <PopupAddUser />
-              </AppContext.Provider>
-            </Row>
-
-            <ListGroup>
-              <div className="membersText">Members</div>
-              <ListGroup.Item className="mx-0">
-                <Row>
-                  <Col xs={2}>Name</Col>
-                  <Col xs={3}>Email</Col>
-                  <Col xs={3}>Billable Rate (euro)</Col>
-                  <Col xs={2}>Role</Col>
-                  <Col xs={2}>Group</Col>
-                </Row>
-              </ListGroup.Item>
-              {users != null &&
-                users.map((data, key) => {
-                  let q = data.memberships.find(
-                    (m) => m.targetId === selectedOption.id
-                  );
-                  return (
-                    <ListGroup.Item key={key}>
-                      <Row>
-                        <Col xs={2}>
-                          {data.profile.first_name} {data.profile.last_name}
-                        </Col>
-                        <Col xs={3}>{data.profile.email}</Col>
-                        <Col xs={3}>
-                          {q !== undefined && q.hourlyRate.amount}{" "}
-                          {q !== undefined && q.hourlyRate.currency}
-                        </Col>
-                        <Col xs={2}>Role</Col>
-                        <Col xs={2}>Group</Col>
-                      </Row>
-                    </ListGroup.Item>
-                  );
-                })}
-            </ListGroup>
-          </Tab>
-          <Tab eventKey="groups" title="Groups"></Tab>
-        </Tabs>
-      </Container>
-    </div>
+                return (
+                  <TableRow
+                    key={row.userId}
+                    hover
+                    onClick={(event) => handleClick(event, row.id)}
+                    role="checkbox"
+                    aria-checked={isItemSelected}
+                    tabIndex={-1}
+                    selected={isItemSelected}
+                  >
+                    <TableCell>
+                      <Checkbox
+                        color="primary"
+                        checked={isItemSelected}
+                        inputProps={{ "aria-labelledby": labelId }}
+                      />
+                    </TableCell>
+                    <TableCell>
+                      {row.profile.first_name} {row.profile.last_name}
+                    </TableCell>
+                    <TableCell align="right">{row.profile.email}</TableCell>
+                    {(admin || editor) && (
+                      <TableCell align="right">10</TableCell>
+                    )}
+                    <TableCell align="right">role (in futer)</TableCell>
+                    <TableCell align="right">
+                      {row.profile.phone_number}
+                    </TableCell>
+                  </TableRow>
+                );
+              })}
+            </TableBody>
+          </Table>
+        )}
+      </TableContainer>
+    </Container>
   );
 };
 

@@ -34,7 +34,7 @@ const Timer = () => {
   const [selected, setSelected] = useState([]);
 
   const loadTimeList = async () => {
-    if (isAuthenticated) {
+    if (isAuthenticated && selectedOption !== null) {
       try {
         const databaseTimeList = await DataStore.query(TimeEntry);
         const currentUser = await Auth.currentAuthenticatedUser();

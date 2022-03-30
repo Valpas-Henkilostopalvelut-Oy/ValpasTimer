@@ -76,13 +76,13 @@ const TableToolBar = (props) => {
 
       {numSelected > 0 && (
         <>
-          <Tooltip>
+          <Tooltip title="Upload">
             <IconButton onClick={sendToConfirm}>
               <UploadIcon />
             </IconButton>
           </Tooltip>
 
-          <Tooltip>
+          <Tooltip title="Delete">
             <IconButton onClick={deleteSelected}>
               <DeleteIcon />
             </IconButton>
