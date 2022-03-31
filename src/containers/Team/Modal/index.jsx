@@ -38,7 +38,6 @@ const PopupAddUser = ({
               });
             })
           );
-          reload()
         } catch (error) {
           onError(error);
           

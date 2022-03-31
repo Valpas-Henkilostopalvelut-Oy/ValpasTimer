@@ -2,11 +2,11 @@ import { Auth } from "aws-amplify";
 import React, { useEffect, useState } from "react";
 import { useAppContext } from "../../services/contextLib";
 import "../../App.css";
-import { Switch, Container } from "@mui/material";
+import { Container, Typography, Box } from "@mui/material";
 
 const Home = () => {
   const { isAuthenticated } = useAppContext();
-  const [currentUser, setCurrentUser] = useState([]);
+  const [currentUser, setCurrentUser] = useState(null);
 
   useEffect(() => {
     const loadUser = async () => {
@@ -14,17 +14,16 @@ const Home = () => {
       setCurrentUser(user);
     };
     isAuthenticated && loadUser();
-  }, []);
+  }, [isAuthenticated]);
 
   return (
-    <Container>
-      <div>
-        <div>Welcome to Valpas application</div>
-        <div>
-          Welcome {currentUser.length !== 0 && currentUser.attributes.email}
-        </div>
-      </div>
-    </Container>
+    <Box>
+      {currentUser !== null ? (
+        <Typography>Welcome {currentUser.attributes.email}</Typography>
+      ) : (
+        <Typography>Loading...</Typography>
+      )}
+    </Box>
   );
 };
 

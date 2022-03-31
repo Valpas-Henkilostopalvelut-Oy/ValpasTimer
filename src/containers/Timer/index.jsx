@@ -16,12 +16,13 @@ import {
   TableRow,
   Paper,
   Checkbox,
-  Button,
+  TextField,
 } from "@mui/material";
 import Recorder from "./Recorder";
 import AddTime from "./AddTime";
 import TableToolBar from "./ListTableToolbar";
 import CustomTableHead from "./ListTableHead";
+import TimeEditing from "../../components/TimeEditing";
 
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import RadioButtonUncheckedIcon from "@mui/icons-material/RadioButtonUnchecked";
@@ -29,7 +30,6 @@ import RadioButtonUncheckedIcon from "@mui/icons-material/RadioButtonUnchecked";
 const Timer = () => {
   const [manual, setManual] = useState(false);
   const [timeList, setTimeList] = useState(null);
-  const [workList, setWorkList] = useState([]);
   const { isAuthenticated, selectedOption } = useAppContext();
   const [selected, setSelected] = useState([]);
 
@@ -46,7 +46,7 @@ const Timer = () => {
             .filter((u) => u.userId === currentUser.username)
         );
       } catch (error) {
-        onError(error);
+        console.warn(error);
       }
     }
   };
@@ -54,22 +54,7 @@ const Timer = () => {
   useEffect(() => {
     loadTimeList();
     setSelected([]);
-  }, [isAuthenticated, selectedOption]);
-
-  useEffect(() => {
-    const loadWorkList = async () => {
-      if (isAuthenticated) {
-        try {
-          const databaseWorkList = await DataStore.query(AllWorkSpaces);
-
-          setWorkList(databaseWorkList);
-        } catch (error) {
-          onError(error);
-        }
-      }
-    };
-    loadWorkList();
-  }, [isAuthenticated]);
+  }, [selectedOption]);
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
@@ -184,17 +169,19 @@ const Timer = () => {
                         </TableCell>
 
                         <TableCell align="right">
-                          {new Date(data.timeInterval.start).getHours()}:
-                          {String(
-                            "0" + new Date(data.timeInterval.start).getMinutes()
-                          ).slice(-2)}
+                          <TimeEditing
+                            time={data.timeInterval.start}
+                            data={data}
+                            type="start"
+                          />
                         </TableCell>
 
                         <TableCell align="right">
-                          {new Date(data.timeInterval.end).getHours()}:
-                          {String(
-                            "0" + new Date(data.timeInterval.end).getMinutes()
-                          ).slice(-2)}
+                          <TimeEditing
+                            time={data.timeInterval.end}
+                            data={data}
+                            type="end"
+                          />
                         </TableCell>
 
                         <TableCell align="right">

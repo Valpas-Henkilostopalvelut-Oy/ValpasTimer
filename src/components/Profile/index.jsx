@@ -1,61 +1,74 @@
 import React, { useEffect, useState } from "react";
 import { Auth } from "aws-amplify";
-import { Menu, MenuItem, Button, Fade, Box } from "@mui/material";
+import { Menu, MenuItem, IconButton, Box } from "@mui/material";
 import { useAppContext } from "../../services/contextLib";
 import { useNavigate } from "react-router-dom";
 import { LinkContainer } from "react-router-bootstrap";
+import AccountCircle from "@mui/icons-material/AccountCircle";
 
 const Profile = () => {
-  const { userHasAuthenticated, setAdmin } = useAppContext();
+  const { userHasAuthenticated } = useAppContext();
   const navigate = useNavigate();
   const [loadedUser, setLoadedUser] = useState(null);
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
 
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
 
   useEffect(() => {
+    let isActive = false
+
     const loadUser = async () => {
       const currentUser = await Auth.currentAuthenticatedUser();
 
-      setLoadedUser(currentUser);
+      !isActive && setLoadedUser(currentUser);
     };
 
     if (loadedUser === null) loadUser();
+    return () => (isActive = true)
   }, [loadedUser]);
 
   const handleLogout = async () => {
     await Auth.signOut();
-    userHasAuthenticated(false);
-    handleClose();
+    userHasAuthenticated(false)
     navigate("login");
   };
 
+  const menuId = "primary-search-account-menu";
+
   return (
     <Box>
-      <Button
-        variant="contained"
-        aria-controls={open ? "demo-positioned-menu" : undefined}
+      <IconButton
+        size="large"
+        edge="end"
+        aria-label="account of current user"
+        aria-controls={menuId}
         aria-haspopup="true"
-        aria-expanded={open ? "true" : undefined}
         onClick={handleClick}
+        color="inherit"
       >
-        Profile
-      </Button>
+        <AccountCircle />
+      </IconButton>
       <Menu
-        id="fade-menu"
-        MenuListProps={{
-          "aria-labelledby": "fade-button",
-        }}
         anchorEl={anchorEl}
+        anchorOrigin={{
+          vertical: "top",
+          horizontal: "right",
+        }}
+        id={menuId}
+        keepMounted
+        transformOrigin={{
+          vertical: "top",
+          horizontal: "right",
+        }}
         open={open}
         onClose={handleClose}
-        TransitionComponent={Fade}
       >
         <MenuItem disabled>
           {loadedUser != null

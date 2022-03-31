@@ -3,7 +3,6 @@ import { DataStore } from "aws-amplify";
 import { UserCredentials } from "../../models";
 import {
   Container,
-  Button,
   TableContainer,
   Table,
   TableHead,
@@ -88,6 +87,7 @@ const Team = () => {
           isAdmin={admin}
           isEditor={editor}
           option={selectedOption}
+          setSelected={setSelected}
         />
         <Divider />
         {users !== null && (

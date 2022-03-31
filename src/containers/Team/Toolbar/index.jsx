@@ -21,10 +21,14 @@ const TeamToolbar = ({
   isAdmin,
   isEditor,
   option,
+  setSelected
 }) => {
   const [open, setOpen] = useState(false);
 
-  const handleClose = () => setOpen(false);
+  const handleClose = () => {
+    setOpen(false);
+    reload();
+  };
   const handleOpen = () => setOpen(true);
 
   const removeUser = async () => {
@@ -40,7 +44,7 @@ const TeamToolbar = ({
                 update.memberships.splice(ii, 1);
               })
             );
-            reload()
+            reload();
           } catch (error) {
             console.warn(error);
           }
@@ -61,6 +65,7 @@ const TeamToolbar = ({
         }
       }
     }
+    setSelected([])
   };
 
   return (

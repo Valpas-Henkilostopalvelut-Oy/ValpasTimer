@@ -3,25 +3,15 @@ import "./WorkspaceSelect.css";
 import { Auth, DataStore } from "aws-amplify";
 import { AllWorkSpaces, UserCredentials } from "../../models";
 import { useAppContext } from "../../services/contextLib";
-import {
-  Box,
-  InputLabel,
-  MenuItem,
-  FormControl,
-  IconButton,
-  Select,
-  Typography,
-} from "@mui/material";
+import { Box, InputLabel, MenuItem, FormControl, Select } from "@mui/material";
 
 const WorkspaceSelect = () => {
   const [options, setOptions] = useState([]);
-  const {
-    selectedOption,
-    setSelectedOption,
-    admin,
-  } = useAppContext();
+  const { selectedOption, setSelectedOption, admin } = useAppContext();
 
   useEffect(() => {
+    let isActive = false;
+
     const makeList = async () => {
       if (!admin) {
         const user = await Auth.currentAuthenticatedUser();
@@ -44,7 +34,7 @@ const WorkspaceSelect = () => {
           });
         }
 
-        setOptions(q);
+        !isActive && setOptions(q);
       } else {
         const workspaceAllList = await DataStore.query(AllWorkSpaces);
 
@@ -58,11 +48,13 @@ const WorkspaceSelect = () => {
           });
         }
 
-        setOptions(w);
+        !isActive && setOptions(w);
       }
     };
 
     makeList();
+
+    return () => (isActive = true);
   }, [admin]);
 
   useEffect(() => {
@@ -98,13 +90,13 @@ const WorkspaceSelect = () => {
   };
 
   return (
-    <Box sx={{ minWidth: 120 }}>
+    <Box sx={{ minWidth: 120, marginBottom: "5px", marginTop: "5px" }}>
       {selectedOption !== null && admin !== null && (
-        <FormControl>
+        <FormControl variant="standard">
           <InputLabel>Workspaces</InputLabel>
           <Select
-            labelId="demo-simple-select-label"
-            id="demo-simple-select"
+            labelId="demo-simple-select-standard-label"
+            id="demo-simple-select-standard"
             value={selectedOption.id}
             label="Workspaces"
             onChange={(event) => {
