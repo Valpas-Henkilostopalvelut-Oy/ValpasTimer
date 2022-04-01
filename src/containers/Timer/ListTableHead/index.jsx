@@ -1,22 +1,11 @@
 import React from "react";
-import { TableHead, TableRow, TableCell, Checkbox } from "@mui/material";
+import { TableHead, TableRow, TableCell } from "@mui/material";
 
-const CustomTableHead = (props) => {
-  const { onSelectAllClick, numSelected, rowCount } = props;
+const CustomTableHead = () => {
   return (
     <TableHead>
       <TableRow>
-        <TableCell>
-          <Checkbox
-            color="primary"
-            indeterminate={numSelected > 0 && numSelected < rowCount}
-            checked={rowCount > 0 && numSelected === rowCount}
-            onChange={onSelectAllClick}
-            inputProps={{
-              "aria-label": "select all desserts",
-            }}
-          />
-        </TableCell>
+        <TableCell />
         <TableCell>Description</TableCell>
         <TableCell align="right">Start</TableCell>
         <TableCell align="right">End</TableCell>

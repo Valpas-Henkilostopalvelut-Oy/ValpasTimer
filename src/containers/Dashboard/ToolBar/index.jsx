@@ -1,11 +1,9 @@
 import { Toolbar, Typography, Tooltip, IconButton } from "@mui/material";
 import React from "react";
-import CheckIcon from "@mui/icons-material/Check";
-import ThumbUpAltIcon from "@mui/icons-material/ThumbUpAlt";
-import ThumbDownRoundedIcon from "@mui/icons-material/ThumbDownRounded";
 import ThumbUpOffAltRoundedIcon from "@mui/icons-material/ThumbUpOffAltRounded";
 import { DataStore } from "aws-amplify";
 import { TimeEntry } from "../../../models";
+import { alpha } from "@mui/material/styles";
 
 const HeadToolBar = (props) => {
   const { numSelected, selected } = props;
@@ -24,7 +22,19 @@ const HeadToolBar = (props) => {
   };
 
   return (
-    <Toolbar>
+    <Toolbar
+      sx={{
+        pl: { sm: 2 },
+        pr: { xs: 1, sm: 1 },
+        ...(numSelected > 0 && {
+          bgcolor: (theme) =>
+            alpha(
+              theme.palette.primary.main,
+              theme.palette.action.activatedOpacity
+            ),
+        }),
+      }}
+    >
       {numSelected > 0 ? (
         <Typography
           sx={{ flex: "1 1 100%" }}

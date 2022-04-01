@@ -1,6 +1,7 @@
-import { TextField, Typography } from "@mui/material";
-import React, { useState } from "react";
-import { useEffect } from "react";
+import { TextField, Box } from "@mui/material";
+import React, { useState, useEffect } from "react";
+import { DataStore } from "aws-amplify";
+import { TimeEntry } from "../../models";
 
 const TimeEditing = ({ time, data, type }) => {
   const [value, setValue] = useState("");
@@ -8,11 +9,19 @@ const TimeEditing = ({ time, data, type }) => {
     const arr = customTime.target.value.split("").filter((t) => t !== ":");
 
     if (arr.length === 1) {
-      setValue(`0${arr[0]}:00`);
+      let h = String(arr[0]);
+      let min = "00";
+
+      updateValue({ h: Number(h), m: Number(min) });
+
+      setValue(`${String("0" + h).slice(-2)}:${String("0" + min).slice(-2)}`);
     } else if (arr.length === 2) {
       let h = String(arr[0] + arr[1]);
+      let min = "00";
 
-      setValue(`${h.slice(-2)}:00`);
+      updateValue({ h: Number(h), m: Number(min) });
+
+      setValue(`${String("0" + h).slice(-2)}:${String("0" + min).slice(-2)}`);
     } else if (arr.length === 3) {
       let h = String(arr[0]);
       let min = String(arr[1] + arr[2]);
@@ -21,6 +30,8 @@ const TimeEditing = ({ time, data, type }) => {
         Number(h++);
         min = Number(min - 60);
       }
+
+      updateValue({ h: Number(h), m: Number(min) });
 
       setValue(`${String("0" + h).slice(-2)}:${String("0" + min).slice(-2)}`);
     } else if (arr.length === 4) {
@@ -32,6 +43,8 @@ const TimeEditing = ({ time, data, type }) => {
         min = Number(min - 60);
       }
 
+      updateValue({ h: Number(h), m: Number(min) });
+
       setValue(`${String("0" + h).slice(-2)}:${String("0" + min).slice(-2)}`);
     } else {
       let d = new Date(time);
@@ -40,6 +53,30 @@ const TimeEditing = ({ time, data, type }) => {
           "0" + d.getMinutes()
         ).slice(-2)}`
       );
+    }
+  };
+
+  const updateValue = async (val) => {
+    try {
+      if (type === "start") {
+        await DataStore.save(
+          TimeEntry.copyOf(data, (update) => {
+            update.timeInterval.start = new Date(
+              new Date(time).setHours(val.h, val.m, 0)
+            ).toISOString();
+          })
+        );
+      } else if (type === "end") {
+        await DataStore.save(
+          TimeEntry.copyOf(data, (update) => {
+            update.timeInterval.end = new Date(
+              new Date(time).setHours(val.h, val.m, 0)
+            ).toISOString();
+          })
+        );
+      }
+    } catch (error) {
+      console.warn(error);
     }
   };
 
@@ -56,15 +93,17 @@ const TimeEditing = ({ time, data, type }) => {
       );
 
     return () => (isActive = true);
-  }, []);
+  }, [time]);
 
   return (
-    <TextField
-      variant="standard"
-      value={value}
-      onChange={(event) => setValue(event.target.value)}
-      onMouseLeave={maker}
-    />
+    <Box sx={{ width: 43 }}>
+      <TextField
+        variant="standard"
+        value={value}
+        onChange={(event) => setValue(event.target.value)}
+        onBlur={maker}
+      />
+    </Box>
   );
 };
 
