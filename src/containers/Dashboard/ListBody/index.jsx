@@ -18,12 +18,22 @@ const ListBody = ({ time, isSelected, handleClick }) => {
         let d2 = new Date(date1.timeInterval.start);
         return d1 - d2;
       })
-      .reduce((res, val) => {
+      .reduce((res, val, index, array) => {
         const dat = new Date(val.timeInterval.start);
         const by = dat.toDateString();
 
-        res[by] = res[by] || [];
-        res[by].push(val);
+        if (res.filter((r) => r.date === by).length === 0) {
+          res.push({
+            index: Number(res.length + 1),
+            arr: [],
+            date: by,
+          });
+
+          res.find((r) => r.date === by).arr.push(val);
+        } else {
+          res.find((r) => r.date === by).arr.push(val);
+        }
+
         return res;
       }, []);
   };
@@ -36,80 +46,39 @@ const ListBody = ({ time, isSelected, handleClick }) => {
     return () => (isActive = true);
   }, [time]);
 
+  console.log(list);
+
   return (
     <TableBody>
-      {time
-        .sort((date1, date2) => {
-          let d1 = new Date(date2.timeInterval.start);
-          let d2 = new Date(date1.timeInterval.start);
-          return d1 - d2;
-        })
-        .map((inDate, key) => {
-          const total = new Date(
-            Date.parse(inDate.timeInterval.end) -
-              Date.parse(inDate.timeInterval.start)
-          );
+      {list !== null &&
+        list.map((row, index) => {
+          let start = new Date(row.arr[row.arr.length - 1].timeInterval.start);
+          let end = new Date(row.arr[0].timeInterval.end);
+          let total = new Date(Date.parse(end) - Date.parse(start));
 
-          const labelId = `enhanced-table-checkbox-${key}`;
-          const isItemSelected = isSelected(inDate.id);
+          let totalVal = `${String("0" + total.getUTCHours()).slice(
+            -2
+          )}:${String("0" + total.getUTCMinutes()).slice(-2)}:${String(
+            "0" + total.getUTCSeconds()
+          ).slice(-2)}`;
+          let startVal = `${String("0" + start.getHours()).slice(-2)}:${String(
+            "0" + start.getMinutes()
+          ).slice(-2)}`;
+          let endVal = `${String("0" + end.getHours()).slice(-2)}:${String(
+            "0" + end.getMinutes()
+          ).slice(-2)}`;
 
           return (
-            <TableRow
-              key={key}
-              hover
-              role="checkbox"
-              aria-checked={isItemSelected}
-              tabIndex={-1}
-              selected={isItemSelected}
-              onClick={(event) =>
-                !inDate.isConfirmed && handleClick(event, inDate.id)
-              }
-            >
+            <TableRow key={index}>
               <TableCell>
-                {!inDate.isConfirmed && (
-                  <Checkbox
-                    color="primary"
-                    checked={isItemSelected}
-                    inputProps={{ "aria-labelledby": labelId }}
-                  />
-                )}
+                <Checkbox />
               </TableCell>
-
-              <TableCell>
-                {new Date(inDate.timeInterval.start).toDateString()}
-              </TableCell>
-
-              <TableCell align="right">{inDate.description}</TableCell>
-
-              <TableCell align="right">
-                {new Date(inDate.timeInterval.start).getHours()}:
-                {String(
-                  "0" + new Date(inDate.timeInterval.start).getMinutes()
-                ).slice(-2)}
-              </TableCell>
-
-              <TableCell align="right">
-                {new Date(inDate.timeInterval.end).getHours()}:
-                {String(
-                  "0" + new Date(inDate.timeInterval.end).getMinutes()
-                ).slice(-2)}
-              </TableCell>
-
-              <TableCell align="right">
-                {new Date(total).getUTCHours() +
-                  ":" +
-                  String("0" + new Date(total).getUTCMinutes()).slice(-2) +
-                  ":" +
-                  String("0" + new Date(total).getUTCSeconds()).slice(-2)}
-              </TableCell>
-
-              <TableCell align="right">
-                {!inDate.isConfirmed ? (
-                  <RadioButtonUncheckedIcon color="primary" />
-                ) : (
-                  <CheckCircleIcon color="success" />
-                )}
-              </TableCell>
+              <TableCell>{row.date}</TableCell>
+              <TableCell align="right">desc</TableCell>
+              <TableCell align="right">{startVal}</TableCell>
+              <TableCell align="right">{endVal}</TableCell>
+              <TableCell align="right">{totalVal}</TableCell>
+              <TableCell align="right">conf</TableCell>
             </TableRow>
           );
         })}

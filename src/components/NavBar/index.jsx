@@ -29,12 +29,12 @@ const Navbar = ({ position, open, setOpenDrawer, isAuthenticated }) => {
   }));
 
   return (
-    <AppBar position="fixed" open={open}>
+    <AppBar position="fixed" open={open} color="navbar">
       <Toolbar>
         {isAuthenticated && (
           <IconButton
             color="inherit"
-            aria-label="open drawer"
+            aria-label="open drawer" 
             onClick={() => setOpenDrawer(true)}
             edge="start"
             sx={{

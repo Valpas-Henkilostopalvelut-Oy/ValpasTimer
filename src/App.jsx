@@ -9,7 +9,7 @@ import { onError } from "./services/errorLib";
 import Sidebar from "./components/Sidebar";
 import Navbar from "./components/NavBar";
 import { Box, CssBaseline } from "@mui/material";
-import { styled } from "@mui/material/styles";
+import { styled, createTheme, ThemeProvider } from "@mui/material/styles";
 
 function App() {
   const [isAuthenticated, userHasAuthenticated] = useState(false);
@@ -20,6 +20,14 @@ function App() {
   const [editor, setEditor] = useState(false);
   const [applicant, setAplicant] = useState(false);
   const [openDrawer, setOpenDrawer] = useState(false);
+
+  const theme = createTheme({
+    palette: {
+      navbar: {
+        main: "#00adef",
+      },
+    },
+  });
 
   Hub.listen("auth", async (data) => {
     switch (data.payload.event) {
@@ -117,21 +125,23 @@ function App() {
           setAplicant,
         }}
       >
-        <Box sx={{ display: "flex" }}>
-          <CssBaseline />
-          <Navbar
-            open={openDrawer}
-            setOpenDrawer={setOpenDrawer}
-            isAuthenticated={isAuthenticated}
-          />
-          {isAuthenticated && (
-            <Sidebar open={openDrawer} setOpen={setOpenDrawer} />
-          )}
-          <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
-            <Header />
-            <Navigation />
+        <ThemeProvider theme={theme}>
+          <Box sx={{ display: "flex" }}>
+            <CssBaseline />
+            <Navbar
+              open={openDrawer}
+              setOpenDrawer={setOpenDrawer}
+              isAuthenticated={isAuthenticated}
+            />
+            {isAuthenticated && (
+              <Sidebar open={openDrawer} setOpen={setOpenDrawer} />
+            )}
+            <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
+              <Header />
+              <Navigation />
+            </Box>
           </Box>
-        </Box>
+        </ThemeProvider>
       </AppContext.Provider>
     )
   );
