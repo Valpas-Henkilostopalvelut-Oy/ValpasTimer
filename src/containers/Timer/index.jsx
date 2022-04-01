@@ -173,6 +173,7 @@ const Timer = () => {
                             time={data.timeInterval.start}
                             data={data}
                             type="start"
+                            reload={loadTimeList}
                           />
                         </TableCell>
 
@@ -181,6 +182,7 @@ const Timer = () => {
                             time={data.timeInterval.end}
                             data={data}
                             type="end"
+                            reload={loadTimeList}
                           />
                         </TableCell>
 

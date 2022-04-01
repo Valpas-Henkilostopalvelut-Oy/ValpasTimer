@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import { DataStore } from "aws-amplify";
 import { TimeEntry } from "../../models";
 
-const TimeEditing = ({ time, data, type }) => {
+const TimeEditing = ({ time, data, type, reload }) => {
   const [value, setValue] = useState("");
   const maker = (customTime, val) => {
     const arr = customTime.target.value.split("").filter((t) => t !== ":");
@@ -66,6 +66,7 @@ const TimeEditing = ({ time, data, type }) => {
             ).toISOString();
           })
         );
+        reload()
       } else if (type === "end") {
         await DataStore.save(
           TimeEntry.copyOf(data, (update) => {
@@ -74,6 +75,7 @@ const TimeEditing = ({ time, data, type }) => {
             ).toISOString();
           })
         );
+        reload()
       }
     } catch (error) {
       console.warn(error);
