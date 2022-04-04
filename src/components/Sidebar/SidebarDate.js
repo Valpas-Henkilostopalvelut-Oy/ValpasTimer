@@ -4,12 +4,14 @@ import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import PeopleIcon from "@mui/icons-material/People";
 import SummarizeIcon from "@mui/icons-material/Summarize";
+import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
 
 export const SidebarData = [
   {
     title: "Home",
     icon: <HomeIcon />,
-    link: "/",
+    link: "/home",
+    editing: { admin: true, editors: true, applicant: false },
   },
   {
     title: "Time tracker",
@@ -17,13 +19,24 @@ export const SidebarData = [
     link: "/timer",
   },
   {
-    title: "Oma työaika",
+    title: "Reports",
     icon: <DashboardIcon />,
-    link: "/dashboard",
+    link: "/reports",
+    access: { admin: true, editors: true, applicant: true },
+    editing: { admin: true, editors: true, applicant: true },
   },
   {
     title: "Team",
     icon: <PeopleIcon />,
     link: "/team",
+    access: { admin: true, editors: true, applicant: true },
+    editing: { admin: true, editors: true, applicant: false },
+  },
+  {
+    title: "Workers",
+    icon: <FormatListBulletedIcon />,
+    link: "/allworkers",
+    access: { admin: true, editors: true, applicant: false },
+    editing: { admin: true, editors: true, applicant: false },
   },
 ];

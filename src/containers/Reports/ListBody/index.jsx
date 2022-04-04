@@ -5,12 +5,17 @@ import {
   TableRow,
   Checkbox,
   Button,
+  IconButton,
 } from "@mui/material";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import RadioButtonUncheckedIcon from "@mui/icons-material/RadioButtonUnchecked";
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 
 const ListBody = ({ time, isSelected, handleClick }) => {
   const [list, setList] = useState(null);
+  const [open, setOpen] = useState(false);
+
   const groupBy = (array) => {
     return array
       .sort((date1, date2) => {
@@ -18,7 +23,7 @@ const ListBody = ({ time, isSelected, handleClick }) => {
         let d2 = new Date(date1.timeInterval.start);
         return d1 - d2;
       })
-      .reduce((res, val, index, array) => {
+      .reduce((res, val) => {
         const dat = new Date(val.timeInterval.start);
         const by = dat.toDateString();
 
@@ -72,6 +77,15 @@ const ListBody = ({ time, isSelected, handleClick }) => {
             <TableRow key={index}>
               <TableCell>
                 <Checkbox />
+              </TableCell>
+              <TableCell>
+                <IconButton
+                  aria-label="expand row"
+                  size="small"
+                  onClick={() => setOpen(!open)}
+                >
+                  {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+                </IconButton>
               </TableCell>
               <TableCell>{row.date}</TableCell>
               <TableCell align="right">desc</TableCell>

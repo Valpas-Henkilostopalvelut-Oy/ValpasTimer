@@ -9,7 +9,8 @@ import Team from "./containers/Team";
 import Workspaces from "./containers/Workspaces";
 import WorkspaceSettings from "./containers/Workspaces/Settings";
 import Home from "./containers/Home";
-import Dashboard from "./containers/Dashboard";
+import Dashboard from "./containers/Reports";
+import Workers from "./containers/Workers";
 
 import { useAppContext } from "./services/contextLib";
 
@@ -66,8 +67,13 @@ const Navigation = () => {
       />
       <Route
         exact
-        path="dashboard"
+        path="reports"
         element={isAuthenticated ? <Dashboard /> : <Redirect />}
+      />
+      <Route
+        exact
+        path="allworkers"
+        element={isAuthenticated ? <Workers /> : <Redirect />}
       />
       <Route element={NotFound} />
     </Routes>

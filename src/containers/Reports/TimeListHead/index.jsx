@@ -6,6 +6,7 @@ const ListHead = () => {
     <TableHead>
       <TableRow>
         <TableCell />
+        <TableCell />
         <TableCell>Date</TableCell>
         <TableCell align="right">Description</TableCell>
         <TableCell align="right">Start time</TableCell>
