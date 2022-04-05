@@ -20,10 +20,12 @@ import {
 
 import { DataStore } from "aws-amplify";
 import { UserCredentials } from "../../models";
+import HeadToolBar from "./ToolBar";
 
 const Dashboard = () => {
-  const [users, setUsers] = useState(null);
+  const [usersList, setUsers] = useState(null);
   const { selectedOption } = useAppContext();
+  const [selected, setSelected] = useState([]);
 
   useEffect(() => {
     const loadTeamActivities = async () => {
@@ -50,27 +52,32 @@ const Dashboard = () => {
   return (
     <Container>
       <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-        {users != null && (
-          <TableContainer component={Paper}>
-            <Table aria-label="collapsible table">
-              <TableHead>
-                <TableRow>
-                  <TableCell />
-                  <TableCell>Worker</TableCell>
-                  <TableCell>Total Hours</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {users.map((data, key) => (
-                  <TotalLatest
-                    data={data}
-                    key={key}
-                    selOption={selectedOption}
-                  />
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
+        {usersList != null && (
+          <Paper>
+            <HeadToolBar numSelected={selected.length} selected={selected} setSelected={setSelected}/>
+            <TableContainer>
+              <Table aria-label="collapsible table">
+                <TableHead>
+                  <TableRow>
+                    <TableCell />
+                    <TableCell>Worker</TableCell>
+                    <TableCell>Total Hours</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {usersList.map((users, key) => (
+                    <TotalLatest
+                      users={users}
+                      key={key}
+                      selOption={selectedOption}
+                      setSelected={setSelected}
+                      selected={selected}
+                    />
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </Paper>
         )}
       </Box>
     </Container>

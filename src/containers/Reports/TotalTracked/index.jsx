@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from "react";
-import { Row, Col, ListGroup } from "react-bootstrap";
+import React, { useEffect, useState, Fragment } from "react";
 import { DataStore } from "aws-amplify";
 import { TimeEntry } from "../../../models";
 import { onError } from "../../../services/errorLib";
@@ -8,42 +7,39 @@ import {
   TableCell,
   IconButton,
   Collapse,
-  Typography,
   Box,
   Table,
   TableHead,
   TableBody,
-  Checkbox,
 } from "@mui/material";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
-import ListHead from "../TimeListHead";
-import HeadToolBar from "../ToolBar";
+import { groupBy } from "../../../services/group";
+import InList from "../InList";
 
-import ListBody from "../ListBody";
-
-const TotalLatest = ({ data, selOption }) => {
+const TotalLatest = ({ users, selOption, setSelected, selected }) => {
   const [time, setTime] = useState(null);
   const [open, setOpen] = React.useState(false);
-  const [selected, setSelected] = useState([]);
+  const [grouped, setGrouped] = useState(null);
 
   useEffect(() => {
     const loadTime = async () => {
       try {
         const times = (await DataStore.query(TimeEntry))
-          .filter((u) => u.userId === data.owner)
+          .filter((u) => u.userId === users.owner)
           .filter((t) => t.workspaceId === selOption.id)
           .filter((a) => !a.isActive)
           .filter((a) => a.isSent);
 
         setTime(times);
+        setGrouped(groupBy(times));
       } catch (error) {
-        onError(error);
+        console.warn(error);
       }
     };
 
     loadTime();
-  }, [data]);
+  }, [users]);
 
   const Total = () => {
     if (time !== null) {
@@ -65,37 +61,6 @@ const TotalLatest = ({ data, selOption }) => {
     }
   };
 
-  const isSelected = (name) => selected.indexOf(name) !== -1;
-
-  const handleClick = (event, name) => {
-    const selectedIndex = selected.indexOf(name);
-    let newSelected = [];
-
-    if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, name);
-    } else if (selectedIndex === 0) {
-      newSelected = newSelected.concat(selected.slice(1));
-    } else if (selectedIndex === selected.length - 1) {
-      newSelected = newSelected.concat(selected.slice(0, -1));
-    } else if (selectedIndex > 0) {
-      newSelected = newSelected.concat(
-        selected.slice(0, selectedIndex),
-        selected.slice(selectedIndex + 1)
-      );
-    }
-
-    setSelected(newSelected);
-  };
-
-  const handleSelectAllClick = (event) => {
-    if (event.target.checked) {
-      const newSelecteds = time.map((n) => n.id);
-      setSelected(newSelecteds);
-      return;
-    }
-    setSelected([]);
-  };
-
   return (
     <React.Fragment>
       {time != null && (
@@ -113,32 +78,50 @@ const TotalLatest = ({ data, selOption }) => {
           </TableCell>
 
           <TableCell>
-            {data.profile.first_name} {data.profile.last_name}
+            {users.profile.first_name} {users.profile.last_name}
           </TableCell>
 
           <Total />
         </TableRow>
       )}
-      {time != null && time.length != 0 && (
+      {grouped != null && time != null && time.length != 0 && (
         <TableRow>
           <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
             <Collapse in={open} timeout="auto" unmountOnExit>
               <Box sx={{ margin: 1 }}>
-                <HeadToolBar
-                  numSelected={selected.length}
-                  selected={selected}
-                />
                 <Table size="small" aria-label="purchases">
-                  <ListHead
-                    numSelected={selected.length}
-                    onSelectAllClick={handleSelectAllClick}
-                    rowCount={time.length}
-                  />
-                  <ListBody
-                    time={time}
-                    isSelected={isSelected}
-                    handleClick={handleClick}
-                  />
+                  <TableHead>
+                    <TableRow>
+                      <TableCell>Total on week</TableCell>
+                      <TableCell align="right">Week</TableCell>
+                      <TableCell align="right">Confirmed</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {grouped.map((week, index) => (
+                      <Fragment key={index}>
+                        <TableRow>
+                          <TableCell>total</TableCell>
+                          <TableCell align="right">{week.week}</TableCell>
+                          <TableCell align="right">Conf</TableCell>
+                        </TableRow>
+                        <TableRow>
+                          <TableCell
+                            style={{ paddingBottom: 0, paddingTop: 0 }}
+                            colSpan={6}
+                          >
+                            <Box sx={{ margin: 1 }}>
+                              <InList
+                                data={week}
+                                selected={selected}
+                                setSelected={setSelected}
+                              />
+                            </Box>
+                          </TableCell>
+                        </TableRow>
+                      </Fragment>
+                    ))}
+                  </TableBody>
                 </Table>
               </Box>
             </Collapse>

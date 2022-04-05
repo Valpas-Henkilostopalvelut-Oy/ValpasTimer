@@ -10,10 +10,12 @@ import {
   TablePagination,
   TableRow,
   TableFooter,
-  Checkbox
+  Checkbox,
 } from "@mui/material";
 import { DataStore } from "aws-amplify";
 import { UserCredentials, AllWorkSpaces } from "../../models";
+import ListToolbar from "./ListToolbar";
+import MultipleWorkSelect from "./MultipleWorkSelect";
 
 const Workers = () => {
   const [users, setUsers] = useState(null);
@@ -58,8 +60,8 @@ const Workers = () => {
 
   const CurrentWork = ({ workspaceId }) => {
     const curWork = workspaceList.find((w) => w.id === workspaceId);
-
-    return curWork.name;
+    if (curWork !== undefined) return curWork.name;
+    else return "undefined";
   };
 
   const emptyRows =
@@ -76,9 +78,34 @@ const Workers = () => {
 
   const isSelected = (name) => selected.indexOf(name) !== -1;
 
+  const handleClick = (event, name) => {
+    const selectedIndex = selected.indexOf(name);
+    let newSelected = [];
+
+    if (selectedIndex === -1) {
+      newSelected = newSelected.concat(selected, name);
+    } else if (selectedIndex === 0) {
+      newSelected = newSelected.concat(selected.slice(1));
+    } else if (selectedIndex === selected.length - 1) {
+      newSelected = newSelected.concat(selected.slice(0, -1));
+    } else if (selectedIndex > 0) {
+      newSelected = newSelected.concat(
+        selected.slice(0, selectedIndex),
+        selected.slice(selectedIndex + 1)
+      );
+    }
+
+    setSelected(newSelected);
+  };
+
   return (
     <Container>
       <TableContainer component={Paper}>
+        <ListToolbar
+          numSelected={selected.length}
+          selected={selected}
+          setSelected={setSelected}
+        />
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead>
             <TableRow>
@@ -86,6 +113,7 @@ const Workers = () => {
               <TableCell>Name</TableCell>
               <TableCell align="right">Email</TableCell>
               <TableCell align="right">Phone number</TableCell>
+              <TableCell align="right">Works</TableCell>
               <TableCell align="right">Current work</TableCell>
             </TableRow>
           </TableHead>
@@ -99,7 +127,7 @@ const Workers = () => {
                     )
                   : users
                 ).map((row, index) => {
-                  const isItemSelected = isSelected(row.name);
+                  const isItemSelected = isSelected(row.id);
                   const labelId = `enhanced-table-checkbox-${index}`;
 
                   return (
@@ -110,12 +138,22 @@ const Workers = () => {
                       aria-checked={isItemSelected}
                       tabIndex={-1}
                       selected={isItemSelected}
+                      onClick={(event) => handleClick(event, row.id)}
                     >
                       <TableCell>
-                        <Checkbox />
+                        <Checkbox
+                          color="primary"
+                          checked={isItemSelected}
+                          inputProps={{ "aria-labelledby": labelId }}
+                        />
                       </TableCell>
 
-                      <TableCell component="th" scope="row">
+                      <TableCell
+                        component="th"
+                        scope="row"
+                        id={labelId}
+                        padding="none"
+                      >
                         {row.profile.first_name} {row.profile.last_name}
                       </TableCell>
 
@@ -123,6 +161,10 @@ const Workers = () => {
 
                       <TableCell align="right">
                         {row.profile.phone_number}
+                      </TableCell>
+
+                      <TableCell align="right">
+                        in Future
                       </TableCell>
 
                       <TableCell align="right">
