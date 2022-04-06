@@ -75,7 +75,6 @@ const Navigation = () => {
         path="allworkers"
         element={isAuthenticated ? <Workers /> : <Redirect />}
       />
-      <Route element={NotFound} />
     </Routes>
   );
 };

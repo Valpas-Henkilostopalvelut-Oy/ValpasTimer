@@ -3,8 +3,8 @@ import HomeIcon from "@mui/icons-material/Home";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import PeopleIcon from "@mui/icons-material/People";
-import SummarizeIcon from "@mui/icons-material/Summarize";
 import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
+import WorkIcon from "@mui/icons-material/Work";
 
 export const SidebarData = [
   {
@@ -36,6 +36,13 @@ export const SidebarData = [
     title: "Workers",
     icon: <FormatListBulletedIcon />,
     link: "/allworkers",
+    access: { admin: true, editors: true, applicant: false },
+    editing: { admin: true, editors: true, applicant: false },
+  },
+  {
+    title: "Workspaces",
+    icon: <WorkIcon />,
+    link: "/workspaces",
     access: { admin: true, editors: true, applicant: false },
     editing: { admin: true, editors: true, applicant: false },
   },

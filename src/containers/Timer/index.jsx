@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import "./timer.css";
 import "../../App.css";
 import { DataStore, Auth } from "aws-amplify";
@@ -16,55 +16,45 @@ import {
   TableRow,
   Paper,
   Checkbox,
-  TextField,
+  TableHead,
+  Collapse,
+  Typography,
+  Box,
+  IconButton,
 } from "@mui/material";
 import Recorder from "./Recorder";
 import AddTime from "./AddTime";
 import TableToolBar from "./ListTableToolbar";
-import CustomTableHead from "./ListTableHead";
 import TimeEditing from "../../components/TimeEditing";
+import { groupBy } from "../../services/group";
 
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import RadioButtonUncheckedIcon from "@mui/icons-material/RadioButtonUnchecked";
 
-const Timer = () => {
-  const [manual, setManual] = useState(false);
-  const [timeList, setTimeList] = useState(null);
-  const { isAuthenticated, selectedOption } = useAppContext();
-  const [selected, setSelected] = useState([]);
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 
-  const loadTimeList = async () => {
-    if (isAuthenticated && selectedOption !== null) {
-      try {
-        const databaseTimeList = await DataStore.query(TimeEntry);
-        const currentUser = await Auth.currentAuthenticatedUser();
+const Row = ({ data, selected, setSelected, loadTimeList }) => {
+  return (
+    <Fragment>
+      <TableRow>
+        <TableCell colSpan={7}>{data.week} week</TableCell>
+      </TableRow>
+      {data.arr.map((byday, key) => (
+        <Details
+          data={byday}
+          key={key}
+          index={key}
+          selected={selected}
+          setSelected={setSelected}
+          loadTimeList={loadTimeList}
+        />
+      ))}
+    </Fragment>
+  );
+};
 
-        setTimeList(
-          databaseTimeList
-            .filter((t) => t.workspaceId === selectedOption.id)
-            .filter((a) => !a.isActive)
-            .filter((u) => u.userId === currentUser.username)
-        );
-      } catch (error) {
-        console.warn(error);
-      }
-    }
-  };
-
-  useEffect(() => {
-    loadTimeList();
-    setSelected([]);
-  }, [selectedOption]);
-
-  const handleSelectAllClick = (event) => {
-    if (event.target.checked) {
-      const newSelecteds = timeList.map((n) => n.id);
-      setSelected(newSelecteds);
-      return;
-    }
-    setSelected([]);
-  };
-
+const Details = ({ data, selected, setSelected, loadTimeList, index }) => {
   const handleClick = (event, name) => {
     const selectedIndex = selected.indexOf(name);
     let newSelected = [];
@@ -86,6 +76,164 @@ const Timer = () => {
   };
 
   const isSelected = (name) => selected.indexOf(name) !== -1;
+  const [open, setOpen] = useState(false);
+
+  let start = new Date(data.arr[data.arr.length - 1].timeInterval.start);
+  let end = new Date(data.arr[0].timeInterval.end);
+  let total = new Date(Date.parse(end) - Date.parse(start));
+
+  let totalVal = `${String("0" + total.getUTCHours()).slice(-2)}:${String(
+    "0" + total.getUTCMinutes()
+  ).slice(-2)}:${String("0" + total.getUTCSeconds()).slice(-2)}`;
+  let startVal = `${String("0" + start.getHours()).slice(-2)}:${String(
+    "0" + start.getMinutes()
+  ).slice(-2)}`;
+  let endVal = `${String("0" + end.getHours()).slice(-2)}:${String(
+    "0" + end.getMinutes()
+  ).slice(-2)}`;
+
+  const isItemSelected = isSelected(data);
+  const labelId = `enhanced-table-checkbox-${index}`;
+
+  return (
+    <Fragment>
+      <TableRow
+        key={index}
+        hover
+        role="checkbox"
+        selected={isItemSelected}
+        aria-checked={isItemSelected}
+        tabIndex={-1}
+      >
+        <TableCell>
+          <Checkbox
+            color="primary"
+            checked={isItemSelected}
+            inputProps={{ "aria-labelledby": labelId }}
+            onClick={(event) => !data.isSent && handleClick(event, data)}
+          />
+        </TableCell>
+
+        <TableCell>
+          <IconButton
+            aria-label="expand row"
+            size="small"
+            onClick={() => setOpen(!open)}
+          >
+            {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+          </IconButton>
+        </TableCell>
+
+        <TableCell align="right">
+          {data.arr[0].description == ""
+            ? "Add description"
+            : data.arr[0].description}
+        </TableCell>
+
+        <TableCell align="right">{startVal}</TableCell>
+        <TableCell align="right">{endVal}</TableCell>
+        <TableCell align="right">{data.date}</TableCell>
+        <TableCell align="right">{totalVal}</TableCell>
+      </TableRow>
+      <TableRow>
+        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={7}>
+          <Collapse in={open} timeout={"auto"} unmountOnExit>
+            <Box sx={{ margin: 1 }}>
+              <Typography variant="h6" gutterBottom component="div">
+                Details
+              </Typography>
+              <Table size="small" aria-label="purchases">
+                <TableHead>
+                  <TableCell>Description</TableCell>
+                  <TableCell align="right">Start</TableCell>
+                  <TableCell align="right">End</TableCell>
+                  <TableCell align="right">Sent</TableCell>
+                  <TableCell align="right">Confirmed</TableCell>
+                </TableHead>
+                <TableBody>
+                  {data.arr.map((row) => (
+                    <TableRow key={row.timeInterval.start}>
+                      <TableCell component="th" scope="row">
+                        {data.description}
+                      </TableCell>
+                      <TableCell align="right">
+                        <TimeEditing
+                          time={row.timeInterval.start}
+                          data={row}
+                          type="start"
+                          reload={loadTimeList}
+                        />
+                      </TableCell>
+                      <TableCell align="right">
+                        <TimeEditing
+                          time={row.timeInterval.end}
+                          data={row}
+                          type="end"
+                          reload={loadTimeList}
+                        />
+                      </TableCell>
+                      <TableCell align="right">
+                        {row.isSent ? (
+                          <CheckCircleIcon color="success" />
+                        ) : (
+                          <RadioButtonUncheckedIcon color="disabled" />
+                        )}
+                      </TableCell>
+
+                      <TableCell align="right">
+                        {row.isConfirmed ? (
+                          <CheckCircleIcon color="success" />
+                        ) : (
+                          <RadioButtonUncheckedIcon color="disabled" />
+                        )}
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </Box>
+          </Collapse>
+        </TableCell>
+      </TableRow>
+    </Fragment>
+  );
+};
+
+const Timer = () => {
+  const [manual, setManual] = useState(false);
+  const [timeList, setTimeList] = useState(null);
+  const { isAuthenticated, selectedOption } = useAppContext();
+  const [selected, setSelected] = useState([]);
+  const [grouped, setGrouped] = useState([]);
+
+  const loadTimeList = async () => {
+    if (isAuthenticated && selectedOption !== null) {
+      try {
+        const databaseTimeList = await DataStore.query(TimeEntry);
+        const currentUser = await Auth.currentAuthenticatedUser();
+
+        const filtered = databaseTimeList
+          .sort((date1, date2) => {
+            let d1 = new Date(date2.timeInterval.start);
+            let d2 = new Date(date1.timeInterval.start);
+            return d1 - d2;
+          })
+          .filter((t) => t.workspaceId === selectedOption.id)
+          .filter((a) => !a.isActive)
+          .filter((u) => u.userId === currentUser.username);
+
+        setTimeList(filtered);
+        setGrouped(groupBy(filtered));
+      } catch (error) {
+        console.warn(error);
+      }
+    }
+  };
+
+  useEffect(() => {
+    loadTimeList();
+    setSelected([]);
+  }, [selectedOption]);
 
   return (
     <Container>
@@ -110,114 +258,41 @@ const Timer = () => {
         </Grid>
       </Grid>
 
-      {timeList != null && selectedOption != null && (
-        <Paper>
+      {grouped != null && timeList != null && selectedOption != null && (
+        <Fragment>
           <TableToolBar
             numSelected={selected.length}
             selected={selected}
             loadUpdate={loadTimeList}
             clearSelected={setSelected}
           />
-          <TableContainer>
+          <TableContainer component={Paper}>
             <Table sx={{ minWidth: 650 }} aria-label="simple table">
-              <CustomTableHead
-                numSelected={selected.length}
-                onSelectAllClick={handleSelectAllClick}
-                rowCount={timeList.length}
-              />
+              <TableHead>
+                <TableRow>
+                  <TableCell />
+                  <TableCell />
+                  <TableCell>Description</TableCell>
+                  <TableCell align="right">Start</TableCell>
+                  <TableCell align="right">End</TableCell>
+                  <TableCell align="right">Date</TableCell>
+                  <TableCell align="right">Total</TableCell>
+                </TableRow>
+              </TableHead>
               <TableBody>
-                {timeList
-                  .sort((date1, date2) => {
-                    let d1 = new Date(date2.timeInterval.start);
-                    let d2 = new Date(date1.timeInterval.start);
-                    return d1 - d2;
-                  })
-                  .map((data, key) => {
-                    const total = new Date(
-                      Date.parse(data.timeInterval.end) -
-                        Date.parse(data.timeInterval.start)
-                    );
-                    const isItemSelected = isSelected(data.id);
-                    const labelId = `enhanced-table-checkbox-${key}`;
-
-                    return (
-                      <TableRow
-                        key={key}
-                        hover
-                        role="checkbox"
-                        selected={isItemSelected}
-                        aria-checked={isItemSelected}
-                        tabIndex={-1}
-                        onClick={(event) =>
-                          !data.isSent && handleClick(event, data.id)
-                        }
-                      >
-                        <TableCell>
-                          {!data.isSent && (
-                            <Checkbox
-                              color="primary"
-                              checked={isItemSelected}
-                              inputProps={{ "aria-labelledby": labelId }}
-                            />
-                          )}
-                        </TableCell>
-
-                        <TableCell component="th" scope="row">
-                          {data.description == ""
-                            ? "Add description"
-                            : data.description}
-                        </TableCell>
-
-                        <TableCell align="right">
-                          <TimeEditing
-                            time={data.timeInterval.start}
-                            data={data}
-                            type="start"
-                            reload={loadTimeList}
-                          />
-                        </TableCell>
-
-                        <TableCell align="right">
-                          <TimeEditing
-                            time={data.timeInterval.end}
-                            data={data}
-                            type="end"
-                            reload={loadTimeList}
-                          />
-                        </TableCell>
-
-                        <TableCell align="right">
-                          {new Date(data.timeInterval.start).toDateString()}
-                        </TableCell>
-
-                        <TableCell align="right">
-                          {total.getUTCHours()}:
-                          {String("0" + total.getUTCMinutes()).slice(-2)}:
-                          {String("0" + total.getUTCSeconds()).slice(-2)}
-                        </TableCell>
-
-                        <TableCell align="right">
-                          {!data.isConfirmed ? (
-                            <RadioButtonUncheckedIcon color="primary" />
-                          ) : (
-                            <CheckCircleIcon color="success" />
-                          )}
-                        </TableCell>
-
-                        <TableCell align="right">
-                          {!data.isSent ? (
-                            <RadioButtonUncheckedIcon color="primary" />
-                          ) : (
-                            <CheckCircleIcon color="success" />
-                          )}
-                        </TableCell>
-                      </TableRow>
-                    );
-                  })}
+                {grouped.map((data, key) => (
+                  <Row
+                    data={data}
+                    key={key}
+                    selected={selected}
+                    setSelected={setSelected}
+                    loadTimeList={loadTimeList}
+                  />
+                ))}
               </TableBody>
             </Table>
           </TableContainer>
-        </Paper>
+        </Fragment>
       )}
     </Container>
   );
