@@ -138,13 +138,13 @@ const Workers = () => {
                       aria-checked={isItemSelected}
                       tabIndex={-1}
                       selected={isItemSelected}
-                      onClick={(event) => handleClick(event, row.id)}
                     >
                       <TableCell>
                         <Checkbox
                           color="primary"
                           checked={isItemSelected}
                           inputProps={{ "aria-labelledby": labelId }}
+                          onClick={(event) => handleClick(event, row.id)}
                         />
                       </TableCell>
 
@@ -163,9 +163,7 @@ const Workers = () => {
                         {row.profile.phone_number}
                       </TableCell>
 
-                      <TableCell align="right">
-                        in Future
-                      </TableCell>
+                      <TableCell align="right">in Future</TableCell>
 
                       <TableCell align="right">
                         {workspaceList !== null ? (

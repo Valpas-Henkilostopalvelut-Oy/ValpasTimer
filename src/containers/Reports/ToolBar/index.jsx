@@ -6,7 +6,7 @@ import { TimeEntry } from "../../../models";
 import { alpha } from "@mui/material/styles";
 
 const HeadToolBar = (props) => {
-  const { numSelected, selected, setSelected } = props;
+  const { numSelected, selected, setSelected, reload } = props;
 
   const confirmSelected = async () => {
     for (let i = 0; i < selected.length; i++) {
@@ -17,13 +17,17 @@ const HeadToolBar = (props) => {
             selected[i].arr[ii].id
           );
 
-          await DataStore.save(
-            TimeEntry.copyOf(timeToConfirm, (update) => {
-              update.isConfirmed = true;
-              update.isLocked = true;
-            })
-          );
-          
+          if (!timeToConfirm.isConfirmed) {
+            await DataStore.save(
+              TimeEntry.copyOf(timeToConfirm, (update) => {
+                update.isConfirmed = true;
+                update.isLocked = true;
+              })
+            );
+
+            reload();
+          }
+
           setSelected([]);
         } catch (error) {
           console.warn(error);

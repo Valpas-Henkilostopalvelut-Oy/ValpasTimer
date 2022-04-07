@@ -6,9 +6,8 @@ import { TimeEntry, AllWorkSpaces } from "../../models";
 import { onError } from "../../services/errorLib";
 import { useAppContext } from "../../services/contextLib";
 import {
-  Switch,
+  Typography,
   Container,
-  Grid,
   Table,
   TableContainer,
   TableBody,
@@ -18,21 +17,74 @@ import {
   Checkbox,
   TableHead,
   Collapse,
-  Typography,
   Box,
   IconButton,
+  TextField,
 } from "@mui/material";
 import Recorder from "./Recorder";
-import AddTime from "./AddTime";
 import TableToolBar from "./ListTableToolbar";
 import TimeEditing from "../../components/TimeEditing";
 import { groupBy } from "../../services/group";
 
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import RadioButtonUncheckedIcon from "@mui/icons-material/RadioButtonUnchecked";
-
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
+
+const updateValue = async ({ val, type, reload, id, time }) => {
+  try {
+    if (type === "start") {
+      const d = await DataStore.query(TimeEntry, id);
+      await DataStore.save(
+        TimeEntry.copyOf(d, (update) => {
+          update.timeInterval.start = new Date(
+            new Date(time).setHours(val.h, val.m, 0)
+          ).toISOString();
+        })
+      );
+      reload();
+    } else if (type === "end") {
+      const d = await DataStore.query(TimeEntry, id);
+      await DataStore.save(
+        TimeEntry.copyOf(d, (update) => {
+          update.timeInterval.end = new Date(
+            new Date(time).setHours(val.h, val.m, 0)
+          ).toISOString();
+        })
+      );
+      reload();
+    }
+  } catch (error) {
+    console.warn(error);
+  }
+};
+
+const EditDescription = ({ reload, description, data, id }) => {
+  const [desc, setDesc] = useState(description);
+
+  const updateDesc = async () => {
+    try {
+      await DataStore.save(
+        TimeEntry.copyOf(data, (update) => {
+          update.description = desc;
+        })
+      );
+    } catch (error) {
+      console.warn(error);
+    }
+  };
+
+  return (
+    <TextField
+      onChange={(event) => setDesc(event.target.value)}
+      onBlur={updateDesc}
+      value={desc}
+      fullWidth
+      placeholder="Add description"
+      variant="standard"
+    />
+  );
+};
 
 const Row = ({ data, selected, setSelected, loadTimeList }) => {
   return (
@@ -124,12 +176,6 @@ const Details = ({ data, selected, setSelected, loadTimeList, index }) => {
           </IconButton>
         </TableCell>
 
-        <TableCell align="right">
-          {data.arr[0].description == ""
-            ? "Add description"
-            : data.arr[0].description}
-        </TableCell>
-
         <TableCell align="right">{startVal}</TableCell>
         <TableCell align="right">{endVal}</TableCell>
         <TableCell align="right">{data.date}</TableCell>
@@ -139,55 +185,76 @@ const Details = ({ data, selected, setSelected, loadTimeList, index }) => {
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={7}>
           <Collapse in={open} timeout={"auto"} unmountOnExit>
             <Box sx={{ margin: 1 }}>
-              <Typography variant="h6" gutterBottom component="div">
-                Details
-              </Typography>
               <Table size="small" aria-label="purchases">
                 <TableHead>
-                  <TableCell>Description</TableCell>
-                  <TableCell align="right">Start</TableCell>
-                  <TableCell align="right">End</TableCell>
-                  <TableCell align="right">Sent</TableCell>
-                  <TableCell align="right">Confirmed</TableCell>
+                  <TableRow>
+                    <TableCell>Description</TableCell>
+                    <TableCell align="right">Start</TableCell>
+                    <TableCell align="right">End</TableCell>
+                    <TableCell align="right">Sent</TableCell>
+                    <TableCell align="right">Confirmed</TableCell>
+                  </TableRow>
                 </TableHead>
                 <TableBody>
                   {data.arr.map((row) => (
-                    <TableRow key={row.timeInterval.start}>
-                      <TableCell component="th" scope="row">
-                        {data.description}
-                      </TableCell>
-                      <TableCell align="right">
-                        <TimeEditing
-                          time={row.timeInterval.start}
-                          data={row}
-                          type="start"
-                          reload={loadTimeList}
-                        />
-                      </TableCell>
-                      <TableCell align="right">
-                        <TimeEditing
-                          time={row.timeInterval.end}
-                          data={row}
-                          type="end"
-                          reload={loadTimeList}
-                        />
-                      </TableCell>
-                      <TableCell align="right">
-                        {row.isSent ? (
-                          <CheckCircleIcon color="success" />
-                        ) : (
-                          <RadioButtonUncheckedIcon color="disabled" />
-                        )}
-                      </TableCell>
+                    <Fragment key={row.timeInterval.start}>
+                      <TableRow>
+                        <TableCell scope="row">
+                          <EditDescription
+                            description={row.description}
+                            data={row}
+                            id={row.id}
+                            reload={loadTimeList}
+                          />
+                        </TableCell>
 
-                      <TableCell align="right">
-                        {row.isConfirmed ? (
-                          <CheckCircleIcon color="success" />
-                        ) : (
-                          <RadioButtonUncheckedIcon color="disabled" />
-                        )}
-                      </TableCell>
-                    </TableRow>
+                        <TableCell align="right">
+                          <TimeEditing
+                            time={row.timeInterval.start}
+                            onChange={(event) =>
+                              updateValue({
+                                id: row.id,
+                                val: event,
+                                type: "start",
+                                reload: loadTimeList,
+                                time: row.timeInterval.start,
+                              })
+                            }
+                          />
+                        </TableCell>
+
+                        <TableCell align="right">
+                          <TimeEditing
+                            time={row.timeInterval.end}
+                            onChange={(event) =>
+                              updateValue({
+                                id: row.id,
+                                val: event,
+                                type: "end",
+                                reload: loadTimeList,
+                                time: row.timeInterval.end,
+                              })
+                            }
+                          />
+                        </TableCell>
+
+                        <TableCell align="right">
+                          {row.isSent ? (
+                            <CheckCircleIcon color="success" />
+                          ) : (
+                            <RadioButtonUncheckedIcon color="disabled" />
+                          )}
+                        </TableCell>
+
+                        <TableCell align="right">
+                          {row.isConfirmed ? (
+                            <CheckCircleIcon color="success" />
+                          ) : (
+                            <RadioButtonUncheckedIcon color="disabled" />
+                          )}
+                        </TableCell>
+                      </TableRow>
+                    </Fragment>
                   ))}
                 </TableBody>
               </Table>
@@ -200,7 +267,6 @@ const Details = ({ data, selected, setSelected, loadTimeList, index }) => {
 };
 
 const Timer = () => {
-  const [manual, setManual] = useState(false);
   const [timeList, setTimeList] = useState(null);
   const { isAuthenticated, selectedOption } = useAppContext();
   const [selected, setSelected] = useState([]);
@@ -237,26 +303,7 @@ const Timer = () => {
 
   return (
     <Container>
-      <Grid container alignItems="center" spacing={2}>
-        <Grid item md={11}>
-          {!manual ? (
-            <Recorder
-              loadTimeList={loadTimeList}
-              selectedOption={selectedOption}
-            />
-          ) : (
-            <AddTime />
-          )}
-        </Grid>
-
-        <Grid item md={1}>
-          <Switch
-            checked={manual}
-            onChange={() => setManual(!manual)}
-            inputProps={{ "aria-label": "controlled" }}
-          />
-        </Grid>
-      </Grid>
+      <Recorder loadTimeList={loadTimeList} selectedOption={selectedOption} />
 
       {grouped != null && timeList != null && selectedOption != null && (
         <Fragment>
@@ -272,7 +319,6 @@ const Timer = () => {
                 <TableRow>
                   <TableCell />
                   <TableCell />
-                  <TableCell>Description</TableCell>
                   <TableCell align="right">Start</TableCell>
                   <TableCell align="right">End</TableCell>
                   <TableCell align="right">Date</TableCell>

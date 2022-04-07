@@ -1,22 +1,16 @@
-
-export const timeMaker = (event, props) => {
+export const timeMaker = (event, time) => {
   const arr = event.target.value.split("").filter((t) => t !== ":");
-  const { setValue, time, updateValue } = props;
 
   if (arr.length === 1) {
     let h = String(arr[0]);
-    let min = "00";
+    let min = 0;
 
-    updateValue({ h: Number(h), m: Number(min) },props);
-
-    setValue(`${String("0" + h).slice(-2)}:${String("0" + min).slice(-2)}`);
+    return { h: Number(h), m: Number(min) };
   } else if (arr.length === 2) {
     let h = String(arr[0] + arr[1]);
-    let min = "00";
+    let min = 0;
 
-    updateValue({ h: Number(h), m: Number(min) }, props);
-
-    setValue(`${String("0" + h).slice(-2)}:${String("0" + min).slice(-2)}`);
+    return { h: Number(h), m: Number(min) };
   } else if (arr.length === 3) {
     let h = String(arr[0]);
     let min = String(arr[1] + arr[2]);
@@ -26,9 +20,7 @@ export const timeMaker = (event, props) => {
       min = Number(min - 60);
     }
 
-    updateValue({ h: Number(h), m: Number(min) }, props);
-
-    setValue(`${String("0" + h).slice(-2)}:${String("0" + min).slice(-2)}`);
+    return { h: Number(h), m: Number(min) };
   } else if (arr.length === 4) {
     let h = String(arr[0] + arr[1]);
     let min = String(arr[2] + arr[3]);
@@ -38,17 +30,10 @@ export const timeMaker = (event, props) => {
       min = Number(min - 60);
     }
 
-    updateValue({ h: Number(h), m: Number(min) }, props);
-
-    setValue(`${String("0" + h).slice(-2)}:${String("0" + min).slice(-2)}`);
+    return { h: Number(h), m: Number(min) };
   } else {
     let d = new Date(time);
-    setValue(
-      `${String("0" + d.getHours()).slice(-2)}:${String(
-        "0" + d.getMinutes()
-      ).slice(-2)}`
-    );
+
+    return { h: Number(d.getHours()), m: Number(d.getMinutes()) };
   }
 };
-
-

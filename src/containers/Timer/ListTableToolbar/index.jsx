@@ -12,8 +12,13 @@ const TableToolBar = (props) => {
   const deleteSelected = async () => {
     try {
       for (let i = 0; i < selected.length; i++) {
-        const timeToDelete = await DataStore.query(TimeEntry, selected[i]);
-        await DataStore.delete(timeToDelete);
+        for (let ii = 0; ii < selected[i].arr.length; ii++) {
+          const timeToDelete = await DataStore.query(
+            TimeEntry,
+            selected[i].arr[ii].id
+          );
+          await DataStore.delete(timeToDelete);
+        }
       }
       loadUpdate();
       clearSelected([]);
@@ -25,16 +30,23 @@ const TableToolBar = (props) => {
   const sendToConfirm = async () => {
     try {
       for (let i = 0; i < selected.length; i++) {
-        const timeToSend = await DataStore.query(TimeEntry, selected[i]);
+        for (let ii = 0; ii < selected[i].arr.length; ii++) {
+          const timeToSend = await DataStore.query(
+            TimeEntry,
+            selected[i].arr[ii].id
+          );
 
-        await DataStore.save(
-          TimeEntry.copyOf(timeToSend, (updated) => {
-            updated.isSent = true;
-          })
-        );
+          if (!timeToSend.isSent) {
+            await DataStore.save(
+              TimeEntry.copyOf(timeToSend, (updated) => {
+                updated.isSent = true;
+              })
+            );
+          }
+        }
       }
       clearSelected([]);
-      loadUpdate()
+      loadUpdate();
     } catch (error) {
       console.warn(error);
     }

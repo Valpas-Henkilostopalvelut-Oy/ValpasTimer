@@ -27,26 +27,30 @@ const Dashboard = () => {
   const { selectedOption } = useAppContext();
   const [selected, setSelected] = useState([]);
 
-  useEffect(() => {
-    const loadTeamActivities = async () => {
-      const usersCredentials = await DataStore.query(UserCredentials);
+  const loadTeamActivities = async () => {
+    const usersCredentials = await DataStore.query(UserCredentials);
 
-      let q = [];
+    let q = [];
 
-      for (let i = 0; i < usersCredentials.length; i++) {
-        if (
-          usersCredentials[i].memberships.filter(
-            (m) => m.targetId === selectedOption.id
-          ).length > 0
-        ) {
-          q.push(usersCredentials[i]);
-        }
+    for (let i = 0; i < usersCredentials.length; i++) {
+      if (
+        usersCredentials[i].memberships.filter(
+          (m) => m.targetId === selectedOption.id
+        ).length > 0
+      ) {
+        q.push(usersCredentials[i]);
       }
+    }
 
-      setUsers(q);
-    };
+    setUsers(q);
+  };
 
-    selectedOption !== null && loadTeamActivities();
+  useEffect(() => {
+    let isActive = false;
+
+    !isActive && selectedOption !== null && loadTeamActivities();
+
+    return () => (isActive = true);
   }, [selectedOption]);
 
   return (
@@ -54,7 +58,12 @@ const Dashboard = () => {
       <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
         {usersList != null && (
           <Paper>
-            <HeadToolBar numSelected={selected.length} selected={selected} setSelected={setSelected}/>
+            <HeadToolBar
+              numSelected={selected.length}
+              selected={selected}
+              setSelected={setSelected}
+              reload={loadTeamActivities}
+            />
             <TableContainer>
               <Table aria-label="collapsible table">
                 <TableHead>
