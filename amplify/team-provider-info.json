@@ -13,7 +13,14 @@
     },
     "categories": {
       "auth": {
-        "valpasappca37c128": {}
+        "valpasappca37c128": {},
+        "userPoolGroups": {}
+      },
+      "function": {
+        "AdminQueries6bf4ddf9": {
+          "deploymentBucketName": "amplify-valpasapp-dev-100646-deployment",
+          "s3Key": "amplify-builds/AdminQueries6bf4ddf9-66456d32356e4b384130-build.zip"
+        }
       }
     }
   }

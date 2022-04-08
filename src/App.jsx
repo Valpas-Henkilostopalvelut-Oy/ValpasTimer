@@ -10,15 +10,14 @@ import Sidebar from "./components/Sidebar";
 import Navbar from "./components/NavBar";
 import { Box, CssBaseline } from "@mui/material";
 import { styled, createTheme, ThemeProvider } from "@mui/material/styles";
+import { UserCredentials } from "./models";
 
 function App() {
   const [isAuthenticated, userHasAuthenticated] = useState(false);
   const [isAuthenticating, setIsAuthenticating] = useState(true);
   const [selectedOption, setSelectedOption] = useState(null);
 
-  const [admin, setAdmin] = useState(false);
-  const [editor, setEditor] = useState(false);
-  const [applicant, setAplicant] = useState(false);
+  const [groups, setGroups] = useState([]);
   const [openDrawer, setOpenDrawer] = useState(false);
 
   const theme = createTheme({
@@ -33,9 +32,8 @@ function App() {
     switch (data.payload.event) {
       case "signOut":
         await DataStore.clear();
-        setAdmin(false);
-        setEditor(false);
-        setAplicant(false);
+        setGroups(false);
+        setSelectedOption(null);
         break;
       case "signIn":
         await DataStore.start();
@@ -44,6 +42,8 @@ function App() {
   });
 
   useEffect(() => {
+    let isActive = false;
+
     const onLoad = async () => {
       try {
         await Auth.currentSession();
@@ -56,49 +56,29 @@ function App() {
       setIsAuthenticating(false);
     };
 
-    onLoad();
+    !isActive && onLoad();
+
+    return () => (isActive = true);
   }, []);
 
   useEffect(() => {
-    const loadAdmin = async () => {
+    let isActive = false;
+
+    const loadGroup = async () => {
       try {
         const user = await Auth.currentAuthenticatedUser();
         const groups =
           user.signInUserSession.accessToken.payload["cognito:groups"];
 
-        groups !== undefined && setAdmin(groups.includes("Admins"));
+        groups !== undefined && setGroups(groups);
       } catch (error) {
-        onError(error);
+        console.warn(error);
       }
     };
 
-    const loadEditor = async () => {
-      try {
-        const user = await Auth.currentAuthenticatedUser();
-        const groups =
-          user.signInUserSession.accessToken.payload["cognito:groups"];
+    !isActive && isAuthenticated && loadGroup();
 
-        groups !== undefined && setEditor(groups.includes("Editors"));
-      } catch (error) {
-        onError(error);
-      }
-    };
-
-    const loadApplicant = async () => {
-      try {
-        const user = await Auth.currentAuthenticatedUser();
-        const groups =
-          user.signInUserSession.accessToken.payload["cognito:groups"];
-
-        groups !== undefined && setAplicant(groups.includes("Applicants"));
-      } catch (error) {
-        onError(error);
-      }
-    };
-
-    isAuthenticated && loadAdmin();
-    isAuthenticated && loadEditor();
-    isAuthenticated && loadApplicant();
+    return () => (isActive = true);
   }, [isAuthenticated]);
 
   const Header = styled("div")(({ theme }) => ({
@@ -117,12 +97,7 @@ function App() {
           userHasAuthenticated,
           selectedOption,
           setSelectedOption,
-          admin,
-          setAdmin,
-          editor,
-          setEditor,
-          applicant,
-          setAplicant,
+          groups,
         }}
       >
         <ThemeProvider theme={theme}>

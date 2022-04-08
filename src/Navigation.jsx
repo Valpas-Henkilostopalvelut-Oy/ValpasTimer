@@ -20,6 +20,14 @@ const Navigation = () => {
   const Redirect = () => <Navigate replace to="/login" />;
   return (
     <Routes>
+      <Route exact path="/" element={<Navigate replace to="/home" />} />
+
+      <Route
+        exact
+        path="home"
+        element={isAuthenticated ? <Home /> : <Redirect />}
+      />
+
       <Route
         exact
         path="login"
@@ -34,17 +42,13 @@ const Navigation = () => {
           !isAuthenticated ? <Signup /> : <Navigate replace to="/timer" />
         }
       />
-      <Route exact path="/" element={<Navigate replace to="/home" />} />
+
       <Route
         exact
         path="timer"
         element={isAuthenticated ? <Timer /> : <Redirect />}
       />
-      <Route
-        exact
-        path="home"
-        element={isAuthenticated ? <Home /> : <Redirect />}
-      />
+
       <Route
         exact
         path="settings"

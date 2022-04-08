@@ -34,7 +34,11 @@
     "serviceName": "Cognito",
     "useDefault": "default",
     "sharedId": "ca37c128",
-    "userPoolGroupList": [],
+    "userPoolGroupList": [
+      "Admins",
+      "Clients",
+      "Workers"
+    ],
     "usernameAttributes": [
       "email"
     ],
@@ -57,6 +61,7 @@
     "adminQueries": false,
     "hostedUI": false,
     "useEnabledMfas": false,
-    "authProviders": []
+    "authProviders": [],
+    "adminQueryGroup": "Admins"
   }
 }

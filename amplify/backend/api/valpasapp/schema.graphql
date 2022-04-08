@@ -37,23 +37,7 @@ type TimeInterval {
   start: AWSDateTime
 }
 
-type TimeEntry
-  @model
-  @auth(
-    rules: [
-      { allow: owner }
-      {
-        allow: groups
-        groups: ["Editors"]
-        operations: [read, create, update, delete]
-      }
-      {
-        allow: groups
-        groups: ["Applicants"]
-        operations: [read, create, update]
-      }
-    ]
-  ) {
+type TimeEntry @model @auth(rules: [{allow: owner}, {allow: groups, groups: ["Admins"], operations: [read, create, update, delete]}, {allow: groups, groups: ["Clients"], operations: [read, update]}]) {
   id: ID!
   description: String
   userId: ID
@@ -84,23 +68,7 @@ type HourlyRate {
   currency: String
 }
 
-type AllWorkSpaces
-  @model
-  @auth(
-    rules: [
-      { allow: private, operations: [read] }
-      {
-        allow: groups
-        groups: ["Editors"]
-        operations: [read, create, update, delete]
-      }
-      {
-        allow: groups
-        groups: ["Applicants"]
-        operations: [read, create, update]
-      }
-    ]
-  ) {
+type AllWorkSpaces @model @auth(rules: [{allow: groups, groups: ["Admins"], operations: [read, create, update, delete]}]) {
   id: ID!
   hourlyRate: HourlyRate
   imageUrl: AWSURL
@@ -110,23 +78,7 @@ type AllWorkSpaces
   customOwner: ID
 }
 
-type UserCredentials
-  @model
-  @auth(
-    rules: [
-      { allow: owner }
-      {
-        allow: groups
-        groups: ["Editors"]
-        operations: [read, create, update, delete]
-      }
-      {
-        allow: groups
-        groups: ["Applicants"]
-        operations: [read, create]
-      }
-    ]
-  ) {
+type UserCredentials @model @auth(rules: [{allow: owner}, {allow: groups, groups: ["Admins"], operations: [read, create, update, delete]}, {allow: groups, groups: ["Clients"], operations: [update, read]}]) {
   id: ID!
   userId: ID!
   activeTimeEntry: ID
@@ -141,3 +93,4 @@ type FormItem {
   name: String
   text: String
 }
+ 
