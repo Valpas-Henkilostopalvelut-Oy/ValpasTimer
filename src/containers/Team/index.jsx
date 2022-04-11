@@ -22,7 +22,7 @@ import TeamToolbar from "./Toolbar";
 const Team = () => {
   const [users, setUsers] = useState(null);
   const [selected, setSelected] = useState([]);
-  const { selectedOption, admin, editor, applicant } = useAppContext();
+  const { selectedOption, groups } = useAppContext();
 
   const loadUsers = async () => {
     try {
@@ -76,6 +76,7 @@ const Team = () => {
     setSelected(newSelected);
   };
 
+
   return (
     <Container>
       <Typography variant="h3">Team</Typography>
@@ -84,8 +85,7 @@ const Team = () => {
           numSelected={selected.length}
           reload={loadUsers}
           selected={selected}
-          isAdmin={admin}
-          isEditor={editor}
+          groups={groups}
           option={selectedOption}
           setSelected={setSelected}
         />
@@ -97,7 +97,9 @@ const Team = () => {
                 <TableCell></TableCell>
                 <TableCell>Name</TableCell>
                 <TableCell align="right">Email</TableCell>
-                {(admin || editor) && <TableCell align="right">Rate</TableCell>}
+                {groups.includes("Admins") && (
+                  <TableCell align="right">Rate</TableCell>
+                )}
                 <TableCell align="right">Role</TableCell>
                 <TableCell align="right">Phone number</TableCell>
               </TableRow>
@@ -128,7 +130,7 @@ const Team = () => {
                       {row.profile.first_name} {row.profile.last_name}
                     </TableCell>
                     <TableCell align="right">{row.profile.email}</TableCell>
-                    {(admin || editor) && (
+                    {groups.includes("Admins") && (
                       <TableCell align="right">10</TableCell>
                     )}
                     <TableCell align="right">role (in futer)</TableCell>

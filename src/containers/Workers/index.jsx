@@ -11,8 +11,9 @@ import {
   TableRow,
   TableFooter,
   Checkbox,
+  Button,
 } from "@mui/material";
-import { DataStore } from "aws-amplify";
+import { DataStore, Auth } from "aws-amplify";
 import { UserCredentials, AllWorkSpaces } from "../../models";
 import ListToolbar from "./ListToolbar";
 import MultipleWorkSelect from "./MultipleWorkSelect";
@@ -98,6 +99,10 @@ const Workers = () => {
     setSelected(newSelected);
   };
 
+  const changeRole = async ({ id, data }) => {
+    console.log(await Auth);
+  };
+
   return (
     <Container>
       <TableContainer component={Paper}>
@@ -113,7 +118,7 @@ const Workers = () => {
               <TableCell>Name</TableCell>
               <TableCell align="right">Email</TableCell>
               <TableCell align="right">Phone number</TableCell>
-              <TableCell align="right">Works</TableCell>
+              <TableCell align="right">Role</TableCell>
               <TableCell align="right">Current work</TableCell>
             </TableRow>
           </TableHead>
@@ -163,7 +168,13 @@ const Workers = () => {
                         {row.profile.phone_number}
                       </TableCell>
 
-                      <TableCell align="right">in Future</TableCell>
+                      <TableCell align="right">
+                        <Button
+                          onClick={() => changeRole({ id: row.id, data: row })}
+                        >
+                          qqq
+                        </Button>
+                      </TableCell>
 
                       <TableCell align="right">
                         {workspaceList !== null ? (

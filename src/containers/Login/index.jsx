@@ -4,7 +4,7 @@ import "./login.css";
 import "../../App.css";
 import { Auth, DataStore } from "aws-amplify";
 import { useAppContext } from "../../services/contextLib";
-import { useNavigate, Navigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import LoaderButton from "../../components/LoaderButton";
 import { onError } from "../../services/errorLib";
 import { createUser } from "../../services/createUser";

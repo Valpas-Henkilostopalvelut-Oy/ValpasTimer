@@ -26,6 +26,9 @@ export async function createUser() {
           other_settings: { timeFormat: "", timeZone: "", dateFormat: "" },
         },
         formChecked: [],
+        accessToken: (await Auth.currentSession())
+          .getAccessToken()
+          .getJwtToken(),
       })
     );
 

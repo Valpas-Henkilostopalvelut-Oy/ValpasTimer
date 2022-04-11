@@ -7,7 +7,6 @@ import Signup from "./containers/Singup";
 import Settings from "./containers/Settings";
 import Team from "./containers/Team";
 import Workspaces from "./containers/Workspaces";
-import WorkspaceSettings from "./containers/Workspaces/Settings";
 import Home from "./containers/Home";
 import Dashboard from "./containers/Reports";
 import Workers from "./containers/Workers";
@@ -59,11 +58,7 @@ const Navigation = () => {
         path="workspaces"
         element={isAuthenticated ? <Workspaces /> : <Redirect />}
       />
-      <Route
-        exact
-        path="workspaces/settings"
-        element={isAuthenticated ? <WorkspaceSettings /> : <Redirect />}
-      />
+
       <Route
         exact
         path="team"

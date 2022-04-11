@@ -123,7 +123,9 @@ const Row = ({ row, index, handleClick, isSelected }) => {
                               Without description
                             </Typography>
                           ) : (
-                            <Typography>{inarr.description}</Typography>
+                            <Typography variant="p">
+                              {inarr.description}
+                            </Typography>
                           )}
                         </TableCell>
 

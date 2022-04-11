@@ -7,10 +7,9 @@ import { onError } from "../../../services/errorLib";
 
 const PopupAddUser = ({
   workspaceId,
-  isAdmin,
+  groups,
   modalState,
   closeModal,
-  reload,
 }) => {
   const { selectedOption } = useAppContext();
   const [userEmail, setUserEmail] = useState("");
@@ -20,12 +19,12 @@ const PopupAddUser = ({
   };
 
   const handleAddUser = async () => {
-    if (isAdmin !== null) {
+    if (groups.includes("Admins")) {
       const credentials = (await DataStore.query(UserCredentials)).find(
         (u) => u.profile.email === userEmail
       );
       const original = await DataStore.query(AllWorkSpaces, workspaceId);
-      if (isAdmin && credentials !== undefined && original !== undefined) {
+      if (groups.includes("Admins") && credentials !== undefined && original !== undefined) {
         try {
           await DataStore.save(
             AllWorkSpaces.copyOf(original, (updated) => {

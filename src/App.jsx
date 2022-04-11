@@ -10,12 +10,12 @@ import Sidebar from "./components/Sidebar";
 import Navbar from "./components/NavBar";
 import { Box, CssBaseline } from "@mui/material";
 import { styled, createTheme, ThemeProvider } from "@mui/material/styles";
-import { UserCredentials } from "./models";
 
 function App() {
   const [isAuthenticated, userHasAuthenticated] = useState(false);
   const [isAuthenticating, setIsAuthenticating] = useState(true);
   const [selectedOption, setSelectedOption] = useState(null);
+  const [options, setOptions] = useState([]);
 
   const [groups, setGroups] = useState([]);
   const [openDrawer, setOpenDrawer] = useState(false);
@@ -98,6 +98,8 @@ function App() {
           selectedOption,
           setSelectedOption,
           groups,
+          options,
+          setOptions,
         }}
       >
         <ThemeProvider theme={theme}>

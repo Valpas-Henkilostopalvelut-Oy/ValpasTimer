@@ -1,75 +1,76 @@
 import React, { useState, useEffect } from "react";
 import "./WorkspaceSelect.css";
-import { Auth, DataStore } from "aws-amplify";
+import { Auth, DataStore, Hub } from "aws-amplify";
 import { AllWorkSpaces, UserCredentials } from "../../models";
 import { useAppContext } from "../../services/contextLib";
-import { Box, InputLabel, MenuItem, FormControl, Select } from "@mui/material";
+import {
+  Box,
+  InputLabel,
+  MenuItem,
+  FormControl,
+  Select,
+  Button,
+} from "@mui/material";
 
 const WorkspaceSelect = () => {
-  const [options, setOptions] = useState([]);
-  const { selectedOption, setSelectedOption, admin } = useAppContext();
+  const { selectedOption, setSelectedOption, options, setOptions } =
+    useAppContext();
+
+  const makeList = async () => {
+    const user = await Auth.currentAuthenticatedUser();
+    const creditails = await DataStore.query(
+      UserCredentials,
+      user.attributes["custom:UserCreditails"]
+    );
+
+    let q = [];
+
+    for (let i = 0; i < creditails.memberships.length; i++) {
+      const workspaceList = await DataStore.query(
+        AllWorkSpaces,
+        creditails.memberships[i].targetId
+      );
+      q.push({
+        value: workspaceList.name,
+        label: workspaceList.name,
+        id: workspaceList.id,
+      });
+    }
+
+    console.log(q);
+
+    setOptions(q);
+  };
 
   useEffect(() => {
-    let isActive = false;
+    let isActive = true;
 
-    const makeList = async () => {
-      if (!admin) {
-        const user = await Auth.currentAuthenticatedUser();
-        const creditails = await DataStore.query(
-          UserCredentials,
-          user.attributes["custom:UserCreditails"]
-        );
-
-        let q = [];
-
-        for (let i = 0; i < creditails.memberships.length; i++) {
-          const workspaceList = await DataStore.query(
-            AllWorkSpaces,
-            creditails.memberships[i].targetId
-          );
-          q.push({
-            value: workspaceList.name,
-            label: workspaceList.name,
-            id: workspaceList.id,
-          });
-        }
-
-        !isActive && setOptions(q);
-      } else {
-        const workspaceAllList = await DataStore.query(AllWorkSpaces);
-
-        let w = [];
-
-        for (let i = 0; i < workspaceAllList.length; i++) {
-          w.push({
-            value: workspaceAllList[i].name,
-            label: workspaceAllList[i].name,
-            id: workspaceAllList[i].id,
-          });
-        }
-
-        !isActive && setOptions(w);
-      }
-    };
-
-    makeList();
-
-    return () => (isActive = true);
-  }, [admin]);
-
-  useEffect(() => {
     const lastWorkspaceLoad = async () => {
       const loggedUser = await Auth.currentAuthenticatedUser();
       const creditails = await DataStore.query(
         UserCredentials,
         loggedUser.attributes["custom:UserCreditails"]
       );
-      setSelectedOption({
-        id: creditails.defaultWorkspace,
-      });
+
+      if (creditails.memberships.length !== 0) {
+        if (creditails.defaultWorkspace !== null) {
+          setSelectedOption({
+            id: creditails.defaultWorkspace,
+          });
+        } else {
+          setSelectedOption({
+            id: creditails.memberships[0].targetId,
+          });
+        }
+      }
     };
 
-    selectedOption === null && lastWorkspaceLoad();
+    !isActive &&
+      options.length !== 0 &&
+      selectedOption === null &&
+      lastWorkspaceLoad();
+
+    return () => (isActive = true);
   }, [options]);
 
   const changeLastValue = async (val) => {
@@ -91,7 +92,8 @@ const WorkspaceSelect = () => {
 
   return (
     <Box sx={{ minWidth: 120, marginBottom: "5px", marginTop: "5px" }}>
-      {selectedOption !== null && admin !== null && (
+      <Button onClick={makeList}>qq</Button>
+      {selectedOption !== null && (
         <FormControl variant="standard">
           <InputLabel>Workspaces</InputLabel>
           <Select

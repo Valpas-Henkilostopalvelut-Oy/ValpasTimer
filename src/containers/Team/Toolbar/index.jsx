@@ -18,10 +18,9 @@ const TeamToolbar = ({
   numSelected,
   reload,
   selected,
-  isAdmin,
-  isEditor,
+  groups,
   option,
-  setSelected
+  setSelected,
 }) => {
   const [open, setOpen] = useState(false);
 
@@ -65,7 +64,7 @@ const TeamToolbar = ({
         }
       }
     }
-    setSelected([])
+    setSelected([]);
   };
 
   return (
@@ -109,7 +108,7 @@ const TeamToolbar = ({
           </IconButton>
         </Tooltip>
       ) : (
-        (isAdmin || isEditor) &&
+        groups.includes("Admins") &&
         option !== null && (
           <Box>
             <Tooltip title="Add worker">
@@ -120,7 +119,7 @@ const TeamToolbar = ({
 
             <PopupAddUser
               workspaceId={option.id}
-              isAdmin={isAdmin}
+              groups={groups}
               modalState={open}
               closeModal={handleClose}
               reload={reload}

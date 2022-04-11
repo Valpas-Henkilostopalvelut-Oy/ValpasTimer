@@ -87,6 +87,7 @@ type UserCredentials @model @auth(rules: [{allow: owner}, {allow: groups, groups
   memberships: [UserMemberships]
   profile: Profile
   formChecked: [String]
+  accessToken: String
 }
 
 type FormItem {

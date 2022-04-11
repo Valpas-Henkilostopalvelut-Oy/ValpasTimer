@@ -317,6 +317,13 @@ export const schema = {
                     "attributes": [],
                     "isArrayNullable": true
                 },
+                "accessToken": {
+                    "name": "accessToken",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
                 "createdAt": {
                     "name": "createdAt",
                     "isArray": false,
@@ -690,5 +697,5 @@ export const schema = {
             }
         }
     },
-    "version": "b06e21bb59585712cd91018bab588d9c"
+    "version": "1c1144c9d3932432c84d6b7e19c5aab7"
 };
