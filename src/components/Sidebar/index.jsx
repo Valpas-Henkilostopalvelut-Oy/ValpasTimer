@@ -17,7 +17,7 @@ import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import { useAppContext } from "../../services/contextLib";
 
 const Sidebar = ({ open, setOpen }) => {
-  const { admin, editor, applicant } = useAppContext();
+  const { groups } = useAppContext();
   const theme = useTheme();
   const drawerWidth = 240;
 
@@ -85,7 +85,7 @@ const Sidebar = ({ open, setOpen }) => {
       <Divider />
       <List>
         {SidebarData.map((component, index) => {
-          if (true) {
+          if (component.access.includes(groups[0])) {
             return (
               <LinkContainer to={component.link} key={component.title}>
                 <ListItemButton

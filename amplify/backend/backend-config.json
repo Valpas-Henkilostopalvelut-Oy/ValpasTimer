@@ -60,7 +60,16 @@
             }
           ]
         }
-      }
+      },
+      "dependsOn": [
+        {
+          "category": "auth",
+          "resourceName": "valpasappca37c128",
+          "attributes": [
+            "UserPoolId"
+          ]
+        }
+      ]
     },
     "AdminQueries": {
       "service": "API Gateway",

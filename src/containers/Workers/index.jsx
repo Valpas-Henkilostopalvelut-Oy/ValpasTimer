@@ -13,10 +13,9 @@ import {
   Checkbox,
   Button,
 } from "@mui/material";
-import { DataStore, Auth } from "aws-amplify";
+import { DataStore, Auth, API } from "aws-amplify";
 import { UserCredentials, AllWorkSpaces } from "../../models";
 import ListToolbar from "./ListToolbar";
-import MultipleWorkSelect from "./MultipleWorkSelect";
 
 const Workers = () => {
   const [users, setUsers] = useState(null);
@@ -47,8 +46,19 @@ const Workers = () => {
 
     const loadUsers = async () => {
       try {
-        const userList = await DataStore.query(UserCredentials);
-        userList.length !== 0 && setUsers(userList);
+        let apiName = "AdminQueries";
+        let path = "/ListUsers";
+        let myInit = {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `${(await Auth.currentSession())
+              .getAccessToken()
+              .getJwtToken()}`,
+          },
+        };
+
+        const list = await API.get(apiName, path, myInit);
+        setUsers(list.Users);
       } catch (error) {
         console.warn(error);
       }
@@ -63,6 +73,28 @@ const Workers = () => {
     const curWork = workspaceList.find((w) => w.id === workspaceId);
     if (curWork !== undefined) return curWork.name;
     else return "undefined";
+  };
+
+  const listGroup = async (Username) => {
+    let apiName = "AdminQueries";
+    let path = "/ListGroupsForUser";
+    let myInit = {
+      queryStringParameters: {
+        username: "7760d2ad-fcb4-419a-9d39-71bad7762fa0",
+      },
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `${(await Auth.currentSession())
+          .getAccessToken()
+          .getJwtToken()}`,
+      },
+    };
+
+    const group = await API.get(apiName, path, myInit);
+
+    console.log(group);
+
+    return group;
   };
 
   const emptyRows =
@@ -99,9 +131,7 @@ const Workers = () => {
     setSelected(newSelected);
   };
 
-  const changeRole = async ({ id, data }) => {
-    console.log(await Auth);
-  };
+  console.log(listGroup());
 
   return (
     <Container>
@@ -118,7 +148,7 @@ const Workers = () => {
               <TableCell>Name</TableCell>
               <TableCell align="right">Email</TableCell>
               <TableCell align="right">Phone number</TableCell>
-              <TableCell align="right">Role</TableCell>
+              <TableCell align="right">Group</TableCell>
               <TableCell align="right">Current work</TableCell>
             </TableRow>
           </TableHead>
@@ -132,12 +162,12 @@ const Workers = () => {
                     )
                   : users
                 ).map((row, index) => {
-                  const isItemSelected = isSelected(row.id);
+                  const isItemSelected = isSelected(row.Username);
                   const labelId = `enhanced-table-checkbox-${index}`;
 
                   return (
                     <TableRow
-                      key={row.id}
+                      key={row.Username}
                       hover
                       role="checkbox"
                       aria-checked={isItemSelected}
@@ -149,7 +179,7 @@ const Workers = () => {
                           color="primary"
                           checked={isItemSelected}
                           inputProps={{ "aria-labelledby": labelId }}
-                          onClick={(event) => handleClick(event, row.id)}
+                          onClick={(event) => handleClick(event, row.Username)}
                         />
                       </TableCell>
 
@@ -159,22 +189,25 @@ const Workers = () => {
                         id={labelId}
                         padding="none"
                       >
-                        {row.profile.first_name} {row.profile.last_name}
-                      </TableCell>
-
-                      <TableCell align="right">{row.profile.email}</TableCell>
-
-                      <TableCell align="right">
-                        {row.profile.phone_number}
+                        {
+                          row.Attributes.find((a) => a.Name === "family_name")
+                            .Value
+                        }
+                        {row.Attributes.find((a) => a.Name === "name").Value}{" "}
                       </TableCell>
 
                       <TableCell align="right">
-                        <Button
-                          onClick={() => changeRole({ id: row.id, data: row })}
-                        >
-                          qqq
-                        </Button>
+                        {row.Attributes.find((a) => a.Name === "email").Value}
                       </TableCell>
+
+                      <TableCell align="right">
+                        {
+                          row.Attributes.find((a) => a.Name === "phone_number")
+                            .Value
+                        }
+                      </TableCell>
+
+                      <TableCell align="right">1</TableCell>
 
                       <TableCell align="right">
                         {workspaceList !== null ? (

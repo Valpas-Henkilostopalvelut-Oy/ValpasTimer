@@ -12,7 +12,7 @@ import { UserCredentials } from "../../models";
 import { Formik } from "formik";
 
 const Login = () => {
-  const { userHasAuthenticated } = useAppContext();
+  const { userHasAuthenticated, setAppLoading } = useAppContext();
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
@@ -43,9 +43,10 @@ const Login = () => {
             userHasAuthenticated(true);
             setTimeout(() => {
               checkUserProfile();
-              navigate("/", { replace: true });
-              setIsLoading(false);
             }, 1000);
+            setAppLoading(false)
+            navigate("/home", { replace: true });
+            setIsLoading(false);
           } catch (e) {
             setIsLoading(false);
             onError(e);

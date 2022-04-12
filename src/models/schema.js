@@ -246,6 +246,28 @@ export const schema = {
                                     "update",
                                     "delete"
                                 ]
+                            },
+                            {
+                                "groupClaim": "cognito:groups",
+                                "provider": "userPools",
+                                "allow": "groups",
+                                "groups": [
+                                    "Workers"
+                                ],
+                                "operations": [
+                                    "read"
+                                ]
+                            },
+                            {
+                                "groupClaim": "cognito:groups",
+                                "provider": "userPools",
+                                "allow": "groups",
+                                "groups": [
+                                    "Clients"
+                                ],
+                                "operations": [
+                                    "read"
+                                ]
                             }
                         ]
                     }
@@ -316,13 +338,6 @@ export const schema = {
                     "isRequired": false,
                     "attributes": [],
                     "isArrayNullable": true
-                },
-                "accessToken": {
-                    "name": "accessToken",
-                    "isArray": false,
-                    "type": "String",
-                    "isRequired": false,
-                    "attributes": []
                 },
                 "createdAt": {
                     "name": "createdAt",
@@ -697,5 +712,5 @@ export const schema = {
             }
         }
     },
-    "version": "1c1144c9d3932432c84d6b7e19c5aab7"
+    "version": "b06e21bb59585712cd91018bab588d9c"
 };

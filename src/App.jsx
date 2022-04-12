@@ -15,7 +15,7 @@ function App() {
   const [isAuthenticated, userHasAuthenticated] = useState(false);
   const [isAuthenticating, setIsAuthenticating] = useState(true);
   const [selectedOption, setSelectedOption] = useState(null);
-  const [options, setOptions] = useState([]);
+  const [appLoading, setAppLoading] = useState(true);
 
   const [groups, setGroups] = useState([]);
   const [openDrawer, setOpenDrawer] = useState(false);
@@ -48,6 +48,7 @@ function App() {
       try {
         await Auth.currentSession();
         userHasAuthenticated(true);
+        setAppLoading(false)
       } catch (e) {
         if (e !== "No current user") {
           onError(e);
@@ -98,8 +99,8 @@ function App() {
           selectedOption,
           setSelectedOption,
           groups,
-          options,
-          setOptions,
+          appLoading,
+          setAppLoading,
         }}
       >
         <ThemeProvider theme={theme}>

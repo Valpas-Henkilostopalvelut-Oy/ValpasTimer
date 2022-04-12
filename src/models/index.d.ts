@@ -125,7 +125,6 @@ export declare class UserCredentials {
   readonly memberships?: (UserMemberships | null)[] | null;
   readonly profile?: Profile | null;
   readonly formChecked?: (string | null)[] | null;
-  readonly accessToken?: string | null;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
   constructor(init: ModelInit<UserCredentials, UserCredentialsMetaData>);

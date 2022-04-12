@@ -13,37 +13,44 @@ import {
 } from "@mui/material";
 
 const WorkspaceSelect = () => {
-  const { selectedOption, setSelectedOption, options, setOptions } =
+  const [list, setList] = useState([]);
+  const { selectedOption, setSelectedOption, appLoading, setAppLoading } =
     useAppContext();
 
-  const makeList = async () => {
-    const user = await Auth.currentAuthenticatedUser();
-    const creditails = await DataStore.query(
-      UserCredentials,
-      user.attributes["custom:UserCreditails"]
-    );
+  useEffect(() => {
+    let isActive = false;
 
-    let q = [];
-
-    for (let i = 0; i < creditails.memberships.length; i++) {
-      const workspaceList = await DataStore.query(
-        AllWorkSpaces,
-        creditails.memberships[i].targetId
+    const makeList = async () => {
+      const user = await Auth.currentAuthenticatedUser();
+      const creditails = await DataStore.query(
+        UserCredentials,
+        user.attributes["custom:UserCreditails"]
       );
-      q.push({
-        value: workspaceList.name,
-        label: workspaceList.name,
-        id: workspaceList.id,
-      });
-    }
 
-    console.log(q);
+      let q = [];
 
-    setOptions(q);
-  };
+      for (let i = 0; i < creditails.memberships.length; i++) {
+        const workspaceList = await DataStore.query(
+          AllWorkSpaces,
+          creditails.memberships[i].targetId
+        );
+        q.push({
+          value: workspaceList.name,
+          label: workspaceList.name,
+          id: workspaceList.id,
+        });
+      }
+
+      !isActive && setList(q);
+    };
+
+    !isActive && !appLoading && makeList();
+
+    return () => (isActive = true);
+  }, [appLoading]);
 
   useEffect(() => {
-    let isActive = true;
+    let isActive = false;
 
     const lastWorkspaceLoad = async () => {
       const loggedUser = await Auth.currentAuthenticatedUser();
@@ -66,12 +73,12 @@ const WorkspaceSelect = () => {
     };
 
     !isActive &&
-      options.length !== 0 &&
+      list.length !== 0 &&
       selectedOption === null &&
       lastWorkspaceLoad();
 
     return () => (isActive = true);
-  }, [options]);
+  }, [list]);
 
   const changeLastValue = async (val) => {
     try {
@@ -92,8 +99,7 @@ const WorkspaceSelect = () => {
 
   return (
     <Box sx={{ minWidth: 120, marginBottom: "5px", marginTop: "5px" }}>
-      <Button onClick={makeList}>qq</Button>
-      {selectedOption !== null && (
+      {list.length !== 0 && selectedOption !== null && (
         <FormControl variant="standard">
           <InputLabel>Workspaces</InputLabel>
           <Select
@@ -106,7 +112,7 @@ const WorkspaceSelect = () => {
               changeLastValue(event.target.value);
             }}
           >
-            {options.map((option, key) => (
+            {list.map((option, key) => (
               <MenuItem value={option.id} key={key}>
                 {option.value}
               </MenuItem>

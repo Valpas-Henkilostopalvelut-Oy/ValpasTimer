@@ -68,7 +68,7 @@ type HourlyRate {
   currency: String
 }
 
-type AllWorkSpaces @model @auth(rules: [{allow: groups, groups: ["Admins"], operations: [read, create, update, delete]}]) {
+type AllWorkSpaces @model @auth(rules: [{allow: groups, groups: ["Admins"], operations: [read, create, update, delete]}, {allow: groups, groups: ["Workers"], operations: [read]}, {allow: groups, groups: ["Clients"], operations: [read]}]) {
   id: ID!
   hourlyRate: HourlyRate
   imageUrl: AWSURL
@@ -87,7 +87,6 @@ type UserCredentials @model @auth(rules: [{allow: owner}, {allow: groups, groups
   memberships: [UserMemberships]
   profile: Profile
   formChecked: [String]
-  accessToken: String
 }
 
 type FormItem {
