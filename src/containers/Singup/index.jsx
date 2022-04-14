@@ -22,9 +22,7 @@ const Signup = () => {
 
   return (
     <div className="Signup main">
-      <AppContext.Provider
-        value={{ userForm, setNewUser, newUser, userHasAuthenticated }}
-      >
+      <AppContext.Provider value={{ userForm, setNewUser, newUser, userHasAuthenticated }}>
         {newUser == null ? <SingUpForm /> : <ConfirmationForm />}
       </AppContext.Provider>
     </div>

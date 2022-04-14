@@ -37,76 +37,40 @@ const SingUpForm = () => {
         }
       }}
     >
-      {({
-        values,
-        errors,
-        touched,
-        handleChange,
-        handleBlur,
-        handleSubmit,
-        isSubmitting,
-      }) => (
+      {({ values, errors, touched, handleChange, handleBlur, handleSubmit, isSubmitting }) => (
         <Form onSubmit={handleSubmit}>
           <Row className="mb-3">
             <Form.Group as={Col} controlId="email" size="lg">
               <Form.Label>Email</Form.Label>
-              <Form.Control
-                type="email"
-                name="email"
-                value={values.email}
-                onChange={handleChange}
-              />
+              <Form.Control type="email" name="email" value={values.email} onChange={handleChange} />
             </Form.Group>
           </Row>
           <Row className="mb-3">
             <Form.Group as={Col} size="lg">
               <Form.Label>First name</Form.Label>
-              <Form.Control
-                type="text"
-                name="firstName"
-                value={values.firstName}
-                onChange={handleChange}
-              />
+              <Form.Control type="text" name="firstName" value={values.firstName} onChange={handleChange} />
             </Form.Group>
             <Form.Group as={Col} size="lg">
               <Form.Label>Last name</Form.Label>
-              <Form.Control
-                type="text"
-                name="lastName"
-                value={values.lastName}
-                onChange={handleChange}
-              />
+              <Form.Control type="text" name="lastName" value={values.lastName} onChange={handleChange} />
             </Form.Group>
           </Row>
           <Row className="mb-3">
             <Form.Group as={Col} size="lg">
               <Form.Label>Phone number</Form.Label>
-              <Form.Control
-                type="number"
-                name="phoneNumber"
-                value={values.phoneNumber}
-                onChange={handleChange}
-              />
+              <Form.Control type="number" name="phoneNumber" value={values.phoneNumber} onChange={handleChange} />
             </Form.Group>
           </Row>
           <Row className="mb-3">
             <Form.Group as={Col} controlId="password" size="lg">
               <Form.Label>Password</Form.Label>
-              <Form.Control
-                type="password"
-                value={values.password}
-                onChange={handleChange}
-              />
+              <Form.Control type="password" value={values.password} onChange={handleChange} />
             </Form.Group>
           </Row>
           <Row className="mb-3">
             <Form.Group as={Col} controlId="confirmPassword" size="lg">
               <Form.Label>Confirm Password</Form.Label>
-              <Form.Control
-                type="password"
-                value={values.confirmPassword}
-                onChange={handleChange}
-              />
+              <Form.Control type="password" value={values.confirmPassword} onChange={handleChange} />
             </Form.Group>
           </Row>
           <LoaderButton

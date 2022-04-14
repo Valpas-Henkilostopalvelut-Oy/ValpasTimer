@@ -1,11 +1,11 @@
-import { Auth, API } from "aws-amplify";
+import { Auth } from "aws-amplify";
 import React, { useEffect, useState } from "react";
 import { useAppContext } from "../../services/contextLib";
 import "../../App.css";
-import { Button, Typography, Box } from "@mui/material";
+import { Typography, Box } from "@mui/material";
 
 const Home = () => {
-  const { isAuthenticated, groups } = useAppContext();
+  const { isAuthenticated } = useAppContext();
   const [currentUser, setCurrentUser] = useState(null);
 
   useEffect(() => {
@@ -15,8 +15,6 @@ const Home = () => {
     };
     isAuthenticated && loadUser();
   }, [isAuthenticated]);
-
-  let nextToken;
 
   return (
     <Box>

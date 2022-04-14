@@ -44,7 +44,7 @@ const Login = () => {
             setTimeout(() => {
               checkUserProfile();
             }, 1000);
-            setAppLoading(false)
+            setAppLoading(false);
             navigate("/home", { replace: true });
             setIsLoading(false);
           } catch (e) {
@@ -58,23 +58,14 @@ const Login = () => {
             <Row className="mb-3">
               <Form.Group as={Col} size="lg" controlId="email">
                 <Form.Label>Email</Form.Label>
-                <Form.Control
-                  type="email"
-                  name="email"
-                  value={values.email}
-                  onChange={handleChange}
-                />
+                <Form.Control type="email" name="email" value={values.email} onChange={handleChange} />
               </Form.Group>
             </Row>
 
             <Row className="mb-3">
               <Form.Group as={Col} size="lg" controlId="password">
                 <Form.Label>Password</Form.Label>
-                <Form.Control
-                  type="password"
-                  value={values.password}
-                  onChange={handleChange}
-                />
+                <Form.Control type="password" value={values.password} onChange={handleChange} />
               </Form.Group>
             </Row>
 

@@ -32,9 +32,7 @@ const Team = () => {
 
       for (let i = 0; i < userCredentials.length; i++) {
         for (let ii = 0; ii < userCredentials[i].memberships.length; ii++) {
-          if (
-            userCredentials[i].memberships[ii].targetId === selectedOption.id
-          ) {
+          if (userCredentials[i].memberships[ii].targetId === selectedOption.id) {
             q.push(userCredentials[i]);
           }
         }
@@ -67,15 +65,11 @@ const Team = () => {
     } else if (selectedIndex === selected.length - 1) {
       newSelected = newSelected.concat(selected.slice(0, -1));
     } else if (selectedIndex > 0) {
-      newSelected = newSelected.concat(
-        selected.slice(0, selectedIndex),
-        selected.slice(selectedIndex + 1)
-      );
+      newSelected = newSelected.concat(selected.slice(0, selectedIndex), selected.slice(selectedIndex + 1));
     }
 
     setSelected(newSelected);
   };
-
 
   return (
     <Container>
@@ -97,9 +91,7 @@ const Team = () => {
                 <TableCell></TableCell>
                 <TableCell>Name</TableCell>
                 <TableCell align="right">Email</TableCell>
-                {groups.includes("Admins") && (
-                  <TableCell align="right">Rate</TableCell>
-                )}
+                {groups.includes("Admins") && <TableCell align="right">Rate</TableCell>}
                 <TableCell align="right">Role</TableCell>
                 <TableCell align="right">Phone number</TableCell>
               </TableRow>
@@ -120,23 +112,15 @@ const Team = () => {
                     selected={isItemSelected}
                   >
                     <TableCell>
-                      <Checkbox
-                        color="primary"
-                        checked={isItemSelected}
-                        inputProps={{ "aria-labelledby": labelId }}
-                      />
+                      <Checkbox color="primary" checked={isItemSelected} inputProps={{ "aria-labelledby": labelId }} />
                     </TableCell>
                     <TableCell>
                       {row.profile.first_name} {row.profile.last_name}
                     </TableCell>
                     <TableCell align="right">{row.profile.email}</TableCell>
-                    {groups.includes("Admins") && (
-                      <TableCell align="right">10</TableCell>
-                    )}
+                    {groups.includes("Admins") && <TableCell align="right">10</TableCell>}
                     <TableCell align="right">role (in futer)</TableCell>
-                    <TableCell align="right">
-                      {row.profile.phone_number}
-                    </TableCell>
+                    <TableCell align="right">{row.profile.phone_number}</TableCell>
                   </TableRow>
                 );
               })}

@@ -11,8 +11,7 @@ import LoaderButton from "../../components/LoaderButton";
 import { UserCredentials } from "../../models";
 
 const Settings = () => {
-  const phoneRegExp =
-    /^(\+?\d{0,4})?\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{4}\)?)?$/;
+  const phoneRegExp = /^(\+?\d{0,4})?\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{4}\)?)?$/;
 
   const valSchema = yup.object().shape({
     lastName: yup
@@ -39,10 +38,7 @@ const Settings = () => {
       .max(100, "*Email must be less than 100 characters")
       .required("*Email is required"),
 
-    phoneNumber: yup
-      .string()
-      .matches(phoneRegExp, "*Phone number is not valid")
-      .required("*Phone number required"),
+    phoneNumber: yup.string().matches(phoneRegExp, "*Phone number is not valid").required("*Phone number required"),
   });
 
   const [initValues, setIniValues] = useState(null);
@@ -152,16 +148,10 @@ const Settings = () => {
                         isInvalid={!!errors.lastName}
                       />
                     </Form.Group>
-                    <Form.Group
-                      as={Col}
-                      md="4"
-                      controlId="validationFormikUsername"
-                    >
+                    <Form.Group as={Col} md="4" controlId="validationFormikUsername">
                       <Form.Label>Username</Form.Label>
                       <InputGroup hasValidation>
-                        <InputGroup.Text id="inputGroupPrepend">
-                          @
-                        </InputGroup.Text>
+                        <InputGroup.Text id="inputGroupPrepend">@</InputGroup.Text>
                         <Form.Control
                           type="text"
                           placeholder="Username"
@@ -172,9 +162,7 @@ const Settings = () => {
                           onBlur={handleBlur}
                           isInvalid={!!errors.username}
                         />
-                        <Form.Control.Feedback type="invalid">
-                          {errors.username}
-                        </Form.Control.Feedback>
+                        <Form.Control.Feedback type="invalid">{errors.username}</Form.Control.Feedback>
                       </InputGroup>
                     </Form.Group>
                   </Row>
@@ -191,9 +179,7 @@ const Settings = () => {
                         value={values.email}
                         isInvalid={!!errors.email}
                       />
-                      <Form.Control.Feedback type="invalid">
-                        {errors.email}
-                      </Form.Control.Feedback>
+                      <Form.Control.Feedback type="invalid">{errors.email}</Form.Control.Feedback>
                     </Form.Group>
                   </Row>
 
@@ -201,9 +187,7 @@ const Settings = () => {
                     <Form.Group as={Col} controlId="phoneNumber">
                       <Form.Label>Phone number</Form.Label>
                       <InputGroup>
-                        <InputGroup.Text id="inputGroupPrepend">
-                          +358
-                        </InputGroup.Text>
+                        <InputGroup.Text id="inputGroupPrepend">+358</InputGroup.Text>
                         <Form.Control
                           type="number"
                           name="phoneNumber"
@@ -213,9 +197,7 @@ const Settings = () => {
                           value={values.phoneNumber}
                           isInvalid={!!errors.phoneNumber}
                         />
-                        <Form.Control.Feedback type="invalid">
-                          {errors.phoneNumber}
-                        </Form.Control.Feedback>
+                        <Form.Control.Feedback type="invalid">{errors.phoneNumber}</Form.Control.Feedback>
                       </InputGroup>
                     </Form.Group>
                   </Row>

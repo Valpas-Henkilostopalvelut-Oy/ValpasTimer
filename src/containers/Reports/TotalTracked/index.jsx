@@ -1,17 +1,7 @@
 import React, { useEffect, useState, Fragment } from "react";
 import { DataStore } from "aws-amplify";
 import { TimeEntry } from "../../../models";
-import { onError } from "../../../services/errorLib";
-import {
-  TableRow,
-  TableCell,
-  IconButton,
-  Collapse,
-  Box,
-  Table,
-  TableHead,
-  TableBody,
-} from "@mui/material";
+import { TableRow, TableCell, IconButton, Collapse, Box, Table, TableBody } from "@mui/material";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import { groupBy } from "../../../services/group";
@@ -39,15 +29,13 @@ const TotalLatest = ({ users, selOption, setSelected, selected }) => {
     };
 
     loadTime();
-  }, [users]);
+  }, []);
 
   const Total = () => {
     if (time !== null) {
       let t = 0;
       for (let i = 0; i < time.length; i++) {
-        t +=
-          Date.parse(time[i].timeInterval.end) -
-          Date.parse(time[i].timeInterval.start);
+        t += Date.parse(time[i].timeInterval.end) - Date.parse(time[i].timeInterval.start);
       }
       return (
         <TableCell>
@@ -66,12 +54,8 @@ const TotalLatest = ({ users, selOption, setSelected, selected }) => {
       {time != null && (
         <TableRow>
           <TableCell>
-            {time != null && time.length != 0 && (
-              <IconButton
-                aria-label="expand row"
-                size="small"
-                onClick={() => setOpen(!open)}
-              >
+            {time != null && time.length !== 0 && (
+              <IconButton aria-label="expand row" size="small" onClick={() => setOpen(!open)}>
                 {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
               </IconButton>
             )}
@@ -84,7 +68,7 @@ const TotalLatest = ({ users, selOption, setSelected, selected }) => {
           <Total />
         </TableRow>
       )}
-      {grouped != null && time != null && time.length != 0 && (
+      {grouped != null && time != null && time.length !== 0 && (
         <TableRow>
           <TableCell style={{ padding: 0 }} colSpan={6}>
             <Collapse in={open} timeout="auto" unmountOnExit>
@@ -97,16 +81,9 @@ const TotalLatest = ({ users, selOption, setSelected, selected }) => {
                           <TableCell>{week.week} week</TableCell>
                         </TableRow>
                         <TableRow>
-                          <TableCell
-                            style={{ padding: 0 }}
-                            colSpan={6}
-                          >
+                          <TableCell style={{ padding: 0 }} colSpan={6}>
                             <Box>
-                              <InList
-                                data={week}
-                                selected={selected}
-                                setSelected={setSelected}
-                              />
+                              <InList data={week} selected={selected} setSelected={setSelected} />
                             </Box>
                           </TableCell>
                         </TableRow>

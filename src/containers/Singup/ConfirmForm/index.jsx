@@ -34,25 +34,12 @@ const ConfirmationForm = () => {
         }
       }}
     >
-      {({
-        values,
-        errors,
-        touched,
-        handleChange,
-        handleBlur,
-        handleSubmit,
-        isSubmitting,
-      }) => (
+      {({ values, errors, touched, handleChange, handleBlur, handleSubmit, isSubmitting }) => (
         <Form onSubmit={handleSubmit}>
           <Row className="mb-3">
             <Form.Group as={Col} controlId="confirmationCode" size="lg">
               <Form.Label>Confirmation Code</Form.Label>
-              <Form.Control
-                autoFocus
-                type="tel"
-                onChange={handleChange}
-                value={values.confirmationCode}
-              />
+              <Form.Control autoFocus type="tel" onChange={handleChange} value={values.confirmationCode} />
               <Form.Text muted>Please check your email for the code.</Form.Text>
             </Form.Group>
           </Row>

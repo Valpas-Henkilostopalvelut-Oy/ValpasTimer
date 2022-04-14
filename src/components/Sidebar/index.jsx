@@ -2,14 +2,7 @@ import React from "react";
 import "../../App.css";
 import { SidebarData } from "./SidebarDate";
 import { LinkContainer } from "react-router-bootstrap";
-import {
-  ListItemText,
-  Divider,
-  IconButton,
-  List,
-  ListItemButton,
-  ListItemIcon,
-} from "@mui/material";
+import { ListItemText, Divider, IconButton, List, ListItemButton, ListItemIcon } from "@mui/material";
 import MuiDrawer from "@mui/material/Drawer";
 import { styled, useTheme } from "@mui/material/styles";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
@@ -75,17 +68,13 @@ const Sidebar = ({ open, setOpen }) => {
     <Drawer variant="permanent" open={open}>
       <DrawerHeader>
         <IconButton onClick={handleDrawerClose}>
-          {theme.direction === "rtl" ? (
-            <ChevronRightIcon />
-          ) : (
-            <ChevronLeftIcon />
-          )}
+          {theme.direction === "rtl" ? <ChevronRightIcon /> : <ChevronLeftIcon />}
         </IconButton>
       </DrawerHeader>
       <Divider />
       <List>
         {SidebarData.map((component, index) => {
-          if (component.access.includes(groups[0])) {
+          if (component.access.includes(groups[0]) || component.default) {
             return (
               <LinkContainer to={component.link} key={component.title}>
                 <ListItemButton
@@ -104,10 +93,7 @@ const Sidebar = ({ open, setOpen }) => {
                   >
                     {component.icon}
                   </ListItemIcon>
-                  <ListItemText
-                    primary={component.title}
-                    sx={{ opacity: open ? 1 : 0 }}
-                  />
+                  <ListItemText primary={component.title} sx={{ opacity: open ? 1 : 0 }} />
                 </ListItemButton>
               </LinkContainer>
             );

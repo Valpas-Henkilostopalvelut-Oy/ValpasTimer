@@ -2,11 +2,9 @@ import React, { Fragment, useEffect, useState } from "react";
 import "./timer.css";
 import "../../App.css";
 import { DataStore, Auth } from "aws-amplify";
-import { TimeEntry, AllWorkSpaces } from "../../models";
-import { onError } from "../../services/errorLib";
+import { TimeEntry } from "../../models";
 import { useAppContext } from "../../services/contextLib";
 import {
-  Typography,
   Container,
   Table,
   TableContainer,
@@ -20,6 +18,7 @@ import {
   Box,
   IconButton,
   TextField,
+  Typography,
 } from "@mui/material";
 import Recorder from "./Recorder";
 import TableToolBar from "./ListTableToolbar";
@@ -37,9 +36,7 @@ const updateValue = async ({ val, type, reload, id, time }) => {
       const d = await DataStore.query(TimeEntry, id);
       await DataStore.save(
         TimeEntry.copyOf(d, (update) => {
-          update.timeInterval.start = new Date(
-            new Date(time).setHours(val.h, val.m, 0)
-          ).toISOString();
+          update.timeInterval.start = new Date(new Date(time).setHours(val.h, val.m, 0)).toISOString();
         })
       );
       reload();
@@ -47,9 +44,7 @@ const updateValue = async ({ val, type, reload, id, time }) => {
       const d = await DataStore.query(TimeEntry, id);
       await DataStore.save(
         TimeEntry.copyOf(d, (update) => {
-          update.timeInterval.end = new Date(
-            new Date(time).setHours(val.h, val.m, 0)
-          ).toISOString();
+          update.timeInterval.end = new Date(new Date(time).setHours(val.h, val.m, 0)).toISOString();
         })
       );
       reload();
@@ -59,7 +54,7 @@ const updateValue = async ({ val, type, reload, id, time }) => {
   }
 };
 
-const EditDescription = ({ reload, description, data, id }) => {
+const EditDescription = ({ reload, description, data, id, isSent }) => {
   const [desc, setDesc] = useState(description);
 
   const updateDesc = async () => {
@@ -74,7 +69,7 @@ const EditDescription = ({ reload, description, data, id }) => {
     }
   };
 
-  return (
+  return !isSent ? (
     <TextField
       onChange={(event) => setDesc(event.target.value)}
       onBlur={updateDesc}
@@ -83,6 +78,10 @@ const EditDescription = ({ reload, description, data, id }) => {
       placeholder="Add description"
       variant="standard"
     />
+  ) : desc !== "" ? (
+    <Typography variant="p">{desc}</Typography>
+  ) : (
+    <Typography variant="p">None description</Typography>
   );
 };
 
@@ -118,10 +117,7 @@ const Details = ({ data, selected, setSelected, loadTimeList, index }) => {
     } else if (selectedIndex === selected.length - 1) {
       newSelected = newSelected.concat(selected.slice(0, -1));
     } else if (selectedIndex > 0) {
-      newSelected = newSelected.concat(
-        selected.slice(0, selectedIndex),
-        selected.slice(selectedIndex + 1)
-      );
+      newSelected = newSelected.concat(selected.slice(0, selectedIndex), selected.slice(selectedIndex + 1));
     }
 
     setSelected(newSelected);
@@ -134,29 +130,18 @@ const Details = ({ data, selected, setSelected, loadTimeList, index }) => {
   let end = new Date(data.arr[0].timeInterval.end);
   let total = new Date(Date.parse(end) - Date.parse(start));
 
-  let totalVal = `${String("0" + total.getUTCHours()).slice(-2)}:${String(
-    "0" + total.getUTCMinutes()
-  ).slice(-2)}:${String("0" + total.getUTCSeconds()).slice(-2)}`;
-  let startVal = `${String("0" + start.getHours()).slice(-2)}:${String(
-    "0" + start.getMinutes()
-  ).slice(-2)}`;
-  let endVal = `${String("0" + end.getHours()).slice(-2)}:${String(
-    "0" + end.getMinutes()
-  ).slice(-2)}`;
+  let totalVal = `${String("0" + total.getUTCHours()).slice(-2)}:${String("0" + total.getUTCMinutes()).slice(
+    -2
+  )}:${String("0" + total.getUTCSeconds()).slice(-2)}`;
+  let startVal = `${String("0" + start.getHours()).slice(-2)}:${String("0" + start.getMinutes()).slice(-2)}`;
+  let endVal = `${String("0" + end.getHours()).slice(-2)}:${String("0" + end.getMinutes()).slice(-2)}`;
 
   const isItemSelected = isSelected(data);
   const labelId = `enhanced-table-checkbox-${index}`;
 
   return (
     <Fragment>
-      <TableRow
-        key={index}
-        hover
-        role="checkbox"
-        selected={isItemSelected}
-        aria-checked={isItemSelected}
-        tabIndex={-1}
-      >
+      <TableRow key={index} hover role="checkbox" selected={isItemSelected} aria-checked={isItemSelected} tabIndex={-1}>
         <TableCell>
           <Checkbox
             color="primary"
@@ -167,11 +152,7 @@ const Details = ({ data, selected, setSelected, loadTimeList, index }) => {
         </TableCell>
 
         <TableCell>
-          <IconButton
-            aria-label="expand row"
-            size="small"
-            onClick={() => setOpen(!open)}
-          >
+          <IconButton aria-label="expand row" size="small" onClick={() => setOpen(!open)}>
             {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
           </IconButton>
         </TableCell>
@@ -205,12 +186,14 @@ const Details = ({ data, selected, setSelected, loadTimeList, index }) => {
                             data={row}
                             id={row.id}
                             reload={loadTimeList}
+                            isSent={row.isSent}
                           />
                         </TableCell>
 
                         <TableCell align="right">
                           <TimeEditing
                             time={row.timeInterval.start}
+                            isSent={row.isSent}
                             onChange={(event) =>
                               updateValue({
                                 id: row.id,
@@ -226,6 +209,7 @@ const Details = ({ data, selected, setSelected, loadTimeList, index }) => {
                         <TableCell align="right">
                           <TimeEditing
                             time={row.timeInterval.end}
+                            isSent={row.isSent}
                             onChange={(event) =>
                               updateValue({
                                 id: row.id,
@@ -297,8 +281,11 @@ const Timer = () => {
   };
 
   useEffect(() => {
-    loadTimeList();
-    setSelected([]);
+    let isActive = false;
+
+    !isActive && loadTimeList();
+
+    return () => (isActive = true);
   }, [selectedOption]);
 
   return (

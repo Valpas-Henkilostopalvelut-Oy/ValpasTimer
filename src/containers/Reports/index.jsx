@@ -1,22 +1,8 @@
 import React, { useEffect, useState } from "react";
 import "./style.css";
-import { useAppContext, AppContext } from "../../services/contextLib";
+import { useAppContext } from "../../services/contextLib";
 import TotalLatest from "./TotalTracked";
-import {
-  Switch,
-  Container,
-  Grid,
-  List,
-  Table,
-  TableContainer,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableRow,
-  Paper,
-  Stack,
-  Box,
-} from "@mui/material";
+import { Container, Table, TableContainer, TableBody, TableCell, TableHead, TableRow, Paper, Box } from "@mui/material";
 
 import { DataStore } from "aws-amplify";
 import { UserCredentials } from "../../models";
@@ -33,11 +19,7 @@ const Dashboard = () => {
     let q = [];
 
     for (let i = 0; i < usersCredentials.length; i++) {
-      if (
-        usersCredentials[i].memberships.filter(
-          (m) => m.targetId === selectedOption.id
-        ).length > 0
-      ) {
+      if (usersCredentials[i].memberships.filter((m) => m.targetId === selectedOption.id).length > 0) {
         q.push(usersCredentials[i]);
       }
     }

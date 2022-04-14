@@ -11,35 +11,191 @@ import {
   TableRow,
   TableFooter,
   Checkbox,
-  Button,
+  Select,
+  InputLabel,
+  MenuItem,
+  ListItemText,
+  FormControl,
+  Box,
+  OutlinedInput,
+  Typography,
 } from "@mui/material";
 import { DataStore, Auth, API } from "aws-amplify";
 import { UserCredentials, AllWorkSpaces } from "../../models";
 import ListToolbar from "./ListToolbar";
 
-const Workers = () => {
-  const [users, setUsers] = useState(null);
-  const [workspaceList, setList] = useState(null);
-  const [page, setPage] = useState(0);
-  const [usersPerPage, setUsersPerPage] = useState(5);
-  const [selected, setSelected] = useState([]);
+const CurrentWork = ({ row }) => {
+  const [state, setState] = useState(null);
 
   useEffect(() => {
     let isActive = false;
 
-    const loadWorks = async () => {
+    const workname = async () => {
       try {
-        const works = await DataStore.query(AllWorkSpaces);
-        works.length !== 0 && setList(works);
+        const credentialsId = row.Attributes.find((a) => a.Name === "custom:UserCreditails").Value;
+        const lastWorkspace = await DataStore.query(UserCredentials, credentialsId);
+
+        if (lastWorkspace !== undefined) {
+          if (lastWorkspace.defaultWorkspace !== null) {
+            const workID = lastWorkspace.defaultWorkspace;
+
+            const work = await DataStore.query(AllWorkSpaces, workID);
+
+            setState(work.name);
+          } else setState("Without last work");
+        } else setState("Unknown user");
       } catch (error) {
         console.warn(error);
       }
     };
 
-    !isActive && loadWorks();
+    !isActive && workname();
 
     return () => (isActive = true);
-  }, []);
+  }, [row]);
+
+  return state;
+};
+
+const CurrentGroup = ({ row }) => {
+  const [groups, setGroups] = useState([]);
+  const [allGroups, setAllGroups] = useState([]);
+
+  const ITEM_HEIGHT = 48;
+  const ITEM_PADDING_TOP = 8;
+  const MenuProps = {
+    PaperProps: {
+      style: {
+        maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+        width: 250,
+      },
+    },
+  };
+
+  useEffect(() => {
+    let isActive = false;
+
+    const listGroup = async (Username) => {
+      let apiName = "AdminQueries";
+      let path = "/ListGroupsForUser";
+      let myInit = {
+        queryStringParameters: {
+          username: row.Username,
+        },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `${(await Auth.currentSession()).getAccessToken().getJwtToken()}`,
+        },
+      };
+
+      let w = (await API.get(apiName, path, myInit)).Groups;
+      let q = [];
+
+      for (let i = 0; i < w.length; i++) q.push(w[i].GroupName);
+
+      setGroups(q);
+    };
+
+    !isActive && listGroup();
+
+    return () => (isActive = true);
+  }, [row]);
+
+  useEffect(() => {
+    let isActive = false;
+
+    const loadList = async () => {
+      let apiName = "AdminQueries";
+      let path = "/ListGroups";
+      let myInit = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `${(await Auth.currentSession()).getAccessToken().getJwtToken()}`,
+        },
+      };
+
+      let w = (await API.get(apiName, path, myInit)).Groups;
+      let q = [];
+
+      for (let i = 0; i < w.length; i++) q.push(w[i].GroupName);
+
+      setAllGroups(q);
+    };
+
+    !isActive && loadList();
+
+    return () => (isActive = true);
+  }, [row]);
+
+  const handleChange = (event) => {
+    const manage = async ({ group, username, path }) => {
+      let apiName = "AdminQueries";
+      let myInit = {
+        body: {
+          username: username,
+          groupname: group,
+        },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `${(await Auth.currentSession()).getAccessToken().getJwtToken()}`,
+        },
+      };
+
+      return await API.post(apiName, path, myInit);
+    };
+
+    const {
+      target: { value },
+    } = event;
+
+    if (groups.length + 1 === value.length) {
+      manage({ path: "/addUserToGroup", group: value[value.length - 1], username: row.Username });
+    } else if (groups.length - 1 === value.length) {
+      for (let i = 0; i < groups.length; i++) {
+        for (let ii = 0; ii < value.length; ii++) {
+          if (groups[i] === value[ii]) groups.splice(i, 1);
+        }
+      }
+
+      manage({ path: "/removeUserFromGroup", group: groups[0], username: row.Username });
+    }
+
+    setGroups(typeof value === "string" ? value.split(",") : value);
+  };
+
+  return (
+    <Box>
+      {allGroups.length !== 0 ? (
+        <FormControl variant="standard" sx={{ m: 1, minWidth: 120, maxWidth: 120 }}>
+          <InputLabel>Groups</InputLabel>
+          <Select
+            label="Groups"
+            multiple
+            value={groups}
+            renderValue={(selected) => selected.join(", ")}
+            MenuProps={MenuProps}
+            onChange={handleChange}
+          >
+            {allGroups.map((name) => (
+              <MenuItem key={name} value={name}>
+                <Checkbox checked={groups.indexOf(name) > -1} />
+                <ListItemText primary={name} />
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+      ) : (
+        <Typography>Loading...</Typography>
+      )}
+    </Box>
+  );
+};
+
+const Workers = () => {
+  const [users, setUsers] = useState(null);
+  const [page, setPage] = useState(0);
+  const [usersPerPage, setUsersPerPage] = useState(5);
+  const [selected, setSelected] = useState([]);
 
   useEffect(() => {
     let isActive = false;
@@ -51,9 +207,7 @@ const Workers = () => {
         let myInit = {
           headers: {
             "Content-Type": "application/json",
-            Authorization: `${(await Auth.currentSession())
-              .getAccessToken()
-              .getJwtToken()}`,
+            Authorization: `${(await Auth.currentSession()).getAccessToken().getJwtToken()}`,
           },
         };
 
@@ -69,36 +223,7 @@ const Workers = () => {
     return () => (isActive = true);
   }, []);
 
-  const CurrentWork = ({ workspaceId }) => {
-    const curWork = workspaceList.find((w) => w.id === workspaceId);
-    if (curWork !== undefined) return curWork.name;
-    else return "undefined";
-  };
-
-  const listGroup = async (Username) => {
-    let apiName = "AdminQueries";
-    let path = "/ListGroupsForUser";
-    let myInit = {
-      queryStringParameters: {
-        username: "7760d2ad-fcb4-419a-9d39-71bad7762fa0",
-      },
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `${(await Auth.currentSession())
-          .getAccessToken()
-          .getJwtToken()}`,
-      },
-    };
-
-    const group = await API.get(apiName, path, myInit);
-
-    console.log(group);
-
-    return group;
-  };
-
-  const emptyRows =
-    page > 0 ? Math.max(0, (1 + page) * usersPerPage - users.length) : 0;
+  const emptyRows = page > 0 ? Math.max(0, (1 + page) * usersPerPage - users.length) : 0;
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -122,25 +247,16 @@ const Workers = () => {
     } else if (selectedIndex === selected.length - 1) {
       newSelected = newSelected.concat(selected.slice(0, -1));
     } else if (selectedIndex > 0) {
-      newSelected = newSelected.concat(
-        selected.slice(0, selectedIndex),
-        selected.slice(selectedIndex + 1)
-      );
+      newSelected = newSelected.concat(selected.slice(0, selectedIndex), selected.slice(selectedIndex + 1));
     }
 
     setSelected(newSelected);
   };
 
-  console.log(listGroup());
-
   return (
     <Container>
       <TableContainer component={Paper}>
-        <ListToolbar
-          numSelected={selected.length}
-          selected={selected}
-          setSelected={setSelected}
-        />
+        <ListToolbar numSelected={selected.length} selected={selected} setSelected={setSelected} />
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead>
             <TableRow>
@@ -155,70 +271,51 @@ const Workers = () => {
           {users !== null && (
             <>
               <TableBody>
-                {(usersPerPage > 0
-                  ? users.slice(
-                      page * usersPerPage,
-                      page * usersPerPage + usersPerPage
-                    )
-                  : users
-                ).map((row, index) => {
-                  const isItemSelected = isSelected(row.Username);
-                  const labelId = `enhanced-table-checkbox-${index}`;
+                {(usersPerPage > 0 ? users.slice(page * usersPerPage, page * usersPerPage + usersPerPage) : users).map(
+                  (row, index) => {
+                    const isItemSelected = isSelected(row.Username);
+                    const labelId = `enhanced-table-checkbox-${index}`;
 
-                  return (
-                    <TableRow
-                      key={row.Username}
-                      hover
-                      role="checkbox"
-                      aria-checked={isItemSelected}
-                      tabIndex={-1}
-                      selected={isItemSelected}
-                    >
-                      <TableCell>
-                        <Checkbox
-                          color="primary"
-                          checked={isItemSelected}
-                          inputProps={{ "aria-labelledby": labelId }}
-                          onClick={(event) => handleClick(event, row.Username)}
-                        />
-                      </TableCell>
-
-                      <TableCell
-                        component="th"
-                        scope="row"
-                        id={labelId}
-                        padding="none"
+                    return (
+                      <TableRow
+                        key={row.Username}
+                        hover
+                        role="checkbox"
+                        aria-checked={isItemSelected}
+                        tabIndex={-1}
+                        selected={isItemSelected}
                       >
-                        {
-                          row.Attributes.find((a) => a.Name === "family_name")
-                            .Value
-                        }
-                        {row.Attributes.find((a) => a.Name === "name").Value}{" "}
-                      </TableCell>
+                        <TableCell>
+                          <Checkbox
+                            color="primary"
+                            checked={isItemSelected}
+                            inputProps={{ "aria-labelledby": labelId }}
+                            onClick={(event) => handleClick(event, row.Username)}
+                          />
+                        </TableCell>
 
-                      <TableCell align="right">
-                        {row.Attributes.find((a) => a.Name === "email").Value}
-                      </TableCell>
+                        <TableCell component="th" scope="row" id={labelId} padding="none">
+                          {row.Attributes.find((a) => a.Name === "family_name").Value}{" "}
+                          {row.Attributes.find((a) => a.Name === "name").Value}
+                        </TableCell>
 
-                      <TableCell align="right">
-                        {
-                          row.Attributes.find((a) => a.Name === "phone_number")
-                            .Value
-                        }
-                      </TableCell>
+                        <TableCell align="right">{row.Attributes.find((a) => a.Name === "email").Value}</TableCell>
 
-                      <TableCell align="right">1</TableCell>
+                        <TableCell align="right">
+                          {row.Attributes.find((a) => a.Name === "phone_number").Value}
+                        </TableCell>
 
-                      <TableCell align="right">
-                        {workspaceList !== null ? (
-                          <CurrentWork workspaceId={row.defaultWorkspace} />
-                        ) : (
-                          "Loading..."
-                        )}
-                      </TableCell>
-                    </TableRow>
-                  );
-                })}
+                        <TableCell align="right">
+                          <CurrentGroup row={row} />
+                        </TableCell>
+
+                        <TableCell align="right">
+                          <CurrentWork row={row} />
+                        </TableCell>
+                      </TableRow>
+                    );
+                  }
+                )}
 
                 {emptyRows > 0 && (
                   <TableRow style={{ height: 53 * emptyRows }}>
@@ -229,12 +326,7 @@ const Workers = () => {
               <TableFooter>
                 <TableRow>
                   <TablePagination
-                    rowsPerPageOptions={[
-                      5,
-                      10,
-                      25,
-                      { label: "All", value: -1 },
-                    ]}
+                    rowsPerPageOptions={[5, 10, 25, { label: "All", value: -1 }]}
                     count={users.length}
                     rowsPerPage={usersPerPage}
                     page={page}

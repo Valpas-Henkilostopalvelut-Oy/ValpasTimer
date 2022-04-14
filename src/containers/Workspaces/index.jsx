@@ -44,10 +44,7 @@ const UserList = ({ member, data, index, selected, setSelected }) => {
     } else if (selectedIndex === selected.length - 1) {
       newSelected = newSelected.concat(selected.slice(0, -1));
     } else if (selectedIndex > 0) {
-      newSelected = newSelected.concat(
-        selected.slice(0, selectedIndex),
-        selected.slice(selectedIndex + 1)
-      );
+      newSelected = newSelected.concat(selected.slice(0, selectedIndex), selected.slice(selectedIndex + 1));
     }
 
     setSelected(newSelected);
@@ -76,13 +73,7 @@ const UserList = ({ member, data, index, selected, setSelected }) => {
   }, []);
 
   return user !== null ? (
-    <TableRow
-      hover
-      role="checkbox"
-      aria-checked={isItemSelected}
-      tabIndex={-1}
-      selected={isItemSelected}
-    >
+    <TableRow hover role="checkbox" aria-checked={isItemSelected} tabIndex={-1} selected={isItemSelected}>
       <TableCell padding="checkbox">
         <Checkbox
           color="primary"
@@ -117,15 +108,9 @@ const AddUser = ({ open, setOpen, data, id }) => {
 
   const handleAddUser = async () => {
     if (groups.includes("Admins")) {
-      const credentials = (await DataStore.query(UserCredentials)).find(
-        (u) => u.profile.email === userEmail
-      );
+      const credentials = (await DataStore.query(UserCredentials)).find((u) => u.profile.email === userEmail);
       const original = await DataStore.query(AllWorkSpaces, id);
-      if (
-        groups.includes("Admins") &&
-        credentials !== undefined &&
-        original !== undefined
-      ) {
+      if (groups.includes("Admins") && credentials !== undefined && original !== undefined) {
         try {
           await DataStore.save(
             AllWorkSpaces.copyOf(original, (updated) => {
@@ -213,30 +198,16 @@ const TableToolBar = ({ selected, data, numSelected, setSelected }) => {
         pl: { sm: 2 },
         pr: { xs: 1, sm: 1 },
         ...(numSelected > 0 && {
-          bgcolor: (theme) =>
-            alpha(
-              theme.palette.primary.main,
-              theme.palette.action.activatedOpacity
-            ),
+          bgcolor: (theme) => alpha(theme.palette.primary.main, theme.palette.action.activatedOpacity),
         }),
       }}
     >
       {numSelected > 0 ? (
-        <Typography
-          sx={{ flex: "1 1 100%" }}
-          color="inherit"
-          variant="subtitle1"
-          component="div"
-        >
+        <Typography sx={{ flex: "1 1 100%" }} color="inherit" variant="subtitle1" component="div">
           {numSelected} selected
         </Typography>
       ) : (
-        <Typography
-          sx={{ flex: "1 1 100%" }}
-          variant="h6"
-          id="tableTitle"
-          component="div"
-        >
+        <Typography sx={{ flex: "1 1 100%" }} variant="h6" id="tableTitle" component="div">
           User list
         </Typography>
       )}
@@ -297,10 +268,7 @@ const Row = ({ data, reload }) => {
 
   return (
     <Fragment>
-      <TableRow
-        key={data.name}
-        sx={{ "&:last-child tg, &:last-child th": { border: 0 } }}
-      >
+      <TableRow key={data.name} sx={{ "&:last-child tg, &:last-child th": { border: 0 } }}>
         <TableCell component="th" scope="row" width={950}>
           {data.name}
         </TableCell>
@@ -327,13 +295,7 @@ const Row = ({ data, reload }) => {
                 updateValue({ values, setSubmitting, data });
               }}
             >
-              {({
-                values,
-                handleSubmit,
-                handleChange,
-                handleBlur,
-                isSubmitting,
-              }) => (
+              {({ values, handleSubmit, handleChange, handleBlur, isSubmitting }) => (
                 <Box
                   component="form"
                   sx={{
@@ -352,13 +314,7 @@ const Row = ({ data, reload }) => {
                     onChange={handleChange("name")}
                     variant="standard"
                   />
-                  <Button
-                    type="submit"
-                    variant="contained"
-                    color="primary"
-                    size="large"
-                    disabled={isSubmitting}
-                  >
+                  <Button type="submit" variant="contained" color="primary" size="large" disabled={isSubmitting}>
                     Save
                   </Button>
                 </Box>
@@ -373,10 +329,7 @@ const Row = ({ data, reload }) => {
               id={data.id}
             />
 
-            <TableContainer
-              component={Paper}
-              sx={{ maxHeight: 440, width: "100%" }}
-            >
+            <TableContainer component={Paper} sx={{ maxHeight: 440, width: "100%" }}>
               <Table aria-label="stivky table">
                 <TableHead>
                   <TableRow>
@@ -480,10 +433,7 @@ const Workspaces = () => {
               </TableCell>
             </TableRow>
             <TableRow>
-              <TableCell
-                colSpan={4}
-                style={{ paddingBottom: 0, paddingTop: 0 }}
-              >
+              <TableCell colSpan={4} style={{ paddingBottom: 0, paddingTop: 0 }}>
                 <Collapse in={open} timeout="auto" unmountOnExit>
                   <Box sx={{ margin: 1 }}>
                     <Formik
@@ -513,12 +463,7 @@ const Workspaces = () => {
                             onChange={handleChange("name")}
                             variant="standard"
                           />
-                          <Button
-                            type="submit"
-                            variant="contained"
-                            color="primary"
-                            size="large"
-                          >
+                          <Button type="submit" variant="contained" color="primary" size="large">
                             Save
                           </Button>
                         </Box>
@@ -530,10 +475,7 @@ const Workspaces = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {works !== null &&
-              works.map((row) => (
-                <Row data={row} key={row.name} reload={loadWorks} />
-              ))}
+            {works !== null && works.map((row) => <Row data={row} key={row.name} reload={loadWorks} />)}
           </TableBody>
         </Table>
       </TableContainer>

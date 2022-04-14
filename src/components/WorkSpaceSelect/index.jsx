@@ -3,37 +3,32 @@ import "./WorkspaceSelect.css";
 import { Auth, DataStore, Hub } from "aws-amplify";
 import { AllWorkSpaces, UserCredentials } from "../../models";
 import { useAppContext } from "../../services/contextLib";
-import {
-  Box,
-  InputLabel,
-  MenuItem,
-  FormControl,
-  Select,
-  Button,
-} from "@mui/material";
+import { Box, InputLabel, MenuItem, FormControl, Select, Button } from "@mui/material";
 
 const WorkspaceSelect = () => {
   const [list, setList] = useState([]);
-  const { selectedOption, setSelectedOption, appLoading, setAppLoading } =
-    useAppContext();
+  const { selectedOption, setSelectedOption, appLoading, setAppLoading } = useAppContext();
 
   useEffect(() => {
     let isActive = false;
 
+    Hub.listen("datastore", (data) => {
+      // eslint-disable-next-line default-case
+      switch (data.payload.event) {
+        case "ready":
+          makeList();
+          break;
+      }
+    });
+
     const makeList = async () => {
       const user = await Auth.currentAuthenticatedUser();
-      const creditails = await DataStore.query(
-        UserCredentials,
-        user.attributes["custom:UserCreditails"]
-      );
+      const creditails = await DataStore.query(UserCredentials, user.attributes["custom:UserCreditails"]);
 
       let q = [];
 
       for (let i = 0; i < creditails.memberships.length; i++) {
-        const workspaceList = await DataStore.query(
-          AllWorkSpaces,
-          creditails.memberships[i].targetId
-        );
+        const workspaceList = await DataStore.query(AllWorkSpaces, creditails.memberships[i].targetId);
         q.push({
           value: workspaceList.name,
           label: workspaceList.name,
@@ -54,10 +49,7 @@ const WorkspaceSelect = () => {
 
     const lastWorkspaceLoad = async () => {
       const loggedUser = await Auth.currentAuthenticatedUser();
-      const creditails = await DataStore.query(
-        UserCredentials,
-        loggedUser.attributes["custom:UserCreditails"]
-      );
+      const creditails = await DataStore.query(UserCredentials, loggedUser.attributes["custom:UserCreditails"]);
 
       if (creditails.memberships.length !== 0) {
         if (creditails.defaultWorkspace !== null) {
@@ -72,10 +64,7 @@ const WorkspaceSelect = () => {
       }
     };
 
-    !isActive &&
-      list.length !== 0 &&
-      selectedOption === null &&
-      lastWorkspaceLoad();
+    !isActive && list.length !== 0 && selectedOption === null && lastWorkspaceLoad();
 
     return () => (isActive = true);
   }, [list]);
@@ -83,10 +72,7 @@ const WorkspaceSelect = () => {
   const changeLastValue = async (val) => {
     try {
       const userAtributes = await Auth.currentAuthenticatedUser();
-      const original = await DataStore.query(
-        UserCredentials,
-        userAtributes.attributes["custom:UserCreditails"]
-      );
+      const original = await DataStore.query(UserCredentials, userAtributes.attributes["custom:UserCreditails"]);
       await DataStore.save(
         UserCredentials.copyOf(original, (newValue) => {
           newValue.defaultWorkspace = val;

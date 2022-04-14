@@ -5,12 +5,7 @@ import { AllWorkSpaces, UserCredentials } from "../../../models";
 import { useAppContext } from "../../../services/contextLib";
 import { onError } from "../../../services/errorLib";
 
-const PopupAddUser = ({
-  workspaceId,
-  groups,
-  modalState,
-  closeModal,
-}) => {
+const PopupAddUser = ({ workspaceId, groups, modalState, closeModal }) => {
   const { selectedOption } = useAppContext();
   const [userEmail, setUserEmail] = useState("");
 
@@ -20,9 +15,7 @@ const PopupAddUser = ({
 
   const handleAddUser = async () => {
     if (groups.includes("Admins")) {
-      const credentials = (await DataStore.query(UserCredentials)).find(
-        (u) => u.profile.email === userEmail
-      );
+      const credentials = (await DataStore.query(UserCredentials)).find((u) => u.profile.email === userEmail);
       const original = await DataStore.query(AllWorkSpaces, workspaceId);
       if (groups.includes("Admins") && credentials !== undefined && original !== undefined) {
         try {
@@ -39,7 +32,6 @@ const PopupAddUser = ({
           );
         } catch (error) {
           onError(error);
-          
         }
         try {
           await DataStore.save(

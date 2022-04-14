@@ -12,10 +12,7 @@ const HeadToolBar = (props) => {
     for (let i = 0; i < selected.length; i++) {
       for (let ii = 0; ii < selected[i].arr.length; ii++) {
         try {
-          const timeToConfirm = await DataStore.query(
-            TimeEntry,
-            selected[i].arr[ii].id
-          );
+          const timeToConfirm = await DataStore.query(TimeEntry, selected[i].arr[ii].id);
 
           if (!timeToConfirm.isConfirmed) {
             await DataStore.save(
@@ -42,21 +39,12 @@ const HeadToolBar = (props) => {
         pl: { sm: 2 },
         pr: { xs: 1, sm: 1 },
         ...(numSelected > 0 && {
-          bgcolor: (theme) =>
-            alpha(
-              theme.palette.primary.main,
-              theme.palette.action.activatedOpacity
-            ),
+          bgcolor: (theme) => alpha(theme.palette.primary.main, theme.palette.action.activatedOpacity),
         }),
       }}
     >
       {numSelected > 0 ? (
-        <Typography
-          sx={{ flex: "1 1 100%" }}
-          color="inherit"
-          variant="subtitle1"
-          component="div"
-        >
+        <Typography sx={{ flex: "1 1 100%" }} color="inherit" variant="subtitle1" component="div">
           {numSelected} selected
         </Typography>
       ) : (

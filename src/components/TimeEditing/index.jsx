@@ -1,17 +1,15 @@
-import { TextField, Box } from "@mui/material";
-import React, { useState, useEffect } from "react";
+import { TextField, Typography } from "@mui/material";
+import React, { useState } from "react";
 import { timeMaker } from "../../services/time";
 
-const TimeEditing = ({ time, onChange }) => {
+const TimeEditing = ({ time, onChange, isSent }) => {
   const d = new Date(time);
 
   const [value, setValue] = useState(
-    `${String("0" + d.getHours()).slice(-2)}:${String(
-      "0" + d.getMinutes()
-    ).slice(-2)}`
+    `${String("0" + d.getHours()).slice(-2)}:${String("0" + d.getMinutes()).slice(-2)}`
   );
 
-  return (
+  return !isSent ? (
     <TextField
       sx={{ width: 42 }}
       variant="standard"
@@ -20,12 +18,12 @@ const TimeEditing = ({ time, onChange }) => {
       onBlur={(event) => {
         let val = timeMaker(event, time);
 
-        setValue(
-          `${String("0" + val.h).slice(-2)}:${String("0" + val.m).slice(-2)}`
-        );
+        setValue(`${String("0" + val.h).slice(-2)}:${String("0" + val.m).slice(-2)}`);
         return onChange(val);
       }}
     />
+  ) : (
+    <Typography>{value}</Typography>
   );
 };
 

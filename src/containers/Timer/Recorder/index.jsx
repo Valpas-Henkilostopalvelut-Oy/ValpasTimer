@@ -1,13 +1,6 @@
 import React, { useEffect, useState, Fragment } from "react";
 import "./timeRecorder.css";
-import {
-  TextField,
-  Button,
-  Box,
-  Grid,
-  Switch,
-  Typography,
-} from "@mui/material";
+import { TextField, Button, Box, Grid, Switch, Typography } from "@mui/material";
 import { Auth, DataStore } from "aws-amplify";
 import { UserCredentials, TimeEntry } from "../../../models";
 import TimeEditing from "../../../components/TimeEditing";
@@ -69,12 +62,7 @@ const Manual = ({ reload, description, selectedOption }) => {
 
       <Grid item xs>
         Start:
-        <TimeEditing
-          time={start}
-          onChange={(val) =>
-            setStart(new Date(start.setHours(val.h, val.m, 0)))
-          }
-        />
+        <TimeEditing time={start} onChange={(val) => setStart(new Date(start.setHours(val.h, val.m, 0)))} />
       </Grid>
 
       <Grid item xs>
@@ -89,8 +77,7 @@ const Manual = ({ reload, description, selectedOption }) => {
 
       <Grid item xs>
         <Typography>
-          {String("0" + total.getUTCHours()).slice(-2)}:
-          {String("0" + total.getUTCMinutes()).slice(-2)}:
+          {String("0" + total.getUTCHours()).slice(-2)}:{String("0" + total.getUTCMinutes()).slice(-2)}:
           {String("0" + total.getUTCMilliseconds()).slice(-2)}
         </Typography>
       </Grid>
@@ -110,25 +97,33 @@ const Timer = ({ description, selectedOption, reload }) => {
   });
   const [started, setStarted] = useState(false);
 
-  useEffect(async () => {
-    const user = await Auth.currentAuthenticatedUser();
-    if (user.attributes["custom:RuningTimeEntry"] !== "null") {
-      const ongoingTime = await DataStore.query(
-        TimeEntry,
-        user.attributes["custom:RuningTimeEntry"]
-      );
+  useEffect(() => {
+    let isActive = false;
 
-      const timeDiff = new Date(
-        Date.parse(new Date()) - Date.parse(ongoingTime.timeInterval.start)
-      );
-      setTime({
-        seconds: timeDiff.getUTCSeconds(),
-        minutes: timeDiff.getUTCMinutes(),
-        hours: timeDiff.getUTCHours(),
-      });
+    const checkActiveTime = async () => {
+      try {
+        const user = await Auth.currentAuthenticatedUser();
 
-      setStarted(true);
-    }
+        if (user.attributes["custom:RuningTimeEntry"] !== "null") {
+          const ongoingTime = await DataStore.query(TimeEntry, user.attributes["custom:RuningTimeEntry"]);
+
+          const timeDiff = new Date(Date.parse(new Date()) - Date.parse(ongoingTime.timeInterval.start));
+          setTime({
+            seconds: timeDiff.getUTCSeconds(),
+            minutes: timeDiff.getUTCMinutes(),
+            hours: timeDiff.getUTCHours(),
+          });
+
+          setStarted(true);
+        }
+      } catch (error) {
+        console.warn(error);
+      }
+    };
+
+    !isActive && checkActiveTime();
+
+    return () => (isActive = true);
   }, []);
 
   useEffect(() => {
@@ -154,8 +149,7 @@ const Timer = ({ description, selectedOption, reload }) => {
           nHours = 0;
         }
 
-        !isCanceled &&
-          setTime({ seconds: nSeconds, minutes: nMinutes, hours: nHours });
+        !isCanceled && setTime({ seconds: nSeconds, minutes: nMinutes, hours: nHours });
       }, 1000);
     };
     started && advanceTime();
@@ -194,10 +188,7 @@ const Timer = ({ description, selectedOption, reload }) => {
           })
         );
 
-        const original = await DataStore.query(
-          UserCredentials,
-          user.attributes["custom:UserCreditails"]
-        );
+        const original = await DataStore.query(UserCredentials, user.attributes["custom:UserCreditails"]);
 
         await DataStore.save(
           UserCredentials.copyOf(original, (updated) => {
@@ -211,10 +202,7 @@ const Timer = ({ description, selectedOption, reload }) => {
       };
 
       const endTimeEntry = async () => {
-        const oldActiveTime = await DataStore.query(
-          TimeEntry,
-          user.attributes["custom:RuningTimeEntry"]
-        );
+        const oldActiveTime = await DataStore.query(TimeEntry, user.attributes["custom:RuningTimeEntry"]);
 
         await DataStore.save(
           TimeEntry.copyOf(oldActiveTime, (updated) => {
@@ -223,10 +211,7 @@ const Timer = ({ description, selectedOption, reload }) => {
           })
         );
 
-        const original = await DataStore.query(
-          UserCredentials,
-          user.attributes["custom:UserCreditails"]
-        );
+        const original = await DataStore.query(UserCredentials, user.attributes["custom:UserCreditails"]);
 
         await DataStore.save(
           UserCredentials.copyOf(original, (updated) => {
@@ -247,15 +232,14 @@ const Timer = ({ description, selectedOption, reload }) => {
         endTimeEntry();
       }
     } catch (err) {
-      console.log(err);
+      console.warn(err);
     }
   };
 
   return (
     <Fragment>
       <Grid item xs>
-        {String("0" + time.hours).slice(-2)}:
-        {String("0" + time.minutes).slice(-2)}:
+        {String("0" + time.hours).slice(-2)}:{String("0" + time.minutes).slice(-2)}:
         {String("0" + time.seconds).slice(-2)}
       </Grid>
 
@@ -296,26 +280,11 @@ const Recorder = ({ loadTimeList, selectedOption }) => {
           />
         </Grid>
 
-        <Grid
-          item
-          container
-          xs={manual ? 5 : 2}
-          alignItems="center"
-          direction="row"
-          spacing={2}
-        >
+        <Grid item container xs={manual ? 5 : 2} alignItems="center" direction="row" spacing={2}>
           {!manual ? (
-            <Timer
-              reload={loadTimeList}
-              description={description}
-              selectedOption={selectedOption}
-            />
+            <Timer reload={loadTimeList} description={description} selectedOption={selectedOption} />
           ) : (
-            <Manual
-              reload={loadTimeList}
-              description={description}
-              selectedOption={selectedOption}
-            />
+            <Manual reload={loadTimeList} description={description} selectedOption={selectedOption} />
           )}
         </Grid>
 

@@ -1,12 +1,5 @@
 import React, { useState } from "react";
-import {
-  Toolbar,
-  Typography,
-  Tooltip,
-  IconButton,
-  Box,
-  Button,
-} from "@mui/material";
+import { Toolbar, Typography, Tooltip, IconButton, Box, Button } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { alpha } from "@mui/material/styles";
 import { DataStore } from "aws-amplify";
@@ -14,14 +7,7 @@ import { AllWorkSpaces, UserCredentials } from "../../../models";
 import PopupAddUser from "../Modal";
 import AddIcon from "@mui/icons-material/Add";
 
-const TeamToolbar = ({
-  numSelected,
-  reload,
-  selected,
-  groups,
-  option,
-  setSelected,
-}) => {
+const TeamToolbar = ({ numSelected, reload, selected, groups, option, setSelected }) => {
   const [open, setOpen] = useState(false);
 
   const handleClose = () => {
@@ -73,30 +59,16 @@ const TeamToolbar = ({
         pl: { sm: 2 },
         pr: { xs: 1, sm: 1 },
         ...(numSelected > 0 && {
-          bgcolor: (theme) =>
-            alpha(
-              theme.palette.primary.main,
-              theme.palette.action.activatedOpacity
-            ),
+          bgcolor: (theme) => alpha(theme.palette.primary.main, theme.palette.action.activatedOpacity),
         }),
       }}
     >
       {numSelected > 0 ? (
-        <Typography
-          sx={{ flex: "1 1 100%" }}
-          color="inherit"
-          variant="subtitle1"
-          component="div"
-        >
+        <Typography sx={{ flex: "1 1 100%" }} color="inherit" variant="subtitle1" component="div">
           {numSelected} selected
         </Typography>
       ) : (
-        <Typography
-          sx={{ flex: "1 1 100%" }}
-          variant="h6"
-          id="tableTitle"
-          component="div"
-        >
+        <Typography sx={{ flex: "1 1 100%" }} variant="h6" id="tableTitle" component="div">
           Teams
         </Typography>
       )}
