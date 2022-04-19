@@ -13,6 +13,8 @@ const TotalLatest = ({ users, selOption, setSelected, selected }) => {
   const [grouped, setGrouped] = useState(null);
 
   useEffect(() => {
+    let isActive = false;
+
     const loadTime = async () => {
       try {
         const times = (await DataStore.query(TimeEntry))
@@ -28,26 +30,10 @@ const TotalLatest = ({ users, selOption, setSelected, selected }) => {
       }
     };
 
-    loadTime();
-  }, []);
+    !isActive && loadTime();
 
-  const Total = () => {
-    if (time !== null) {
-      let t = 0;
-      for (let i = 0; i < time.length; i++) {
-        t += Date.parse(time[i].timeInterval.end) - Date.parse(time[i].timeInterval.start);
-      }
-      return (
-        <TableCell>
-          {new Date(t).getUTCHours() +
-            ":" +
-            String("0" + new Date(t).getUTCMinutes()).slice(-2) +
-            ":" +
-            String("0" + new Date(t).getUTCSeconds()).slice(-2)}
-        </TableCell>
-      );
-    }
-  };
+    return () => (isActive = false);
+  }, [selOption]);
 
   return (
     <React.Fragment>
@@ -61,11 +47,9 @@ const TotalLatest = ({ users, selOption, setSelected, selected }) => {
             )}
           </TableCell>
 
-          <TableCell>
+          <TableCell align="right">
             {users.profile.first_name} {users.profile.last_name}
           </TableCell>
-
-          <Total />
         </TableRow>
       )}
       {grouped != null && time != null && time.length !== 0 && (

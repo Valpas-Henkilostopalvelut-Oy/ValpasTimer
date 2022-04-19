@@ -1,7 +1,4 @@
-import React, { useState } from "react";
-import { Form, Row, Col } from "react-bootstrap";
-import "./login.css";
-import "../../App.css";
+import React from "react";
 import { Auth, DataStore } from "aws-amplify";
 import { useAppContext } from "../../services/contextLib";
 import { useNavigate } from "react-router-dom";
@@ -10,10 +7,12 @@ import { onError } from "../../services/errorLib";
 import { createUser } from "../../services/createUser";
 import { UserCredentials } from "../../models";
 import { Formik } from "formik";
+import { Box, Container, CssBaseline, Typography, TextField, Grid, Link } from "@mui/material";
+import * as yup from "yup";
+import { LinkContainer } from "react-router-bootstrap";
 
 const Login = () => {
   const { userHasAuthenticated, setAppLoading } = useAppContext();
-  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
   const checkUserProfile = async () => {
@@ -27,62 +26,120 @@ const Login = () => {
     }
   };
 
+  //validate
+  const validationSchema = yup.object().shape({
+    email: yup.string().email("Email is invalid").required("Email is required"),
+    password: yup.string().required("Password is required"),
+  });
+
+  //enable button
+  const enable = (values) => {
+    return !(values.email.length === 0 || values.password.length === 0);
+  };
+
   return (
-    <div className="Login main">
-      <Formik
-        initialValues={{
-          email: "",
-          password: "",
-        }}
-        onSubmit={async (val) => {
-          setIsLoading(true);
+    <Formik
+      validationSchema={validationSchema}
+      initialValues={{
+        email: "",
+        password: "",
+      }}
+      onSubmit={async (val, { setSubmitting }) => {
+        setSubmitting(true);
 
-          try {
-            await Auth.signIn(val.email, val.password);
-            await DataStore.start();
-            userHasAuthenticated(true);
-            setTimeout(() => {
-              checkUserProfile();
-            }, 1000);
-            setAppLoading(false);
-            navigate("/home", { replace: true });
-            setIsLoading(false);
-          } catch (e) {
-            setIsLoading(false);
-            onError(e);
-          }
-        }}
-      >
-        {({ values, handleChange, handleSubmit }) => (
-          <Form>
-            <Row className="mb-3">
-              <Form.Group as={Col} size="lg" controlId="email">
-                <Form.Label>Email</Form.Label>
-                <Form.Control type="email" name="email" value={values.email} onChange={handleChange} />
-              </Form.Group>
-            </Row>
+        try {
+          await Auth.signIn(val.email, val.password);
+          await DataStore.start();
+          userHasAuthenticated(true);
+          setTimeout(() => {
+            checkUserProfile();
+          }, 1000);
+          setAppLoading(false);
+          navigate("/home", { replace: true });
+          setSubmitting(false);
+        } catch (e) {
+          setSubmitting(false);
+          onError(e);
+        }
+      }}
+    >
+      {({ values, handleChange, handleSubmit, handleBlur, isSubmitting, errors, touched }) => (
+        //login form
+        <Container component="main" maxWidth="xs">
+          <CssBaseline />
+          <Box sx={{ marginTop: 8, display: "flex", flexDirection: "column", alignItems: "center" }}>
+            <Typography component="h1" variant="h5">
+              Sign in
+            </Typography>
+            <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                id="email"
+                label="Email Address"
+                name="email"
+                autoComplete="email"
+                autoFocus
+                onChange={handleChange}
+                onBlur={handleBlur}
+                value={values.email}
+                error={errors.email && touched.email}
+              />
+              {errors.email && touched.email && (
+                <Typography variant="caption" color="error">
+                  {errors.email}
+                </Typography>
+              )}
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                name="password"
+                label="Password"
+                type="password"
+                id="password"
+                autoComplete="current-password"
+                onChange={handleChange}
+                onBlur={handleBlur}
+                value={values.password}
+                error={errors.password && touched.password}
+              />
+              {errors.password && touched.password && (
+                <Typography variant="caption" color="error">
+                  {errors.password}
+                </Typography>
+              )}
+              <LoaderButton
+                type="submit"
+                fullWidth
+                variant="contained"
+                sx={{ mt: 2, mb: 2 }}
+                isLoading={isSubmitting}
+                text="Sign In"
+                loadingText="Logging in…"
+                disabled={!enable(values)}
+              />
+              <Grid container>
+                <Grid item xs>
+                  <Link href="#" variant="body2">
+                    Forgot password?
+                  </Link>
+                </Grid>
 
-            <Row className="mb-3">
-              <Form.Group as={Col} size="lg" controlId="password">
-                <Form.Label>Password</Form.Label>
-                <Form.Control type="password" value={values.password} onChange={handleChange} />
-              </Form.Group>
-            </Row>
-
-            <LoaderButton
-              size="lg"
-              type="submit"
-              variant="success"
-              isLoading={isLoading}
-              as={Col}
-              onClick={handleSubmit}
-            >
-              Login
-            </LoaderButton>
-          </Form>
-        )}
-      </Formik>
-    </div>
+                <Grid item>
+                  <LinkContainer to="/signup">
+                    <Link href="/signup" variant="body2">
+                      {"Don't have an account? Sign Up"}
+                    </Link>
+                  </LinkContainer>
+                </Grid>
+              </Grid>
+            </Box>
+          </Box>
+        </Container>
+      )}
+    </Formik>
   );
 };
 

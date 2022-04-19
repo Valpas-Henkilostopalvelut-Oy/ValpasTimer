@@ -51,8 +51,7 @@ const Dashboard = () => {
                 <TableHead>
                   <TableRow>
                     <TableCell />
-                    <TableCell>Worker</TableCell>
-                    <TableCell>Total Hours</TableCell>
+                    <TableCell align="right">Worker</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>

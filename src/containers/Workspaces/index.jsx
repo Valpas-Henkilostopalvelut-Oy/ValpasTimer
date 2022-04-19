@@ -192,6 +192,37 @@ const AddUser = ({ open, setOpen, data, id }) => {
 
 const TableToolBar = ({ selected, data, numSelected, setSelected }) => {
   const [open, setOpen] = useState(false);
+
+  //delete selected users from workspace
+  const handleDelete = async () => {
+    for (let i = 0; i < selected.length; i++) {
+      const original = await DataStore.query(AllWorkSpaces, data.id);
+      const users = await DataStore.query(UserCredentials);
+      const user = users.find((u) => u.userId === selected[i]);
+
+      if (original !== undefined && user !== undefined) {
+        try {
+          await DataStore.save(
+            AllWorkSpaces.copyOf(original, (updated) => {
+              updated.memberships = updated.memberships.filter((m) => m.userId !== user.userId);
+            })
+          );
+        } catch (error) {
+          console.warn(error);
+        }
+        try {
+          await DataStore.save(
+            UserCredentials.copyOf(user, (updated) => {
+              updated.memberships = updated.memberships.filter((m) => m.targetId !== original.id);
+            })
+          );
+        } catch (error) {
+          console.warn(error);
+        }
+      }
+    }
+  };
+
   return (
     <Toolbar
       sx={{
@@ -214,7 +245,7 @@ const TableToolBar = ({ selected, data, numSelected, setSelected }) => {
 
       {numSelected > 0 ? (
         <Tooltip title="Delete">
-          <IconButton>
+          <IconButton onClick={handleDelete}>
             <DeleteIcon />
           </IconButton>
         </Tooltip>
@@ -464,7 +495,7 @@ const Workspaces = () => {
                             variant="standard"
                           />
                           <Button type="submit" variant="contained" color="primary" size="large">
-                            Save
+                            Create
                           </Button>
                         </Box>
                       )}

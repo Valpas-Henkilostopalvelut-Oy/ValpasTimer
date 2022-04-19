@@ -54,7 +54,11 @@ const CurrentWork = ({ row }) => {
     return () => (isActive = true);
   }, [row]);
 
-  return state;
+  return (
+    <Typography variant="body2" color="textSecondary" component="p">
+      {state}
+    </Typography>
+  );
 };
 
 const CurrentGroup = ({ row }) => {
@@ -197,26 +201,26 @@ const Workers = () => {
   const [usersPerPage, setUsersPerPage] = useState(5);
   const [selected, setSelected] = useState([]);
 
+  const loadUsers = async () => {
+    try {
+      let apiName = "AdminQueries";
+      let path = "/ListUsers";
+      let myInit = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `${(await Auth.currentSession()).getAccessToken().getJwtToken()}`,
+        },
+      };
+
+      const list = await API.get(apiName, path, myInit);
+      setUsers(list.Users);
+    } catch (error) {
+      console.warn(error);
+    }
+  };
+
   useEffect(() => {
     let isActive = false;
-
-    const loadUsers = async () => {
-      try {
-        let apiName = "AdminQueries";
-        let path = "/ListUsers";
-        let myInit = {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `${(await Auth.currentSession()).getAccessToken().getJwtToken()}`,
-          },
-        };
-
-        const list = await API.get(apiName, path, myInit);
-        setUsers(list.Users);
-      } catch (error) {
-        console.warn(error);
-      }
-    };
 
     !isActive && loadUsers();
 
@@ -256,7 +260,7 @@ const Workers = () => {
   return (
     <Container>
       <TableContainer component={Paper}>
-        <ListToolbar numSelected={selected.length} selected={selected} setSelected={setSelected} />
+        <ListToolbar numSelected={selected.length} selected={selected} setSelected={setSelected} reload={loadUsers} />
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead>
             <TableRow>
@@ -264,7 +268,9 @@ const Workers = () => {
               <TableCell>Name</TableCell>
               <TableCell align="right">Email</TableCell>
               <TableCell align="right">Phone number</TableCell>
-              <TableCell align="right">Group</TableCell>
+              <TableCell align="right">Enabled</TableCell>
+              <TableCell align="right">Status</TableCell>
+              <TableCell align="right">Groups</TableCell>
               <TableCell align="right">Current work</TableCell>
             </TableRow>
           </TableHead>
@@ -273,7 +279,7 @@ const Workers = () => {
               <TableBody>
                 {(usersPerPage > 0 ? users.slice(page * usersPerPage, page * usersPerPage + usersPerPage) : users).map(
                   (row, index) => {
-                    const isItemSelected = isSelected(row.Username);
+                    const isItemSelected = isSelected(row);
                     const labelId = `enhanced-table-checkbox-${index}`;
 
                     return (
@@ -290,27 +296,65 @@ const Workers = () => {
                             color="primary"
                             checked={isItemSelected}
                             inputProps={{ "aria-labelledby": labelId }}
-                            onClick={(event) => handleClick(event, row.Username)}
+                            onClick={(event) => handleClick(event, row)}
                           />
                         </TableCell>
 
                         <TableCell component="th" scope="row" id={labelId} padding="none">
-                          {row.Attributes.find((a) => a.Name === "family_name").Value}{" "}
-                          {row.Attributes.find((a) => a.Name === "name").Value}
-                        </TableCell>
-
-                        <TableCell align="right">{row.Attributes.find((a) => a.Name === "email").Value}</TableCell>
-
-                        <TableCell align="right">
-                          {row.Attributes.find((a) => a.Name === "phone_number").Value}
+                          <Typography variant="body2" color="textSecondary">
+                            {row.Attributes.find((a) => a.Name === "family_name").Value}{" "}
+                            {row.Attributes.find((a) => a.Name === "name").Value}
+                          </Typography>
                         </TableCell>
 
                         <TableCell align="right">
-                          <CurrentGroup row={row} />
+                          <Typography variant="body2" color="textSecondary">
+                            {row.Attributes.find((a) => a.Name === "email").Value}
+                          </Typography>
                         </TableCell>
 
                         <TableCell align="right">
-                          <CurrentWork row={row} />
+                          <Typography variant="body2" color="textSecondary">
+                            {row.Attributes.find((a) => a.Name === "phone_number").Value}
+                          </Typography>
+                        </TableCell>
+
+                        <TableCell align="right">
+                          {row.Enabled ? (
+                            <Typography variant="body2" color="primary">
+                              Yes
+                            </Typography>
+                          ) : (
+                            <Typography variant="body2" color="error">
+                              No
+                            </Typography>
+                          )}
+                        </TableCell>
+
+                        <TableCell align="right">
+                          <Typography variant="body2" color="textSecondary">
+                            {row.UserStatus}
+                          </Typography>
+                        </TableCell>
+
+                        <TableCell align="right">
+                          {row.UserStatus === "CONFIRMED" ? (
+                            <CurrentGroup row={row} />
+                          ) : (
+                            <Typography variant="body2" color="textSecondary">
+                              N/A
+                            </Typography>
+                          )}
+                        </TableCell>
+
+                        <TableCell align="right">
+                          {row.UserStatus === "CONFIRMED" ? (
+                            <CurrentWork row={row} />
+                          ) : (
+                            <Typography variant="body2" color="textSecondary">
+                              N/A
+                            </Typography>
+                          )}
                         </TableCell>
                       </TableRow>
                     );
