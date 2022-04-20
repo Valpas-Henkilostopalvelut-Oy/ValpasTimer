@@ -13,9 +13,7 @@ const ConfirmForm = ({ password, email }) => {
   const navigate = useNavigate();
 
   const enableButton = (values) => {
-    return (
-      values.confirmationCode.length > 0 && values.confirmationCode.length < 6 && values.confirmationCode.length > 0
-    );
+    return values.confirmationCode.length > 0 && values.confirmationCode.length === 6;
   };
   //validate form
   const validationSchema = yup.object().shape({
@@ -36,7 +34,7 @@ const ConfirmForm = ({ password, email }) => {
           createUser();
 
           userHasAuthenticated(true);
-          navigate("");
+          navigate("/home", { replace: true });
         } catch (e) {
           console.warn(e);
           setSubmitting(false);

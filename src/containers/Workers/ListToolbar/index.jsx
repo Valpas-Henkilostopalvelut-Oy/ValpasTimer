@@ -15,6 +15,25 @@ const ListToolbar = ({ numSelected, selected, setSelected, reload }) => {
         if (credentialsId !== null) {
           await DataStore.delete(UserCredentials, credentialsId);
         }
+
+        //delete another user from cognito
+        let apiName = "AdminQueries";
+        let path = "/deleteUser";
+        let myInit = {
+          body: {
+            username: selected[i].Username,
+          },
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `${(await Auth.currentSession()).getAccessToken().getJwtToken()}`,
+          },
+        };
+
+        console.log(selected[i].Username);
+
+        await API.del(apiName, path, myInit).catch((error) => {
+          console.warn(error);
+        });
       }
       setSelected([]);
       reload();
@@ -71,7 +90,6 @@ const ListToolbar = ({ numSelected, selected, setSelected, reload }) => {
     };
 
     try {
-      console.log(selected);
       for (let i = 0; i < selected.length; i++) {
         if (selected[i].Enabled === true) {
           await disableUser(selected[i].Username);
@@ -81,7 +99,6 @@ const ListToolbar = ({ numSelected, selected, setSelected, reload }) => {
           await enableUser(selected[i].Username);
           setSelected([]);
           reload();
-          
         }
       }
     } catch (error) {
@@ -111,8 +128,14 @@ const ListToolbar = ({ numSelected, selected, setSelected, reload }) => {
 
       {numSelected > 0 && (
         <Fragment>
-          <Tooltip title="Delete">
+          <Tooltip title="Deactivate/Activate">
             <IconButton onClick={enableDisable}>
+              <DoDisturbIcon />
+            </IconButton>
+          </Tooltip>
+
+          <Tooltip title="Delete">
+            <IconButton onClick={deleteUser}>
               <DeleteIcon />
             </IconButton>
           </Tooltip>

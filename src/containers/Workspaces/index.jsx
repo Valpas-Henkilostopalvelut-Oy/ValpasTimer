@@ -23,12 +23,13 @@ import {
   Tooltip,
   Typography,
   Modal,
-  Grid,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from "@mui/icons-material/Add";
 import { Formik } from "formik";
 import { useAppContext } from "../../services/contextLib";
+import * as yup from "yup";
+import LoaderButton from "../../components/LoaderButton";
 
 const UserList = ({ member, data, index, selected, setSelected }) => {
   const [user, setUser] = useState(null);
@@ -98,99 +99,147 @@ const UserList = ({ member, data, index, selected, setSelected }) => {
   );
 };
 
-const AddUser = ({ open, setOpen, data, id }) => {
+const AddUser = ({ open, setOpen, id, reload }) => {
   const { groups } = useAppContext();
-  const [userEmail, setUserEmail] = useState("");
+  const [message, setMessage] = useState(null);
 
-  const handleChange = (event) => {
-    setUserEmail(event.target.value);
+  //validate email
+  const validateEmail = yup.object().shape({
+    email: yup
+      .string()
+      .min(2, "Email is too short")
+      .max(50, "Email is too long")
+      .email("Invalid email format")
+      .required("Email is required"),
+  });
+
+  //disable button if email is invalid
+  const enable = (values) => {
+    return values.email.length > 0;
   };
 
-  const handleAddUser = async () => {
-    if (groups.includes("Admins")) {
-      const credentials = (await DataStore.query(UserCredentials)).find((u) => u.profile.email === userEmail);
-      const original = await DataStore.query(AllWorkSpaces, id);
-      if (groups.includes("Admins") && credentials !== undefined && original !== undefined) {
-        try {
-          await DataStore.save(
-            AllWorkSpaces.copyOf(original, (updated) => {
-              updated.memberships.push({
-                hourlyRate: original.hourlyRate,
-                membershipStatus: "",
-                membershipType: "USER",
-                userId: credentials.userId,
-                targetId: original.id,
-              });
-            })
-          );
-        } catch (error) {
-          console.warn(error);
-        }
-        try {
-          await DataStore.save(
-            UserCredentials.copyOf(credentials, (updated) => {
-              updated.memberships.push({
-                hourlyRate: original.hourlyRate,
-                costRate: {},
-                membershipStatus: "",
-                membershipType: "WORKSPACE",
-                userId: credentials.userId,
-                targetId: id,
-              });
-            })
-          );
-        } catch (error) {
-          console.warn(error);
-        }
-      }
-    }
-  };
+  //modal for adding users to workspace
 
   return (
-    <Modal
-      open={open}
-      onClose={() => setOpen(false)}
-      aria-labelledby="modal-modal-title"
-      aria-describedby="modal-modal-description"
-    >
-      <Box
-        sx={{
-          position: "absolute",
-          top: "50%",
-          left: "50%",
-          transform: "translate(-50%, -50%)",
-          width: 400,
-          bgcolor: "background.paper",
-          border: "2px solid #000",
-          boxShadow: 24,
-          p: 4,
+    <Modal open={open} onClose={() => setOpen(false)}>
+      <Formik
+        initialValues={{ email: "" }}
+        validationSchema={validateEmail}
+        onSubmit={async (values, { setSubmitting }) => {
+          setSubmitting(true);
+          try {
+            if (groups.includes("Admins")) {
+              const credentials = (await DataStore.query(UserCredentials)).find(
+                (u) => u.profile.email === values.email
+              );
+              const original = await DataStore.query(AllWorkSpaces, id);
+              if (groups.includes("Admins") && credentials !== undefined && original !== undefined) {
+                try {
+                  if (
+                    original.memberships.filter((m) => m.userId === credentials.userId).length === 0 &&
+                    credentials.memberships.filter((m) => m.workspaceId === original.id).length === 0
+                  ) {
+                    await DataStore.save(
+                      AllWorkSpaces.copyOf(original, (updated) => {
+                        updated.memberships.push({
+                          hourlyRate: original.hourlyRate,
+                          membershipStatus: "",
+                          membershipType: "USER",
+                          userId: credentials.userId,
+                          targetId: original.id,
+                        });
+                      })
+                    );
+                    await DataStore.save(
+                      UserCredentials.copyOf(credentials, (updated) => {
+                        updated.memberships.push({
+                          hourlyRate: original.hourlyRate,
+                          costRate: {},
+                          membershipStatus: "",
+                          membershipType: "WORKSPACE",
+                          userId: credentials.userId,
+                          targetId: id,
+                        });
+                      })
+                    );
+                    setMessage("User added to workspace");
+                    reload();
+                    setOpen(false);
+                  } else {
+                    setMessage("User is already a member of this workspace");
+                  }
+                } catch (error) {
+                  console.warn(error);
+                }
+              } else {
+                setMessage("User does not exist");
+              }
+            }
+          } catch (error) {
+            setSubmitting(false);
+            console.warn(error);
+          }
         }}
       >
-        <Typography>Add user</Typography>
-
-        <Grid container alignItems={"center"} spacing={1}>
-          <Grid item md={10}>
+        {({ values, handleChange, handleSubmit, handleBlur, isSubmitting, errors, touched }) => (
+          <Box
+            sx={{
+              position: "absolute",
+              top: "50%",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+              width: 400,
+              bgcolor: "background.paper",
+              border: "2px solid #000",
+              boxShadow: 24,
+              p: 4,
+            }}
+            onSubmit={handleSubmit}
+            component="form"
+          >
+            <Typography variant="h6">Add User</Typography>
             <TextField
-              fullWidth
-              variant="standard"
-              id="outlined-name"
+              id="email"
               label="Email"
-              value={userEmail}
+              type="email"
+              name="email"
+              value={values.email}
               onChange={handleChange}
+              onBlur={handleBlur}
+              onClick={() => setMessage(null)}
+              fullWidth
+              margin="normal"
+              variant="outlined"
+              error={touched.email && errors.email}
             />
-          </Grid>
-          <Grid item md={2}>
-            <Button onClick={handleAddUser} variant="contained">
-              Add
-            </Button>
-          </Grid>
-        </Grid>
-      </Box>
+            {message !== null && (
+              <Typography variant="caption" color="error">
+                {message}
+              </Typography>
+            )}{" "}
+            {errors.email && touched.email && (
+              <Typography variant="caption" color="error">
+                {errors.email}
+              </Typography>
+            )}
+            <LoaderButton
+              type="submit"
+              fullWidth
+              variant="contained"
+              color="primary"
+              isLoading={isSubmitting}
+              text="Add user"
+              loadingText="Adding..."
+              disabled={!enable(values)}
+            />
+          </Box>
+        )}
+      </Formik>
     </Modal>
   );
 };
 
-const TableToolBar = ({ selected, data, numSelected, setSelected }) => {
+const TableToolBar = ({ selected, data, numSelected, setSelected, reload }) => {
   const [open, setOpen] = useState(false);
 
   //delete selected users from workspace
@@ -221,6 +270,8 @@ const TableToolBar = ({ selected, data, numSelected, setSelected }) => {
         }
       }
     }
+    reload();
+    setSelected([]);
   };
 
   return (
@@ -256,7 +307,7 @@ const TableToolBar = ({ selected, data, numSelected, setSelected }) => {
               <AddIcon />
             </IconButton>
           </Tooltip>
-          <AddUser open={open} setOpen={setOpen} data={data} id={data.id} />
+          <AddUser open={open} setOpen={setOpen} data={data} id={data.id} reload={reload} />
         </Fragment>
       )}
     </Toolbar>
@@ -358,6 +409,7 @@ const Row = ({ data, reload }) => {
               numSelected={selected.length}
               data={data}
               id={data.id}
+              reload={reload}
             />
 
             <TableContainer component={Paper} sx={{ maxHeight: 440, width: "100%" }}>

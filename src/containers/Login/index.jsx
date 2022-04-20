@@ -1,9 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 import { Auth, DataStore } from "aws-amplify";
 import { useAppContext } from "../../services/contextLib";
 import { useNavigate } from "react-router-dom";
 import LoaderButton from "../../components/LoaderButton";
-import { onError } from "../../services/errorLib";
 import { createUser } from "../../services/createUser";
 import { UserCredentials } from "../../models";
 import { Formik } from "formik";
@@ -13,6 +12,7 @@ import { LinkContainer } from "react-router-bootstrap";
 
 const Login = () => {
   const { userHasAuthenticated, setAppLoading } = useAppContext();
+  const [message, setMessage] = useState(null);
   const navigate = useNavigate();
 
   const checkUserProfile = async () => {
@@ -59,7 +59,7 @@ const Login = () => {
           setSubmitting(false);
         } catch (e) {
           setSubmitting(false);
-          onError(e);
+          setMessage(e.message);
         }
       }}
     >
@@ -83,6 +83,7 @@ const Login = () => {
                 autoFocus
                 onChange={handleChange}
                 onBlur={handleBlur}
+                onClick={() => setMessage(null)}
                 value={values.email}
                 error={errors.email && touched.email}
               />
@@ -102,9 +103,15 @@ const Login = () => {
                 autoComplete="current-password"
                 onChange={handleChange}
                 onBlur={handleBlur}
+                onClick={() => setMessage(null)}
                 value={values.password}
                 error={errors.password && touched.password}
               />
+              {message !== null && (
+                <Typography variant="caption" color="error">
+                  {message}
+                </Typography>
+              )}
               {errors.password && touched.password && (
                 <Typography variant="caption" color="error">
                   {errors.password}
@@ -129,9 +136,7 @@ const Login = () => {
 
                 <Grid item>
                   <LinkContainer to="/signup">
-                    <Link href="/signup" variant="body2">
-                      {"Don't have an account? Sign Up"}
-                    </Link>
+                    <Link variant="body2">Don't have an account? Sign Up</Link>
                   </LinkContainer>
                 </Grid>
               </Grid>

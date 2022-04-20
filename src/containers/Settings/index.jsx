@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from "react";
-import { Button, Col, Form, Row, InputGroup } from "react-bootstrap";
+import { Container, CssBaseline, Typography, Box, TextField, Grid, CircularProgress } from "@mui/material";
 import { Auth, DataStore } from "aws-amplify";
 import { useAppContext } from "../../services/contextLib";
 import "../../App.css";
 import "./Settings.css";
 import { Formik } from "formik";
 import * as yup from "yup";
-import { useFormFields } from "../../services/hooksLib";
 import LoaderButton from "../../components/LoaderButton";
 import { UserCredentials } from "../../models";
 
 const Settings = () => {
+  //Profile settings form
   const phoneRegExp = /^(\+?\d{0,4})?\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{4}\)?)?$/;
 
   const valSchema = yup.object().shape({
@@ -26,12 +26,6 @@ const Settings = () => {
       .max(100, "*Frist names can't be longer than 100 characters")
       .required("*First names is required"),
 
-    username: yup
-      .string()
-      .min(3, "*Nickname must have at least 2 characters")
-      .max(100, "*Nicknames can't be longer than 100 characters")
-      .required("*Nickname is required"),
-
     email: yup
       .string()
       .email("*Must be a valid email address")
@@ -44,217 +38,303 @@ const Settings = () => {
   const [initValues, setIniValues] = useState(null);
 
   useEffect(() => {
+    let isActive = false;
+
     const loadSettings = async () => {
       let loggedUser = await Auth.currentAuthenticatedUser();
       setIniValues({
         lastName: loggedUser.attributes.family_name,
         firstName: loggedUser.attributes.name,
-        username: loggedUser.nickname,
         email: loggedUser.attributes.email,
         phoneNumber: loggedUser.attributes.phone_number.slice(4),
         address: "",
+        state: "",
         city: "",
         zipCode: "",
         contry: "",
       });
     };
-    if (initValues === null) loadSettings();
-  });
 
-  const updateAttributes = async (formVal) => {};
+    !isActive && loadSettings();
+    return () => (isActive = true);
+  }, []);
 
-  const Avatar = () => {
-    return (
-      <div className="current-image">
-        <div className="image-text">OK</div>
-      </div>
-    );
+  //enable save button when form is valid
+  const enableSaveButton = (values) => {
+    const { lastName, firstName, email, phoneNumber } = values;
+    return !(lastName && firstName && email && phoneNumber);
   };
 
-  return (
-    <div className="settings main container">
-      {initValues != null && (
-        <div>
-          <div>
-            <div>Profile settings</div>
-          </div>
-          <div className="settings-card">
-            <div className="profile-image">
-              <div className="photo-upload">
-                <Avatar />
-                <div className="upload">
-                  <Button className="upload-button">Upload image</Button>
-                </div>
-              </div>
-            </div>
+  return initValues !== null ? (
+    <Formik
+      initialValues={initValues}
+      validationSchema={valSchema}
+      onSubmit={async (values, { setSubmitting }) => {
+        setSubmitting(true);
+        try {
+          const user = await Auth.currentAuthenticatedUser();
+          await Auth.updateUserAttributes(user, {
+            name: values.firstName,
+            family_name: values.lastName,
+            phone_number: `+358${values.phoneNumber}`,
+            email: values.email,
+          });
 
-            <Formik
-              initialValues={initValues}
-              validationSchema={valSchema}
-              onSubmit={async (values) => {
-                console.log(values);
-                try {
-                  const loggedUser = await Auth.currentAuthenticatedUser();
-                  await Auth.updateUserAttributes(loggedUser, {
-                    nickname: values.username,
+          const dataStoreUser = await DataStore.query(UserCredentials, user.attributes["custom:UserCreditails"]);
+          await DataStore.save(
+            UserCredentials.copyOf(dataStoreUser, (updated) => {
+              updated.profile.first_name = values.firstName;
+              updated.profile.last_name = values.lastName;
+              updated.profile.email = values.email;
+              updated.profile.phone_number = `+358${values.phoneNumber}`;
+            })
+          );
 
-                    name: values.firstName,
-                    family_name: values.lastName,
-
-                    phone_number: `+358${values.phoneNumber}`,
-                    email: values.email,
-                  });
-
-                  const original = await DataStore.query(
-                    UserCredentials,
-                    loggedUser.attributes["custom:UserCreditails"]
-                  );
-
-                  await DataStore.save(
-                    UserCredentials.copyOf(original, (updated) => {
-                      updated.profile.first_name = values.firstName;
-                      updated.profile.last_name = values.lastName;
-                      updated.profile.phone_number = `+358${values.phoneNumber}`;
-                      updated.profile.email = values.email;
-                    })
-                  );
-                } catch (error) {
-                  console.log(error);
-                }
+          setSubmitting(false);
+        } catch (error) {
+          setSubmitting(false);
+          console.warn(error);
+        }
+      }}
+    >
+      {({ values, handleChange, handleBlur, handleSubmit, errors, touched, isSubmitting }) => (
+        <Container component="main" maxWidth="sm">
+          <CssBaseline />
+          <Box
+            sx={{
+              marginTop: 8,
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <Typography component="h1" variant="h5">
+              Profile Settings
+            </Typography>
+            <Box
+              component="form"
+              noValidate
+              onSubmit={handleSubmit}
+              sx={{
+                mt: 3,
+                width: "100%",
+                maxWidth: "sm",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
               }}
             >
-              {({ values, errors, handleChange, handleBlur, handleSubmit }) => (
-                <Form id="settings-form" noValidate>
-                  <Row className="mb-3">
-                    <Form.Group as={Col} md="4" controlId="validationFormik01">
-                      <Form.Label>First name</Form.Label>
-                      <Form.Control
-                        type="text"
-                        name="firstName"
-                        value={values.firstName}
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        isInvalid={!!errors.firstName}
-                      />
-                    </Form.Group>
-                    <Form.Group as={Col} md="4" controlId="validationFormik02">
-                      <Form.Label>Last name</Form.Label>
-                      <Form.Control
-                        type="text"
-                        name="lastName"
-                        value={values.lastName}
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        isInvalid={!!errors.lastName}
-                      />
-                    </Form.Group>
-                    <Form.Group as={Col} md="4" controlId="validationFormikUsername">
-                      <Form.Label>Username</Form.Label>
-                      <InputGroup hasValidation>
-                        <InputGroup.Text id="inputGroupPrepend">@</InputGroup.Text>
-                        <Form.Control
-                          type="text"
-                          placeholder="Username"
-                          aria-describedby="inputGroupPrepend"
-                          name="username"
-                          value={values.username}
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          isInvalid={!!errors.username}
-                        />
-                        <Form.Control.Feedback type="invalid">{errors.username}</Form.Control.Feedback>
-                      </InputGroup>
-                    </Form.Group>
-                  </Row>
-
-                  <Row className="mb-3">
-                    <Form.Group as={Col} controlId="email">
-                      <Form.Label>Email: </Form.Label>
-                      <Form.Control
-                        type="email"
-                        name="email"
-                        placeholder="Email"
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        value={values.email}
-                        isInvalid={!!errors.email}
-                      />
-                      <Form.Control.Feedback type="invalid">{errors.email}</Form.Control.Feedback>
-                    </Form.Group>
-                  </Row>
-
-                  <Row className="mb-3">
-                    <Form.Group as={Col} controlId="phoneNumber">
-                      <Form.Label>Phone number</Form.Label>
-                      <InputGroup>
-                        <InputGroup.Text id="inputGroupPrepend">+358</InputGroup.Text>
-                        <Form.Control
-                          type="number"
-                          name="phoneNumber"
-                          placeholder="Phone number"
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          value={values.phoneNumber}
-                          isInvalid={!!errors.phoneNumber}
-                        />
-                        <Form.Control.Feedback type="invalid">{errors.phoneNumber}</Form.Control.Feedback>
-                      </InputGroup>
-                    </Form.Group>
-                  </Row>
-
-                  {/*<Row className="mb-3">
-                    <Form.Group as={Col}>
-                      <Form.Label>Address</Form.Label>
-                      <Form.Control
-                        type="text"
-                        name="address"
-                        placeholder="Address"
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        value={values.address}
-                        isInvalid={!!errors.address}
-                      />
-                    </Form.Group>
-                  </Row>
-
-                  <Row className="mb-3">
-                    <Form.Group as={Col} md="6" controlId="zipCode">
-                      <Form.Label>Zip code</Form.Label>
-                      <Form.Control
-                        type="number"
-                        name="zipCode"
-                        placeholder="Zip code"
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        value={values.zipCode}
-                        isInvalid={!!errors.zipCode}
-                      />
-                    </Form.Group>
-
-                    <Form.Group as={Col} md="6" controlId="contry">
-                      <Form.Label>Contry</Form.Label>
-                      <Form.Control
-                        type="text"
-                        name="contry"
-                        placeholder="Contry"
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        value={values.contry}
-                        isInvalid={!!errors.contry}
-                      />
-                    </Form.Group>
-                    </Row>
-                    */}
-                  <Button type="submit" onClick={handleSubmit}>
-                    Save
-                  </Button>
-                </Form>
-              )}
-            </Formik>
-          </div>
-        </div>
+              <Grid container spacing={2}>
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    variant="outlined"
+                    required
+                    fullWidth
+                    id="lastName"
+                    label="Last Name"
+                    name="lastName"
+                    autoComplete="lname"
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    value={values.lastName}
+                    error={errors.lastName && touched.lastName}
+                  />
+                  {errors.lastName && touched.lastName && (
+                    <Typography variant="caption" color="error">
+                      {errors.lastName}
+                    </Typography>
+                  )}
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    variant="outlined"
+                    required
+                    fullWidth
+                    id="firstName"
+                    label="First Name"
+                    name="firstName"
+                    autoComplete="fname"
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    value={values.firstName}
+                    error={errors.firstName && touched.firstName}
+                  />
+                  {errors.firstName && touched.firstName && (
+                    <Typography variant="caption" color="error">
+                      {errors.firstName}
+                    </Typography>
+                  )}
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    variant="outlined"
+                    required
+                    fullWidth
+                    id="email"
+                    label="Email Address"
+                    name="email"
+                    autoComplete="email"
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    value={values.email}
+                    error={errors.email && touched.email}
+                  />
+                  {errors.email && touched.email && (
+                    <Typography variant="caption" color="error">
+                      {errors.email}
+                    </Typography>
+                  )}
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    variant="outlined"
+                    required
+                    fullWidth
+                    id="phoneNumber"
+                    label="Phone Number"
+                    name="phoneNumber"
+                    autoComplete="phoneNumber"
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    value={values.phoneNumber}
+                    error={errors.phoneNumber && touched.phoneNumber}
+                  />
+                  {errors.phoneNumber && touched.phoneNumber && (
+                    <Typography variant="caption" color="error">
+                      {errors.phoneNumber}
+                    </Typography>
+                  )}
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    variant="outlined"
+                    fullWidth
+                    id="address"
+                    label="Address"
+                    name="address"
+                    autoComplete="address"
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    value={values.address}
+                    error={errors.address && touched.address}
+                  />
+                  {errors.address && touched.address && (
+                    <Typography variant="caption" color="error">
+                      {errors.address}
+                    </Typography>
+                  )}
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    variant="outlined"
+                    fullWidth
+                    id="state"
+                    label="State"
+                    name="state"
+                    autoComplete="state"
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    value={values.state}
+                    error={errors.state && touched.state}
+                  />
+                  {errors.state && touched.state && (
+                    <Typography variant="caption" color="error">
+                      {errors.state}
+                    </Typography>
+                  )}
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    variant="outlined"
+                    fullWidth
+                    id="city"
+                    label="City"
+                    name="city"
+                    autoComplete="city"
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    value={values.city}
+                    error={errors.city && touched.city}
+                  />
+                  {errors.city && touched.city && (
+                    <Typography variant="caption" color="error">
+                      {errors.city}
+                    </Typography>
+                  )}
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    variant="outlined"
+                    fullWidth
+                    id="zipCode"
+                    label="Zip Code"
+                    name="zipCode"
+                    autoComplete="zipCode"
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    value={values.zipCode}
+                    error={errors.zipCode && touched.zipCode}
+                  />
+                  {errors.zipCode && touched.zipCode && (
+                    <Typography variant="caption" color="error">
+                      {errors.zipCode}
+                    </Typography>
+                  )}
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    variant="outlined"
+                    fullWidth
+                    id="country"
+                    label="Country"
+                    name="country"
+                    autoComplete="country"
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    value={values.country}
+                    error={errors.country && touched.country}
+                  />
+                  {errors.country && touched.country && (
+                    <Typography variant="caption" color="error">
+                      {errors.country}
+                    </Typography>
+                  )}
+                </Grid>
+              </Grid>
+              <LoaderButton
+                type="submit"
+                fullWidth
+                variant="contained"
+                color="primary"
+                disabled={enableSaveButton(values) && !isSubmitting}
+                isLoading={isSubmitting}
+                loadingText="Saving..."
+                text="Save"
+                sx={{
+                  mt: 3,
+                }}
+              />
+            </Box>
+          </Box>
+        </Container>
       )}
-    </div>
+    </Formik>
+  ) : (
+    <Container>
+      {/*loading container*/}
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+        }}
+      >
+        <CircularProgress />
+      </Box>
+    </Container>
   );
 };
 
