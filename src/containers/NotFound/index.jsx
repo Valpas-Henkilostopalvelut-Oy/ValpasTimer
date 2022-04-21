@@ -1,11 +1,16 @@
 import React from "react";
-import "./404.css";
+import { Container, Box, Typography } from "@mui/material";
 
 const NotFound = () => {
+  //404 not found 
   return (
-    <div className="NotFound text-center">
-      <h3>Sorry, page not found</h3>
-    </div>
+    <Container>
+      <Box display="flex" justifyContent="center" alignItems="center" flexDirection="column" p={3}>
+        <Typography variant="h4">404</Typography>
+        <Typography variant="h5">Page Not Found</Typography>
+        <Typography variant="body1">The page you are looking for doesn't exist.</Typography>
+      </Box>
+    </Container>
   );
 };
 

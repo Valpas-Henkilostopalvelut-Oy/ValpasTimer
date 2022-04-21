@@ -1,5 +1,5 @@
 import React, { Fragment, useEffect, useState } from "react";
-import { DataStore } from "aws-amplify";
+import { DataStore, API, Auth } from "aws-amplify";
 import { AllWorkSpaces, UserCredentials } from "../../models";
 import "./Workspaces.css";
 import "../../App.css";
@@ -122,23 +122,25 @@ const AddUser = ({ open, setOpen, id, reload }) => {
 
   return (
     <Modal open={open} onClose={() => setOpen(false)}>
-      <Formik
-        initialValues={{ email: "" }}
-        validationSchema={validateEmail}
-        onSubmit={async (values, { setSubmitting }) => {
-          setSubmitting(true);
-          try {
-            if (groups.includes("Admins")) {
-              const credentials = (await DataStore.query(UserCredentials)).find(
-                (u) => u.profile.email === values.email
-              );
-              const original = await DataStore.query(AllWorkSpaces, id);
-              if (groups.includes("Admins") && credentials !== undefined && original !== undefined) {
-                try {
+      <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center">
+        <Formik
+          initialValues={{ email: "" }}
+          validationSchema={validateEmail}
+          onSubmit={async (values, { setSubmitting }) => {
+            setSubmitting(true);
+            try {
+              if (groups.includes("Admins")) {
+                const credentials = (await DataStore.query(UserCredentials)).find(
+                  (u) => u.profile.email === values.email
+                );
+                const original = await DataStore.query(AllWorkSpaces, id);
+
+                if (groups.includes("Admins") && credentials !== undefined && original !== undefined) {
                   if (
                     original.memberships.filter((m) => m.userId === credentials.userId).length === 0 &&
                     credentials.memberships.filter((m) => m.workspaceId === original.id).length === 0
                   ) {
+                    //add user to workspace
                     await DataStore.save(
                       AllWorkSpaces.copyOf(original, (updated) => {
                         updated.memberships.push({
@@ -168,73 +170,71 @@ const AddUser = ({ open, setOpen, id, reload }) => {
                   } else {
                     setMessage("User is already a member of this workspace");
                   }
-                } catch (error) {
-                  console.warn(error);
+                } else {
+                  setMessage("User does not exist");
                 }
-              } else {
-                setMessage("User does not exist");
               }
+            } catch (error) {
+              setSubmitting(false);
+              console.warn(error);
             }
-          } catch (error) {
-            setSubmitting(false);
-            console.warn(error);
-          }
-        }}
-      >
-        {({ values, handleChange, handleSubmit, handleBlur, isSubmitting, errors, touched }) => (
-          <Box
-            sx={{
-              position: "absolute",
-              top: "50%",
-              left: "50%",
-              transform: "translate(-50%, -50%)",
-              width: 400,
-              bgcolor: "background.paper",
-              border: "2px solid #000",
-              boxShadow: 24,
-              p: 4,
-            }}
-            onSubmit={handleSubmit}
-            component="form"
-          >
-            <Typography variant="h6">Add User</Typography>
-            <TextField
-              id="email"
-              label="Email"
-              type="email"
-              name="email"
-              value={values.email}
-              onChange={handleChange}
-              onBlur={handleBlur}
-              onClick={() => setMessage(null)}
-              fullWidth
-              margin="normal"
-              variant="outlined"
-              error={touched.email && errors.email}
-            />
-            {message !== null && (
-              <Typography variant="caption" color="error">
-                {message}
-              </Typography>
-            )}{" "}
-            {errors.email && touched.email && (
-              <Typography variant="caption" color="error">
-                {errors.email}
-              </Typography>
-            )}
-            <LoaderButton
-              type="submit"
-              fullWidth
-              variant="contained"
-              color="primary"
-              isLoading={isSubmitting}
-              text="Add user"
-              loadingText="Adding..."
-              disabled={!enable(values)}
-            />
-          </Box>
-        )}
-      </Formik>
+          }}
+        >
+          {({ values, handleChange, handleSubmit, handleBlur, isSubmitting, errors, touched }) => (
+            <Box
+              sx={{
+                position: "absolute",
+                top: "50%",
+                left: "50%",
+                transform: "translate(-50%, -50%)",
+                width: 400,
+                bgcolor: "background.paper",
+                border: "2px solid #000",
+                boxShadow: 24,
+                p: 4,
+              }}
+              onSubmit={handleSubmit}
+              component="form"
+            >
+              <Typography variant="h6">Add User</Typography>
+              <TextField
+                id="email"
+                label="Email"
+                type="email"
+                name="email"
+                value={values.email}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                onClick={() => setMessage(null)}
+                fullWidth
+                margin="normal"
+                variant="outlined"
+                error={touched.email && errors.email}
+              />
+              {message !== null && (
+                <Typography variant="caption" color="error">
+                  {message}
+                </Typography>
+              )}{" "}
+              {errors.email && touched.email && (
+                <Typography variant="caption" color="error">
+                  {errors.email}
+                </Typography>
+              )}
+              <LoaderButton
+                type="submit"
+                fullWidth
+                variant="contained"
+                color="primary"
+                isLoading={isSubmitting}
+                text="Add user"
+                loadingText="Adding..."
+                disabled={!enable(values)}
+              />
+            </Box>
+          )}
+        </Formik>
+      </Box>
     </Modal>
   );
 };

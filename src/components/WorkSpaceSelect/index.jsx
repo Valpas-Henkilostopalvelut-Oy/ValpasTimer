@@ -7,7 +7,7 @@ import { Box, InputLabel, MenuItem, FormControl, Select, Button } from "@mui/mat
 
 const WorkspaceSelect = () => {
   const [list, setList] = useState([]);
-  const { selectedOption, setSelectedOption, appLoading, setAppLoading } = useAppContext();
+  const { selectedOption, setSelectedOption, appLoading, setAppLoading, groups } = useAppContext();
 
   useEffect(() => {
     let isActive = false;
@@ -22,21 +22,26 @@ const WorkspaceSelect = () => {
     });
 
     const makeList = async () => {
-      const user = await Auth.currentAuthenticatedUser();
-      const creditails = await DataStore.query(UserCredentials, user.attributes["custom:UserCreditails"]);
+      try {
+        const user = await Auth.currentAuthenticatedUser();
+        const creditails = await DataStore.query(UserCredentials, user.attributes["custom:UserCreditails"]);
 
-      let q = [];
+        let q = [];
 
-      for (let i = 0; i < creditails.memberships.length; i++) {
-        const workspaceList = await DataStore.query(AllWorkSpaces, creditails.memberships[i].targetId);
-        q.push({
-          value: workspaceList.name,
-          label: workspaceList.name,
-          id: workspaceList.id,
-        });
+        if (creditails.length !== 0) {
+          for (let i = 0; i < creditails.memberships.length; i++) {
+            const workspaceList = await DataStore.query(AllWorkSpaces, creditails.memberships[i].targetId);
+            q.push({
+              value: workspaceList.name,
+              label: workspaceList.name,
+              id: workspaceList.id,
+            });
+          }
+          !isActive && setList(q);
+        }
+      } catch (error) {
+        console.warn(error);
       }
-
-      !isActive && setList(q);
     };
 
     !isActive && !appLoading && makeList();

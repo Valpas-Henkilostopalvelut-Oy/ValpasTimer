@@ -7,7 +7,7 @@ import { LinkContainer } from "react-router-bootstrap";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 
 const Profile = () => {
-  const { userHasAuthenticated } = useAppContext();
+  const { userHasAuthenticated, setGroups } = useAppContext();
   const navigate = useNavigate();
   const [loadedUser, setLoadedUser] = useState(null);
 
@@ -22,21 +22,26 @@ const Profile = () => {
   };
 
   useEffect(() => {
-    let isActive = false
+    let isActive = false;
 
     const loadUser = async () => {
-      const currentUser = await Auth.currentAuthenticatedUser();
+      try {
+        const currentUser = await Auth.currentAuthenticatedUser();
 
-      !isActive && setLoadedUser(currentUser);
+        !isActive && setLoadedUser(currentUser);
+      } catch (e) {
+        console.warn(e);
+      }
     };
 
     if (loadedUser === null) loadUser();
-    return () => (isActive = true)
+    return () => (isActive = true);
   }, [loadedUser]);
 
   const handleLogout = async () => {
     await Auth.signOut();
-    userHasAuthenticated(false)
+    setGroups([]);
+    userHasAuthenticated(false);
     navigate("login");
   };
 
@@ -71,15 +76,9 @@ const Profile = () => {
         onClose={handleClose}
       >
         <MenuItem disabled>
-          {loadedUser != null
-            ? loadedUser.attributes.name +
-              " " +
-              loadedUser.attributes.family_name
-            : "Loading"}
+          {loadedUser != null ? loadedUser.attributes.name + " " + loadedUser.attributes.family_name : "Loading"}
         </MenuItem>
-        <MenuItem disabled>
-          {loadedUser != null ? loadedUser.attributes.email : "Loading"}
-        </MenuItem>
+        <MenuItem disabled>{loadedUser != null ? loadedUser.attributes.email : "Loading"}</MenuItem>
         <LinkContainer to={"settings"}>
           <MenuItem onClick={handleClose}>Profile settings</MenuItem>
         </LinkContainer>

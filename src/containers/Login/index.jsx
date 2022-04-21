@@ -16,13 +16,11 @@ const Login = () => {
   const navigate = useNavigate();
 
   const checkUserProfile = async () => {
-    try {
-      const currentuser = await DataStore.query(UserCredentials);
-      if (currentuser.length === 0) {
-        createUser();
-      }
-    } catch (error) {
-      console.log(error);
+    const userAuth = await Auth.currentAuthenticatedUser();
+    const userProfile = await DataStore.query(UserCredentials, userAuth.attributes["custom:UserCreditails"]);
+    
+    if (userProfile === undefined || userAuth.attributes["custom:UserCreditails"] === null) {
+      createUser().catch((err) => console.warn(err));
     }
   };
 
@@ -80,7 +78,6 @@ const Login = () => {
                 label="Email Address"
                 name="email"
                 autoComplete="email"
-                autoFocus
                 onChange={handleChange}
                 onBlur={handleBlur}
                 onClick={() => setMessage(null)}
@@ -129,9 +126,9 @@ const Login = () => {
               />
               <Grid container>
                 <Grid item xs>
-                  <Link href="#" variant="body2">
-                    Forgot password?
-                  </Link>
+                  <LinkContainer to="/forgot-password">
+                    <Link variant="body2">Forgot password?</Link>
+                  </LinkContainer>
                 </Grid>
 
                 <Grid item>

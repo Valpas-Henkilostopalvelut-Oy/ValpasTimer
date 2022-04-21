@@ -4,7 +4,7 @@ import "./App.css";
 //Custom
 import Navigation from "./Navigation";
 import { AppContext } from "./services/contextLib";
-import { Auth, DataStore, Hub } from "aws-amplify";
+import { Auth } from "aws-amplify";
 import { onError } from "./services/errorLib";
 import Sidebar from "./components/Sidebar";
 import Navbar from "./components/NavBar";
@@ -28,19 +28,6 @@ function App() {
     },
   });
 
-  Hub.listen("auth", async (data) => {
-    switch (data.payload.event) {
-      case "signOut":
-        await DataStore.clear();
-        setGroups(false);
-        setSelectedOption(null);
-        break;
-      case "signIn":
-        await DataStore.start();
-        break;
-    }
-  });
-
   useEffect(() => {
     let isActive = false;
 
@@ -48,7 +35,7 @@ function App() {
       try {
         await Auth.currentSession();
         userHasAuthenticated(true);
-        setAppLoading(false)
+        setAppLoading(false);
       } catch (e) {
         if (e !== "No current user") {
           onError(e);
@@ -68,8 +55,7 @@ function App() {
     const loadGroup = async () => {
       try {
         const user = await Auth.currentAuthenticatedUser();
-        const groups =
-          user.signInUserSession.accessToken.payload["cognito:groups"];
+        const groups = user.signInUserSession.accessToken.payload["cognito:groups"];
 
         groups !== undefined && setGroups(groups);
       } catch (error) {
@@ -98,6 +84,7 @@ function App() {
           userHasAuthenticated,
           selectedOption,
           setSelectedOption,
+          setGroups,
           groups,
           appLoading,
           setAppLoading,
@@ -106,17 +93,11 @@ function App() {
         <ThemeProvider theme={theme}>
           <Box sx={{ display: "flex" }}>
             <CssBaseline />
-            <Navbar
-              open={openDrawer}
-              setOpenDrawer={setOpenDrawer}
-              isAuthenticated={isAuthenticated}
-            />
-            {isAuthenticated && (
-              <Sidebar open={openDrawer} setOpen={setOpenDrawer} />
-            )}
+            <Navbar open={openDrawer} setOpenDrawer={setOpenDrawer} isAuthenticated={isAuthenticated} />
+            {isAuthenticated && <Sidebar open={openDrawer} setOpen={setOpenDrawer} />}
             <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
               <Header />
-              <Navigation />
+              <Navigation isAuthenticated={isAuthenticated} groups={groups} />
             </Box>
           </Box>
         </ThemeProvider>

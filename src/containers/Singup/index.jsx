@@ -112,7 +112,10 @@ const Signup = () => {
       .max(50, "First name too long")
       .required("First name is required"),
     password: yup.string().required("Password is required"),
-    confirmPassword: yup.string().required("Confirm password is required"),
+    confirmPassword: yup
+      .string()
+      .oneOf([yup.ref("password"), null], "Passwords must match")
+      .required("Confirm password is required"),
   });
 
   const enable = (values) => {
@@ -189,7 +192,6 @@ const Signup = () => {
                     fullWidth
                     id="firstName"
                     label="First Name"
-                    autoFocus
                     onChange={handleChange}
                     onBlur={handleBlur}
                     value={values.firstName}

@@ -10,69 +10,79 @@ import Workspaces from "./containers/Workspaces";
 import Home from "./containers/Home";
 import Dashboard from "./containers/Reports";
 import Workers from "./containers/Workers";
+import NoAccessPage from "./containers/NoAccessPage";
+import ForgotPassword from "./containers/ForgotPassword";
 
-import { useAppContext } from "./services/contextLib";
-
-const Navigation = () => {
-  const { isAuthenticated } = useAppContext();
-
+const Navigation = ({ isAuthenticated, groups }) => {
   const Redirect = () => <Navigate replace to="/login" />;
   return (
     <Routes>
+      <Route path="*" element={<NotFound />} />
+      <Route exact path="login" element={!isAuthenticated ? <Login /> : <Navigate replace to="/home" />} />
+      <Route exact path="signup" element={!isAuthenticated ? <Signup /> : <Navigate replace to="/home" />} />
+      <Route
+        exact
+        path="forgot-password"
+        element={!isAuthenticated ? <ForgotPassword /> : <Navigate replace to="/home" />}
+      />
+
+      <Route exact path="home" element={isAuthenticated ? <Home /> : <Redirect />} />
       <Route exact path="/" element={<Navigate replace to="/home" />} />
-
-      <Route
-        exact
-        path="home"
-        element={isAuthenticated ? <Home /> : <Redirect />}
-      />
-
-      <Route
-        exact
-        path="login"
-        element={
-          !isAuthenticated ? <Login /> : <Navigate replace to="/timer" />
-        }
-      />
-      <Route
-        exact
-        path="signup"
-        element={
-          !isAuthenticated ? <Signup /> : <Navigate replace to="/timer" />
-        }
-      />
-
       <Route
         exact
         path="timer"
-        element={isAuthenticated ? <Timer /> : <Redirect />}
+        element={
+          isAuthenticated ? (
+            groups.includes("Workers") || groups.includes("Admins") || groups.includes("Clients") ? (
+              <Timer />
+            ) : (
+              <NoAccessPage />
+            )
+          ) : (
+            <Redirect />
+          )
+        }
       />
-
-      <Route
-        exact
-        path="settings"
-        element={isAuthenticated ? <Settings /> : <Redirect />}
-      />
+      <Route exact path="settings" element={isAuthenticated ? <Settings /> : <Redirect />} />
       <Route
         exact
         path="workspaces"
-        element={isAuthenticated ? <Workspaces /> : <Redirect />}
-      />
-
-      <Route
-        exact
-        path="team"
-        element={isAuthenticated ? <Team /> : <Redirect />}
-      />
-      <Route
-        exact
-        path="reports"
-        element={isAuthenticated ? <Dashboard /> : <Redirect />}
+        element={isAuthenticated ? groups.includes("Admins") ? <Workspaces /> : <NoAccessPage /> : <Redirect />}
       />
       <Route
         exact
         path="allworkers"
-        element={isAuthenticated ? <Workers /> : <Redirect />}
+        element={isAuthenticated ? groups.includes("Admins") ? <Workers /> : <NoAccessPage /> : <Redirect />}
+      />
+      <Route
+        exact
+        path="team"
+        element={
+          isAuthenticated ? (
+            groups.includes("Admins") || groups.includes("Clients") ? (
+              <Team />
+            ) : (
+              <NoAccessPage />
+            )
+          ) : (
+            <Redirect />
+          )
+        }
+      />
+      <Route
+        exact
+        path="reports"
+        element={
+          isAuthenticated ? (
+            groups.includes("Admins") || groups.includes("Clients") ? (
+              <Dashboard />
+            ) : (
+              <NoAccessPage />
+            )
+          ) : (
+            <Redirect />
+          )
+        }
       />
     </Routes>
   );

@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import "./style.css";
 import { useAppContext } from "../../services/contextLib";
 import TotalLatest from "./TotalTracked";
 import { Container, Table, TableContainer, TableBody, TableCell, TableHead, TableRow, Paper, Box } from "@mui/material";
