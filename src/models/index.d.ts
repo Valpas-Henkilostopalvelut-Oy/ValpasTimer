@@ -11,7 +11,6 @@ export declare class Profile {
   readonly address?: string | null;
   readonly zip_code?: number | null;
   readonly contry?: string | null;
-  readonly other_settings?: UserSettings | null;
   readonly email?: string | null;
   constructor(init: ModelInit<Profile>);
 }
@@ -20,6 +19,8 @@ export declare class UserSettings {
   readonly timeFormat?: string | null;
   readonly timeZone?: string | null;
   readonly dateFormat?: string | null;
+  readonly modalSendConfirm?: boolean | null;
+  readonly modalConfirmConfirm?: boolean | null;
   constructor(init: ModelInit<UserSettings>);
 }
 
@@ -125,6 +126,7 @@ export declare class UserCredentials {
   readonly memberships?: (UserMemberships | null)[] | null;
   readonly profile?: Profile | null;
   readonly formChecked?: (string | null)[] | null;
+  readonly settings?: UserSettings | null;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
   constructor(init: ModelInit<UserCredentials, UserCredentialsMetaData>);

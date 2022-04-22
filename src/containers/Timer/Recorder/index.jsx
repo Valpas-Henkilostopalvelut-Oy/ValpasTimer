@@ -1,6 +1,6 @@
 import React, { useEffect, useState, Fragment } from "react";
 import "./timeRecorder.css";
-import { TextField, Button, Box, Grid, Switch, Typography } from "@mui/material";
+import { TextField, Button, Grid, Switch, Typography } from "@mui/material";
 import { Auth, DataStore } from "aws-amplify";
 import { UserCredentials, TimeEntry } from "../../../models";
 import TimeEditing from "../../../components/TimeEditing";
@@ -236,6 +236,7 @@ const Timer = ({ description, selectedOption, reload }) => {
     }
   };
 
+  //timer form fields and logic for adding new time
   return (
     <Fragment>
       <Grid item xs>
@@ -258,17 +259,8 @@ const Recorder = ({ loadTimeList, selectedOption }) => {
   const [description, setDescription] = useState("");
   const handleChange = (event) => setDescription(event.target.value);
 
+  
   return (
-    <Box
-      component="form"
-      sx={{
-        maxWidth: "100%",
-        marginBottom: "10px",
-        marginTop: "10px",
-      }}
-      noValidate
-      autoComplete="off"
-    >
       <Grid container spacing={2} alignItems="center" direction="row">
         <Grid item xs={manual ? 6 : 9}>
           <TextField
@@ -280,19 +272,18 @@ const Recorder = ({ loadTimeList, selectedOption }) => {
           />
         </Grid>
 
-        <Grid item container xs={manual ? 5 : 2} alignItems="center" direction="row" spacing={2}>
-          {!manual ? (
-            <Timer reload={loadTimeList} description={description} selectedOption={selectedOption} />
-          ) : (
-            <Manual reload={loadTimeList} description={description} selectedOption={selectedOption} />
-          )}
-        </Grid>
-
-        <Grid item xs={1}>
-          <Switch onChange={() => setManual(!manual)} value={manual} />
-        </Grid>
+      <Grid item container xs={manual ? 5 : 2} alignItems="center" direction="row" spacing={2}>
+        {!manual ? (
+          <Timer reload={loadTimeList} description={description} selectedOption={selectedOption} />
+        ) : (
+          <Manual reload={loadTimeList} description={description} selectedOption={selectedOption} />
+        )}
       </Grid>
-    </Box>
+
+      <Grid item xs={1}>
+        <Switch onChange={() => setManual(!manual)} value={manual} />
+      </Grid>
+    </Grid>
   );
 };
 

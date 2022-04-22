@@ -23,12 +23,15 @@ export async function createUser() {
           zip_code: 0,
           contry: null,
           email: userAuth.attributes.email,
-          other_settings: { timeFormat: "", timeZone: "", dateFormat: "" },
         },
         formChecked: [],
-        accessToken: (await Auth.currentSession())
-          .getAccessToken()
-          .getJwtToken(),
+        settings: {
+          timeFormat: "",
+          timeZone: "",
+          dateFormat: "",
+          modalConfirmConfirm: true,
+          modalSendConfirm: true,
+        },
       })
     );
 

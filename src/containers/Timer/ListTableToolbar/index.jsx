@@ -1,13 +1,16 @@
-import React from "react";
-import { IconButton, Toolbar, Tooltip, Typography } from "@mui/material";
+import React, { useState } from "react";
+import { IconButton, Toolbar, Tooltip, Typography, Modal, Box, Button } from "@mui/material";
 import { alpha } from "@mui/material/styles";
 import DeleteIcon from "@mui/icons-material/Delete";
 import UploadIcon from "@mui/icons-material/Upload";
-import { DataStore } from "aws-amplify";
-import { TimeEntry } from "../../../models";
+import { DataStore, Auth } from "aws-amplify";
+import { TimeEntry, UserCredentials } from "../../../models";
+import LoaderButton from "../../../components/LoaderButton";
 
 const TableToolBar = (props) => {
   const { numSelected, selected, loadUpdate, clearSelected } = props;
+  const [open, setOpen] = useState(false);
+  const [deleteOpen, setDeleteOpen] = useState(false);
 
   const deleteSelected = async () => {
     try {
@@ -24,7 +27,7 @@ const TableToolBar = (props) => {
     }
   };
 
-  const sendToConfirm = async () => {
+  const sendSelected = async (selected) => {
     try {
       for (let i = 0; i < selected.length; i++) {
         for (let ii = 0; ii < selected[i].arr.length; ii++) {
@@ -39,8 +42,6 @@ const TableToolBar = (props) => {
           }
         }
       }
-      clearSelected([]);
-      loadUpdate();
     } catch (error) {
       console.warn(error);
     }
@@ -69,16 +70,108 @@ const TableToolBar = (props) => {
       {numSelected > 0 && (
         <>
           <Tooltip title="Upload">
-            <IconButton onClick={sendToConfirm}>
+            <IconButton onClick={() => setOpen(true)}>
               <UploadIcon />
             </IconButton>
           </Tooltip>
 
+          <Modal
+            open={open}
+            onClose={() => {
+              setOpen(false);
+              clearSelected([]);
+            }}
+          >
+            <Box
+              sx={{
+                position: "absolute",
+                top: "50%",
+                left: "50%",
+                transform: "translate(-50%, -50%)",
+                width: 400,
+                bgcolor: "background.paper",
+                border: "2px solid #000",
+                boxShadow: 24,
+                p: 4,
+              }}
+            >
+              <Typography variant="h6" id="modal-title">
+                Send to Confirm
+              </Typography>
+              <Typography variant="subtitle1" id="modal-description">
+                Are you sure you want to send to confirm?
+              </Typography>
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "flex-end",
+                  mt: 2,
+                }}
+              >
+                <Button
+                  onClick={() => {
+                    sendSelected(selected);
+                    setOpen(false);
+                  }}
+                >
+                  Send
+                </Button>
+                <Button onClick={() => setOpen(false)}>Cancel</Button>
+              </Box>
+            </Box>
+          </Modal>
+
           <Tooltip title="Delete">
-            <IconButton onClick={deleteSelected}>
+            <IconButton onClick={() => setDeleteOpen(true)}>
               <DeleteIcon />
             </IconButton>
           </Tooltip>
+
+          <Modal
+            open={deleteOpen}
+            onClose={() => {
+              setDeleteOpen(false);
+              clearSelected([]);
+            }}
+          >
+            <Box
+              sx={{
+                position: "absolute",
+                top: "50%",
+                left: "50%",
+                transform: "translate(-50%, -50%)",
+                width: 400,
+                bgcolor: "background.paper",
+                border: "2px solid #000",
+                boxShadow: 24,
+                p: 4,
+              }}
+            >
+              <Typography variant="h6" id="modal-title">
+                Delete
+              </Typography>
+              <Typography variant="subtitle1" id="modal-description">
+                Are you sure you want to delete?
+              </Typography>
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "flex-end",
+                  mt: 2,
+                }}
+              >
+                <Button
+                  onClick={() => {
+                    deleteSelected();
+                    setDeleteOpen(false);
+                  }}
+                >
+                  Delete
+                </Button>
+                <Button onClick={() => setDeleteOpen(false)}>Cancel</Button>
+              </Box>
+            </Box>
+          </Modal>
         </>
       )}
     </Toolbar>

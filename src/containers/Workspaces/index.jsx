@@ -1,5 +1,5 @@
 import React, { Fragment, useEffect, useState } from "react";
-import { DataStore, API, Auth } from "aws-amplify";
+import { DataStore } from "aws-amplify";
 import { AllWorkSpaces, UserCredentials } from "../../models";
 import "./Workspaces.css";
 import "../../App.css";

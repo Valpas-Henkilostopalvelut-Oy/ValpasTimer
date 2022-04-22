@@ -339,6 +339,15 @@ export const schema = {
                     "attributes": [],
                     "isArrayNullable": true
                 },
+                "settings": {
+                    "name": "settings",
+                    "isArray": false,
+                    "type": {
+                        "nonModel": "UserSettings"
+                    },
+                    "isRequired": false,
+                    "attributes": []
+                },
                 "createdAt": {
                     "name": "createdAt",
                     "isArray": false,
@@ -472,15 +481,6 @@ export const schema = {
                     "isRequired": false,
                     "attributes": []
                 },
-                "other_settings": {
-                    "name": "other_settings",
-                    "isArray": false,
-                    "type": {
-                        "nonModel": "UserSettings"
-                    },
-                    "isRequired": false,
-                    "attributes": []
-                },
                 "email": {
                     "name": "email",
                     "isArray": false,
@@ -511,6 +511,20 @@ export const schema = {
                     "name": "dateFormat",
                     "isArray": false,
                     "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "modalSendConfirm": {
+                    "name": "modalSendConfirm",
+                    "isArray": false,
+                    "type": "Boolean",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "modalConfirmConfirm": {
+                    "name": "modalConfirmConfirm",
+                    "isArray": false,
+                    "type": "Boolean",
                     "isRequired": false,
                     "attributes": []
                 }
@@ -712,5 +726,5 @@ export const schema = {
             }
         }
     },
-    "version": "b06e21bb59585712cd91018bab588d9c"
+    "version": "33d7b0673a6eee749931a496f093f2d2"
 };

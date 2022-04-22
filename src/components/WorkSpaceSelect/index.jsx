@@ -3,11 +3,11 @@ import "./WorkspaceSelect.css";
 import { Auth, DataStore, Hub } from "aws-amplify";
 import { AllWorkSpaces, UserCredentials } from "../../models";
 import { useAppContext } from "../../services/contextLib";
-import { Box, InputLabel, MenuItem, FormControl, Select, Button } from "@mui/material";
+import { Box, InputLabel, MenuItem, FormControl, Select } from "@mui/material";
 
 const WorkspaceSelect = () => {
   const [list, setList] = useState([]);
-  const { selectedOption, setSelectedOption, appLoading, setAppLoading, groups } = useAppContext();
+  const { selectedOption, setSelectedOption, appLoading, groups } = useAppContext();
 
   useEffect(() => {
     let isActive = false;
@@ -23,21 +23,39 @@ const WorkspaceSelect = () => {
 
     const makeList = async () => {
       try {
-        const user = await Auth.currentAuthenticatedUser();
-        const creditails = await DataStore.query(UserCredentials, user.attributes["custom:UserCreditails"]);
+        //check if user is in wokers or client group and if Admin show all workspaces
+        if (groups.includes("Admins")) {
+          const workspaces = await DataStore.query(AllWorkSpaces);
 
-        let q = [];
+          let q = [];
 
-        if (creditails.length !== 0) {
-          for (let i = 0; i < creditails.memberships.length; i++) {
-            const workspaceList = await DataStore.query(AllWorkSpaces, creditails.memberships[i].targetId);
-            q.push({
-              value: workspaceList.name,
-              label: workspaceList.name,
-              id: workspaceList.id,
-            });
+          if (workspaces.length > 0) {
+            for (let i = 0; i < workspaces.length; i++) {
+              q.push({
+                id: workspaces[i].id,
+                value: workspaces[i].name,
+                label: workspaces[i].name,
+              });
+            }
+            !isActive && setList(q);
           }
-          !isActive && setList(q);
+        } else if (groups.includes("Workers") || groups.includes("Clients")) {
+          const user = await Auth.currentAuthenticatedUser();
+          const creditails = await DataStore.query(UserCredentials, user.attributes["custom:UserCreditails"]);
+
+          let q = [];
+
+          if (creditails.length !== 0) {
+            for (let i = 0; i < creditails.memberships.length; i++) {
+              const workspaceList = await DataStore.query(AllWorkSpaces, creditails.memberships[i].targetId);
+              q.push({
+                value: workspaceList.name,
+                label: workspaceList.name,
+                id: workspaceList.id,
+              });
+            }
+            !isActive && setList(q);
+          }
         }
       } catch (error) {
         console.warn(error);
@@ -47,7 +65,7 @@ const WorkspaceSelect = () => {
     !isActive && !appLoading && makeList();
 
     return () => (isActive = true);
-  }, [appLoading]);
+  }, [appLoading, groups]);
 
   useEffect(() => {
     let isActive = false;
@@ -72,7 +90,7 @@ const WorkspaceSelect = () => {
     !isActive && list.length !== 0 && selectedOption === null && lastWorkspaceLoad();
 
     return () => (isActive = true);
-  }, [list]);
+  }, [list, selectedOption]);
 
   const changeLastValue = async (val) => {
     try {

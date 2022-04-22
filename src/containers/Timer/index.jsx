@@ -19,6 +19,7 @@ import {
   IconButton,
   TextField,
   Typography,
+  CircularProgress,
 } from "@mui/material";
 import Recorder from "./Recorder";
 import TableToolBar from "./ListTableToolbar";
@@ -255,8 +256,9 @@ const Timer = () => {
   const { isAuthenticated, selectedOption } = useAppContext();
   const [selected, setSelected] = useState([]);
   const [grouped, setGrouped] = useState([]);
+  const [openSend, setOpenSend] = useState(false);
 
-  const loadTimeList = async () => {
+  const loadTimeList = async (isAuthenticated, selectedOption) => {
     if (isAuthenticated && selectedOption !== null) {
       try {
         const databaseTimeList = await DataStore.query(TimeEntry);
@@ -283,22 +285,25 @@ const Timer = () => {
   useEffect(() => {
     let isActive = false;
 
-    !isActive && loadTimeList();
+    !isActive && loadTimeList(isAuthenticated, selectedOption);
 
     return () => (isActive = true);
-  }, [selectedOption]);
+  }, [isAuthenticated, selectedOption]);
+
+  //loading if grouped, timelist and selected option are null
 
   return (
     <Container>
-      <Recorder loadTimeList={loadTimeList} selectedOption={selectedOption} />
-
-      {grouped != null && timeList != null && selectedOption != null && (
+      {grouped != null && timeList != null && selectedOption != null ? (
         <Fragment>
+          <Recorder loadTimeList={loadTimeList} selectedOption={selectedOption} />
           <TableToolBar
             numSelected={selected.length}
             selected={selected}
             loadUpdate={loadTimeList}
             clearSelected={setSelected}
+            setOpenSend={setOpenSend}
+            openSend={openSend}
           />
           <TableContainer component={Paper}>
             <Table sx={{ minWidth: 650 }} aria-label="simple table">
@@ -326,6 +331,17 @@ const Timer = () => {
             </Table>
           </TableContainer>
         </Fragment>
+      ) : (
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            height: "100vh",
+          }}
+        >
+          <CircularProgress />
+        </Box>
       )}
     </Container>
   );

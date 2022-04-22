@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import "./App.css";
 
 //Custom
@@ -93,8 +93,13 @@ function App() {
         <ThemeProvider theme={theme}>
           <Box sx={{ display: "flex" }}>
             <CssBaseline />
-            <Navbar open={openDrawer} setOpenDrawer={setOpenDrawer} isAuthenticated={isAuthenticated} />
-            {isAuthenticated && <Sidebar open={openDrawer} setOpen={setOpenDrawer} />}
+
+            {isAuthenticated && (
+              <Fragment>
+                <Sidebar open={openDrawer} setOpen={setOpenDrawer} />
+                <Navbar open={openDrawer} setOpenDrawer={setOpenDrawer} isAuthenticated={isAuthenticated} />
+              </Fragment>
+            )}
             <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
               <Header />
               <Navigation isAuthenticated={isAuthenticated} groups={groups} />
