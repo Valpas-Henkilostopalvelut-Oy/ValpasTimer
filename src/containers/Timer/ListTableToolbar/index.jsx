@@ -39,6 +39,10 @@ const TableToolBar = (props) => {
                 updated.isSent = true;
               })
             );
+            loadUpdate();
+            clearSelected([]);
+          } else {
+            clearSelected([]);
           }
         }
       }

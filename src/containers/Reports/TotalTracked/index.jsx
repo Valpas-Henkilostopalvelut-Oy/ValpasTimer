@@ -33,7 +33,7 @@ const TotalLatest = ({ users, selOption, setSelected, selected }) => {
     !isActive && loadTime();
 
     return () => (isActive = false);
-  }, [selOption]);
+  }, [users, selOption]);
 
   return (
     <React.Fragment>

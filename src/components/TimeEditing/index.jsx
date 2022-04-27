@@ -2,14 +2,14 @@ import { TextField, Typography } from "@mui/material";
 import React, { useState } from "react";
 import { timeMaker } from "../../services/time";
 
-const TimeEditing = ({ time, onChange, isSent }) => {
+const TimeEditing = ({ time, onChange, isManual = false, isSent = false, isAdmin = false }) => {
   const d = new Date(time);
 
   const [value, setValue] = useState(
     `${String("0" + d.getHours()).slice(-2)}:${String("0" + d.getMinutes()).slice(-2)}`
   );
 
-  return !isSent ? (
+  return isSent || isAdmin || isManual ? (
     <TextField
       sx={{ width: 42 }}
       variant="standard"

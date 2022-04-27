@@ -90,7 +90,7 @@ const Row = ({ data, selected, setSelected, loadTimeList }) => {
   return (
     <Fragment>
       <TableRow>
-        <TableCell colSpan={7}>{data.week} week</TableCell>
+        <TableCell colSpan={8}>{data.week} week</TableCell>
       </TableRow>
       {data.arr.map((byday, key) => (
         <Details
@@ -140,16 +140,26 @@ const Details = ({ data, selected, setSelected, loadTimeList, index }) => {
   const isItemSelected = isSelected(data);
   const labelId = `enhanced-table-checkbox-${index}`;
 
+  const sent = (d) => {
+    return d.arr.filter((item) => item.isSent).length === d.arr.length;
+  };
+
+  const confirmed = (d) => {
+    return d.arr.filter((item) => item.isConfirmed).length === d.arr.length;
+  };
+
   return (
     <Fragment>
       <TableRow key={index} hover role="checkbox" selected={isItemSelected} aria-checked={isItemSelected} tabIndex={-1}>
         <TableCell>
-          <Checkbox
-            color="primary"
-            checked={isItemSelected}
-            inputProps={{ "aria-labelledby": labelId }}
-            onClick={(event) => !data.isSent && handleClick(event, data)}
-          />
+          {!sent(data) && (
+            <Checkbox
+              color="primary"
+              checked={isItemSelected}
+              inputProps={{ "aria-labelledby": labelId }}
+              onClick={(event) => !sent(data) && handleClick(event, data)}
+            />
+          )}
         </TableCell>
 
         <TableCell>
@@ -162,9 +172,15 @@ const Details = ({ data, selected, setSelected, loadTimeList, index }) => {
         <TableCell align="right">{endVal}</TableCell>
         <TableCell align="right">{data.date}</TableCell>
         <TableCell align="right">{totalVal}</TableCell>
+        <TableCell align="right">
+          {confirmed(data) ? <CheckCircleIcon color="success" /> : <RadioButtonUncheckedIcon color="disabled" />}
+        </TableCell>
+        <TableCell align="right">
+          {sent(data) ? <CheckCircleIcon color="success" /> : <RadioButtonUncheckedIcon color="disabled" />}
+        </TableCell>
       </TableRow>
       <TableRow>
-        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={7}>
+        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={8}>
           <Collapse in={open} timeout={"auto"} unmountOnExit>
             <Box sx={{ margin: 1 }}>
               <Table size="small" aria-label="purchases">
@@ -194,7 +210,7 @@ const Details = ({ data, selected, setSelected, loadTimeList, index }) => {
                         <TableCell align="right">
                           <TimeEditing
                             time={row.timeInterval.start}
-                            isSent={row.isSent}
+                            isSent={!row.isSent}
                             onChange={(event) =>
                               updateValue({
                                 id: row.id,
@@ -210,7 +226,7 @@ const Details = ({ data, selected, setSelected, loadTimeList, index }) => {
                         <TableCell align="right">
                           <TimeEditing
                             time={row.timeInterval.end}
-                            isSent={row.isSent}
+                            isSent={!row.isSent}
                             onChange={(event) =>
                               updateValue({
                                 id: row.id,
@@ -258,7 +274,7 @@ const Timer = () => {
   const [grouped, setGrouped] = useState([]);
   const [openSend, setOpenSend] = useState(false);
 
-  const loadTimeList = async (isAuthenticated, selectedOption) => {
+  const loadTimeList = async () => {
     if (isAuthenticated && selectedOption !== null) {
       try {
         const databaseTimeList = await DataStore.query(TimeEntry);
@@ -285,7 +301,7 @@ const Timer = () => {
   useEffect(() => {
     let isActive = false;
 
-    !isActive && loadTimeList(isAuthenticated, selectedOption);
+    !isActive && loadTimeList();
 
     return () => (isActive = true);
   }, [isAuthenticated, selectedOption]);
@@ -315,6 +331,8 @@ const Timer = () => {
                   <TableCell align="right">End</TableCell>
                   <TableCell align="right">Date</TableCell>
                   <TableCell align="right">Total</TableCell>
+                  <TableCell align="right">All Confirmed</TableCell>
+                  <TableCell align="right">Sent</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>

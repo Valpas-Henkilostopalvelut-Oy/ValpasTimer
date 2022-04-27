@@ -16,31 +16,47 @@ import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import RadioButtonUncheckedIcon from "@mui/icons-material/RadioButtonUnchecked";
+import { useAppContext } from "../../../services/contextLib";
+import TimeEditing from "../../../components/TimeEditing";
+import { DataStore } from "aws-amplify";
+import { TimeEntry } from "../../../models";
 
 const start = (val) => {
   let start = new Date(val);
-
   let startVal = `${String("0" + start.getHours()).slice(-2)}:${String("0" + start.getMinutes()).slice(-2)}`;
-
   return startVal;
 };
 
 const end = (val) => {
   let end = new Date(val);
-
   let endVal = `${String("0" + end.getHours()).slice(-2)}:${String("0" + end.getMinutes()).slice(-2)}`;
-
   return endVal;
 };
 
 const total = (s, e) => {
   let total = new Date(Date.parse(e) - Date.parse(s));
-
   let totalVal = `${String("0" + total.getUTCHours()).slice(-2)}:${String("0" + total.getUTCMinutes()).slice(
     -2
   )}:${String("0" + total.getUTCSeconds()).slice(-2)}`;
-
   return totalVal;
+};
+
+const updateTime = async (val, id, type) => {
+  let time = new Date().setHours(val.h, val.m, 0);
+  const original = await DataStore.query(TimeEntry, id).catch((err) => console.warn(err));
+  await DataStore.save(
+    TimeEntry.copyOf(original, (update) => {
+      if (type === "start") {
+        update.timeInterval.start = new Date(time).toISOString();
+      } else if (type === "end") {
+        update.timeInterval.end = new Date(time).toISOString();
+      }
+    })
+  ).catch((err) => console.warn(err));
+};
+
+const confirmed = (d) => {
+  return d.arr.filter((item) => item.isConfirmed).length === d.arr.length;
 };
 
 const Row = ({ row, index, handleClick, isSelected }) => {
@@ -49,18 +65,22 @@ const Row = ({ row, index, handleClick, isSelected }) => {
   const isItemSelected = isSelected(row);
   const labelId = `enhanced-table-checkbox-${index}`;
 
+  const { groups } = useAppContext();
+
   return (
     <Fragment>
       <TableRow key={index} hover role="checkbox" aria-checked={isItemSelected} tabIndex={-1} selected={isItemSelected}>
         <TableCell>
-          <Checkbox
-            color="primary"
-            checked={isItemSelected}
-            inputProps={{
-              "aria-labelledby": labelId,
-            }}
-            onClick={(event) => handleClick(event, row)}
-          />
+          {(!confirmed(row) || groups.includes("Admins")) && (
+            <Checkbox
+              color="primary"
+              checked={isItemSelected}
+              inputProps={{
+                "aria-labelledby": labelId,
+              }}
+              onClick={(event) => handleClick(event, row)}
+            />
+          )}
         </TableCell>
         <TableCell>
           <IconButton aria-label="expand row" size="small" onClick={() => setOpen(!open)}>
@@ -76,7 +96,9 @@ const Row = ({ row, index, handleClick, isSelected }) => {
           {total(row.arr[row.arr.length - 1].timeInterval.start, row.arr[0].timeInterval.end)}
         </TableCell>
 
-        <TableCell align="right">conf</TableCell>
+        <TableCell align="right">
+          {confirmed(row) ? <CheckCircleIcon color="success" /> : <RadioButtonUncheckedIcon color="disabled" />}
+        </TableCell>
       </TableRow>
 
       <TableRow>
@@ -105,9 +127,21 @@ const Row = ({ row, index, handleClick, isSelected }) => {
                           )}
                         </TableCell>
 
-                        <TableCell align="right">{start(inarr.timeInterval.start)}</TableCell>
+                        <TableCell align="right">
+                          <TimeEditing
+                            time={inarr.timeInterval.start}
+                            isAdmin={groups.includes("Admins")}
+                            onChange={(val) => updateTime(val, inarr.id, "start")}
+                          />
+                        </TableCell>
 
-                        <TableCell align="right">{end(inarr.timeInterval.end)}</TableCell>
+                        <TableCell align="right">
+                          <TimeEditing
+                            time={inarr.timeInterval.end}
+                            isAdmin={groups.includes("Admins")}
+                            onChange={(val) => updateTime(val, inarr.id, "end")}
+                          />
+                        </TableCell>
 
                         <TableCell align="right">{total(inarr.timeInterval.start, inarr.timeInterval.end)}</TableCell>
 

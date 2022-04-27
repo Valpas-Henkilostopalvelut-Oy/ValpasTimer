@@ -62,17 +62,16 @@ const Manual = ({ reload, description, selectedOption }) => {
 
       <Grid item xs>
         Start:
-        <TimeEditing time={start} onChange={(val) => setStart(new Date(start.setHours(val.h, val.m, 0)))} />
+        <TimeEditing
+          time={start}
+          onChange={(val) => setStart(new Date(start.setHours(val.h, val.m, 0)))}
+          isManual={true}
+        />
       </Grid>
 
       <Grid item xs>
         End:
-        <TimeEditing
-          time={end}
-          onChange={(val) => {
-            setEnd(new Date(end.setHours(val.h, val.m, 0)));
-          }}
-        />
+        <TimeEditing time={end} onChange={(val) => setEnd(new Date(end.setHours(val.h, val.m, 0)))} isManual={true} />
       </Grid>
 
       <Grid item xs>
@@ -259,18 +258,17 @@ const Recorder = ({ loadTimeList, selectedOption }) => {
   const [description, setDescription] = useState("");
   const handleChange = (event) => setDescription(event.target.value);
 
-  
   return (
-      <Grid container spacing={2} alignItems="center" direction="row">
-        <Grid item xs={manual ? 6 : 9}>
-          <TextField
-            fullWidth
-            label="Description"
-            placeholder="Description"
-            onChange={handleChange}
-            value={description}
-          />
-        </Grid>
+    <Grid container spacing={2} alignItems="center" direction="row">
+      <Grid item xs={manual ? 6 : 9}>
+        <TextField
+          fullWidth
+          label="Description"
+          placeholder="Description"
+          onChange={handleChange}
+          value={description}
+        />
+      </Grid>
 
       <Grid item container xs={manual ? 5 : 2} alignItems="center" direction="row" spacing={2}>
         {!manual ? (

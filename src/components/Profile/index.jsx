@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Auth } from "aws-amplify";
+import { Auth, DataStore } from "aws-amplify";
 import { Menu, MenuItem, IconButton, Box } from "@mui/material";
 import { useAppContext } from "../../services/contextLib";
 import { useNavigate } from "react-router-dom";
@@ -39,10 +39,12 @@ const Profile = () => {
   }, [loadedUser]);
 
   const handleLogout = async () => {
+    await DataStore.stop();
     await Auth.signOut();
     setGroups([]);
     userHasAuthenticated(false);
     navigate("login");
+    await DataStore.clear();
   };
 
   const menuId = "primary-search-account-menu";

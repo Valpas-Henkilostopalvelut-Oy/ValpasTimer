@@ -71,7 +71,7 @@ const UserList = ({ member, data, index, selected, setSelected }) => {
     !isActive && user === null && loadUser();
 
     return () => (isActive = true);
-  }, []);
+  }, [member, user]);
 
   return user !== null ? (
     <TableRow hover role="checkbox" aria-checked={isItemSelected} tabIndex={-1} selected={isItemSelected}>
@@ -412,7 +412,7 @@ const Row = ({ data, reload }) => {
               reload={reload}
             />
 
-            <TableContainer component={Paper} sx={{ maxHeight: 440, width: "100%" }}>
+            <TableContainer sx={{ maxHeight: 440, width: "100%", mb: 3 }}>
               <Table aria-label="stivky table">
                 <TableHead>
                   <TableRow>
