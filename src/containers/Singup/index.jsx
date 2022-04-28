@@ -32,7 +32,6 @@ const ConfirmForm = ({ password, email }) => {
           await Auth.confirmSignUp(email, values.confirmationCode);
           await Auth.signIn(email, password);
           createUser();
-
           userHasAuthenticated(true);
           navigate("/home", { replace: true });
         } catch (e) {
@@ -111,9 +110,15 @@ const Signup = () => {
       .min(2, "First name is short")
       .max(50, "First name too long")
       .required("First name is required"),
-    password: yup.string().required("Password is required"),
+    password: yup
+      .string()
+      .min(8, "Password is too short")
+      .max(50, "Password is too long")
+      .required("Password is required"),
     confirmPassword: yup
       .string()
+      .min(8, "Password is too short")
+      .max(50, "Password is too long")
       .oneOf([yup.ref("password"), null], "Passwords must match")
       .required("Confirm password is required"),
   });

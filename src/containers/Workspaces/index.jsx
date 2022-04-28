@@ -1,5 +1,5 @@
 import React, { Fragment, useEffect, useState } from "react";
-import { DataStore } from "aws-amplify";
+import { API, DataStore, Auth } from "aws-amplify";
 import { AllWorkSpaces, UserCredentials } from "../../models";
 import "./Workspaces.css";
 import "../../App.css";
@@ -130,49 +130,66 @@ const AddUser = ({ open, setOpen, id, reload }) => {
             setSubmitting(true);
             try {
               if (groups.includes("Admins")) {
-                const credentials = (await DataStore.query(UserCredentials)).find(
-                  (u) => u.profile.email === values.email
-                );
-                const original = await DataStore.query(AllWorkSpaces, id);
+                await API.get("AdminQueries", "/listUsers", {
+                  queryStringParameters: {
+                    filter: "email",
+                  },
+                  headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `${(await Auth.currentSession()).getAccessToken().getJwtToken()}`,
+                  },
+                })
+                  .then(async (data) => {
+                    const foundUser = data.Users.find(
+                      (u) => u.Attributes.find((a) => a.Name === "email").Value === values.email
+                    );
 
-                if (groups.includes("Admins") && credentials !== undefined && original !== undefined) {
-                  if (
-                    original.memberships.filter((m) => m.userId === credentials.userId).length === 0 &&
-                    credentials.memberships.filter((m) => m.workspaceId === original.id).length === 0
-                  ) {
-                    //add user to workspace
-                    await DataStore.save(
-                      AllWorkSpaces.copyOf(original, (updated) => {
-                        updated.memberships.push({
-                          hourlyRate: original.hourlyRate,
-                          membershipStatus: "",
-                          membershipType: "USER",
-                          userId: credentials.userId,
-                          targetId: original.id,
-                        });
-                      })
-                    );
-                    await DataStore.save(
-                      UserCredentials.copyOf(credentials, (updated) => {
-                        updated.memberships.push({
-                          hourlyRate: original.hourlyRate,
-                          costRate: {},
-                          membershipStatus: "",
-                          membershipType: "WORKSPACE",
-                          userId: credentials.userId,
-                          targetId: id,
-                        });
-                      })
-                    );
-                    setMessage("User added to workspace");
-                    reload();
-                    setOpen(false);
-                  } else {
-                    setMessage("User is already a member of this workspace");
-                  }
-                } else {
-                  setMessage("User does not exist");
-                }
+                    if (foundUser !== undefined) {
+                      const credentialsId = foundUser.Attributes.find((a) => a.Name === "custom:UserCreditails").Value;
+                      const credentials = await DataStore.query(UserCredentials, credentialsId);
+                      const original = await DataStore.query(AllWorkSpaces, id);
+
+                      if (groups.includes("Admins") && credentials !== undefined && original !== undefined) {
+                        if (
+                          original.memberships.filter((m) => m.userId === credentials.userId).length === 0 &&
+                          credentials.memberships.filter((m) => m.workspaceId === original.id).length === 0
+                        ) {
+                          //add user to workspace
+                          await DataStore.save(
+                            AllWorkSpaces.copyOf(original, (updated) => {
+                              updated.memberships.push({
+                                hourlyRate: original.hourlyRate,
+                                membershipStatus: "",
+                                membershipType: "USER",
+                                userId: credentials.userId,
+                                targetId: original.id,
+                              });
+                            })
+                          );
+                          await DataStore.save(
+                            UserCredentials.copyOf(credentials, (updated) => {
+                              updated.memberships.push({
+                                hourlyRate: original.hourlyRate,
+                                costRate: {},
+                                membershipStatus: "",
+                                membershipType: "WORKSPACE",
+                                userId: credentials.userId,
+                                targetId: id,
+                              });
+                            })
+                          );
+                          setMessage("User added to workspace");
+                          reload();
+                          setOpen(false);
+                        } else {
+                          setMessage("User is already a member of this workspace");
+                        }
+                      }
+                    } else {
+                      setMessage("User does not exist");
+                    }
+                  })
+                  .catch((err) => console.warn(err));
               }
             } catch (error) {
               setSubmitting(false);

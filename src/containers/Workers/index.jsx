@@ -270,7 +270,7 @@ const Workers = () => {
                 <TableCell align="right">Email</TableCell>
                 <TableCell align="right">Phone number</TableCell>
                 <TableCell align="right">Enabled</TableCell>
-                <TableCell align="right">Status</TableCell>
+                <TableCell align="right">Email</TableCell>
                 <TableCell align="right">Groups</TableCell>
                 <TableCell align="right">Current work</TableCell>
               </TableRow>
