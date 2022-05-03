@@ -14,14 +14,15 @@ import {
   CircularProgress,
 } from "@mui/material";
 
-import { DataStore } from "aws-amplify";
-import { UserCredentials } from "../../models";
-import HeadToolBar from "./ToolBar";
+import { DataStore, Auth } from "aws-amplify";
+import { UserCredentials, AllWorkSpaces } from "../../models";
+import { Header } from "./Tools";
 
 const Dashboard = () => {
   const [usersList, setUsers] = useState(null);
-  const { selectedOption, groups } = useAppContext();
+  const { groups } = useAppContext();
   const [selected, setSelected] = useState([]);
+  const [selectedOption, setSelectedOption] = useState("");
 
   const loadTeamActivities = async () => {
     const usersCredentials = await DataStore.query(UserCredentials);
@@ -29,7 +30,7 @@ const Dashboard = () => {
     let q = [];
 
     for (let i = 0; i < usersCredentials.length; i++) {
-      if (usersCredentials[i].memberships.filter((m) => m.targetId === selectedOption.id).length > 0) {
+      if (usersCredentials[i].memberships.filter((m) => m.targetId === selectedOption).length > 0) {
         q.push(usersCredentials[i]);
       }
     }
@@ -40,22 +41,20 @@ const Dashboard = () => {
   useEffect(() => {
     let isActive = false;
 
-    !isActive && selectedOption !== null && loadTeamActivities();
+    !isActive && selectedOption !== "" && loadTeamActivities();
 
     return () => (isActive = true);
   }, [selectedOption]);
 
   return (
     <Container>
-      {selectedOption !== null && usersList !== null ? (
-        <Box sx={{ borderBottom: 1, borderColor: "divider" }} component={Paper}>
-          <HeadToolBar
-            numSelected={selected.length}
-            selected={selected}
-            setSelected={setSelected}
-            loadNew={loadTeamActivities}
-            isAdmin={groups.includes("Admins")}
-          />
+      <Box sx={{ borderBottom: 1, borderColor: "divider" }} component={Paper}>
+        <Header
+          selectedOption={selectedOption}
+          setSelectedOption={setSelectedOption}
+          isAdmin={groups.includes("Admins")}
+        />
+        {usersList !== null ? (
           <TableContainer>
             <Table aria-label="collapsible table">
               <TableHead>
@@ -77,14 +76,24 @@ const Dashboard = () => {
               </TableBody>
             </Table>
           </TableContainer>
-        </Box>
-      ) : (
-        <Box sx={{ borderBottom: 1, borderColor: "divider" }} component={Paper}>
-          <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%" }}>
+        ) : (
+          <Box
+            sx={{
+              pt: 6,
+              pb: 6,
+              borderBottom: 1,
+              borderColor: "divider",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              height: "100%",
+            }}
+            component={Paper}
+          >
             <CircularProgress />
           </Box>
-        </Box>
-      )}
+        )}
+      </Box>
     </Container>
   );
 };

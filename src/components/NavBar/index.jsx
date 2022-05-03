@@ -34,7 +34,7 @@ const Navbar = ({ position, open, setOpenDrawer, isAuthenticated }) => {
         {isAuthenticated && (
           <IconButton
             color="inherit"
-            aria-label="open drawer" 
+            aria-label="open drawer"
             onClick={() => setOpenDrawer(true)}
             edge="start"
             sx={{
@@ -53,7 +53,6 @@ const Navbar = ({ position, open, setOpenDrawer, isAuthenticated }) => {
         <Box sx={{ display: { xs: "none", md: "flex" } }}>
           {isAuthenticated ? (
             <>
-              <WorkspaceSelect />
               <Profile />
             </>
           ) : (

@@ -62,7 +62,7 @@ const deleteSelected = async ({ selected }) => {
   }
 };
 
-const HeadToolBar = ({ numSelected, selected, setSelected, loadNew, isAdmin }) => {
+export const HeadetTools = ({ numSelected, selected, setSelected, loadNew, isAdmin }) => {
   const [confirmModalOpen, setConfirmModalOpen] = useState(false);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [unConfirmModalOpen, setUnConfirmModalOpen] = useState(false);
@@ -248,4 +248,4 @@ const HeadToolBar = ({ numSelected, selected, setSelected, loadNew, isAdmin }) =
   );
 };
 
-export default HeadToolBar;
+export const Header = ({ selectedOption, setSelectedOption, isAdmin }) => {};

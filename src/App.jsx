@@ -10,23 +10,17 @@ import Sidebar from "./components/Sidebar";
 import Navbar from "./components/NavBar";
 import { Box, CssBaseline } from "@mui/material";
 import { styled, createTheme, ThemeProvider } from "@mui/material/styles";
+import { customPalette } from "./services/appSettings";
 
 function App() {
   const [isAuthenticated, userHasAuthenticated] = useState(false);
   const [isAuthenticating, setIsAuthenticating] = useState(true);
-  const [selectedOption, setSelectedOption] = useState(null);
   const [appLoading, setAppLoading] = useState(true);
 
   const [groups, setGroups] = useState([]);
   const [openDrawer, setOpenDrawer] = useState(false);
 
-  const theme = createTheme({
-    palette: {
-      navbar: {
-        main: "#00adef",
-      },
-    },
-  });
+  const theme = createTheme(customPalette);
 
   useEffect(() => {
     let isActive = false;
@@ -82,8 +76,6 @@ function App() {
         value={{
           isAuthenticated,
           userHasAuthenticated,
-          selectedOption,
-          setSelectedOption,
           setGroups,
           groups,
           appLoading,

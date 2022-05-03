@@ -5,64 +5,38 @@ import { AllWorkSpaces, UserCredentials } from "../../models";
 import { useAppContext } from "../../services/contextLib";
 import { Box, InputLabel, MenuItem, FormControl, Select } from "@mui/material";
 
-const WorkspaceSelect = () => {
+const WorkspaceSelect = ({ selectedOption, setSelectedOption }) => {
   const [list, setList] = useState([]);
-  const { selectedOption, setSelectedOption, appLoading, groups } = useAppContext();
+  const { appLoading, groups } = useAppContext();
 
   useEffect(() => {
     let isActive = false;
 
-    Hub.listen("datastore", (data) => {
-      // eslint-disable-next-line default-case
-      switch (data.payload.event) {
-        case "ready":
-          makeList();
-          break;
-      }
-    });
-
     const makeList = async () => {
       try {
         //check if user is in wokers or client group and if Admin show all workspaces
-        if (groups.includes("Admins")) {
-          const workspaces = await DataStore.query(AllWorkSpaces);
 
-          let q = [];
+        const user = await Auth.currentAuthenticatedUser();
+        const creditails = await DataStore.query(UserCredentials, user.attributes["custom:UserCreditails"]);
 
-          if (workspaces.length > 0) {
-            for (let i = 0; i < workspaces.length; i++) {
-              q.push({
-                id: workspaces[i].id,
-                value: workspaces[i].name,
-                label: workspaces[i].name,
-              });
-            }
-            !isActive && setList(q);
+        let q = [];
+
+        if (creditails.memberships.length > 0) {
+          for (let i = 0; i < creditails.memberships.length; i++) {
+            const workspaceList = await DataStore.query(AllWorkSpaces, creditails.memberships[i].targetId);
+            q.push({
+              value: workspaceList.id,
+              label: workspaceList.name,
+            });
           }
-        } else if (groups.includes("Workers") || groups.includes("Clients")) {
-          const user = await Auth.currentAuthenticatedUser();
-          const creditails = await DataStore.query(UserCredentials, user.attributes["custom:UserCreditails"]);
-
-          let q = [];
-
-          if (creditails.length !== 0) {
-            for (let i = 0; i < creditails.memberships.length; i++) {
-              const workspaceList = await DataStore.query(AllWorkSpaces, creditails.memberships[i].targetId);
-              q.push({
-                value: workspaceList.name,
-                label: workspaceList.name,
-                id: workspaceList.id,
-              });
-            }
-            !isActive && setList(q);
-          }
+          setList(q);
         }
       } catch (error) {
         console.warn(error);
       }
     };
 
-    !isActive && !appLoading && makeList();
+    !isActive && makeList();
 
     return () => (isActive = true);
   }, [appLoading, groups]);
@@ -74,20 +48,14 @@ const WorkspaceSelect = () => {
       const loggedUser = await Auth.currentAuthenticatedUser();
       const creditails = await DataStore.query(UserCredentials, loggedUser.attributes["custom:UserCreditails"]);
 
-      if (creditails.memberships.length !== 0) {
-        if (creditails.defaultWorkspace !== null) {
-          setSelectedOption({
-            id: creditails.defaultWorkspace,
-          });
-        } else {
-          setSelectedOption({
-            id: creditails.memberships[0].targetId,
-          });
-        }
+      if (creditails.defaultWorkspace !== null) {
+        setSelectedOption(creditails.defaultWorkspace);
+      } else if (creditails.memberships.length !== 0) {
+        setSelectedOption(creditails.memberships[0].targetId);
       }
     };
 
-    !isActive && list.length !== 0 && selectedOption === null && lastWorkspaceLoad();
+    !isActive && list.length !== 0 && lastWorkspaceLoad();
 
     return () => (isActive = true);
   }, [list, selectedOption]);
@@ -107,29 +75,28 @@ const WorkspaceSelect = () => {
   };
 
   return (
-    <Box sx={{ minWidth: 120, marginBottom: "5px", marginTop: "5px" }}>
-      {list.length !== 0 && selectedOption !== null && (
-        <FormControl variant="standard">
-          <InputLabel>Workspaces</InputLabel>
-          <Select
-            labelId="demo-simple-select-standard-label"
-            id="demo-simple-select-standard"
-            value={selectedOption.id}
-            label="Workspaces"
-            onChange={(event) => {
-              setSelectedOption({ id: event.target.value });
-              changeLastValue(event.target.value);
-            }}
-          >
-            {list.map((option, key) => (
-              <MenuItem value={option.id} key={key}>
-                {option.value}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-      )}
-    </Box>
+    list.length !== 0 &&
+    selectedOption !== null && (
+      <FormControl>
+        <InputLabel>Workspaces</InputLabel>
+        <Select
+          labelId="demo-simple-select-standard-label"
+          id="demo-simple-select-standard"
+          value={selectedOption}
+          label="Workspaces"
+          onChange={(event) => {
+            setSelectedOption(event.target.value);
+            changeLastValue(event.target.value);
+          }}
+        >
+          {list.map((option) => (
+            <MenuItem value={option.value} key={option.value}>
+              {option.label}
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
+    )
   );
 };
 

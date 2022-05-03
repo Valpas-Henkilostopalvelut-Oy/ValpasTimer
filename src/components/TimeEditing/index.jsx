@@ -23,7 +23,7 @@ const TimeEditing = ({ time, onChange, isManual = false, isSent = false, isAdmin
       }}
     />
   ) : (
-    <Typography>{value}</Typography>
+    <Typography variant="p">{value}</Typography>
   );
 };
 

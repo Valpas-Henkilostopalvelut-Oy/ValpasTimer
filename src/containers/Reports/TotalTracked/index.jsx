@@ -19,7 +19,7 @@ const TotalLatest = ({ users, selOption, setSelected, selected }) => {
       try {
         const times = (await DataStore.query(TimeEntry))
           .filter((u) => u.userId === users.owner)
-          .filter((t) => t.workspaceId === selOption.id)
+          .filter((t) => t.workspaceId === selOption)
           .filter((a) => !a.isActive)
           .filter((a) => a.isSent);
 

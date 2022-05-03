@@ -1,5 +1,4 @@
 import React, { useEffect, useState, Fragment } from "react";
-import "./timeRecorder.css";
 import { TextField, Button, Grid, Switch, Typography } from "@mui/material";
 import { Auth, DataStore } from "aws-amplify";
 import { UserCredentials, TimeEntry } from "../../../models";
@@ -7,6 +6,7 @@ import TimeEditing from "../../../components/TimeEditing";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import DatePicker from "@mui/lab/DatePicker";
 import DateAdapter from "@mui/lab/AdapterDateFns";
+import WorkspaceSelect from "../../../components/WorkSpaceSelect";
 
 const Manual = ({ reload, description, selectedOption }) => {
   const [start, setStart] = useState(new Date());
@@ -61,7 +61,7 @@ const Manual = ({ reload, description, selectedOption }) => {
       </Grid>
 
       <Grid item xs>
-        Start:
+        Start:{" "}
         <TimeEditing
           time={start}
           onChange={(val) => setStart(new Date(start.setHours(val.h, val.m, 0)))}
@@ -70,12 +70,12 @@ const Manual = ({ reload, description, selectedOption }) => {
       </Grid>
 
       <Grid item xs>
-        End:
+        End:{" "}
         <TimeEditing time={end} onChange={(val) => setEnd(new Date(end.setHours(val.h, val.m, 0)))} isManual={true} />
       </Grid>
 
       <Grid item xs>
-        <Typography>
+        <Typography variant="h6">
           {String("0" + total.getUTCHours()).slice(-2)}:{String("0" + total.getUTCMinutes()).slice(-2)}:
           {String("0" + total.getUTCMilliseconds()).slice(-2)}
         </Typography>
@@ -238,12 +238,14 @@ const Timer = ({ description, selectedOption, reload }) => {
   //timer form fields and logic for adding new time
   return (
     <Fragment>
-      <Grid item xs>
-        {String("0" + time.hours).slice(-2)}:{String("0" + time.minutes).slice(-2)}:
-        {String("0" + time.seconds).slice(-2)}
+      <Grid item md>
+        <Typography variant="h6">
+          {String("0" + time.hours).slice(-2)}:{String("0" + time.minutes).slice(-2)}:
+          {String("0" + time.seconds).slice(-2)}
+        </Typography>
       </Grid>
 
-      <Grid item xs>
+      <Grid item md>
         <Button onClick={addItem} variant="contained">
           {!started ? "Start" : "Stop"}
         </Button>
@@ -252,34 +254,48 @@ const Timer = ({ description, selectedOption, reload }) => {
   );
 };
 
-const Recorder = ({ loadTimeList, selectedOption }) => {
+const Recorder = ({ loadTimeList }) => {
   const [manual, setManual] = useState(false);
+  const [selectedOption, setSelectedOption] = useState("");
 
   const [description, setDescription] = useState("");
   const handleChange = (event) => setDescription(event.target.value);
 
   return (
     <Grid container spacing={2} alignItems="center" direction="row">
-      <Grid item xs={manual ? 6 : 9}>
-        <TextField
-          fullWidth
-          label="Description"
-          placeholder="Description"
-          onChange={handleChange}
-          value={description}
-        />
+      <Grid item container md={manual ? 4 : 8} lg={manual ? 6 : 9} spacing={2}>
+        <Grid item xs={10}>
+          <TextField
+            fullWidth
+            label="Description"
+            placeholder="Description"
+            onChange={handleChange}
+            value={description}
+          />
+        </Grid>
+        <Grid item xs={2}>
+          <WorkspaceSelect selectedOption={selectedOption} setSelectedOption={setSelectedOption} />
+        </Grid>
       </Grid>
 
-      <Grid item container xs={manual ? 5 : 2} alignItems="center" direction="row" spacing={2}>
+      <Grid
+        item
+        container
+        md={manual ? 8 : 4}
+        lg={manual ? 6 : 3}
+        alignItems="center"
+        direction="row"
+        justifyContent="space-around"
+        spacing={2}
+      >
         {!manual ? (
           <Timer reload={loadTimeList} description={description} selectedOption={selectedOption} />
         ) : (
           <Manual reload={loadTimeList} description={description} selectedOption={selectedOption} />
         )}
-      </Grid>
-
-      <Grid item xs={1}>
-        <Switch onChange={() => setManual(!manual)} value={manual} />
+        <Grid item md>
+          <Switch onChange={() => setManual(!manual)} value={manual} />
+        </Grid>
       </Grid>
     </Grid>
   );

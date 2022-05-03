@@ -1,6 +1,4 @@
 import React, { Fragment, useEffect, useState } from "react";
-import "./timer.css";
-import "../../App.css";
 import { DataStore, Auth } from "aws-amplify";
 import { TimeEntry } from "../../models";
 import { useAppContext } from "../../services/contextLib";
@@ -12,7 +10,6 @@ import {
   TableCell,
   TableRow,
   Paper,
-  Checkbox,
   TableHead,
   Collapse,
   Box,
@@ -22,7 +19,6 @@ import {
   CircularProgress,
 } from "@mui/material";
 import Recorder from "./Recorder";
-import TableToolBar from "./ListTableToolbar";
 import TimeEditing from "../../components/TimeEditing";
 import { groupBy } from "../../services/group";
 
@@ -30,6 +26,7 @@ import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import RadioButtonUncheckedIcon from "@mui/icons-material/RadioButtonUnchecked";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
+import { SendForm, DeleteForm, WorkOfTime } from "./Tools";
 
 const updateValue = async ({ val, type, reload, id, time }) => {
   try {
@@ -86,45 +83,47 @@ const EditDescription = ({ reload, description, data, id, isSent }) => {
   );
 };
 
-const Row = ({ data, selected, setSelected, loadTimeList }) => {
+const Row = ({ data, loadTimeList }) => {
+  let date = { h: 0, min: 0 };
+  for (let i = 0; i < data.arr.length; i++) {
+    let arr = data.arr[i];
+
+    for (let ii = 0; ii < arr.arr.length; ii++) {
+      const timeL = arr.arr[ii];
+      let start = new Date(timeL.timeInterval.start).setMilliseconds(0);
+      let end = new Date(timeL.timeInterval.end).setMilliseconds(0);
+
+      let total = new Date(Math.abs(end - start));
+
+      date = {
+        h: date.h + total.getUTCHours(),
+        min: date.min + total.getUTCMinutes(),
+      };
+
+      if (date.min > 60) {
+        date.h += Math.floor(date.min / 60);
+        date.min = date.min % 60;
+      }
+    }
+  }
+
   return (
     <Fragment>
       <TableRow>
-        <TableCell colSpan={8}>{data.week} week</TableCell>
+        <TableCell>{data.week} week</TableCell>
+        <TableCell>
+          {date.h}h {date.min}min
+        </TableCell>
+        <TableCell colSpan={5} />
       </TableRow>
       {data.arr.map((byday, key) => (
-        <Details
-          data={byday}
-          key={key}
-          index={key}
-          selected={selected}
-          setSelected={setSelected}
-          loadTimeList={loadTimeList}
-        />
+        <Details data={byday} key={key} index={key} loadTimeList={loadTimeList} />
       ))}
     </Fragment>
   );
 };
 
-const Details = ({ data, selected, setSelected, loadTimeList, index }) => {
-  const handleClick = (event, name) => {
-    const selectedIndex = selected.indexOf(name);
-    let newSelected = [];
-
-    if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, name);
-    } else if (selectedIndex === 0) {
-      newSelected = newSelected.concat(selected.slice(1));
-    } else if (selectedIndex === selected.length - 1) {
-      newSelected = newSelected.concat(selected.slice(0, -1));
-    } else if (selectedIndex > 0) {
-      newSelected = newSelected.concat(selected.slice(0, selectedIndex), selected.slice(selectedIndex + 1));
-    }
-
-    setSelected(newSelected);
-  };
-
-  const isSelected = (name) => selected.indexOf(name) !== -1;
+const Details = ({ data, loadTimeList, index }) => {
   const [open, setOpen] = useState(false);
 
   let start = new Date(data.arr[data.arr.length - 1].timeInterval.start);
@@ -137,9 +136,6 @@ const Details = ({ data, selected, setSelected, loadTimeList, index }) => {
   let startVal = `${String("0" + start.getHours()).slice(-2)}:${String("0" + start.getMinutes()).slice(-2)}`;
   let endVal = `${String("0" + end.getHours()).slice(-2)}:${String("0" + end.getMinutes()).slice(-2)}`;
 
-  const isItemSelected = isSelected(data);
-  const labelId = `enhanced-table-checkbox-${index}`;
-
   const sent = (d) => {
     return d.arr.filter((item) => item.isSent).length === d.arr.length;
   };
@@ -150,18 +146,7 @@ const Details = ({ data, selected, setSelected, loadTimeList, index }) => {
 
   return (
     <Fragment>
-      <TableRow key={index} hover role="checkbox" selected={isItemSelected} aria-checked={isItemSelected} tabIndex={-1}>
-        <TableCell>
-          {!sent(data) && (
-            <Checkbox
-              color="primary"
-              checked={isItemSelected}
-              inputProps={{ "aria-labelledby": labelId }}
-              onClick={(event) => !sent(data) && handleClick(event, data)}
-            />
-          )}
-        </TableCell>
-
+      <TableRow key={index} hover role="checkbox" tabIndex={-1}>
         <TableCell>
           <IconButton aria-label="expand row" size="small" onClick={() => setOpen(!open)}>
             {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
@@ -173,10 +158,18 @@ const Details = ({ data, selected, setSelected, loadTimeList, index }) => {
         <TableCell align="right">{data.date}</TableCell>
         <TableCell align="right">{totalVal}</TableCell>
         <TableCell align="right">
-          {confirmed(data) ? <CheckCircleIcon color="success" /> : <RadioButtonUncheckedIcon color="disabled" />}
+          {sent(data) ? (
+            <CheckCircleIcon style={{ color: "#4caf50" }} />
+          ) : (
+            <RadioButtonUncheckedIcon color="disabled" />
+          )}
         </TableCell>
         <TableCell align="right">
-          {sent(data) ? <CheckCircleIcon color="success" /> : <RadioButtonUncheckedIcon color="disabled" />}
+          {confirmed(data) ? (
+            <CheckCircleIcon style={{ color: "#4caf50" }} />
+          ) : (
+            <RadioButtonUncheckedIcon color="disabled" />
+          )}
         </TableCell>
       </TableRow>
       <TableRow>
@@ -187,10 +180,12 @@ const Details = ({ data, selected, setSelected, loadTimeList, index }) => {
                 <TableHead>
                   <TableRow>
                     <TableCell>Description</TableCell>
+                    <TableCell>Work Name</TableCell>
                     <TableCell align="right">Start</TableCell>
                     <TableCell align="right">End</TableCell>
                     <TableCell align="right">Sent</TableCell>
                     <TableCell align="right">Confirmed</TableCell>
+                    {!sent(data) && <TableCell align="right">Edit</TableCell>}
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -205,6 +200,10 @@ const Details = ({ data, selected, setSelected, loadTimeList, index }) => {
                             reload={loadTimeList}
                             isSent={row.isSent}
                           />
+                        </TableCell>
+
+                        <TableCell>
+                          <WorkOfTime id={row.workspaceId} reload={loadTimeList} timeId={row.id} isSent={row.isSent} />
                         </TableCell>
 
                         <TableCell align="right">
@@ -241,19 +240,34 @@ const Details = ({ data, selected, setSelected, loadTimeList, index }) => {
 
                         <TableCell align="right">
                           {row.isSent ? (
-                            <CheckCircleIcon color="success" />
+                            <CheckCircleIcon style={{ color: "#4caf50" }} />
                           ) : (
                             <RadioButtonUncheckedIcon color="disabled" />
                           )}
                         </TableCell>
-
                         <TableCell align="right">
                           {row.isConfirmed ? (
-                            <CheckCircleIcon color="success" />
+                            <CheckCircleIcon style={{ color: "#4caf50" }} />
                           ) : (
                             <RadioButtonUncheckedIcon color="disabled" />
                           )}
                         </TableCell>
+                        {!sent(data) && (
+                          <TableCell align="right">
+                            <SendForm
+                              id={row.id}
+                              reload={loadTimeList}
+                              isSent={row.isSent}
+                              isConfirmed={row.isConfirmed}
+                            />
+                            <DeleteForm
+                              id={row.id}
+                              reload={loadTimeList}
+                              isSent={row.isSent}
+                              isConfirmed={row.isConfirmed}
+                            />
+                          </TableCell>
+                        )}
                       </TableRow>
                     </Fragment>
                   ))}
@@ -268,82 +282,60 @@ const Details = ({ data, selected, setSelected, loadTimeList, index }) => {
 };
 
 const Timer = () => {
-  const [timeList, setTimeList] = useState(null);
-  const { isAuthenticated, selectedOption } = useAppContext();
-  const [selected, setSelected] = useState([]);
+  const { isAuthenticated } = useAppContext();
   const [grouped, setGrouped] = useState([]);
-  const [openSend, setOpenSend] = useState(false);
 
   const loadTimeList = async () => {
-    if (isAuthenticated && selectedOption !== null) {
-      try {
-        const databaseTimeList = await DataStore.query(TimeEntry);
-        const currentUser = await Auth.currentAuthenticatedUser();
+    try {
+      const databaseTimeList = await DataStore.query(TimeEntry);
+      const currentUser = await Auth.currentAuthenticatedUser();
 
-        const filtered = databaseTimeList
-          .sort((date1, date2) => {
-            let d1 = new Date(date2.timeInterval.start);
-            let d2 = new Date(date1.timeInterval.start);
-            return d1 - d2;
-          })
-          .filter((t) => t.workspaceId === selectedOption.id)
-          .filter((a) => !a.isActive)
-          .filter((u) => u.userId === currentUser.username);
+      const filtered = databaseTimeList
+        .sort((date1, date2) => {
+          let d1 = new Date(date2.timeInterval.start);
+          let d2 = new Date(date1.timeInterval.start);
+          return d1 - d2;
+        })
+        .filter((a) => !a.isActive)
+        .filter((u) => u.userId === currentUser.username);
 
-        setTimeList(filtered);
-        setGrouped(groupBy(filtered));
-      } catch (error) {
-        console.warn(error);
-      }
+      setGrouped(groupBy(filtered));
+    } catch (error) {
+      console.warn(error);
     }
   };
 
   useEffect(() => {
     let isActive = false;
 
-    !isActive && loadTimeList();
+    !isActive && isAuthenticated && loadTimeList();
 
     return () => (isActive = true);
-  }, [isAuthenticated, selectedOption]);
+  }, [isAuthenticated]);
 
   //loading if grouped, timelist and selected option are null
 
   return (
     <Container>
-      {grouped != null && timeList != null && selectedOption != null ? (
+      {grouped != null ? (
         <Fragment>
-          <Recorder loadTimeList={loadTimeList} selectedOption={selectedOption} />
-          <TableToolBar
-            numSelected={selected.length}
-            selected={selected}
-            loadUpdate={loadTimeList}
-            clearSelected={setSelected}
-            setOpenSend={setOpenSend}
-            openSend={openSend}
-          />
-          <TableContainer component={Paper}>
+          <Recorder loadTimeList={loadTimeList} />
+          <TableContainer component={Paper} sx={{ mt: 2 }}>
             <Table sx={{ minWidth: 650 }} aria-label="simple table">
               <TableHead>
                 <TableRow>
-                  <TableCell />
                   <TableCell />
                   <TableCell align="right">Start</TableCell>
                   <TableCell align="right">End</TableCell>
                   <TableCell align="right">Date</TableCell>
                   <TableCell align="right">Total</TableCell>
-                  <TableCell align="right">All Confirmed</TableCell>
-                  <TableCell align="right">Sent</TableCell>
+                  <TableCell align="right">Is Sent</TableCell>
+                  <TableCell align="right">Confirmed</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
                 {grouped.map((data, key) => (
-                  <Row
-                    data={data}
-                    key={key}
-                    selected={selected}
-                    setSelected={setSelected}
-                    loadTimeList={loadTimeList}
-                  />
+                  <Row data={data} key={key} loadTimeList={loadTimeList} />
                 ))}
               </TableBody>
             </Table>
