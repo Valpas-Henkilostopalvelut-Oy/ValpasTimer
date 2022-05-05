@@ -8,6 +8,14 @@ import { createUser } from "../../services/createUser";
 import { useNavigate } from "react-router-dom";
 import * as yup from "yup";
 
+const phone = (phone) => {
+  if (phone.length === 13) {
+    return `${phone}`;
+  } else if (phone.length === 10) {
+    return `+358${phone.slice(1)}`;
+  } else if (phone.length === 9) return `+358${phone}`;
+};
+
 const ConfirmForm = ({ password, email }) => {
   const { userHasAuthenticated } = useAppContext();
   const navigate = useNavigate();
@@ -156,7 +164,7 @@ const Signup = () => {
               "custom:RuningTimeEntry": "null",
               name: val.firstName,
               family_name: val.lastName,
-              phone_number: `+${val.phoneNumber}`,
+              phone_number: phone(val.phoneNumber),
             },
           });
           setCredentials({

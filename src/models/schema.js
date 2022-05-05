@@ -198,12 +198,29 @@ export const schema = {
                     "isRequired": false,
                     "attributes": []
                 },
-                "customOwner": {
-                    "name": "customOwner",
-                    "isArray": false,
+                "clientId": {
+                    "name": "clientId",
+                    "isArray": true,
                     "type": "ID",
                     "isRequired": false,
-                    "attributes": []
+                    "attributes": [],
+                    "isArrayNullable": true
+                },
+                "adminId": {
+                    "name": "adminId",
+                    "isArray": true,
+                    "type": "ID",
+                    "isRequired": false,
+                    "attributes": [],
+                    "isArrayNullable": true
+                },
+                "managerId": {
+                    "name": "managerId",
+                    "isArray": true,
+                    "type": "ID",
+                    "isRequired": false,
+                    "attributes": [],
+                    "isArrayNullable": true
                 },
                 "createdAt": {
                     "name": "createdAt",
@@ -726,5 +743,5 @@ export const schema = {
             }
         }
     },
-    "version": "33d7b0673a6eee749931a496f093f2d2"
+    "version": "0668a021ad9da32d0867903e674f0546"
 };

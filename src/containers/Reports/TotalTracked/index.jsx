@@ -7,7 +7,7 @@ import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import { groupBy } from "../../../services/group";
 import InList from "../InList";
 
-const TotalLatest = ({ users, selOption, setSelected, selected }) => {
+const TotalLatest = ({ users, selOption, isAdmin, isClient, reload }) => {
   const [time, setTime] = useState(null);
   const [open, setOpen] = React.useState(false);
   const [grouped, setGrouped] = useState(null);
@@ -54,25 +54,51 @@ const TotalLatest = ({ users, selOption, setSelected, selected }) => {
       )}
       {grouped != null && time != null && time.length !== 0 && (
         <TableRow>
-          <TableCell style={{ padding: 0 }} colSpan={6}>
+          <TableCell style={{ padding: 0 }} colSpan={2}>
             <Collapse in={open} timeout="auto" unmountOnExit>
               <Box sx={{ margin: 1 }}>
                 <Table size="small" aria-label="purchases">
                   <TableBody>
-                    {grouped.map((week, index) => (
-                      <Fragment key={index}>
-                        <TableRow>
-                          <TableCell>{week.week} week</TableCell>
-                        </TableRow>
-                        <TableRow>
-                          <TableCell style={{ padding: 0 }} colSpan={6}>
-                            <Box>
-                              <InList data={week} selected={selected} setSelected={setSelected} />
-                            </Box>
-                          </TableCell>
-                        </TableRow>
-                      </Fragment>
-                    ))}
+                    {grouped.map((week, index) => {
+                      let time = { h: 0, m: 0 };
+                      for (let i = 0; i < week.arr.length; i++) {
+                        let arr = week.arr[i];
+
+                        for (let ii = 0; ii < arr.arr.length; ii++) {
+                          const timeL = arr.arr[ii];
+                          let start = new Date(timeL.timeInterval.start);
+                          let end = new Date(timeL.timeInterval.end);
+
+                          let total = new Date(Math.abs(end - start));
+
+                          time = {
+                            h: time.h + total.getUTCHours(),
+                            m: time.m + total.getUTCMinutes(),
+                          };
+
+                          if (time.m > 60) {
+                            time.h += Math.floor(time.m / 60);
+                            time.m = time.m % 60;
+                          }
+                        }
+                      }
+                      return (
+                        <Fragment key={index}>
+                          <TableRow>
+                            <TableCell>
+                              {week.week} week. {time.h}h {time.m}min
+                            </TableCell>
+                          </TableRow>
+                          <TableRow>
+                            <TableCell style={{ padding: 0 }} colSpan={6}>
+                              <Box>
+                                <InList data={week} isAdmin={isAdmin} isClient={isClient} reload={reload} />
+                              </Box>
+                            </TableCell>
+                          </TableRow>
+                        </Fragment>
+                      );
+                    })}
                   </TableBody>
                 </Table>
               </Box>

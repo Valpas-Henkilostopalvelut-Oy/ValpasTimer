@@ -22,7 +22,7 @@ import { useNavigate } from "react-router-dom";
 const ModalDelete = ({ open, setOpen }) => {
   const { userHasAuthenticated, setGroups } = useAppContext();
   const { navigate } = useNavigate();
-  
+
   const handleDelete = async () => {
     await Auth.deleteUser()
       .then(async (data) => {
@@ -74,6 +74,28 @@ const ModalDelete = ({ open, setOpen }) => {
   );
 };
 
+const phone = (phone) => {
+  if (phone.length === 13) {
+    return `${phone}`;
+  } else if (phone.length === 10) {
+    return `+358${phone.slice(1)}`;
+  } else if (phone.length === 9) return `+358${phone}`;
+};
+
+const iban = (iban) => {
+  let ibanNumber = iban
+    .toUpperCase()
+    .split("")
+    .filter((i) => i !== " ");
+  if (ibanNumber.length === 18) {
+    console.log(
+      `${ibanNumber.slice(0, 4).join("")} ${ibanNumber.slice(4, 8).join("")} ${ibanNumber
+        .slice(8, 12)
+        .join("")} ${ibanNumber.slice(12, 16).join("")} ${ibanNumber.slice(16, 18).join("")}`
+    );
+  }
+};
+
 const Settings = () => {
   //Profile settings form
   const phoneRegExp = /^(\+?\d{0,4})?\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{4}\)?)?$/;
@@ -107,11 +129,13 @@ const Settings = () => {
 
     const loadSettings = async () => {
       let loggedUser = await Auth.currentAuthenticatedUser();
+      console.log();
       setIniValues({
         lastName: loggedUser.attributes.family_name,
         firstName: loggedUser.attributes.name,
         email: loggedUser.attributes.email,
-        phoneNumber: loggedUser.attributes.phone_number.slice(4),
+        phoneNumber: phone(loggedUser.attributes.phone_number),
+        iban: loggedUser.attributes["custom:iban"] === undefined ? "" : loggedUser.attributes["custom:iban"],
         address: "",
         state: "",
         city: "",
@@ -146,8 +170,9 @@ const Settings = () => {
             await Auth.updateUserAttributes(user, {
               name: values.firstName,
               family_name: values.lastName,
-              phone_number: `+358${values.phoneNumber}`,
+              phone_number: phone(values.phoneNumber),
               email: values.email,
+              "custom:iban": iban(values.iban),
             });
 
             const dataStoreUser = await DataStore.query(UserCredentials, user.attributes["custom:UserCreditails"]);
@@ -156,7 +181,7 @@ const Settings = () => {
                 updated.profile.first_name = values.firstName;
                 updated.profile.last_name = values.lastName;
                 updated.profile.email = values.email;
-                updated.profile.phone_number = `+358${values.phoneNumber}`;
+                updated.profile.phone_number = phone(values.phoneNumber);
               })
             );
 
@@ -274,6 +299,26 @@ const Settings = () => {
                     {errors.phoneNumber && touched.phoneNumber && (
                       <Typography variant="caption" color="error">
                         {errors.phoneNumber}
+                      </Typography>
+                    )}
+                  </Grid>
+                  <Grid item xs={12}>
+                    <TextField
+                      variant="outlined"
+                      required
+                      fullWidth
+                      id="iban"
+                      label="IBAN"
+                      name="iban"
+                      autoComplete="iban"
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      value={values.iban}
+                      error={errors.iban && touched.iban}
+                    />
+                    {errors.iban && touched.iban && (
+                      <Typography variant="caption" color="error">
+                        {errors.iban}
                       </Typography>
                     )}
                   </Grid>

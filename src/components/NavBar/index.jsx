@@ -50,22 +50,7 @@ const Navbar = ({ position, open, setOpenDrawer, isAuthenticated }) => {
           Valpas timer
         </Typography>
         <Box sx={{ flexGrow: 1 }} />
-        <Box sx={{ display: { xs: "none", md: "flex" } }}>
-          {isAuthenticated ? (
-            <>
-              <Profile />
-            </>
-          ) : (
-            <Box>
-              <LinkContainer to="signup">
-                <Button color="inherit">Sign up</Button>
-              </LinkContainer>
-              <LinkContainer to="login">
-                <Button color="inherit">Login</Button>
-              </LinkContainer>
-            </Box>
-          )}
-        </Box>
+        <Box sx={{ display: { xs: "flex" } }}>{isAuthenticated && <Profile />}</Box>
       </Toolbar>
     </AppBar>
   );

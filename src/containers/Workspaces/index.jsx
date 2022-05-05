@@ -30,9 +30,11 @@ import { Formik } from "formik";
 import { useAppContext } from "../../services/contextLib";
 import * as yup from "yup";
 import LoaderButton from "../../components/LoaderButton";
+import { ChangeRole } from "./Tools";
 
 const UserList = ({ member, data, index, selected, setSelected }) => {
   const [user, setUser] = useState(null);
+  const { groups } = useAppContext();
 
   const handleClick = (event, name) => {
     const selectedIndex = selected.indexOf(name);
@@ -91,6 +93,9 @@ const UserList = ({ member, data, index, selected, setSelected }) => {
       </TableCell>
       <TableCell>{user.profile.email}</TableCell>
       <TableCell>{user.profile.phone_number}</TableCell>
+      <TableCell>
+        <ChangeRole userId={member.userId} workId={data.id} isAdmin={groups.includes("Admins")} />
+      </TableCell>
     </TableRow>
   ) : (
     <TableRow>
@@ -440,6 +445,8 @@ const Row = ({ data, reload }) => {
                     <TableCell>Email</TableCell>
 
                     <TableCell>Phone number</TableCell>
+
+                    <TableCell>Role</TableCell>
                   </TableRow>
                 </TableHead>
 

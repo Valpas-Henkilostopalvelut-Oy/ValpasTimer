@@ -7,19 +7,22 @@ import { Box, InputLabel, MenuItem, FormControl, Select } from "@mui/material";
 
 const WorkspaceSelect = ({ selectedOption, setSelectedOption }) => {
   const [list, setList] = useState([]);
-  const { appLoading, groups } = useAppContext();
+  const { groups } = useAppContext();
 
   useEffect(() => {
     let isActive = false;
 
     const makeList = async () => {
       try {
+        
         //check if user is in wokers or client group and if Admin show all workspaces
 
         const user = await Auth.currentAuthenticatedUser();
         const creditails = await DataStore.query(UserCredentials, user.attributes["custom:UserCreditails"]);
 
         let q = [];
+
+        console.log(creditails);
 
         if (creditails.memberships.length > 0) {
           for (let i = 0; i < creditails.memberships.length; i++) {
@@ -29,6 +32,7 @@ const WorkspaceSelect = ({ selectedOption, setSelectedOption }) => {
               label: workspaceList.name,
             });
           }
+
           setList(q);
         }
       } catch (error) {
@@ -39,7 +43,7 @@ const WorkspaceSelect = ({ selectedOption, setSelectedOption }) => {
     !isActive && makeList();
 
     return () => (isActive = true);
-  }, [appLoading, groups]);
+  }, []);
 
   useEffect(() => {
     let isActive = false;
@@ -75,8 +79,7 @@ const WorkspaceSelect = ({ selectedOption, setSelectedOption }) => {
   };
 
   return (
-    list.length !== 0 &&
-    selectedOption !== null && (
+    list.length > 0 && (
       <FormControl>
         <InputLabel>Workspaces</InputLabel>
         <Select

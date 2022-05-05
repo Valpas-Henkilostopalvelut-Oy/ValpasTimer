@@ -76,7 +76,9 @@ type AllWorkSpaces @model @auth(rules: [{allow: groups, groups: ["Admins"], oper
   memberships: [Membership]
   name: String
   workspaceSettings: WorkspaceSettings
-  customOwner: ID
+  clientId: [ID]
+  adminId: [ID]
+  managerId: [ID]
 }
 
 type UserCredentials @model @auth(rules: [{allow: owner}, {allow: groups, groups: ["Admins"], operations: [read, create, update, delete]}, {allow: groups, groups: ["Clients"], operations: [update, read]}]) {

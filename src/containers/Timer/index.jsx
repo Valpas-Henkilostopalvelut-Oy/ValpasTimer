@@ -69,6 +69,7 @@ const EditDescription = ({ reload, description, data, id, isSent }) => {
 
   return !isSent ? (
     <TextField
+      sx={{ maxWidth: 180 }}
       onChange={(event) => setDesc(event.target.value)}
       onBlur={updateDesc}
       value={desc}

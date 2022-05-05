@@ -21,8 +21,8 @@ import { Header } from "./Tools";
 const Dashboard = () => {
   const [usersList, setUsers] = useState(null);
   const { groups } = useAppContext();
-  const [selected, setSelected] = useState([]);
   const [selectedOption, setSelectedOption] = useState("");
+  const [isClient, setIsClient] = useState(false);
 
   const loadTeamActivities = async () => {
     const usersCredentials = await DataStore.query(UserCredentials);
@@ -39,6 +39,24 @@ const Dashboard = () => {
   };
 
   useEffect(() => {
+    const loadIsClient = async () => {
+      try {
+        const user = await Auth.currentAuthenticatedUser();
+        const data = (await DataStore.query(AllWorkSpaces, selectedOption)).clientId.includes(user.username);
+        setIsClient(data);
+      } catch (error) {
+        console.warn(error);
+      }
+    };
+
+    let isActive = false;
+
+    !isActive && selectedOption !== "" && loadIsClient();
+
+    return () => (isActive = true);
+  }, [selectedOption]);
+
+  useEffect(() => {
     let isActive = false;
 
     !isActive && selectedOption !== "" && loadTeamActivities();
@@ -53,6 +71,7 @@ const Dashboard = () => {
           selectedOption={selectedOption}
           setSelectedOption={setSelectedOption}
           isAdmin={groups.includes("Admins")}
+          isClient={isClient}
         />
         {usersList !== null ? (
           <TableContainer>
@@ -69,8 +88,9 @@ const Dashboard = () => {
                     users={users}
                     key={key}
                     selOption={selectedOption}
-                    setSelected={setSelected}
-                    selected={selected}
+                    isAdmin={groups.includes("Admins")}
+                    isClient={isClient}
+                    reload={loadTeamActivities}
                   />
                 ))}
               </TableBody>

@@ -204,7 +204,7 @@ export function WorkOfTime({ timeId, id, reload, isSent, isConfirmed }) {
   };
 
   return !isSent ? (
-    <FormControl variant="standard" sx={{ minWidth: 100 }}>
+    <FormControl variant="standard" fullWidth sx={{ maxWidth: 100, pb: 2 }}>
       <InputLabel id="work-of-time">Work of Time</InputLabel>
       <Select labelId="work-of-time" id="work-of-time" value={id} onChange={changeWork}>
         {work &&

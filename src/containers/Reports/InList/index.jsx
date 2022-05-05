@@ -20,6 +20,7 @@ import { useAppContext } from "../../../services/contextLib";
 import TimeEditing from "../../../components/TimeEditing";
 import { DataStore } from "aws-amplify";
 import { TimeEntry } from "../../../models";
+import { Confirm, Unconfirm, Delete } from "../Tools";
 
 const start = (val) => {
   let start = new Date(val);
@@ -59,137 +60,14 @@ const confirmed = (d) => {
   return d.arr.filter((item) => item.isConfirmed).length === d.arr.length;
 };
 
-const Row = ({ row, index, handleClick, isSelected }) => {
+const InList = ({ data, isAdmin = false, isClient = false, reload }) => {
   const [open, setOpen] = React.useState(false);
 
-  const isItemSelected = isSelected(row);
-  const labelId = `enhanced-table-checkbox-${index}`;
-
   const { groups } = useAppContext();
-
-  return (
-    <Fragment>
-      <TableRow key={index} hover role="checkbox" aria-checked={isItemSelected} tabIndex={-1} selected={isItemSelected}>
-        <TableCell>
-          {(!confirmed(row) || groups.includes("Admins")) && (
-            <Checkbox
-              color="primary"
-              checked={isItemSelected}
-              inputProps={{
-                "aria-labelledby": labelId,
-              }}
-              onClick={(event) => handleClick(event, row)}
-            />
-          )}
-        </TableCell>
-        <TableCell>
-          <IconButton aria-label="expand row" size="small" onClick={() => setOpen(!open)}>
-            {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
-          </IconButton>
-        </TableCell>
-        <TableCell>{row.date}</TableCell>
-        <TableCell align="right">{start(row.arr[row.arr.length - 1].timeInterval.start)}</TableCell>
-
-        <TableCell align="right">{end(row.arr[0].timeInterval.end)}</TableCell>
-
-        <TableCell align="right">
-          {total(row.arr[row.arr.length - 1].timeInterval.start, row.arr[0].timeInterval.end)}
-        </TableCell>
-
-        <TableCell align="right">
-          {confirmed(row) ? <CheckCircleIcon color="success" /> : <RadioButtonUncheckedIcon color="disabled" />}
-        </TableCell>
-      </TableRow>
-
-      <TableRow>
-        <TableCell colSpan={7} style={{ padding: 0 }}>
-          <Collapse in={open} timeout="auto" unmountOnExit>
-            <Box>
-              <Table aria-label="purchases">
-                <TableHead>
-                  <TableRow>
-                    <TableCell>Description</TableCell>
-                    <TableCell align="right">Start</TableCell>
-                    <TableCell align="right">End</TableCell>
-                    <TableCell align="right">Total</TableCell>
-                    <TableCell align="right">Confirmed</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {row.arr.map((inarr) => {
-                    return (
-                      <TableRow key={inarr.id}>
-                        <TableCell>
-                          {inarr.description === "" ? (
-                            <Typography variant="p">Without description</Typography>
-                          ) : (
-                            <Typography variant="p">{inarr.description}</Typography>
-                          )}
-                        </TableCell>
-
-                        <TableCell align="right">
-                          <TimeEditing
-                            time={inarr.timeInterval.start}
-                            isAdmin={groups.includes("Admins")}
-                            onChange={(val) => updateTime(val, inarr.id, "start")}
-                          />
-                        </TableCell>
-
-                        <TableCell align="right">
-                          <TimeEditing
-                            time={inarr.timeInterval.end}
-                            isAdmin={groups.includes("Admins")}
-                            onChange={(val) => updateTime(val, inarr.id, "end")}
-                          />
-                        </TableCell>
-
-                        <TableCell align="right">{total(inarr.timeInterval.start, inarr.timeInterval.end)}</TableCell>
-
-                        <TableCell align="right">
-                          {inarr.isConfirmed ? (
-                            <CheckCircleIcon color="success" />
-                          ) : (
-                            <RadioButtonUncheckedIcon color="disabled" />
-                          )}
-                        </TableCell>
-                      </TableRow>
-                    );
-                  })}
-                </TableBody>
-              </Table>
-            </Box>
-          </Collapse>
-        </TableCell>
-      </TableRow>
-    </Fragment>
-  );
-};
-
-const InList = ({ data, selected, setSelected }) => {
-  const isSelected = (id) => selected.indexOf(id) !== -1;
-
-  const handleClick = (event, name) => {
-    const selectedIndex = selected.indexOf(name);
-    let newSelected = [];
-
-    if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, name);
-    } else if (selectedIndex === 0) {
-      newSelected = newSelected.concat(selected.slice(1));
-    } else if (selectedIndex === selected.length - 1) {
-      newSelected = newSelected.concat(selected.slice(0, -1));
-    } else if (selectedIndex > 0) {
-      newSelected = newSelected.concat(selected.slice(0, selectedIndex), selected.slice(selectedIndex + 1));
-    }
-
-    setSelected(newSelected);
-  };
-
   return (
     <Table aria-label="purchases">
       <TableHead>
         <TableRow>
-          <TableCell />
           <TableCell />
           <TableCell>Date</TableCell>
           <TableCell align="right">Start time</TableCell>
@@ -200,7 +78,98 @@ const InList = ({ data, selected, setSelected }) => {
       </TableHead>
       <TableBody>
         {data.arr.map((row, index) => (
-          <Row row={row} index={index} key={index} handleClick={handleClick} isSelected={isSelected} />
+          <Fragment key={index}>
+            <TableRow hover role="checkbox" tabIndex={-1}>
+              <TableCell>
+                <IconButton aria-label="expand row" size="small" onClick={() => setOpen(!open)}>
+                  {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+                </IconButton>
+              </TableCell>
+              <TableCell>{row.date}</TableCell>
+              <TableCell align="right">{start(row.arr[row.arr.length - 1].timeInterval.start)}</TableCell>
+
+              <TableCell align="right">{end(row.arr[0].timeInterval.end)}</TableCell>
+
+              <TableCell align="right">
+                {total(row.arr[row.arr.length - 1].timeInterval.start, row.arr[0].timeInterval.end)}
+              </TableCell>
+
+              <TableCell align="right">
+                {confirmed(row) ? <CheckCircleIcon color="success" /> : <RadioButtonUncheckedIcon color="disabled" />}
+              </TableCell>
+            </TableRow>
+
+            <TableRow>
+              <TableCell colSpan={7} style={{ padding: 0 }}>
+                <Collapse in={open} timeout="auto" unmountOnExit>
+                  <Box>
+                    <Table aria-label="purchases">
+                      <TableHead>
+                        <TableRow>
+                          <TableCell>Description</TableCell>
+                          <TableCell align="right">Start</TableCell>
+                          <TableCell align="right">End</TableCell>
+                          <TableCell align="right">Total</TableCell>
+                          <TableCell align="right">Confirmed</TableCell>
+                          {(isAdmin || !confirmed(row)) && <TableCell align="right">Edit</TableCell>}
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        {row.arr.map((inarr) => {
+                          return (
+                            <TableRow key={inarr.id}>
+                              <TableCell>
+                                {inarr.description === "" ? (
+                                  <Typography variant="p">Without description</Typography>
+                                ) : (
+                                  <Typography variant="p">{inarr.description}</Typography>
+                                )}
+                              </TableCell>
+
+                              <TableCell align="right">
+                                <TimeEditing
+                                  time={inarr.timeInterval.start}
+                                  isAdmin={groups.includes("Admins")}
+                                  onChange={(val) => updateTime(val, inarr.id, "start")}
+                                />
+                              </TableCell>
+
+                              <TableCell align="right">
+                                <TimeEditing
+                                  time={inarr.timeInterval.end}
+                                  isAdmin={groups.includes("Admins")}
+                                  onChange={(val) => updateTime(val, inarr.id, "end")}
+                                />
+                              </TableCell>
+
+                              <TableCell align="right">
+                                {total(inarr.timeInterval.start, inarr.timeInterval.end)}
+                              </TableCell>
+
+                              <TableCell align="right">
+                                {inarr.isConfirmed ? (
+                                  <CheckCircleIcon color="success" />
+                                ) : (
+                                  <RadioButtonUncheckedIcon color="disabled" />
+                                )}
+                              </TableCell>
+                              {(isAdmin || !confirmed(row)) && (
+                                <TableCell align="right">
+                                  {!confirmed(row) && <Confirm timeId={inarr.id} reload={reload} />}
+                                  {confirmed(row) && isAdmin && <Unconfirm timeId={inarr.id} reload={reload} />}
+                                  {isAdmin && <Delete timeId={inarr.id} reload={reload} />}
+                                </TableCell>
+                              )}
+                            </TableRow>
+                          );
+                        })}
+                      </TableBody>
+                    </Table>
+                  </Box>
+                </Collapse>
+              </TableCell>
+            </TableRow>
+          </Fragment>
         ))}
       </TableBody>
     </Table>

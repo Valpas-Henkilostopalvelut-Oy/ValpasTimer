@@ -1,47 +1,35 @@
-import { Toolbar, Typography, Tooltip, IconButton, Modal, Box, Button } from "@mui/material";
-import React, { Fragment, useState } from "react";
-import ThumbUpOffAltRoundedIcon from "@mui/icons-material/ThumbUpOffAltRounded";
-import { DataStore } from "aws-amplify";
-import { TimeEntry } from "../../../models";
-import { alpha } from "@mui/material/styles";
-import DoDisturbIcon from "@mui/icons-material/DoDisturb";
-import DeleteIcon from "@mui/icons-material/Delete";
-const unConfirmSelected = async ({ selected }) => {
+import { Toolbar, Typography, Modal, Box, Button, FormControl, InputLabel, Select, MenuItem } from "@mui/material";
+import React, { Fragment, useState, useEffect } from "react";
+import { DataStore, Auth } from "aws-amplify";
+import { TimeEntry, AllWorkSpaces } from "../../../models";
+const unConfirmSelected = async ({ id }) => {
   //unconfirm selected
   try {
-    for (let i = 0; i < selected.length; i++) {
-      for (let ii = 0; ii < selected[i].arr.length; ii++) {
-        const timeToUnConfirm = await DataStore.query(TimeEntry, selected[i].arr[ii].id);
+    const timeToUnConfirm = await DataStore.query(TimeEntry, id);
 
-        if (timeToUnConfirm.isConfirmed) {
-          await DataStore.save(
-            TimeEntry.copyOf(timeToUnConfirm, (updated) => {
-              updated.isConfirmed = false;
-            })
-          );
-        }
-      }
+    if (timeToUnConfirm.isConfirmed) {
+      await DataStore.save(
+        TimeEntry.copyOf(timeToUnConfirm, (updated) => {
+          updated.isConfirmed = false;
+        })
+      );
     }
   } catch (error) {
     console.warn(error);
   }
 };
 
-const confirmSelected = async ({ selected }) => {
+const confirmSelected = async ({ id }) => {
   try {
-    for (let i = 0; i < selected.length; i++) {
-      for (let ii = 0; ii < selected[i].arr.length; ii++) {
-        const timeToConfirm = await DataStore.query(TimeEntry, selected[i].arr[ii].id);
+    const timeToConfirm = await DataStore.query(TimeEntry, id);
 
-        if (!timeToConfirm.isConfirmed) {
-          await DataStore.save(
-            TimeEntry.copyOf(timeToConfirm, (update) => {
-              update.isConfirmed = true;
-              update.isLocked = true;
-            })
-          );
-        }
-      }
+    if (!timeToConfirm.isConfirmed) {
+      await DataStore.save(
+        TimeEntry.copyOf(timeToConfirm, (update) => {
+          update.isConfirmed = true;
+          update.isLocked = true;
+        })
+      );
     }
   } catch (error) {
     console.warn(error);
@@ -49,203 +37,151 @@ const confirmSelected = async ({ selected }) => {
 };
 
 //Delete selected
-const deleteSelected = async ({ selected }) => {
+const deleteSelected = async ({ id }) => {
   try {
-    for (let i = 0; i < selected.length; i++) {
-      for (let ii = 0; ii < selected[i].arr.length; ii++) {
-        const original = await DataStore.query(TimeEntry, selected[i].arr[ii].id);
-        DataStore.delete(original);
-      }
-    }
+    const original = await DataStore.query(TimeEntry, id);
+    DataStore.delete(original);
   } catch (error) {
     console.warn(error);
   }
 };
 
-export const HeadetTools = ({ numSelected, selected, setSelected, loadNew, isAdmin }) => {
-  const [confirmModalOpen, setConfirmModalOpen] = useState(false);
-  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
-  const [unConfirmModalOpen, setUnConfirmModalOpen] = useState(false);
+export const Unconfirm = ({ isAdmin, timeId, reload }) => {
+  return (
+    <Button
+      onClick={async () => {
+        await unConfirmSelected({ id: timeId });
+        reload();
+      }}
+    >
+      Unconfirm
+    </Button>
+  );
+};
+
+export const Confirm = ({ isAdmin, isClient, timeId, reload }) => {
+  const [open, setOpen] = useState(false);
+
+  //confirm button
+
+  return (
+    <Fragment>
+      <Button onClick={() => setOpen(!open)}>Confirm</Button>
+      <Modal open={open} onClose={() => setOpen(false)}>
+        <Box
+          sx={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            width: 400,
+            bgcolor: "background.paper",
+            border: "2px solid #000",
+            boxShadow: 24,
+            p: 4,
+          }}
+        >
+          <Typography variant="h6" id="modal-title">
+            Send to Confirm
+          </Typography>
+          <Typography variant="subtitle1" id="modal-description">
+            Are you sure you want to send to confirm?
+          </Typography>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "flex-end",
+              mt: 2,
+            }}
+          >
+            <Button
+              onClick={async () => {
+                await confirmSelected({ id: timeId });
+                reload();
+                setOpen(false);
+              }}
+            >
+              Send
+            </Button>
+            <Button onClick={() => setOpen(false)}>Cancel</Button>
+          </Box>
+        </Box>
+      </Modal>
+    </Fragment>
+  );
+};
+
+export const Delete = ({ isAdmin, timeId, reload }) => {
+  return (
+    <Button
+      onClick={async () => {
+        await deleteSelected({ id: timeId });
+        reload();
+      }}
+    >
+      Delete
+    </Button>
+  );
+};
+
+export const Header = ({ selectedOption, setSelectedOption, isAdmin, isClient }) => {
+  const [works, setWorks] = useState(null);
+
+  useEffect(() => {
+    const loadAdminWorks = async () => {
+      const work = await DataStore.query(AllWorkSpaces);
+      if (work.length !== 0) {
+        setWorks(work);
+        setSelectedOption(work[0].id);
+      }
+    };
+
+    const loadClientWorks = async () => {
+      const work = await DataStore.query(AllWorkSpaces);
+      const user = await Auth.currentAuthenticatedUser();
+      const w = work.filter((w) => w.clientId.includes(user.username));
+      setWorks(w);
+      setSelectedOption(w[0].id);
+    };
+
+    let isActive = false;
+
+    if (!isActive) {
+      if (isAdmin) {
+        loadAdminWorks();
+      } else {
+        loadClientWorks();
+      }
+    }
+
+    return () => (isActive = true);
+  }, [isAdmin]);
 
   return (
     <Toolbar
       sx={{
+        pt: { sm: 2, md: 3 },
+        pb: { sm: 2, md: 3 },
         pl: { sm: 2 },
         pr: { xs: 1, sm: 1 },
-        ...(numSelected > 0 && {
-          bgcolor: (theme) => alpha(theme.palette.primary.main, theme.palette.action.activatedOpacity),
-        }),
       }}
     >
-      {numSelected > 0 ? (
-        <Typography sx={{ flex: "1 1 100%" }} color="inherit" variant="subtitle1" component="div">
-          {numSelected} selected
-        </Typography>
-      ) : (
-        <Typography sx={{ flex: "1 1 100%" }} variant="h6" component="div">
-          Time List
-        </Typography>
-      )}
-
-      {numSelected > 0 && (
-        <Fragment>
-          <Tooltip title="Confirm">
-            <IconButton
-              onClick={() => {
-                setConfirmModalOpen(true);
-              }}
-            >
-              <ThumbUpOffAltRoundedIcon />
-            </IconButton>
-          </Tooltip>
-          <Modal open={confirmModalOpen} onClose={() => setConfirmModalOpen(false)}>
-            <Box
-              sx={{
-                position: "absolute",
-                top: "50%",
-                left: "50%",
-                transform: "translate(-50%, -50%)",
-                width: 400,
-                bgcolor: "background.paper",
-                border: "2px solid #000",
-                boxShadow: 24,
-                p: 4,
-              }}
-            >
-              <Typography variant="h6" id="modal-title">
-                Send to Confirm
-              </Typography>
-              <Typography variant="subtitle1" id="modal-description">
-                Are you sure you want to send to confirm?
-              </Typography>
-              <Box
-                sx={{
-                  display: "flex",
-                  justifyContent: "flex-end",
-                  mt: 2,
-                }}
-              >
-                <Button
-                  onClick={async () => {
-                    await confirmSelected({ selected: selected });
-                    await loadNew();
-                    setSelected([]);
-                  }}
-                >
-                  Send
-                </Button>
-                <Button onClick={() => setConfirmModalOpen(false)}>Cancel</Button>
-              </Box>
-            </Box>
-          </Modal>
-
-          {isAdmin && (
-            <Fragment>
-              <Tooltip title="Unconfirm">
-                <IconButton
-                  onClick={async () => {
-                    setUnConfirmModalOpen(true);
-                  }}
-                >
-                  <DoDisturbIcon />
-                </IconButton>
-              </Tooltip>
-              <Modal open={unConfirmModalOpen} onClose={() => setUnConfirmModalOpen(false)}>
-                <Box
-                  sx={{
-                    position: "absolute",
-                    top: "50%",
-                    left: "50%",
-                    transform: "translate(-50%, -50%)",
-                    width: 400,
-                    bgcolor: "background.paper",
-                    border: "2px solid #000",
-                    boxShadow: 24,
-                    p: 4,
-                  }}
-                >
-                  <Typography variant="h6" id="modal-title">
-                    Unconfirming
-                  </Typography>
-                  <Typography variant="subtitle1" id="modal-description">
-                    Are you sure you want unconfirm?
-                  </Typography>
-                  <Box
-                    sx={{
-                      display: "flex",
-                      justifyContent: "flex-end",
-                      mt: 2,
-                    }}
-                  >
-                    <Button
-                      onClick={async () => {
-                        await unConfirmSelected({ selected: selected });
-                        await loadNew();
-                        setSelected([]);
-                      }}
-                    >
-                      Send
-                    </Button>
-                    <Button onClick={() => setUnConfirmModalOpen(false)}>Cancel</Button>
-                  </Box>
-                </Box>
-              </Modal>
-
-              <Tooltip title="Delete">
-                <IconButton
-                  onClick={async () => {
-                    setDeleteModalOpen(true);
-                  }}
-                >
-                  <DeleteIcon />
-                </IconButton>
-              </Tooltip>
-              <Modal open={deleteModalOpen} onClose={() => setDeleteModalOpen(false)}>
-                <Box
-                  sx={{
-                    position: "absolute",
-                    top: "50%",
-                    left: "50%",
-                    transform: "translate(-50%, -50%)",
-                    width: 400,
-                    bgcolor: "background.paper",
-                    border: "2px solid #000",
-                    boxShadow: 24,
-                    p: 4,
-                  }}
-                >
-                  <Typography variant="h6" id="modal-title">
-                    Delete selected
-                  </Typography>
-                  <Typography variant="subtitle1" id="modal-description">
-                    Are you sure you want to delete selected?
-                  </Typography>
-                  <Box
-                    sx={{
-                      display: "flex",
-                      justifyContent: "flex-end",
-                      mt: 2,
-                    }}
-                  >
-                    <Button
-                      onClick={async () => {
-                        await deleteSelected({ selected: selected });
-                        await loadNew();
-                        setSelected([]);
-                      }}
-                    >
-                      Send
-                    </Button>
-                    <Button onClick={() => setDeleteModalOpen(false)}>Cancel</Button>
-                  </Box>
-                </Box>
-              </Modal>
-            </Fragment>
-          )}
-        </Fragment>
-      )}
+      <FormControl fullWidth sx={{ maxWidth: 180 }}>
+        <InputLabel id="work-select-label">Work</InputLabel>
+        <Select
+          labelId="work-select-label"
+          id="work-select"
+          value={selectedOption}
+          onChange={(e) => setSelectedOption(e.target.value)}
+        >
+          {works !== null &&
+            works.map((work) => (
+              <MenuItem key={work.id} value={work.id}>
+                {work.name}
+              </MenuItem>
+            ))}
+        </Select>
+      </FormControl>
     </Toolbar>
   );
 };
-
-export const Header = ({ selectedOption, setSelectedOption, isAdmin }) => {};

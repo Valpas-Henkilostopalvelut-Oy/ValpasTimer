@@ -110,7 +110,9 @@ export declare class AllWorkSpaces {
   readonly memberships?: (Membership | null)[] | null;
   readonly name?: string | null;
   readonly workspaceSettings?: WorkspaceSettings | null;
-  readonly customOwner?: string | null;
+  readonly clientId?: (string | null)[] | null;
+  readonly adminId?: (string | null)[] | null;
+  readonly managerId?: (string | null)[] | null;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
   constructor(init: ModelInit<AllWorkSpaces, AllWorkSpacesMetaData>);

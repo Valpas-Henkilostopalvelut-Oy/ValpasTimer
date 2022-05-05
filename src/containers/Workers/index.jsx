@@ -20,43 +20,15 @@ import {
   CircularProgress,
   Typography,
 } from "@mui/material";
-import { DataStore, Auth, API } from "aws-amplify";
-import { UserCredentials, AllWorkSpaces } from "../../models";
+import { Auth, API } from "aws-amplify";
 import ListToolbar from "./ListToolbar";
 
-const CurrentWork = ({ row }) => {
-  const [state, setState] = useState(null);
-
-  useEffect(() => {
-    let isActive = false;
-
-    const workname = async () => {
-      try {
-        const credentialsId = row.Attributes.find((a) => a.Name === "custom:UserCreditails").Value;
-        const lastWorkspace = await DataStore.query(UserCredentials, credentialsId);
-
-        if (lastWorkspace !== undefined) {
-          if (lastWorkspace.defaultWorkspace !== null) {
-            const workID = lastWorkspace.defaultWorkspace;
-
-            const work = await DataStore.query(AllWorkSpaces, workID);
-
-            setState(work.name);
-          } else setState("Without last work");
-        } else setState("Unknown user");
-      } catch (error) {
-        console.warn(error);
-      }
-    };
-
-    !isActive && workname();
-
-    return () => (isActive = true);
-  }, [row]);
+const IBAN = ({ row }) => {
+  const iban = row.Attributes.find((a) => a.Name === "custom:iban");
 
   return (
     <Typography variant="body2" color="textSecondary" component="p">
-      {state}
+      {iban !== undefined ? iban.Value : "No IBAN"}
     </Typography>
   );
 };
@@ -195,6 +167,14 @@ const CurrentGroup = ({ row }) => {
   );
 };
 
+const CreateDate = ({ date }) => {
+  return (
+    <Typography variant="body2" color="textSecondary" component="p">
+      {new Date(date).toDateString()}
+    </Typography>
+  );
+};
+
 const Workers = () => {
   const [users, setUsers] = useState(null);
   const [page, setPage] = useState(0);
@@ -272,7 +252,8 @@ const Workers = () => {
                 <TableCell align="right">Enabled</TableCell>
                 <TableCell align="right">Email</TableCell>
                 <TableCell align="right">Groups</TableCell>
-                <TableCell align="right">Current work</TableCell>
+                <TableCell align="right">IBAN</TableCell>
+                <TableCell align="right">Created At</TableCell>
               </TableRow>
             </TableHead>
 
@@ -349,12 +330,16 @@ const Workers = () => {
 
                       <TableCell align="right">
                         {row.UserStatus === "CONFIRMED" ? (
-                          <CurrentWork row={row} />
+                          <IBAN row={row} />
                         ) : (
                           <Typography variant="body2" color="textSecondary">
                             N/A
                           </Typography>
                         )}
+                      </TableCell>
+
+                      <TableCell align="right">
+                        <CreateDate date={row.UserCreateDate} />
                       </TableCell>
                     </TableRow>
                   );
