@@ -2,7 +2,7 @@ import React from "react";
 import "../../App.css";
 import { SidebarData } from "./SidebarDate";
 import { LinkContainer } from "react-router-bootstrap";
-import { ListItemText, Divider, IconButton, List, ListItemButton, ListItemIcon } from "@mui/material";
+import { ListItemText, Divider, IconButton, List, ListItemButton, ListItemIcon, ListItem } from "@mui/material";
 import MuiDrawer from "@mui/material/Drawer";
 import { styled, useTheme } from "@mui/material/styles";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
@@ -74,28 +74,39 @@ const Sidebar = ({ open, setOpen }) => {
       <Divider />
       <List>
         {SidebarData.map((component, index) => {
-          if (component.access.includes(groups[0]) || component.default) {
+          if (component.type === "page") {
             return (
-              <LinkContainer to={component.link} key={component.title}>
-                <ListItemButton
-                  sx={{
-                    minHeight: 48,
-                    justifyContent: open ? "initial" : "center",
-                    px: 2.5,
-                  }}
-                >
-                  <ListItemIcon
+              (component.access.includes(groups[0]) || component.default) && (
+                <LinkContainer to={component.link} key={component.title}>
+                  <ListItemButton
                     sx={{
-                      minHeight: 0,
-                      mr: open ? 3 : "auto",
-                      justifyContent: "center",
+                      minHeight: 48,
+                      justifyContent: open ? "initial" : "center",
+                      px: 2.5,
                     }}
                   >
-                    {component.icon}
-                  </ListItemIcon>
-                  <ListItemText primary={component.title} sx={{ opacity: open ? 1 : 0 }} />
-                </ListItemButton>
-              </LinkContainer>
+                    <ListItemIcon
+                      sx={{
+                        minHeight: 0,
+                        mr: open ? 3 : "auto",
+                        justifyContent: "center",
+                      }}
+                    >
+                      {component.icon}
+                    </ListItemIcon>
+                    <ListItemText primary={component.title} sx={{ opacity: open ? 1 : 0 }} />
+                  </ListItemButton>
+                </LinkContainer>
+              )
+            );
+          } else if (component.type === "text") {
+            return (
+              open &&
+              component.access.includes(groups[0]) && (
+                <ListItem key={component.title}>
+                  <ListItemText primary={component.title} />
+                </ListItem>
+              )
             );
           }
         })}

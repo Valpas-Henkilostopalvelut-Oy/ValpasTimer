@@ -5,10 +5,12 @@ import DashboardIcon from "@mui/icons-material/Dashboard";
 import PeopleIcon from "@mui/icons-material/People";
 import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
 import WorkIcon from "@mui/icons-material/Work";
+import AssignmentIcon from "@mui/icons-material/Assignment";
 
 export const SidebarData = [
   {
     title: "Home",
+    type: "page",
     icon: <HomeIcon />,
     link: "/home",
     default: true,
@@ -17,6 +19,7 @@ export const SidebarData = [
   },
   {
     title: "Time tracker",
+    type: "page",
     icon: <AccessTimeIcon />,
     link: "/timer",
     default: false,
@@ -24,7 +27,22 @@ export const SidebarData = [
     editing: ["Admins"],
   },
   {
+    title: "Tasks",
+    type: "page",
+    icon: <AssignmentIcon />,
+    link: "/team",
+    default: false,
+    access: ["Clients", "Admins"],
+    editing: ["Admins"],
+  },
+  {
+    title: "Analyze",
+    type: "text",
+    access: ["Clients", "Admins"],
+  },
+  {
     title: "Reports",
+    type: "page",
     icon: <DashboardIcon />,
     link: "/reports",
     default: false,
@@ -33,6 +51,7 @@ export const SidebarData = [
   },
   {
     title: "Team",
+    type: "page",
     icon: <PeopleIcon />,
     link: "/team",
     default: false,
@@ -40,7 +59,13 @@ export const SidebarData = [
     editing: ["Admins"],
   },
   {
+    title: "Admins",
+    type: "text",
+    access: ["Admins"],
+  },
+  {
     title: "Workers",
+    type: "page",
     icon: <FormatListBulletedIcon />,
     link: "/allworkers",
     default: false,
@@ -49,6 +74,7 @@ export const SidebarData = [
   },
   {
     title: "Workspaces",
+    type: "page",
     icon: <WorkIcon />,
     link: "/workspaces",
     default: false,

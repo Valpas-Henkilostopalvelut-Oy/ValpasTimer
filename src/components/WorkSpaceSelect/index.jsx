@@ -14,15 +14,12 @@ const WorkspaceSelect = ({ selectedOption, setSelectedOption }) => {
 
     const makeList = async () => {
       try {
-        
         //check if user is in wokers or client group and if Admin show all workspaces
 
         const user = await Auth.currentAuthenticatedUser();
         const creditails = await DataStore.query(UserCredentials, user.attributes["custom:UserCreditails"]);
 
         let q = [];
-
-        console.log(creditails);
 
         if (creditails.memberships.length > 0) {
           for (let i = 0; i < creditails.memberships.length; i++) {

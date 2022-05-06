@@ -18,7 +18,7 @@ export async function createUser() {
           first_name: userAuth.attributes.name,
           last_name: userAuth.attributes.family_name,
           username: userAuth.attributes.username,
-          phone_number: userAuth.attributes.phone_number,
+          phone_number: null,
           address: null,
           zip_code: 0,
           contry: null,

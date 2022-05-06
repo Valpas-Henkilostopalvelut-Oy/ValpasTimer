@@ -1,7 +1,7 @@
 import { Toolbar, Typography, Modal, Box, Button, FormControl, InputLabel, Select, MenuItem } from "@mui/material";
 import React, { Fragment, useState, useEffect } from "react";
 import { DataStore, Auth } from "aws-amplify";
-import { TimeEntry, AllWorkSpaces } from "../../../models";
+import { TimeEntry, AllWorkSpaces, UserCredentials } from "../../../models";
 const unConfirmSelected = async ({ id }) => {
   //unconfirm selected
   try {
@@ -101,7 +101,7 @@ export const Confirm = ({ isAdmin, isClient, timeId, reload }) => {
                 setOpen(false);
               }}
             >
-              Send
+              Confirm
             </Button>
             <Button onClick={() => setOpen(false)}>Cancel</Button>
           </Box>
@@ -118,6 +118,7 @@ export const Delete = ({ isAdmin, timeId, reload }) => {
         await deleteSelected({ id: timeId });
         reload();
       }}
+      color="secondary"
     >
       Delete
     </Button>
@@ -127,12 +128,40 @@ export const Delete = ({ isAdmin, timeId, reload }) => {
 export const Header = ({ selectedOption, setSelectedOption, isAdmin, isClient }) => {
   const [works, setWorks] = useState(null);
 
+  const loadLastSelected = async () => {
+    try {
+      const user = await Auth.currentAuthenticatedUser();
+      const credentials = await DataStore.query(UserCredentials, user.attributes["custom:UserCreditails"]);
+
+      setSelectedOption(credentials.defaultWorkspace);
+    } catch (error) {
+      console.warn(error);
+    }
+  };
+
+  const select = async (e) => {
+    const id = e.target.value;
+    setSelectedOption(id);
+
+    try {
+      const user = await Auth.currentAuthenticatedUser();
+      const credentials = await DataStore.query(UserCredentials, user.attributes["custom:UserCreditails"]);
+      await DataStore.save(
+        UserCredentials.copyOf(credentials, (updated) => {
+          updated.defaultWorkspace = id;
+        })
+      );
+    } catch (error) {
+      console.warn(error);
+    }
+  };
+
   useEffect(() => {
     const loadAdminWorks = async () => {
       const work = await DataStore.query(AllWorkSpaces);
       if (work.length !== 0) {
         setWorks(work);
-        setSelectedOption(work[0].id);
+        loadLastSelected();
       }
     };
 
@@ -141,7 +170,7 @@ export const Header = ({ selectedOption, setSelectedOption, isAdmin, isClient })
       const user = await Auth.currentAuthenticatedUser();
       const w = work.filter((w) => w.clientId.includes(user.username));
       setWorks(w);
-      setSelectedOption(w[0].id);
+      loadLastSelected();
     };
 
     let isActive = false;
@@ -168,12 +197,7 @@ export const Header = ({ selectedOption, setSelectedOption, isAdmin, isClient })
     >
       <FormControl fullWidth sx={{ maxWidth: 180 }}>
         <InputLabel id="work-select-label">Work</InputLabel>
-        <Select
-          labelId="work-select-label"
-          id="work-select"
-          value={selectedOption}
-          onChange={(e) => setSelectedOption(e.target.value)}
-        >
+        <Select labelId="work-select-label" id="work-select" value={selectedOption} onChange={select}>
           {works !== null &&
             works.map((work) => (
               <MenuItem key={work.id} value={work.id}>

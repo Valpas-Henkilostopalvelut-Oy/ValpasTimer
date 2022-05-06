@@ -155,8 +155,8 @@ const InList = ({ data, isAdmin = false, isClient = false, reload }) => {
                               </TableCell>
                               {(isAdmin || !confirmed(row)) && (
                                 <TableCell align="right">
-                                  {!confirmed(row) && <Confirm timeId={inarr.id} reload={reload} />}
-                                  {confirmed(row) && isAdmin && <Unconfirm timeId={inarr.id} reload={reload} />}
+                                  {!inarr.isConfirmed && <Confirm timeId={inarr.id} reload={reload} />}
+                                  {inarr.isConfirmed && isAdmin && <Unconfirm timeId={inarr.id} reload={reload} />}
                                   {isAdmin && <Delete timeId={inarr.id} reload={reload} />}
                                 </TableCell>
                               )}

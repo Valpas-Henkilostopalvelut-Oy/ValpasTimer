@@ -23,7 +23,7 @@ const Manual = ({ reload, description, selectedOption }) => {
           new TimeEntry({
             description: description,
             userId: currentUser.username,
-            workspaceId: selectedOption.id,
+            workspaceId: selectedOption,
             timeInterval: {
               duration: "",
               start: start.toISOString(),
@@ -173,7 +173,7 @@ const Timer = ({ description, selectedOption, reload }) => {
           new TimeEntry({
             description: description,
             userId: user.username,
-            workspaceId: selectedOption.id,
+            workspaceId: selectedOption,
             timeInterval: {
               duration: "",
               end: new Date(new Date().setMilliseconds(0)).toISOString(),
