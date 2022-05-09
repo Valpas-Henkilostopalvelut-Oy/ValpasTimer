@@ -19,7 +19,7 @@ import {
   CircularProgress,
 } from "@mui/material";
 import Recorder from "./Recorder";
-import TimeEditing from "../../components/TimeEditing";
+import { TimeEditing } from "../../components/TimeEditing";
 import { groupBy } from "../../services/group";
 
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";

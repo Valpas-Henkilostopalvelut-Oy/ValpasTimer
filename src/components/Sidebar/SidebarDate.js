@@ -30,7 +30,7 @@ export const SidebarData = [
     title: "Tasks",
     type: "page",
     icon: <AssignmentIcon />,
-    link: "/team",
+    link: "/tasks",
     default: false,
     access: ["Clients", "Admins"],
     editing: ["Admins"],

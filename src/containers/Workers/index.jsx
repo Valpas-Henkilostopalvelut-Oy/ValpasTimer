@@ -237,155 +237,151 @@ const Workers = () => {
     setSelected(newSelected);
   };
 
-  return (
-    <Container>
-      {users !== null ? (
-        <TableContainer component={Paper}>
-          <ListToolbar numSelected={selected.length} selected={selected} setSelected={setSelected} reload={loadUsers} />
-          <Table sx={{ minWidth: 650 }} aria-label="simple table">
-            <TableHead>
-              <TableRow>
-                <TableCell />
-                <TableCell>Name</TableCell>
-                <TableCell align="right">Email</TableCell>
-                <TableCell align="right">Phone number</TableCell>
-                <TableCell align="right">Enabled</TableCell>
-                <TableCell align="right">Email</TableCell>
-                <TableCell align="right">Groups</TableCell>
-                <TableCell align="right">IBAN</TableCell>
-                <TableCell align="right">Created At</TableCell>
-              </TableRow>
-            </TableHead>
+  return users !== null ? (
+    <TableContainer component={Paper}>
+      <ListToolbar numSelected={selected.length} selected={selected} setSelected={setSelected} reload={loadUsers} />
+      <Table sx={{ minWidth: 650 }} aria-label="simple table">
+        <TableHead>
+          <TableRow>
+            <TableCell />
+            <TableCell>Name</TableCell>
+            <TableCell align="right">Email</TableCell>
+            <TableCell align="right">Phone number</TableCell>
+            <TableCell align="right">Enabled</TableCell>
+            <TableCell align="right">Email</TableCell>
+            <TableCell align="right">Groups</TableCell>
+            <TableCell align="right">IBAN</TableCell>
+            <TableCell align="right">Created At</TableCell>
+          </TableRow>
+        </TableHead>
 
-            <TableBody>
-              {(usersPerPage > 0 ? users.slice(page * usersPerPage, page * usersPerPage + usersPerPage) : users).map(
-                (row, index) => {
-                  const isItemSelected = isSelected(row);
-                  const labelId = `enhanced-table-checkbox-${index}`;
+        <TableBody>
+          {(usersPerPage > 0 ? users.slice(page * usersPerPage, page * usersPerPage + usersPerPage) : users).map(
+            (row, index) => {
+              const isItemSelected = isSelected(row);
+              const labelId = `enhanced-table-checkbox-${index}`;
 
-                  return (
-                    <TableRow
-                      key={row.Username}
-                      hover
-                      role="checkbox"
-                      aria-checked={isItemSelected}
-                      tabIndex={-1}
-                      selected={isItemSelected}
-                    >
-                      <TableCell>
-                        <Checkbox
-                          color="primary"
-                          checked={isItemSelected}
-                          inputProps={{ "aria-labelledby": labelId }}
-                          onClick={(event) => handleClick(event, row)}
-                        />
-                      </TableCell>
+              return (
+                <TableRow
+                  key={row.Username}
+                  hover
+                  role="checkbox"
+                  aria-checked={isItemSelected}
+                  tabIndex={-1}
+                  selected={isItemSelected}
+                >
+                  <TableCell>
+                    <Checkbox
+                      color="primary"
+                      checked={isItemSelected}
+                      inputProps={{ "aria-labelledby": labelId }}
+                      onClick={(event) => handleClick(event, row)}
+                    />
+                  </TableCell>
 
-                      <TableCell component="th" scope="row" id={labelId} padding="none">
-                        <Typography variant="body2" color="textSecondary">
-                          {row.Attributes.find((a) => a.Name === "family_name").Value}{" "}
-                          {row.Attributes.find((a) => a.Name === "name").Value}
-                        </Typography>
-                      </TableCell>
+                  <TableCell component="th" scope="row" id={labelId} padding="none">
+                    <Typography variant="body2" color="textSecondary">
+                      {row.Attributes.find((a) => a.Name === "family_name").Value}{" "}
+                      {row.Attributes.find((a) => a.Name === "name").Value}
+                    </Typography>
+                  </TableCell>
 
-                      <TableCell align="right">
-                        <Typography variant="body2" color="textSecondary">
-                          {row.Attributes.find((a) => a.Name === "email").Value}
-                        </Typography>
-                      </TableCell>
+                  <TableCell align="right">
+                    <Typography variant="body2" color="textSecondary">
+                      {row.Attributes.find((a) => a.Name === "email").Value}
+                    </Typography>
+                  </TableCell>
 
-                      <TableCell align="right">
-                        <Typography variant="body2" color="textSecondary">
-                          {row.Attributes.find((a) => a.Name === "phone_number").Value}
-                        </Typography>
-                      </TableCell>
+                  <TableCell align="right">
+                    <Typography variant="body2" color="textSecondary">
+                      {row.Attributes.find((a) => a.Name === "phone_number").Value}
+                    </Typography>
+                  </TableCell>
 
-                      <TableCell align="right">
-                        {row.Enabled ? (
-                          <Typography variant="body2" color="primary">
-                            Yes
-                          </Typography>
-                        ) : (
-                          <Typography variant="body2" color="error">
-                            No
-                          </Typography>
-                        )}
-                      </TableCell>
+                  <TableCell align="right">
+                    {row.Enabled ? (
+                      <Typography variant="body2" color="primary">
+                        Yes
+                      </Typography>
+                    ) : (
+                      <Typography variant="body2" color="error">
+                        No
+                      </Typography>
+                    )}
+                  </TableCell>
 
-                      <TableCell align="right">
-                        <Typography variant="body2" color="textSecondary">
-                          {row.UserStatus}
-                        </Typography>
-                      </TableCell>
+                  <TableCell align="right">
+                    <Typography variant="body2" color="textSecondary">
+                      {row.UserStatus}
+                    </Typography>
+                  </TableCell>
 
-                      <TableCell align="right">
-                        {row.UserStatus === "CONFIRMED" ? (
-                          <CurrentGroup row={row} />
-                        ) : (
-                          <Typography variant="body2" color="textSecondary">
-                            N/A
-                          </Typography>
-                        )}
-                      </TableCell>
+                  <TableCell align="right">
+                    {row.UserStatus === "CONFIRMED" ? (
+                      <CurrentGroup row={row} />
+                    ) : (
+                      <Typography variant="body2" color="textSecondary">
+                        N/A
+                      </Typography>
+                    )}
+                  </TableCell>
 
-                      <TableCell align="right">
-                        {row.UserStatus === "CONFIRMED" ? (
-                          <IBAN row={row} />
-                        ) : (
-                          <Typography variant="body2" color="textSecondary">
-                            N/A
-                          </Typography>
-                        )}
-                      </TableCell>
+                  <TableCell align="right">
+                    {row.UserStatus === "CONFIRMED" ? (
+                      <IBAN row={row} />
+                    ) : (
+                      <Typography variant="body2" color="textSecondary">
+                        N/A
+                      </Typography>
+                    )}
+                  </TableCell>
 
-                      <TableCell align="right">
-                        <CreateDate date={row.UserCreateDate} />
-                      </TableCell>
-                    </TableRow>
-                  );
-                }
-              )}
-
-              {emptyRows > 0 && (
-                <TableRow style={{ height: 53 * emptyRows }}>
-                  <TableCell colSpan={6} />
+                  <TableCell align="right">
+                    <CreateDate date={row.UserCreateDate} />
+                  </TableCell>
                 </TableRow>
-              )}
-            </TableBody>
-            <TableFooter>
-              <TableRow>
-                <TablePagination
-                  rowsPerPageOptions={[5, 10, 25, { label: "All", value: -1 }]}
-                  count={users.length}
-                  rowsPerPage={usersPerPage}
-                  page={page}
-                  SelectProps={{
-                    inputProps: {
-                      "aria-label": "rows per page",
-                    },
-                    native: true,
-                  }}
-                  onPageChange={handleChangePage}
-                  onRowsPerPageChange={handleChangeRowsPerPage}
-                  labelRowsPerPage="Users per page"
-                />
-              </TableRow>
-            </TableFooter>
-          </Table>
-        </TableContainer>
-      ) : (
-        <Box
-          sx={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            height: "100%",
-          }}
-        >
-          <CircularProgress />
-        </Box>
-      )}
-    </Container>
+              );
+            }
+          )}
+
+          {emptyRows > 0 && (
+            <TableRow style={{ height: 53 * emptyRows }}>
+              <TableCell colSpan={6} />
+            </TableRow>
+          )}
+        </TableBody>
+        <TableFooter>
+          <TableRow>
+            <TablePagination
+              rowsPerPageOptions={[5, 10, 25, { label: "All", value: -1 }]}
+              count={users.length}
+              rowsPerPage={usersPerPage}
+              page={page}
+              SelectProps={{
+                inputProps: {
+                  "aria-label": "rows per page",
+                },
+                native: true,
+              }}
+              onPageChange={handleChangePage}
+              onRowsPerPageChange={handleChangeRowsPerPage}
+              labelRowsPerPage="Users per page"
+            />
+          </TableRow>
+        </TableFooter>
+      </Table>
+    </TableContainer>
+  ) : (
+    <Box
+      sx={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        height: "100%",
+      }}
+    >
+      <CircularProgress />
+    </Box>
   );
 };
 

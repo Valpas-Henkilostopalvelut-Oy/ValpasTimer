@@ -2,7 +2,7 @@ import React, { useEffect, useState, Fragment } from "react";
 import { TextField, Button, Grid, Switch, Typography } from "@mui/material";
 import { Auth, DataStore } from "aws-amplify";
 import { UserCredentials, TimeEntry } from "../../../models";
-import TimeEditing from "../../../components/TimeEditing";
+import { TimeEditing } from "../../../components/TimeEditing";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import DatePicker from "@mui/lab/DatePicker";
 import DateAdapter from "@mui/lab/AdapterDateFns";

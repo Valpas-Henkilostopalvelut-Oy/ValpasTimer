@@ -17,7 +17,7 @@ import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import RadioButtonUncheckedIcon from "@mui/icons-material/RadioButtonUnchecked";
 import { useAppContext } from "../../../services/contextLib";
-import TimeEditing from "../../../components/TimeEditing";
+import { TimeEditing } from "../../../components/TimeEditing";
 import { DataStore } from "aws-amplify";
 import { TimeEntry } from "../../../models";
 import { Confirm, Unconfirm, Delete } from "../Tools";
