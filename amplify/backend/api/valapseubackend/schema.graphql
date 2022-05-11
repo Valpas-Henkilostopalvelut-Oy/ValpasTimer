@@ -1,12 +1,45 @@
+type Comment {
+  user: User
+  title: String
+  comment: String
+}
+
+type Workplace {
+  wordId: ID
+  name: String
+}
+
+type User {
+  userId: ID
+  name: String
+  family_name: String
+  icon: AWSURL
+}
+
+enum Status {
+  COMPLETE
+  ACTIVE
+  INWAITTING
+}
+
+type Tasks
+  @model
+  @auth(rules: [{ allow: owner }, { allow: groups, groups: ["Admins"], operations: [read, create, update, delete] }]) {
+  id: ID!
+  title: String
+  description: String
+  userId: User
+  date: ID
+  status: Status
+  workplace: Workplace
+  interval: TimeInterval
+  comments: Comment
+}
+
 type Profile {
   profile_picture: AWSURL
   first_name: String
   last_name: String
-  username: String
-  phone_number: String
-  address: String
-  zip_code: Int
-  contry: String
   email: AWSEmail
 }
 
@@ -38,7 +71,15 @@ type TimeInterval {
   start: AWSDateTime
 }
 
-type TimeEntry @model @auth(rules: [{allow: owner}, {allow: groups, groups: ["Admins"], operations: [read, create, update, delete]}, {allow: groups, groups: ["Clients"], operations: [read, update]}]) {
+type TimeEntry
+  @model
+  @auth(
+    rules: [
+      { allow: owner }
+      { allow: groups, groups: ["Admins"], operations: [read, create, update, delete] }
+      { allow: groups, groups: ["Clients"], operations: [read, update] }
+    ]
+  ) {
   id: ID!
   description: String
   userId: ID
@@ -69,7 +110,15 @@ type HourlyRate {
   currency: String
 }
 
-type AllWorkSpaces @model @auth(rules: [{allow: groups, groups: ["Admins"], operations: [read, create, update, delete]}, {allow: groups, groups: ["Workers"], operations: [read]}, {allow: groups, groups: ["Clients"], operations: [read]}]) {
+type AllWorkSpaces
+  @model
+  @auth(
+    rules: [
+      { allow: groups, groups: ["Admins"], operations: [read, create, update, delete] }
+      { allow: groups, groups: ["Workers"], operations: [read] }
+      { allow: groups, groups: ["Clients"], operations: [read] }
+    ]
+  ) {
   id: ID!
   hourlyRate: HourlyRate
   imageUrl: AWSURL
@@ -81,7 +130,16 @@ type AllWorkSpaces @model @auth(rules: [{allow: groups, groups: ["Admins"], oper
   managerId: [ID]
 }
 
-type UserCredentials @model @auth(rules: [{allow: owner}, {allow: groups, groups: ["Admins"], operations: [read, create, update, delete]}, {allow: groups, groups: ["Clients"], operations: [update, read]}]) {
+type UserCredentials
+  @model
+  @auth(
+    rules: [
+      { allow: owner }
+      { allow: groups, groups: ["Admins"], operations: [read, create, update, delete] }
+      { allow: groups, groups: ["Clients"], operations: [update, read] }
+      { allow: private }
+    ]
+  ) {
   id: ID!
   userId: ID!
   activeTimeEntry: ID
@@ -97,4 +155,3 @@ type FormItem {
   name: String
   text: String
 }
- 

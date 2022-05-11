@@ -1,10 +1,10 @@
 {
   "version": "1",
   "cognitoConfig": {
-    "identityPoolName": "valpasappca37c128_identitypool_ca37c128",
+    "identityPoolName": "valapseubackend58ebb5e2_identitypool_58ebb5e2",
     "allowUnauthenticatedIdentities": false,
-    "resourceNameTruncated": "valpasca37c128",
-    "userPoolName": "valpasappca37c128_userpool_ca37c128",
+    "resourceNameTruncated": "valaps58ebb5e2",
+    "userPoolName": "valapseubackend58ebb5e2_userpool_58ebb5e2",
     "autoVerifiedAttributes": [
       "email"
     ],
@@ -25,24 +25,29 @@
     "aliasAttributes": [],
     "userpoolClientGenerateSecret": false,
     "userpoolClientRefreshTokenValidity": 30,
-    "userpoolClientWriteAttributes": [],
-    "userpoolClientReadAttributes": [],
-    "userpoolClientLambdaRole": "valpasca37c128_userpoolclient_lambda_role",
+    "userpoolClientWriteAttributes": [
+      "email"
+    ],
+    "userpoolClientReadAttributes": [
+      "email"
+    ],
+    "userpoolClientLambdaRole": "valaps58ebb5e2_userpoolclient_lambda_role",
     "userpoolClientSetAttributes": false,
+    "sharedId": "58ebb5e2",
+    "resourceName": "valapseubackend58ebb5e2",
     "authSelections": "identityPoolAndUserPool",
-    "resourceName": "valpasappca37c128",
-    "serviceName": "Cognito",
     "useDefault": "default",
-    "sharedId": "ca37c128",
+    "usernameAttributes": [
+      "email"
+    ],
     "userPoolGroupList": [
       "Admins",
       "Clients",
       "Workers"
     ],
-    "usernameAttributes": [
-      "email"
-    ],
+    "serviceName": "Cognito",
     "usernameCaseSensitive": false,
+    "useEnabledMfas": true,
     "authRoleArn": {
       "Fn::GetAtt": [
         "AuthRole",
@@ -57,11 +62,6 @@
     },
     "breakCircularDependency": true,
     "dependsOn": [],
-    "userPoolGroups": false,
-    "adminQueries": false,
-    "hostedUI": false,
-    "useEnabledMfas": false,
-    "authProviders": [],
     "adminQueryGroup": "Admins"
   }
 }

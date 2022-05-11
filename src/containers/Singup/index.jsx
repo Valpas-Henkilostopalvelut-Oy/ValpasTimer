@@ -4,7 +4,6 @@ import { Container, CssBaseline, Box, Typography, Grid, TextField } from "@mui/m
 import { Formik } from "formik";
 import LoaderButton from "../../components/LoaderButton";
 import { Auth } from "aws-amplify";
-import { createUser } from "../../services/createUser";
 import { useNavigate } from "react-router-dom";
 import * as yup from "yup";
 
@@ -39,7 +38,6 @@ const ConfirmForm = ({ password, email }) => {
         try {
           await Auth.confirmSignUp(email, values.confirmationCode);
           await Auth.signIn(email, password);
-          createUser();
           userHasAuthenticated(true);
           navigate("/home", { replace: true });
         } catch (e) {

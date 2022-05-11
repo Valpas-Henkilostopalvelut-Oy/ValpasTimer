@@ -1,5 +1,140 @@
 export const schema = {
     "models": {
+        "Tasks": {
+            "name": "Tasks",
+            "fields": {
+                "id": {
+                    "name": "id",
+                    "isArray": false,
+                    "type": "ID",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "title": {
+                    "name": "title",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "description": {
+                    "name": "description",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "userId": {
+                    "name": "userId",
+                    "isArray": false,
+                    "type": {
+                        "nonModel": "User"
+                    },
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "date": {
+                    "name": "date",
+                    "isArray": false,
+                    "type": "ID",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "status": {
+                    "name": "status",
+                    "isArray": false,
+                    "type": {
+                        "enum": "Status"
+                    },
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "workplace": {
+                    "name": "workplace",
+                    "isArray": false,
+                    "type": {
+                        "nonModel": "Workplace"
+                    },
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "interval": {
+                    "name": "interval",
+                    "isArray": false,
+                    "type": {
+                        "nonModel": "TimeInterval"
+                    },
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "comments": {
+                    "name": "comments",
+                    "isArray": false,
+                    "type": {
+                        "nonModel": "Comment"
+                    },
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "createdAt": {
+                    "name": "createdAt",
+                    "isArray": false,
+                    "type": "AWSDateTime",
+                    "isRequired": false,
+                    "attributes": [],
+                    "isReadOnly": true
+                },
+                "updatedAt": {
+                    "name": "updatedAt",
+                    "isArray": false,
+                    "type": "AWSDateTime",
+                    "isRequired": false,
+                    "attributes": [],
+                    "isReadOnly": true
+                }
+            },
+            "syncable": true,
+            "pluralName": "Tasks",
+            "attributes": [
+                {
+                    "type": "model",
+                    "properties": {}
+                },
+                {
+                    "type": "auth",
+                    "properties": {
+                        "rules": [
+                            {
+                                "provider": "userPools",
+                                "ownerField": "owner",
+                                "allow": "owner",
+                                "identityClaim": "cognito:username",
+                                "operations": [
+                                    "create",
+                                    "update",
+                                    "delete",
+                                    "read"
+                                ]
+                            },
+                            {
+                                "groupClaim": "cognito:groups",
+                                "provider": "userPools",
+                                "allow": "groups",
+                                "groups": [
+                                    "Admins"
+                                ],
+                                "operations": [
+                                    "read",
+                                    "create",
+                                    "update",
+                                    "delete"
+                                ]
+                            }
+                        ]
+                    }
+                }
+            ]
+        },
         "TimeEntry": {
             "name": "TimeEntry",
             "fields": {
@@ -430,6 +565,15 @@ export const schema = {
                                     "update",
                                     "read"
                                 ]
+                            },
+                            {
+                                "allow": "private",
+                                "operations": [
+                                    "create",
+                                    "update",
+                                    "delete",
+                                    "read"
+                                ]
                             }
                         ]
                     }
@@ -437,8 +581,123 @@ export const schema = {
             ]
         }
     },
-    "enums": {},
+    "enums": {
+        "Status": {
+            "name": "Status",
+            "values": [
+                "COMPLETE",
+                "ACTIVE",
+                "INWAITTING"
+            ]
+        }
+    },
     "nonModels": {
+        "Comment": {
+            "name": "Comment",
+            "fields": {
+                "user": {
+                    "name": "user",
+                    "isArray": false,
+                    "type": {
+                        "nonModel": "User"
+                    },
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "title": {
+                    "name": "title",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "comment": {
+                    "name": "comment",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                }
+            }
+        },
+        "User": {
+            "name": "User",
+            "fields": {
+                "userId": {
+                    "name": "userId",
+                    "isArray": false,
+                    "type": "ID",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "name": {
+                    "name": "name",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "family_name": {
+                    "name": "family_name",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "icon": {
+                    "name": "icon",
+                    "isArray": false,
+                    "type": "AWSURL",
+                    "isRequired": false,
+                    "attributes": []
+                }
+            }
+        },
+        "Workplace": {
+            "name": "Workplace",
+            "fields": {
+                "wordId": {
+                    "name": "wordId",
+                    "isArray": false,
+                    "type": "ID",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "name": {
+                    "name": "name",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                }
+            }
+        },
+        "TimeInterval": {
+            "name": "TimeInterval",
+            "fields": {
+                "duration": {
+                    "name": "duration",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "end": {
+                    "name": "end",
+                    "isArray": false,
+                    "type": "AWSDateTime",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "start": {
+                    "name": "start",
+                    "isArray": false,
+                    "type": "AWSDateTime",
+                    "isRequired": false,
+                    "attributes": []
+                }
+            }
+        },
         "Profile": {
             "name": "Profile",
             "fields": {
@@ -458,41 +717,6 @@ export const schema = {
                 },
                 "last_name": {
                     "name": "last_name",
-                    "isArray": false,
-                    "type": "String",
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "username": {
-                    "name": "username",
-                    "isArray": false,
-                    "type": "String",
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "phone_number": {
-                    "name": "phone_number",
-                    "isArray": false,
-                    "type": "String",
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "address": {
-                    "name": "address",
-                    "isArray": false,
-                    "type": "String",
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "zip_code": {
-                    "name": "zip_code",
-                    "isArray": false,
-                    "type": "Int",
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "contry": {
-                    "name": "contry",
                     "isArray": false,
                     "type": "String",
                     "isRequired": false,
@@ -636,32 +860,6 @@ export const schema = {
                 }
             }
         },
-        "TimeInterval": {
-            "name": "TimeInterval",
-            "fields": {
-                "duration": {
-                    "name": "duration",
-                    "isArray": false,
-                    "type": "String",
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "end": {
-                    "name": "end",
-                    "isArray": false,
-                    "type": "AWSDateTime",
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "start": {
-                    "name": "start",
-                    "isArray": false,
-                    "type": "AWSDateTime",
-                    "isRequired": false,
-                    "attributes": []
-                }
-            }
-        },
         "WorkspaceSettings": {
             "name": "WorkspaceSettings",
             "fields": {
@@ -743,5 +941,5 @@ export const schema = {
             }
         }
     },
-    "version": "0668a021ad9da32d0867903e674f0546"
+    "version": "271a2859e9cec8d3410d28d7d84eac3f"
 };

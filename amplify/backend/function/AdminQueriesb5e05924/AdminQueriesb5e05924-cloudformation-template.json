@@ -1,13 +1,13 @@
 {
   "AWSTemplateFormatVersion": "2010-09-09",
-  "Description": "{\"createdOn\":\"Mac\",\"createdBy\":\"Amplify\",\"createdWith\":\"8.0.0\",\"stackType\":\"function-Lambda\",\"metadata\":{}}",
+  "Description": "{\"createdOn\":\"Mac\",\"createdBy\":\"Amplify\",\"createdWith\":\"8.1.0\",\"stackType\":\"function-Lambda\",\"metadata\":{}}",
   "Parameters": {
     "env": {
       "Type": "String"
     },
-    "authvalpasappca37c128UserPoolId": {
+    "authvalapseubackend58ebb5e2UserPoolId": {
       "Type": "String",
-      "Default": "authvalpasappca37c128UserPoolId"
+      "Default": "authvalapseubackend58ebb5e2UserPoolId"
     },
     "deploymentBucketName": {
       "Type": "String"
@@ -38,12 +38,12 @@
         "FunctionName": {
           "Fn::If": [
             "ShouldNotCreateEnvResources",
-            "AdminQueries6bf4ddf9",
+            "AdminQueriesb5e05924",
             {
               "Fn::Join": [
                 "",
                 [
-                  "AdminQueries6bf4ddf9",
+                  "AdminQueriesb5e05924",
                   "-",
                   {
                     "Ref": "env"
@@ -60,7 +60,7 @@
             },
             "GROUP": "Admins",
             "USERPOOL": {
-              "Ref": "authvalpasappca37c128UserPoolId"
+              "Ref": "authvalapseubackend58ebb5e2UserPoolId"
             }
           }
         },
@@ -88,12 +88,12 @@
         "RoleName": {
           "Fn::If": [
             "ShouldNotCreateEnvResources",
-            "AdminQueries6bf4ddf9LambdaRole",
+            "AdminQueriesb5e05924LambdaRole",
             {
               "Fn::Join": [
                 "",
                 [
-                  "AdminQueries6bf4ddf9LambdaRole",
+                  "AdminQueriesb5e05924LambdaRole",
                   "-",
                   {
                     "Ref": "env"
@@ -189,7 +189,7 @@
                     },
                     ":userpool/",
                     {
-                      "Ref": "authvalpasappca37c128UserPoolId"
+                      "Ref": "authvalapseubackend58ebb5e2UserPoolId"
                     }
                   ]
                 ]

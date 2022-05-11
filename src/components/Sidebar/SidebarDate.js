@@ -6,6 +6,7 @@ import PeopleIcon from "@mui/icons-material/People";
 import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
 import WorkIcon from "@mui/icons-material/Work";
 import AssignmentIcon from "@mui/icons-material/Assignment";
+import WorkHistoryIcon from "@mui/icons-material/WorkHistory";
 
 export const SidebarData = [
   {
@@ -62,6 +63,15 @@ export const SidebarData = [
     title: "Admins",
     type: "text",
     access: ["Admins"],
+  },
+  {
+    title: "Works",
+    type: "page",
+    icon: <WorkHistoryIcon />,
+    link: "/works",
+    default: false,
+    access: ["Admins"],
+    editing: ["Admins"],
   },
   {
     title: "Workers",

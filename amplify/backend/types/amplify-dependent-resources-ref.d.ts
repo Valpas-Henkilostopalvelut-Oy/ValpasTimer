@@ -1,14 +1,13 @@
 export type AmplifyDependentResourcesAttributes = {
     "auth": {
-        "valpasappca37c128": {
+        "valapseubackend58ebb5e2": {
             "IdentityPoolId": "string",
             "IdentityPoolName": "string",
             "UserPoolId": "string",
             "UserPoolArn": "string",
             "UserPoolName": "string",
             "AppClientIDWeb": "string",
-            "AppClientID": "string",
-            "CreatedSNSRole": "string"
+            "AppClientID": "string"
         },
         "userPoolGroups": {
             "AdminsGroupRole": "string",
@@ -17,7 +16,8 @@ export type AmplifyDependentResourcesAttributes = {
         }
     },
     "api": {
-        "valpasapp": {
+        "valapseubackend": {
+            "GraphQLAPIKeyOutput": "string",
             "GraphQLAPIIdOutput": "string",
             "GraphQLAPIEndpointOutput": "string"
         },
@@ -28,7 +28,7 @@ export type AmplifyDependentResourcesAttributes = {
         }
     },
     "function": {
-        "AdminQueries6bf4ddf9": {
+        "AdminQueriesb5e05924": {
             "Name": "string",
             "Arn": "string",
             "Region": "string",
