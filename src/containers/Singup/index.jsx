@@ -163,6 +163,7 @@ const Signup = () => {
               name: val.firstName,
               family_name: val.lastName,
               phone_number: phone(val.phoneNumber),
+              picture: "https://source.unsplash.com/random/256x256",
             },
           });
           setCredentials({

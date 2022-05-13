@@ -5,7 +5,7 @@ type Comment {
 }
 
 type Workplace {
-  worId: ID
+  workId: ID
   name: String
 }
 
@@ -28,11 +28,11 @@ type Tasks @model @auth(rules: [{allow: owner, ownerField: "username"}, {allow: 
   description: String
   username: String
   user: User
-  date: AWSDateTime
+  time: AWSTime
   status: Status
   workplace: Workplace
   interval: TimeInterval
-  comments: Comment
+  comments: [Comment]
 }
 
 type Profile {

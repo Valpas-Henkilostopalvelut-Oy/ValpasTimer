@@ -3,7 +3,7 @@
   "serviceConfiguration": {
     "apiName": "valapseubackend",
     "serviceName": "AppSync",
-    "gqlSchemaPath": "/tmp/amplify-74a1fa60-627f-42fc-816f-f8cd0e9b873c/amplify/backend/api/valapseubackend/schema.graphql",
+    "gqlSchemaPath": "/tmp/amplify-786dc0e6-92ef-400c-a78e-d21b3c081342/amplify/backend/api/valapseubackend/schema.graphql",
     "defaultAuthType": {
       "mode": "AMAZON_COGNITO_USER_POOLS",
       "cognitoUserPoolId": "authvalapseubackend58ebb5e2"

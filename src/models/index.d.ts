@@ -22,7 +22,7 @@ export declare class User {
 }
 
 export declare class Workplace {
-  readonly worId?: string | null;
+  readonly workId?: string | null;
   readonly name?: string | null;
   constructor(init: ModelInit<Workplace>);
 }
@@ -116,11 +116,11 @@ export declare class Tasks {
   readonly description?: string | null;
   readonly username?: string | null;
   readonly user?: User | null;
-  readonly date?: string | null;
+  readonly time?: string | null;
   readonly status?: Status | keyof typeof Status | null;
   readonly workplace?: Workplace | null;
   readonly interval?: TimeInterval | null;
-  readonly comments?: Comment | null;
+  readonly comments?: (Comment | null)[] | null;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
   constructor(init: ModelInit<Tasks, TasksMetaData>);

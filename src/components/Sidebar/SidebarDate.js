@@ -6,10 +6,12 @@ import PeopleIcon from "@mui/icons-material/People";
 import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
 import WorkIcon from "@mui/icons-material/Work";
 import AssignmentIcon from "@mui/icons-material/Assignment";
+import WorkHistoryIcon from "@mui/icons-material/WorkHistory";
+import AssignmentLateIcon from '@mui/icons-material/AssignmentLate';
 
 export const SidebarData = [
   {
-    title: "Home",
+    title: "Etusivu",
     type: "page",
     icon: <HomeIcon />,
     link: "/home",
@@ -18,7 +20,7 @@ export const SidebarData = [
     editing: ["Admins"],
   },
   {
-    title: "Time tracker",
+    title: "Seuranta",
     type: "page",
     icon: <AccessTimeIcon />,
     link: "/timer",
@@ -27,12 +29,21 @@ export const SidebarData = [
     editing: ["Admins"],
   },
   {
-    title: "Tasks",
+    title: "Työvuorot",
     type: "page",
     icon: <AssignmentIcon />,
-    link: "/tasks",
+    link: "/work",
     default: false,
-    access: ["Clients", "Admins"],
+    access: ["Workers", "Clients", "Admins"],
+    editing: ["Admins"],
+  },
+  {
+    title: "Perehdykset",
+    type: "page",
+    icon: <AssignmentLateIcon />,
+    link: "/onboarding",
+    default: false,
+    access: ["Workers", "Clients", "Admins"],
     editing: ["Admins"],
   },
   {
@@ -41,7 +52,7 @@ export const SidebarData = [
     access: ["Clients", "Admins"],
   },
   {
-    title: "Reports",
+    title: "Raportit",
     type: "page",
     icon: <DashboardIcon />,
     link: "/reports",
@@ -50,7 +61,7 @@ export const SidebarData = [
     editing: ["Clients", "Admins"],
   },
   {
-    title: "Team",
+    title: "Ihmiset",
     type: "page",
     icon: <PeopleIcon />,
     link: "/team",
@@ -59,12 +70,21 @@ export const SidebarData = [
     editing: ["Admins"],
   },
   {
-    title: "Admins",
+    title: "Admin panel",
     type: "text",
     access: ["Admins"],
   },
   {
-    title: "Workers",
+    title: "Suunnittelu",
+    type: "page",
+    icon: <WorkHistoryIcon />,
+    link: "/works",
+    default: false,
+    access: ["Admins"],
+    editing: ["Admins"],
+  },
+  {
+    title: "Työntekijät",
     type: "page",
     icon: <FormatListBulletedIcon />,
     link: "/allworkers",
@@ -73,7 +93,7 @@ export const SidebarData = [
     editing: ["Admins"],
   },
   {
-    title: "Workspaces",
+    title: "Työpaikat",
     type: "page",
     icon: <WorkIcon />,
     link: "/workspaces",

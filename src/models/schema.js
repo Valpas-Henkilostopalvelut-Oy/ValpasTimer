@@ -40,10 +40,10 @@ export const schema = {
                     "isRequired": false,
                     "attributes": []
                 },
-                "date": {
-                    "name": "date",
+                "time": {
+                    "name": "time",
                     "isArray": false,
-                    "type": "AWSDateTime",
+                    "type": "AWSTime",
                     "isRequired": false,
                     "attributes": []
                 },
@@ -76,12 +76,13 @@ export const schema = {
                 },
                 "comments": {
                     "name": "comments",
-                    "isArray": false,
+                    "isArray": true,
                     "type": {
                         "nonModel": "Comment"
                     },
                     "isRequired": false,
-                    "attributes": []
+                    "attributes": [],
+                    "isArrayNullable": true
                 },
                 "createdAt": {
                     "name": "createdAt",
@@ -654,8 +655,8 @@ export const schema = {
         "Workplace": {
             "name": "Workplace",
             "fields": {
-                "worId": {
-                    "name": "worId",
+                "workId": {
+                    "name": "workId",
                     "isArray": false,
                     "type": "ID",
                     "isRequired": false,
@@ -939,5 +940,5 @@ export const schema = {
             }
         }
     },
-    "version": "cbf839803259a20c323dcdc0bfc73d9b"
+    "version": "c058065534fbabf2af125dcf8886458a"
 };

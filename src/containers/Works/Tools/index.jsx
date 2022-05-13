@@ -25,10 +25,10 @@ import { Tasks, Status, AllWorkSpaces } from "../../../models";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+import { DesktopTimePicker } from "@mui/x-date-pickers/DesktopTimePicker";
 
 export const EnhancedWorks = (props) => {
-  const { numWorks } = props;
-  const [anchorEl, setAnchorEl] = useState(null);
+  const { numOfWorks = 0, anchorEl = null, setAnchorEl } = props;
   const open = Boolean(anchorEl);
   const id = open ? "simple-popover" : undefined;
 
@@ -45,22 +45,22 @@ export const EnhancedWorks = (props) => {
       sx={{
         pl: { sm: 2 },
         pr: { xs: 2, sm: 1 },
-        ...(numWorks > 0 && {
+        ...(numOfWorks > 0 && {
           bgcolor: (theme) => alpha(theme.palette.primary.main, theme.palette.action.activatedOpacity),
         }),
       }}
     >
-      {numWorks > 0 ? (
+      {numOfWorks > 0 ? (
         <Typography sx={{ flex: "1 1 100%" }} color="inherit" variant="subtitle1" component="div">
-          {numWorks} selected
+          {numOfWorks} selected
         </Typography>
       ) : (
         <Typography sx={{ flex: "1 1 100%" }} variant="h6" id="tableTitle" component="div">
-          All works
+          Työvuorosuunnittelu
         </Typography>
       )}
 
-      {numWorks > 0 ? (
+      {numOfWorks > 0 ? (
         <Tooltip title="Delete">
           <IconButton>
             <DeleteIcon />
@@ -257,6 +257,23 @@ const SelectDuration = (props) => {
   );
 };
 
+const SelectStartTime = (props) => {
+  const { setStartTime, startTime } = props;
+
+  return (
+    <LocalizationProvider dateAdapter={AdapterDateFns}>
+      <DesktopTimePicker
+        label="Start Time"
+        value={startTime}
+        onChange={(newValue) => {
+          setStartTime(newValue);
+        }}
+        renderInput={(params) => <TextField {...params} />}
+      />
+    </LocalizationProvider>
+  );
+};
+
 const CreateTask = (props) => {
   const { id, open, anchorEl, handleClose } = props;
   const [user, setUser] = useState({
@@ -294,26 +311,32 @@ const CreateTask = (props) => {
           description: "",
           status: Status.INWAITTING,
         }}
-        onSubmit={async (values) => {
-          console.log(work, user, values, startDate.toISOString(), endDate.toISOString(), duration);
-          false &&
-            (await DataStore.save(
+        onSubmit={async (values, { setSubmitting }) => {
+          setSubmitting(true);
+          try {
+            await DataStore.save(
               new Tasks({
-                title: "Lorem ipsum dolor sit amet",
-                description: "Lorem ipsum dolor sit amet",
-                userId: "Lorem ipsum dolor sit amet",
+                title: values.title,
+                description: values.description,
+                username: user.userId,
                 user: user,
-                date: "1970-01-01T12:30:23.999Z",
+                time: startDate.toLocaleTimeString(),
                 status: Status.INWAITTING,
                 workplace: work,
                 interval: {
-                  start: "",
-                  end: "",
-                  duration: "",
+                  start: startDate.toISOString(),
+                  end: endDate.toISOString(),
+                  duration: duration,
                 },
                 comments: [],
               })
-            ));
+            );
+            setSubmitting(false);
+            handleClose();
+          } catch (e) {
+            setSubmitting(false);
+            console.log(e);
+          }
         }}
       >
         {({ values, handleChange, handleSubmit, handleBlur, isSubmitting, errors, touched }) => (
@@ -329,7 +352,7 @@ const CreateTask = (props) => {
               }}
             >
               <Typography component="h1" variant="h5">
-                Create task
+                Lisää työvuoroja
               </Typography>
               <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 3 }}>
                 <Grid container spacing={2}>
@@ -376,6 +399,10 @@ const CreateTask = (props) => {
                     <WorkSelect setWork={setWork} />
                   </Grid>
 
+                  <Grid item xs={12}>
+                    <SelectStartTime setStartTime={setStartDate} startTime={startDate} />
+                  </Grid>
+
                   <Grid item xs={12} sm={4.5}>
                     <SelectStartDate setStartDate={setStartDate} startDate={startDate} />
                   </Grid>
@@ -394,6 +421,7 @@ const CreateTask = (props) => {
                   color="primary"
                   onClick={handleSubmit}
                   text="Create"
+                  isLoading={isSubmitting}
                 />
               </Box>
             </Box>
