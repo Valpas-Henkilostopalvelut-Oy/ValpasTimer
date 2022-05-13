@@ -1,16 +1,43 @@
 import { ModelInit, MutableModel, PersistentModelConstructor } from "@aws-amplify/datastore";
 
+export enum Status {
+  COMPLETE = "COMPLETE",
+  ACTIVE = "ACTIVE",
+  INWAITTING = "INWAITTING"
+}
 
+export declare class Comment {
+  readonly user?: User | null;
+  readonly title?: string | null;
+  readonly comment?: string | null;
+  constructor(init: ModelInit<Comment>);
+}
+
+export declare class User {
+  readonly userId?: string | null;
+  readonly name?: string | null;
+  readonly family_name?: string | null;
+  readonly icon?: string | null;
+  constructor(init: ModelInit<User>);
+}
+
+export declare class Workplace {
+  readonly worId?: string | null;
+  readonly name?: string | null;
+  constructor(init: ModelInit<Workplace>);
+}
+
+export declare class TimeInterval {
+  readonly duration?: string | null;
+  readonly end?: string | null;
+  readonly start?: string | null;
+  constructor(init: ModelInit<TimeInterval>);
+}
 
 export declare class Profile {
   readonly profile_picture?: string | null;
   readonly first_name?: string | null;
   readonly last_name?: string | null;
-  readonly username?: string | null;
-  readonly phone_number?: string | null;
-  readonly address?: string | null;
-  readonly zip_code?: number | null;
-  readonly contry?: string | null;
   readonly email?: string | null;
   constructor(init: ModelInit<Profile>);
 }
@@ -46,13 +73,6 @@ export declare class HourlyRate {
   constructor(init: ModelInit<HourlyRate>);
 }
 
-export declare class TimeInterval {
-  readonly duration?: string | null;
-  readonly end?: string | null;
-  readonly start?: string | null;
-  constructor(init: ModelInit<TimeInterval>);
-}
-
 export declare class WorkspaceSettings {
   readonly shortBreak?: number | null;
   readonly dinnerBreak?: number | null;
@@ -74,6 +94,10 @@ export declare class FormItem {
   constructor(init: ModelInit<FormItem>);
 }
 
+type TasksMetaData = {
+  readOnlyFields: 'createdAt' | 'updatedAt';
+}
+
 type TimeEntryMetaData = {
   readOnlyFields: 'createdAt' | 'updatedAt';
 }
@@ -84,6 +108,23 @@ type AllWorkSpacesMetaData = {
 
 type UserCredentialsMetaData = {
   readOnlyFields: 'createdAt' | 'updatedAt';
+}
+
+export declare class Tasks {
+  readonly id: string;
+  readonly title?: string | null;
+  readonly description?: string | null;
+  readonly username?: string | null;
+  readonly user?: User | null;
+  readonly date?: string | null;
+  readonly status?: Status | keyof typeof Status | null;
+  readonly workplace?: Workplace | null;
+  readonly interval?: TimeInterval | null;
+  readonly comments?: Comment | null;
+  readonly createdAt?: string | null;
+  readonly updatedAt?: string | null;
+  constructor(init: ModelInit<Tasks, TasksMetaData>);
+  static copyOf(source: Tasks, mutator: (draft: MutableModel<Tasks, TasksMetaData>) => MutableModel<Tasks, TasksMetaData> | void): Tasks;
 }
 
 export declare class TimeEntry {

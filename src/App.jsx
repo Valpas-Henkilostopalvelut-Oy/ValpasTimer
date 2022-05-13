@@ -4,7 +4,7 @@ import "./App.css";
 //Custom
 import Navigation from "./Navigation";
 import { AppContext } from "./services/contextLib";
-import { Auth } from "aws-amplify";
+import { Auth, DataStore } from "aws-amplify";
 import { onError } from "./services/errorLib";
 import Sidebar from "./components/Sidebar";
 import Navbar from "./components/NavBar";
@@ -30,6 +30,7 @@ function App() {
         await Auth.currentSession();
         userHasAuthenticated(true);
         setAppLoading(false);
+        await DataStore.start();
       } catch (e) {
         if (e !== "No current user") {
           onError(e);

@@ -13,6 +13,7 @@ import Workers from "./containers/Workers";
 import NoAccessPage from "./containers/NoAccessPage";
 import ForgotPassword from "./containers/ForgotPassword";
 import Tasks from "./containers/Tasks";
+import Works from "./containers/Works";
 
 const Navigation = ({ isAuthenticated, groups }) => {
   const Redirect = () => <Navigate replace to="/login" />;
@@ -30,6 +31,11 @@ const Navigation = ({ isAuthenticated, groups }) => {
       <Route exact path="home" element={isAuthenticated ? <Home /> : <Redirect />} />
       <Route exact path="/" element={<Navigate replace to="/home" />} />
       <Route exact path="tasks" element={isAuthenticated ? <Tasks /> : <Redirect />} />
+      <Route
+        exact
+        path="works"
+        element={isAuthenticated ? groups.includes("Admins") ? <Works /> : <NoAccessPage /> : <Redirect />}
+      />
       <Route
         exact
         path="timer"

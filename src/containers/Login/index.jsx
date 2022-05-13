@@ -1,28 +1,17 @@
 import React, { useState } from "react";
-import { Auth, DataStore } from "aws-amplify";
+import { Auth } from "aws-amplify";
 import { useAppContext } from "../../services/contextLib";
 import { useNavigate } from "react-router-dom";
 import LoaderButton from "../../components/LoaderButton";
-import { createUser } from "../../services/createUser";
-import { UserCredentials } from "../../models";
 import { Formik } from "formik";
 import { Box, Container, CssBaseline, Typography, TextField, Grid, Link } from "@mui/material";
 import * as yup from "yup";
 import { LinkContainer } from "react-router-bootstrap";
 
 const Login = () => {
-  const { userHasAuthenticated, setAppLoading } = useAppContext();
+  const { userHasAuthenticated } = useAppContext();
   const [message, setMessage] = useState(null);
   const navigate = useNavigate();
-
-  const checkUserProfile = async () => {
-    const userAuth = await Auth.currentAuthenticatedUser();
-    const userProfile = await DataStore.query(UserCredentials, userAuth.attributes["custom:UserCreditails"]);
-    
-    if (userProfile === undefined || userAuth.attributes["custom:UserCreditails"] === null) {
-      createUser().catch((err) => console.warn(err));
-    }
-  };
 
   //validate
   const validationSchema = yup.object().shape({
@@ -47,14 +36,11 @@ const Login = () => {
 
         try {
           await Auth.signIn(val.email, val.password);
-          await DataStore.start();
           userHasAuthenticated(true);
           setTimeout(() => {
-            checkUserProfile();
+            navigate("/home", { replace: true });
+            setSubmitting(false);
           }, 1000);
-          setAppLoading(false);
-          navigate("/home", { replace: true });
-          setSubmitting(false);
         } catch (e) {
           setSubmitting(false);
           setMessage(e.message);

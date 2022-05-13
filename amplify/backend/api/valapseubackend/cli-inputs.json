@@ -1,10 +1,12 @@
 {
   "version": 1,
   "serviceConfiguration": {
+    "apiName": "valapseubackend",
     "serviceName": "AppSync",
+    "gqlSchemaPath": "/tmp/amplify-74a1fa60-627f-42fc-816f-f8cd0e9b873c/amplify/backend/api/valapseubackend/schema.graphql",
     "defaultAuthType": {
       "mode": "AMAZON_COGNITO_USER_POOLS",
-      "cognitoUserPoolId": "authvalpasappca37c128"
+      "cognitoUserPoolId": "authvalapseubackend58ebb5e2"
     },
     "additionalAuthTypes": [
       {
@@ -15,8 +17,6 @@
       "defaultResolutionStrategy": {
         "type": "AUTOMERGE"
       }
-    },
-    "apiName": "valpasapp",
-    "gqlSchemaPath": "/tmp/amplify-032227d5-1a04-43d7-9184-e5897e624cf7/amplify/backend/api/valpasapp/schema.graphql"
+    }
   }
 }

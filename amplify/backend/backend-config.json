@@ -1,12 +1,13 @@
 {
   "auth": {
-    "valpasappca37c128": {
+    "valapseubackend58ebb5e2": {
       "service": "Cognito",
       "providerPlugin": "awscloudformation",
       "dependsOn": [],
       "customAuth": false,
       "frontendAuthConfig": {
-        "loginMechanisms": [
+        "socialProviders": [],
+        "usernameAttributes": [
           "EMAIL"
         ],
         "signupAttributes": [
@@ -31,7 +32,7 @@
       "dependsOn": [
         {
           "category": "auth",
-          "resourceName": "valpasappca37c128",
+          "resourceName": "valapseubackend58ebb5e2",
           "attributes": [
             "UserPoolId",
             "AppClientIDWeb",
@@ -43,15 +44,24 @@
     }
   },
   "api": {
-    "valpasapp": {
+    "valapseubackend": {
       "service": "AppSync",
       "providerPlugin": "awscloudformation",
+      "dependsOn": [
+        {
+          "category": "auth",
+          "resourceName": "valapseubackend58ebb5e2",
+          "attributes": [
+            "UserPoolId"
+          ]
+        }
+      ],
       "output": {
         "authConfig": {
           "defaultAuthentication": {
             "authenticationType": "AMAZON_COGNITO_USER_POOLS",
             "userPoolConfig": {
-              "userPoolId": "authvalpasappca37c128"
+              "userPoolId": "authvalapseubackend58ebb5e2"
             }
           },
           "additionalAuthenticationProviders": [
@@ -60,16 +70,7 @@
             }
           ]
         }
-      },
-      "dependsOn": [
-        {
-          "category": "auth",
-          "resourceName": "valpasappca37c128",
-          "attributes": [
-            "UserPoolId"
-          ]
-        }
-      ]
+      }
     },
     "AdminQueries": {
       "service": "API Gateway",
@@ -78,14 +79,14 @@
       "dependsOn": [
         {
           "category": "auth",
-          "resourceName": "valpasappca37c128",
+          "resourceName": "valapseubackend58ebb5e2",
           "attributes": [
             "UserPoolId"
           ]
         },
         {
           "category": "function",
-          "resourceName": "AdminQueries6bf4ddf9",
+          "resourceName": "AdminQueriesb5e05924",
           "attributes": [
             "Arn",
             "Name"
@@ -95,20 +96,19 @@
     }
   },
   "function": {
-    "AdminQueries6bf4ddf9": {
+    "AdminQueriesb5e05924": {
       "service": "Lambda",
       "providerPlugin": "awscloudformation",
       "build": true,
       "dependsOn": [
         {
           "category": "auth",
-          "resourceName": "valpasappca37c128",
+          "resourceName": "valapseubackend58ebb5e2",
           "attributes": [
             "UserPoolId"
           ]
         }
       ]
     }
-  },
-  "storage": {}
+  }
 }

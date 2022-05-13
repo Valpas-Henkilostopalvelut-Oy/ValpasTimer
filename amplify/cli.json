@@ -4,12 +4,15 @@
             "addmissingownerfields": true,
             "improvepluralization": false,
             "validatetypenamereservedwords": true,
-            "useexperimentalpipelinedtransformer": false,
+            "useexperimentalpipelinedtransformer": true,
             "enableiterativegsiupdates": true,
             "secondarykeyasgsi": true,
             "skipoverridemutationinputtypes": true,
-            "securityEnhancementNotification": false,
-            "showfieldauthnotification": false
+            "transformerversion": 2,
+            "suppressschemamigrationprompt": true,
+            "securityenhancementnotification": false,
+            "showfieldauthnotification": false,
+            "usesubusernamefordefaultidentityclaim": true
         },
         "frontend-ios": {
             "enablexcodeintegration": true
@@ -18,7 +21,8 @@
             "enablecaseinsensitivity": true,
             "useinclusiveterminology": true,
             "breakcirculardependency": true,
-            "forcealiasattributes": false
+            "forcealiasattributes": false,
+            "useenabledmfas": true
         },
         "codegen": {
             "useappsyncmodelgenplugin": true,

@@ -7,10 +7,40 @@ import reportWebVitals from "./reportWebVitals";
 //Custom imports
 import { BrowserRouter } from "react-router-dom";
 import { StyledEngineProvider } from "@mui/material/styles";
-import Amplify from "aws-amplify";
+import { Amplify, Hub, DataStore } from "aws-amplify";
 import awsconfig from "./aws-exports";
+import { createUser } from "./services/createUser";
 
 Amplify.configure(awsconfig);
+
+Hub.listen("auth", async (data) => {
+  const { payload: event } = data;
+  switch (event.event) {
+    case "signIn":
+      console.log("signed in");
+      await DataStore.start();
+      break;
+    case "signOut":
+      console.log("signed out");
+      await DataStore.clear();
+      await DataStore.stop();
+      break;
+    default:
+      break;
+  }
+});
+
+Hub.listen("datastore", (data) => {
+  const { payload: event } = data;
+  switch (event.event) {
+    case "ready":
+      console.log("ready");
+      createUser();
+      break;
+    default:
+      break;
+  }
+});
 
 ReactDOM.render(
   <React.StrictMode>
