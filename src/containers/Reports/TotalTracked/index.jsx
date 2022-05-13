@@ -18,12 +18,11 @@ const TotalLatest = ({ users, selOption, isAdmin, isClient, reload }) => {
     const loadTime = async () => {
       try {
         const times = (await DataStore.query(TimeEntry))
-          .filter((u) => u.userId === users.owner)
+          .filter((u) => u.userId === users.userId)
           .filter((t) => t.workspaceId === selOption)
           .filter((a) => !a.isActive)
           .filter((a) => a.isSent);
 
-        setTime(times);
         setGrouped(groupBy(times));
       } catch (error) {
         console.warn(error);
@@ -37,22 +36,21 @@ const TotalLatest = ({ users, selOption, isAdmin, isClient, reload }) => {
 
   return (
     <React.Fragment>
-      {time != null && (
-        <TableRow>
-          <TableCell>
-            {time != null && time.length !== 0 && (
-              <IconButton aria-label="expand row" size="small" onClick={() => setOpen(!open)}>
-                {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
-              </IconButton>
-            )}
-          </TableCell>
+      <TableRow>
+        <TableCell>
+          {grouped !== null && (
+            <IconButton aria-label="expand row" size="small" onClick={() => setOpen(!open)}>
+              {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+            </IconButton>
+          )}
+        </TableCell>
 
-          <TableCell align="right">
-            {users.profile.first_name} {users.profile.last_name}
-          </TableCell>
-        </TableRow>
-      )}
-      {grouped != null && time != null && time.length !== 0 && (
+        <TableCell align="right">
+          {users.profile.first_name} {users.profile.last_name}
+        </TableCell>
+      </TableRow>
+
+      {grouped != null && (
         <TableRow>
           <TableCell style={{ padding: 0 }} colSpan={2}>
             <Collapse in={open} timeout="auto" unmountOnExit>

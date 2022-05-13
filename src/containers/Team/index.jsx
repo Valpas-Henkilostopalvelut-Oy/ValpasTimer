@@ -58,7 +58,6 @@ const Team = () => {
                   <TableCell>Name</TableCell>
                   <TableCell align="right">Email</TableCell>
                   {groups.includes("Admins") && <TableCell align="right">Rate</TableCell>}
-                  <TableCell align="right">Phone number</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -70,7 +69,6 @@ const Team = () => {
                       </TableCell>
                       <TableCell align="right">{row.profile.email}</TableCell>
                       {groups.includes("Admins") && <TableCell align="right">10</TableCell>}
-                      <TableCell align="right">{row.profile.phone_number}</TableCell>
                     </TableRow>
                   );
                 })}

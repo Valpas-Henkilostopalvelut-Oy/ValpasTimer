@@ -52,7 +52,7 @@ const WorkspaceSelect = ({ selectedOption, setSelectedOption }) => {
       if (creditails.defaultWorkspace !== null) {
         setSelectedOption(creditails.defaultWorkspace);
       } else if (creditails.memberships.length !== 0) {
-        setSelectedOption(creditails.memberships[0].targetId);
+        setSelectedOption("none");
       }
     };
 
@@ -67,7 +67,9 @@ const WorkspaceSelect = ({ selectedOption, setSelectedOption }) => {
       const original = await DataStore.query(UserCredentials, userAtributes.attributes["custom:UserCreditails"]);
       await DataStore.save(
         UserCredentials.copyOf(original, (newValue) => {
-          newValue.defaultWorkspace = val;
+          if (val !== "none") {
+            newValue.defaultWorkspace = val;
+          } else newValue.defaultWorkspace = null;
         })
       );
     } catch (error) {
@@ -89,6 +91,9 @@ const WorkspaceSelect = ({ selectedOption, setSelectedOption }) => {
             changeLastValue(event.target.value);
           }}
         >
+          <MenuItem value="none">
+            <em>None</em>
+          </MenuItem>
           {list.map((option) => (
             <MenuItem value={option.value} key={option.value}>
               {option.label}

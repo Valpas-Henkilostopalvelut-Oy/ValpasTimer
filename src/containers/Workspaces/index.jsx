@@ -92,7 +92,6 @@ const UserList = ({ member, data, index, selected, setSelected }) => {
         {user.profile.first_name} {user.profile.last_name}
       </TableCell>
       <TableCell>{user.profile.email}</TableCell>
-      <TableCell>{user.profile.phone_number}</TableCell>
       <TableCell>
         <ChangeRole userId={member.userId} workId={data.id} isAdmin={groups.includes("Admins")} />
       </TableCell>
@@ -443,8 +442,6 @@ const Row = ({ data, reload }) => {
                     <TableCell>Name</TableCell>
 
                     <TableCell>Email</TableCell>
-
-                    <TableCell>Phone number</TableCell>
 
                     <TableCell>Role</TableCell>
                   </TableRow>

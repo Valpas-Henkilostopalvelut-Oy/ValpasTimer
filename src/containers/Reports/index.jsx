@@ -76,12 +76,6 @@ const Dashboard = () => {
         {usersList !== null ? (
           <TableContainer>
             <Table aria-label="collapsible table">
-              <TableHead>
-                <TableRow>
-                  <TableCell />
-                  <TableCell align="right">Worker</TableCell>
-                </TableRow>
-              </TableHead>
               <TableBody>
                 {usersList.map((users, key) => (
                   <TotalLatest
