@@ -3,7 +3,7 @@ import { TextField, Button, Grid, Switch, Typography } from "@mui/material";
 import { Auth, DataStore } from "aws-amplify";
 import { UserCredentials, TimeEntry } from "../../../models";
 import { TimeEditing } from "../../../components/TimeEditing";
-import LocalizationProvider from "@mui/lab/LocalizationProvider";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { de } from "date-fns/locale";
