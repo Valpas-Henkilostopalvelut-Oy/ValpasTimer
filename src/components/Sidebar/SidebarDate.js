@@ -7,7 +7,7 @@ import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
 import WorkIcon from "@mui/icons-material/Work";
 import AssignmentIcon from "@mui/icons-material/Assignment";
 import WorkHistoryIcon from "@mui/icons-material/WorkHistory";
-import AssignmentLateIcon from '@mui/icons-material/AssignmentLate';
+import AssignmentLateIcon from "@mui/icons-material/AssignmentLate";
 
 export const SidebarData = [
   {
@@ -17,7 +17,6 @@ export const SidebarData = [
     link: "/home",
     default: true,
     access: ["Clients", "Admins", "Workers"],
-    editing: ["Admins"],
   },
   {
     title: "Seuranta",
@@ -26,7 +25,6 @@ export const SidebarData = [
     link: "/timer",
     default: false,
     access: ["Clients", "Admins", "Workers"],
-    editing: ["Admins"],
   },
   {
     title: "Työvuorot",
@@ -35,7 +33,6 @@ export const SidebarData = [
     link: "/work",
     default: false,
     access: ["Workers", "Clients", "Admins"],
-    editing: ["Admins"],
   },
   {
     title: "Perehdykset",
@@ -44,7 +41,6 @@ export const SidebarData = [
     link: "/onboarding",
     default: false,
     access: ["Workers", "Clients", "Admins"],
-    editing: ["Admins"],
   },
   {
     title: "Analyze",
@@ -58,7 +54,6 @@ export const SidebarData = [
     link: "/reports",
     default: false,
     access: ["Clients", "Admins"],
-    editing: ["Clients", "Admins"],
   },
   {
     title: "Ihmiset",
@@ -67,7 +62,6 @@ export const SidebarData = [
     link: "/team",
     default: false,
     access: ["Clients", "Admins"],
-    editing: ["Admins"],
   },
   {
     title: "Admin panel",
@@ -81,7 +75,6 @@ export const SidebarData = [
     link: "/works",
     default: false,
     access: ["Admins"],
-    editing: ["Admins"],
   },
   {
     title: "Työntekijät",
@@ -90,7 +83,6 @@ export const SidebarData = [
     link: "/allworkers",
     default: false,
     access: ["Admins"],
-    editing: ["Admins"],
   },
   {
     title: "Työpaikat",
@@ -99,6 +91,5 @@ export const SidebarData = [
     link: "/workspaces",
     default: false,
     access: ["Admins"],
-    editing: ["Admins"],
   },
 ];

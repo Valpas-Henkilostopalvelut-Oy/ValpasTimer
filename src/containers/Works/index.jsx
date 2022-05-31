@@ -2,7 +2,7 @@ import React, { useState, useEffect, Fragment } from "react";
 import {
   Box,
   Typography,
-  Popover,
+  Menu,
   Table,
   TableBody,
   TableCell,
@@ -12,42 +12,47 @@ import {
   Paper,
   Button,
   Container,
-  Avatar,
+  MenuItem,
+  CircularProgress,
+  IconButton,
 } from "@mui/material";
-import { EnhancedWorks } from "./Tools";
+import { EnhancedWorks } from "./CreateTask";
 import { DataStore, Auth } from "aws-amplify";
 import { Tasks } from "../../models";
 import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
 
-const Details = ({ data = null, open = false, id, anchorEl = null, handleClose = () => {} }) => {
-  //container with details of the task
+const More = ({ data = null }) => {
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const open = Boolean(anchorEl);
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
   return (
-    <Popover
-      id={id}
-      open={open}
-      anchorEl={anchorEl}
-      onClose={handleClose}
-      anchorOrigin={{
-        vertical: "bottom",
-        horizontal: "right",
-      }}
-      transformOrigin={{
-        vertical: "top",
-        horizontal: "right",
-      }}
-    >
-      <Box sx={{ width: 350 }}>
-        <Box sx={{ m: 2, display: "flex", justifyContent: "center" }}>
-          <Typography variant="subtitle1">Title</Typography>
-        </Box>
-      </Box>
-    </Popover>
+    <div>
+      <IconButton
+        aria-label="more"
+        id="more-button"
+        aria-controls={open ? "more-menu" : undefined}
+        aria-haspopup="true"
+        onClick={handleClick}
+      >
+        <MoreVertIcon />
+      </IconButton>
+      <Menu id="more-menu" anchorEl={anchorEl} open={open} onClose={handleClose} >
+        <MenuItem>Edit</MenuItem>
+        <MenuItem>Delete</MenuItem>
+      </Menu>
+    </div>
   );
 };
 
 const Works = () => {
-  const [anchorEl, setAnchorEl] = React.useState(null);
   const [addAnchorEl, setAddAnchorEl] = React.useState(null);
   const [dense, setDense] = useState(false);
   const [works, setWorks] = useState(null);
@@ -61,6 +66,7 @@ const Works = () => {
         let q = [];
         for (let i = 0; i < tasks.length; i++) {
           q.push({
+            id: tasks[i].id,
             title: tasks[i].title,
             description: tasks[i].description,
             startTime: tasks[i].time,
@@ -83,55 +89,72 @@ const Works = () => {
     return () => (isActive = true);
   }, [addAnchorEl]);
 
-  const open = Boolean(anchorEl);
-  const id = open ? "simple-popover" : undefined;
-
   return (
     <Container>
-      <Box sx={{ width: "100%" }}>
-        <Paper sx={{ width: "100%", mb: 2 }}>
-          <EnhancedWorks anchorEl={addAnchorEl} setAnchorEl={setAddAnchorEl} />
-          <TableContainer>
-            <Table sx={{ minWidth: 750 }} aria-label="workTable" size={dense ? "small" : "medium"}>
-              <TableBody>
-                {works !== null &&
-                  works.map((u, k) => (
-                    <Fragment key={k}>
-                      <TableRow onClick={(e) => setAnchorEl(e.currentTarget)} aria-describedby={id}>
-                        <TableCell>
-                          {u.status === "INWAITTING" && (
-                            <CheckCircleOutlineIcon
-                              sx={{
-                                color: "gray",
-                              }}
-                            />
-                          )}
-                          {u.status === "COMPLETE" && (
-                            <CheckCircleOutlineIcon
-                              sx={{
-                                color: "green",
-                              }}
-                            />
-                          )}
-                        </TableCell>
-                        <TableCell align="left" width={"40%"}>
-                          {u.title}
-                        </TableCell>
-                        <TableCell>{u.startDay}</TableCell>
-                        <TableCell>{u.endDay}</TableCell>
-                        <TableCell align="right">{u.workplace.name}</TableCell>
-                        <TableCell align="right">
-                          {u.user.name} {u.user.family_name}
-                        </TableCell>
-                      </TableRow>
-                      <Details data={u} open={open} id={id} anchorEl={anchorEl} handleClose={() => setAnchorEl(null)} />
-                    </Fragment>
-                  ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
-        </Paper>
-      </Box>
+      {works !== null ? (
+        <Box sx={{ width: "100%" }}>
+          <Paper sx={{ width: "100%", mb: 2 }}>
+            <EnhancedWorks anchorEl={addAnchorEl} setAnchorEl={setAddAnchorEl} />
+            <TableContainer>
+              <Table sx={{ minWidth: 750 }} aria-label="workTable" size={dense ? "small" : "medium"}>
+                <TableBody>
+                  {works !== null &&
+                    works.map((u, k) => {
+                      return (
+                        <Fragment key={k}>
+                          <TableRow>
+                            <TableCell>
+                              {u.status === "INWAITTING" && (
+                                <CheckCircleOutlineIcon
+                                  sx={{
+                                    color: "gray",
+                                  }}
+                                />
+                              )}
+                              {u.status === "COMPLETE" && (
+                                <CheckCircleOutlineIcon
+                                  sx={{
+                                    color: "green",
+                                  }}
+                                />
+                              )}
+                            </TableCell>
+                            <TableCell align="left">{u.title}</TableCell>
+                            <TableCell>{u.startDay}</TableCell>
+                            <TableCell>{u.endDay}</TableCell>
+                            <TableCell align="right">{u.workplace.name}</TableCell>
+                            <TableCell align="right">
+                              {u.user.name} {u.user.family_name}
+                            </TableCell>
+                            <TableCell align="right">
+                              <More data={u} />
+                            </TableCell>
+                          </TableRow>
+                        </Fragment>
+                      );
+                    })}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </Paper>
+        </Box>
+      ) : (
+        <Box
+          component={Paper}
+          sx={{
+            width: "100%",
+            pt: 6,
+            pb: 6,
+            borderBottom: 1,
+            borderColor: "divider",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <CircularProgress />
+        </Box>
+      )}
     </Container>
   );
 };

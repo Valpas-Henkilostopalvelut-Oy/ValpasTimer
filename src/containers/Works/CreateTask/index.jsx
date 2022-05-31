@@ -26,6 +26,7 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { DesktopTimePicker } from "@mui/x-date-pickers/DesktopTimePicker";
+import { de } from "date-fns/locale";
 
 export const EnhancedWorks = (props) => {
   const { numOfWorks = 0, anchorEl = null, setAnchorEl } = props;
@@ -201,8 +202,9 @@ const SelectStartDate = (props) => {
   const { setStartDate, startDate } = props;
 
   return (
-    <LocalizationProvider dateAdapter={AdapterDateFns}>
+    <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={de}>
       <DatePicker
+        mask="__.__.____"
         label="Task Start Date"
         value={startDate}
         onChange={(start) => {
@@ -218,8 +220,9 @@ const SelectEndDate = (props) => {
   const { setEndDate, endDate } = props;
 
   return (
-    <LocalizationProvider dateAdapter={AdapterDateFns}>
+    <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={de}>
       <DatePicker
+        mask="__.__.____"
         label="Task End Date"
         value={endDate}
         onChange={(endDate) => {
@@ -261,7 +264,7 @@ const SelectStartTime = (props) => {
   const { setStartTime, startTime } = props;
 
   return (
-    <LocalizationProvider dateAdapter={AdapterDateFns}>
+    <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={de}>
       <DesktopTimePicker
         label="Start Time"
         value={startTime}
@@ -276,19 +279,15 @@ const SelectStartTime = (props) => {
 
 const CreateTask = (props) => {
   const { id, open, anchorEl, handleClose } = props;
-  const [user, setUser] = useState({
-    userId: "",
-    name: "",
-    family_name: "",
-    icon: "",
-  });
-  const [work, setWork] = useState({
-    workId: "",
-    name: "",
-  });
-  const [startDate, setStartDate] = useState(new Date());
-  const [endDate, setEndDate] = useState(new Date());
+  const [user, setUser] = useState(null);
+  const [work, setWork] = useState(null);
+  const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
   const [duration, setDuration] = useState("");
+
+  const disableButton = (u, w, sd, ed, d) => {
+    return u !== null && w !== null && sd !== null && ed !== null && d !== "";
+  };
 
   return (
     <Popover
@@ -399,18 +398,19 @@ const CreateTask = (props) => {
                     <WorkSelect setWork={setWork} />
                   </Grid>
 
-                  <Grid item xs={12}>
+                  <Grid item xs={6} sm={6}>
                     <SelectStartTime setStartTime={setStartDate} startTime={startDate} />
                   </Grid>
 
-                  <Grid item xs={12} sm={4.5}>
+                  <Grid item xs={6} sm={6}>
+                    <SelectDuration setDuration={setDuration} duration={duration} />
+                  </Grid>
+
+                  <Grid item xs={6} sm={6}>
                     <SelectStartDate setStartDate={setStartDate} startDate={startDate} />
                   </Grid>
-                  <Grid item xs={12} sm={4.5}>
+                  <Grid item xs={6} sm={6}>
                     <SelectEndDate setEndDate={setEndDate} endDate={endDate} />
-                  </Grid>
-                  <Grid item xs={12} sm={3}>
-                    <SelectDuration setDuration={setDuration} duration={duration} />
                   </Grid>
                 </Grid>
                 <LoaderButton
@@ -422,6 +422,7 @@ const CreateTask = (props) => {
                   onClick={handleSubmit}
                   text="Create"
                   isLoading={isSubmitting}
+                  disabled={!disableButton(user, work, startDate, endDate, duration)}
                 />
               </Box>
             </Box>

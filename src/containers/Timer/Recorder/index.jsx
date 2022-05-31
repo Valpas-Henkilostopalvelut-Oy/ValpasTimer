@@ -4,8 +4,9 @@ import { Auth, DataStore } from "aws-amplify";
 import { UserCredentials, TimeEntry } from "../../../models";
 import { TimeEditing } from "../../../components/TimeEditing";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
-import DatePicker from "@mui/lab/DatePicker";
-import DateAdapter from "@mui/lab/AdapterDateFns";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+import { de } from "date-fns/locale";
 import WorkspaceSelect from "../../../components/WorkSpaceSelect";
 
 const Manual = ({ reload, description, selectedOption }) => {
@@ -47,9 +48,10 @@ const Manual = ({ reload, description, selectedOption }) => {
   return (
     <Fragment>
       <Grid item xs={4}>
-        <LocalizationProvider dateAdapter={DateAdapter}>
+        <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={de}>
           <DatePicker
-            label="Basic example"
+            label="Date picker"
+            mask="__.__.____"
             value={start}
             onChange={(newValue) => {
               setStart(new Date(newValue));
