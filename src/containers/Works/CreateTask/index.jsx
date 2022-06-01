@@ -81,10 +81,10 @@ export const EnhancedWorks = (props) => {
   );
 };
 
-const UserSelect = (props) => {
+export const UserSelect = (props) => {
+  const { setUser, id = "" } = props;
   const [users, setUsers] = useState([]);
-  const [selected, setSelected] = useState("");
-  const { setUser } = props;
+  const [selected, setSelected] = useState(id);
 
   useEffect(() => {
     let isActive = false;
@@ -145,7 +145,7 @@ const UserSelect = (props) => {
   );
 };
 
-const WorkSelect = (props) => {
+export const WorkSelect = (props) => {
   const [works, setWorks] = useState([]);
   const [selected, setSelected] = useState("");
   const { setWork } = props;
@@ -198,7 +198,7 @@ const WorkSelect = (props) => {
   );
 };
 
-const SelectStartDate = (props) => {
+export const SelectStartDate = (props) => {
   const { setStartDate, startDate } = props;
 
   return (
@@ -216,7 +216,7 @@ const SelectStartDate = (props) => {
   );
 };
 
-const SelectEndDate = (props) => {
+export const SelectEndDate = (props) => {
   const { setEndDate, endDate } = props;
 
   return (
@@ -234,7 +234,7 @@ const SelectEndDate = (props) => {
   );
 };
 
-const SelectDuration = (props) => {
+export const SelectDuration = (props) => {
   const { setDuration, duration } = props;
 
   const duratinList = ["1h", "2h", "3h", "4h", "5h", "6h", "7h", "8h"];
@@ -260,7 +260,7 @@ const SelectDuration = (props) => {
   );
 };
 
-const SelectStartTime = (props) => {
+export const SelectStartTime = (props) => {
   const { setStartTime, startTime } = props;
 
   return (

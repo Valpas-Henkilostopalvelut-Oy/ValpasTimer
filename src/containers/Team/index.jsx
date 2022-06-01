@@ -52,7 +52,7 @@ const Team = () => {
         <Fragment>
           <Typography variant="h3">Team</Typography>
           <TableContainer component={Paper}>
-            <Table sx={{ minWidth: 650 }} aria-label="simple table">
+            <Table sx={{ minWidth: 750 }} aria-label="simple table">
               <TableHead>
                 <TableRow>
                   <TableCell>Name</TableCell>

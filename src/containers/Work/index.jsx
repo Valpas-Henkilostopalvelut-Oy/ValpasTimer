@@ -11,12 +11,17 @@ import {
   TableRow,
   Paper,
   Button,
+  Tooltip,
 } from "@mui/material";
 import { DataStore, Auth } from "aws-amplify";
 import { Tasks } from "../../models";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
+import { WorkStatus } from "../../services/workLib";
 
 const TasksPage = () => {
   const [tasks, setTasks] = useState(null);
+  const [dense, setDense] = useState(false);
+
   useEffect(() => {
     let isActive = false;
     const loadTasks = async () => {
@@ -54,31 +59,37 @@ const TasksPage = () => {
       <Box sx={{ width: "100%" }}>
         <Paper sx={{ width: "100%", mb: 2 }}>
           <TableContainer>
-            <Table>
+            <Table sx={{ minWidth: 750 }} aria-label="workTable" size={dense ? "small" : "medium"}>
               <TableHead>
                 <TableRow>
+                  <TableCell>Status</TableCell>
                   <TableCell>Title</TableCell>
                   <TableCell>Description</TableCell>
                   <TableCell>Work</TableCell>
                   <TableCell>Start Time</TableCell>
                   <TableCell>Start Day</TableCell>
                   <TableCell>End Day</TableCell>
-                  <TableCell>Duration</TableCell>
-                  <TableCell>Status</TableCell>
+                  <TableCell />
                 </TableRow>
               </TableHead>
               <TableBody>
                 {tasks !== null &&
                   tasks.map((task, k) => (
                     <TableRow key={k}>
-                      <TableCell>{task.title}</TableCell>
-                      <TableCell>{task.description}</TableCell>
+                      <TableCell>
+                        <WorkStatus status={task.status} />
+                      </TableCell>
+                      <TableCell sx={{ width: 150 }}>{task.title}</TableCell>
+                      <TableCell sx={{ width: 400 }}>{task.description}</TableCell>
                       <TableCell>{task.workplace.name}</TableCell>
-                      <TableCell>{task.startTime}</TableCell>
+                      <TableCell>
+                        {task.startTime} <br />({task.duration} / per day)
+                      </TableCell>
                       <TableCell>{task.startDay}</TableCell>
                       <TableCell>{task.endDay}</TableCell>
-                      <TableCell>{task.duration}</TableCell>
-                      <TableCell>{task.status}</TableCell>
+                      <TableCell>
+                        <MoreVertIcon />
+                      </TableCell>
                     </TableRow>
                   ))}
               </TableBody>

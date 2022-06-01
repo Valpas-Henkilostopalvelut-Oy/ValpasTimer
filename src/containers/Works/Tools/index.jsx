@@ -1,0 +1,10 @@
+import { DataStore } from "aws-amplify";
+import { Tasks } from "../../../models";
+
+export const deleteTask = async ({ id }) => {
+  await DataStore.query(Tasks, id)
+    .then((data) => {
+      DataStore.delete(data);
+    })
+    .catch((e) => console.warn(e));
+};

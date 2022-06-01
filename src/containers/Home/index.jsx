@@ -16,14 +16,10 @@ const Home = () => {
     isAuthenticated && loadUser();
   }, [isAuthenticated]);
 
-  return (
-    <Box>
-      {currentUser !== null ? (
-        <Typography>Welcome {currentUser.attributes.email}</Typography>
-      ) : (
-        <Typography>Loading...</Typography>
-      )}
-    </Box>
+  return currentUser !== null ? (
+    <Typography>Welcome {currentUser.attributes.email}</Typography>
+  ) : (
+    <Typography>Loading...</Typography>
   );
 };
 

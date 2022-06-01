@@ -93,7 +93,7 @@ function App() {
                 <Navbar open={openDrawer} setOpenDrawer={setOpenDrawer} isAuthenticated={isAuthenticated} />
               </Fragment>
             )}
-            <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
+            <Box component="main" sx={{ flexGrow: 1, p: 3, minWidth: 750}}>
               <Header />
               <Navigation isAuthenticated={isAuthenticated} groups={groups} />
             </Box>

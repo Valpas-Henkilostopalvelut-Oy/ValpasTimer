@@ -240,7 +240,7 @@ const Workers = () => {
   return users !== null ? (
     <TableContainer component={Paper}>
       <ListToolbar numSelected={selected.length} selected={selected} setSelected={setSelected} reload={loadUsers} />
-      <Table sx={{ minWidth: 650 }} aria-label="simple table">
+      <Table sx={{ minWidth: 750 }} aria-label="simple table">
         <TableHead>
           <TableRow>
             <TableCell />

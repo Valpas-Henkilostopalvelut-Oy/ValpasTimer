@@ -23,6 +23,7 @@ const Dashboard = () => {
   const { groups } = useAppContext();
   const [selectedOption, setSelectedOption] = useState("");
   const [isClient, setIsClient] = useState(false);
+  const [dense, setDense] = useState(false);
 
   const loadTeamActivities = async () => {
     const usersCredentials = await DataStore.query(UserCredentials);
@@ -75,7 +76,7 @@ const Dashboard = () => {
         />
         {usersList !== null ? (
           <TableContainer>
-            <Table aria-label="collapsible table">
+            <Table aria-label="collapsible table" sx={{ minWidth: 750 }} size={dense ? "small" : "medium"}>
               <TableBody>
                 {usersList.map((users, key) => (
                   <TotalLatest

@@ -56,6 +56,7 @@ const EditDescription = ({ reload, description, data, id, isSent }) => {
   const [desc, setDesc] = useState(description);
 
   const updateDesc = async () => {
+    console.log(desc);
     try {
       await DataStore.save(
         TimeEntry.copyOf(data, (update) => {
@@ -69,11 +70,12 @@ const EditDescription = ({ reload, description, data, id, isSent }) => {
 
   return !isSent ? (
     <TextField
-      sx={{ maxWidth: 180 }}
       onChange={(event) => setDesc(event.target.value)}
       onBlur={updateDesc}
       value={desc}
       fullWidth
+      multiline
+      rows={3}
       placeholder="Add description"
       variant="standard"
     />
@@ -181,7 +183,7 @@ const Details = ({ data, loadTimeList, index }) => {
                 <TableHead>
                   <TableRow>
                     <TableCell>Description</TableCell>
-                    <TableCell>Work Name</TableCell>
+                    <TableCell align="right">Work Name</TableCell>
                     <TableCell align="right">Start</TableCell>
                     <TableCell align="right">End</TableCell>
                     <TableCell align="right">Sent</TableCell>
@@ -191,86 +193,84 @@ const Details = ({ data, loadTimeList, index }) => {
                 </TableHead>
                 <TableBody>
                   {data.arr.map((row) => (
-                    <Fragment key={row.timeInterval.start}>
-                      <TableRow>
-                        <TableCell scope="row">
-                          <EditDescription
-                            description={row.description}
-                            data={row}
+                    <TableRow key={row.timeInterval.start}>
+                      <TableCell scope="row" sx={{ width: 400 }}>
+                        <EditDescription
+                          description={row.description}
+                          data={row}
+                          id={row.id}
+                          reload={loadTimeList}
+                          isSent={row.isSent}
+                        />
+                      </TableCell>
+
+                      <TableCell align="right">
+                        <WorkOfTime id={row.workspaceId} reload={loadTimeList} timeId={row.id} isSent={row.isSent} />
+                      </TableCell>
+
+                      <TableCell align="right">
+                        <TimeEditing
+                          time={row.timeInterval.start}
+                          isSent={!row.isSent}
+                          onChange={(event) =>
+                            updateValue({
+                              id: row.id,
+                              val: event,
+                              type: "start",
+                              reload: loadTimeList,
+                              time: row.timeInterval.start,
+                            })
+                          }
+                        />
+                      </TableCell>
+
+                      <TableCell align="right">
+                        <TimeEditing
+                          time={row.timeInterval.end}
+                          isSent={!row.isSent}
+                          onChange={(event) =>
+                            updateValue({
+                              id: row.id,
+                              val: event,
+                              type: "end",
+                              reload: loadTimeList,
+                              time: row.timeInterval.end,
+                            })
+                          }
+                        />
+                      </TableCell>
+
+                      <TableCell align="right">
+                        {row.isSent ? (
+                          <CheckCircleIcon style={{ color: "#4caf50" }} />
+                        ) : (
+                          <RadioButtonUncheckedIcon color="disabled" />
+                        )}
+                      </TableCell>
+                      <TableCell align="right">
+                        {row.isConfirmed ? (
+                          <CheckCircleIcon style={{ color: "#4caf50" }} />
+                        ) : (
+                          <RadioButtonUncheckedIcon color="disabled" />
+                        )}
+                      </TableCell>
+                      {!sent(data) && (
+                        <TableCell align="right">
+                          <SendForm
                             id={row.id}
                             reload={loadTimeList}
                             isSent={row.isSent}
+                            isConfirmed={row.isConfirmed}
+                          />
+                          <DeleteForm
+                            id={row.id}
+                            reload={loadTimeList}
+                            isSent={row.isSent}
+                            isConfirmed={row.isConfirmed}
                           />
                         </TableCell>
-
-                        <TableCell>
-                          <WorkOfTime id={row.workspaceId} reload={loadTimeList} timeId={row.id} isSent={row.isSent} />
-                        </TableCell>
-
-                        <TableCell align="right">
-                          <TimeEditing
-                            time={row.timeInterval.start}
-                            isSent={!row.isSent}
-                            onChange={(event) =>
-                              updateValue({
-                                id: row.id,
-                                val: event,
-                                type: "start",
-                                reload: loadTimeList,
-                                time: row.timeInterval.start,
-                              })
-                            }
-                          />
-                        </TableCell>
-
-                        <TableCell align="right">
-                          <TimeEditing
-                            time={row.timeInterval.end}
-                            isSent={!row.isSent}
-                            onChange={(event) =>
-                              updateValue({
-                                id: row.id,
-                                val: event,
-                                type: "end",
-                                reload: loadTimeList,
-                                time: row.timeInterval.end,
-                              })
-                            }
-                          />
-                        </TableCell>
-
-                        <TableCell align="right">
-                          {row.isSent ? (
-                            <CheckCircleIcon style={{ color: "#4caf50" }} />
-                          ) : (
-                            <RadioButtonUncheckedIcon color="disabled" />
-                          )}
-                        </TableCell>
-                        <TableCell align="right">
-                          {row.isConfirmed ? (
-                            <CheckCircleIcon style={{ color: "#4caf50" }} />
-                          ) : (
-                            <RadioButtonUncheckedIcon color="disabled" />
-                          )}
-                        </TableCell>
-                        {!sent(data) && (
-                          <TableCell align="right">
-                            <SendForm
-                              id={row.id}
-                              reload={loadTimeList}
-                              isSent={row.isSent}
-                              isConfirmed={row.isConfirmed}
-                            />
-                            <DeleteForm
-                              id={row.id}
-                              reload={loadTimeList}
-                              isSent={row.isSent}
-                              isConfirmed={row.isConfirmed}
-                            />
-                          </TableCell>
-                        )}
-                      </TableRow>
-                    </Fragment>
+                      )}
+                    </TableRow>
                   ))}
                 </TableBody>
               </Table>
@@ -285,6 +285,7 @@ const Details = ({ data, loadTimeList, index }) => {
 const Timer = () => {
   const { isAuthenticated } = useAppContext();
   const [grouped, setGrouped] = useState([]);
+  const [dense, setDense] = useState(false);
 
   const loadTimeList = async () => {
     try {
@@ -322,7 +323,7 @@ const Timer = () => {
         <Fragment>
           <Recorder loadTimeList={loadTimeList} />
           <TableContainer component={Paper} sx={{ mt: 2 }}>
-            <Table sx={{ minWidth: 650 }} aria-label="simple table">
+            <Table sx={{ minWidth: 750 }} aria-label="workTable" size={dense ? "small" : "medium"}>
               <TableHead>
                 <TableRow>
                   <TableCell />
