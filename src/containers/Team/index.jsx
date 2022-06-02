@@ -11,7 +11,6 @@ import {
   TableCell,
   Paper,
   Typography,
-  Checkbox,
   Box,
   CircularProgress,
 } from "@mui/material";

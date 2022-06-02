@@ -1,6 +1,6 @@
 projects:
-  valpasapp:
-    schemaPath: amplify/backend/api/valpasapp/build/schema.graphql
+  valapseubackend:
+    schemaPath: amplify/backend/api/valapseubackend/build/schema.graphql
     includes:
       - src/graphql/**/*.js
     excludes:
@@ -13,3 +13,6 @@ projects:
         region: eu-central-1
         apiId: null
         maxDepth: 2
+extensions:
+  amplify:
+    version: 3

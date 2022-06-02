@@ -1,6 +1,98 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
+export const getTasks = /* GraphQL */ `
+  query GetTasks($id: ID!) {
+    getTasks(id: $id) {
+      id
+      title
+      description
+      username
+      user {
+        userId
+        name
+        family_name
+        icon
+      }
+      time
+      status
+      workplace {
+        workId
+        name
+      }
+      interval {
+        duration
+        end
+        start
+      }
+      comments {
+        title
+        comment
+      }
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+    }
+  }
+`;
+export const listTasks = /* GraphQL */ `
+  query ListTasks(
+    $filter: ModelTasksFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listTasks(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        title
+        description
+        username
+        time
+        status
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+      }
+      nextToken
+      startedAt
+    }
+  }
+`;
+export const syncTasks = /* GraphQL */ `
+  query SyncTasks(
+    $filter: ModelTasksFilterInput
+    $limit: Int
+    $nextToken: String
+    $lastSync: AWSTimestamp
+  ) {
+    syncTasks(
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      lastSync: $lastSync
+    ) {
+      items {
+        id
+        title
+        description
+        username
+        time
+        status
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+      }
+      nextToken
+      startedAt
+    }
+  }
+`;
 export const getTimeEntry = /* GraphQL */ `
   query GetTimeEntry($id: ID!) {
     getTimeEntry(id: $id) {
@@ -18,22 +110,22 @@ export const getTimeEntry = /* GraphQL */ `
       isSent
       isConfirmed
       billable
+      createdAt
+      updatedAt
       _version
       _deleted
       _lastChangedAt
-      createdAt
-      updatedAt
       owner
     }
   }
 `;
-export const listTimeEntrys = /* GraphQL */ `
-  query ListTimeEntrys(
+export const listTimeEntries = /* GraphQL */ `
+  query ListTimeEntries(
     $filter: ModelTimeEntryFilterInput
     $limit: Int
     $nextToken: String
   ) {
-    listTimeEntrys(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    listTimeEntries(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
         description
@@ -44,11 +136,11 @@ export const listTimeEntrys = /* GraphQL */ `
         isSent
         isConfirmed
         billable
+        createdAt
+        updatedAt
         _version
         _deleted
         _lastChangedAt
-        createdAt
-        updatedAt
         owner
       }
       nextToken
@@ -79,11 +171,11 @@ export const syncTimeEntries = /* GraphQL */ `
         isSent
         isConfirmed
         billable
+        createdAt
+        updatedAt
         _version
         _deleted
         _lastChangedAt
-        createdAt
-        updatedAt
         owner
       }
       nextToken
@@ -111,32 +203,36 @@ export const getAllWorkSpaces = /* GraphQL */ `
         shortBreak
         dinnerBreak
       }
-      customOwner
+      clientId
+      adminId
+      managerId
+      createdAt
+      updatedAt
       _version
       _deleted
       _lastChangedAt
-      createdAt
-      updatedAt
     }
   }
 `;
-export const listAllWorkSpacess = /* GraphQL */ `
-  query ListAllWorkSpacess(
+export const listAllWorkSpaces = /* GraphQL */ `
+  query ListAllWorkSpaces(
     $filter: ModelAllWorkSpacesFilterInput
     $limit: Int
     $nextToken: String
   ) {
-    listAllWorkSpacess(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    listAllWorkSpaces(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
         imageUrl
         name
-        customOwner
+        clientId
+        adminId
+        managerId
+        createdAt
+        updatedAt
         _version
         _deleted
         _lastChangedAt
-        createdAt
-        updatedAt
       }
       nextToken
       startedAt
@@ -160,12 +256,14 @@ export const syncAllWorkSpaces = /* GraphQL */ `
         id
         imageUrl
         name
-        customOwner
+        clientId
+        adminId
+        managerId
+        createdAt
+        updatedAt
         _version
         _deleted
         _lastChangedAt
-        createdAt
-        updatedAt
       }
       nextToken
       startedAt
@@ -190,11 +288,6 @@ export const getUserCredentials = /* GraphQL */ `
         profile_picture
         first_name
         last_name
-        username
-        phone_number
-        address
-        zip_code
-        contry
         email
       }
       formChecked
@@ -205,26 +298,22 @@ export const getUserCredentials = /* GraphQL */ `
         modalSendConfirm
         modalConfirmConfirm
       }
+      createdAt
+      updatedAt
       _version
       _deleted
       _lastChangedAt
-      createdAt
-      updatedAt
       owner
     }
   }
 `;
-export const listUserCredentialss = /* GraphQL */ `
-  query ListUserCredentialss(
+export const listUserCredentials = /* GraphQL */ `
+  query ListUserCredentials(
     $filter: ModelUserCredentialsFilterInput
     $limit: Int
     $nextToken: String
   ) {
-    listUserCredentialss(
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-    ) {
+    listUserCredentials(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
         userId
@@ -232,11 +321,11 @@ export const listUserCredentialss = /* GraphQL */ `
         status
         defaultWorkspace
         formChecked
+        createdAt
+        updatedAt
         _version
         _deleted
         _lastChangedAt
-        createdAt
-        updatedAt
         owner
       }
       nextToken
@@ -264,11 +353,11 @@ export const syncUserCredentials = /* GraphQL */ `
         status
         defaultWorkspace
         formChecked
+        createdAt
+        updatedAt
         _version
         _deleted
         _lastChangedAt
-        createdAt
-        updatedAt
         owner
       }
       nextToken

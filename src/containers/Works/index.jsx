@@ -1,27 +1,21 @@
-import React, { useState, useEffect, Fragment } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Box,
-  Typography,
   Menu,
   Table,
   TableBody,
   TableCell,
   TableContainer,
-  TableHead,
   TableRow,
   Paper,
-  Button,
-  Modal,
   MenuItem,
   CircularProgress,
   IconButton,
   Tooltip,
 } from "@mui/material";
 import { EnhancedWorks } from "./CreateTask";
-import { DataStore, Auth } from "aws-amplify";
+import { DataStore } from "aws-amplify";
 import { Tasks } from "../../models";
-import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
-import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { deleteTask } from "./Tools";
 import { WorkStatus } from "../../services/workLib";
@@ -65,7 +59,7 @@ const More = ({ data = null, reload }) => {
         </IconButton>
       </Tooltip>
 
-      <EditTask data={data} open={mOpen}  handleClose={handleCloseModal} />
+      <EditTask data={data} open={mOpen} handleClose={handleCloseModal} reload={reload} />
 
       <Menu
         id="more-menu"

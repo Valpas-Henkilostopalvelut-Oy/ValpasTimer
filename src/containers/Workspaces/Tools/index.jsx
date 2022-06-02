@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { Box, FormControl, MenuItem, InputLabel, Select, Typography } from "@mui/material";
-import { DataStore, Auth } from "aws-amplify";
+import { FormControl, MenuItem, InputLabel, Select, Typography } from "@mui/material";
+import { DataStore } from "aws-amplify";
 import { AllWorkSpaces } from "../../../models";
 
 const roles = ["Manager", "Admin", "Client", "No Role"];
@@ -59,7 +59,7 @@ export const ChangeRole = ({ userId, workId, isAdmin }) => {
   };
 
   return isAdmin ? (
-    <FormControl variant="standard" fullWidth sx={{maxWidth: 120}}>
+    <FormControl variant="standard" fullWidth sx={{ maxWidth: 120 }}>
       <InputLabel id="role-label">Role</InputLabel>
       <Select labelId="role-select" id="role-select" value={role} onChange={updateRole}>
         {roles.map((role, key) => (

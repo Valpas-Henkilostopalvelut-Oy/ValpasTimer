@@ -184,7 +184,7 @@ export const Header = ({ selectedOption, setSelectedOption, isAdmin, isClient })
     }
 
     return () => (isActive = true);
-  }, [isAdmin]);
+  }, []);
 
   return (
     <Toolbar

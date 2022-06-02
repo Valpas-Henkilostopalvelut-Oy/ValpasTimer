@@ -1,6 +1,123 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
+export const createTasks = /* GraphQL */ `
+  mutation CreateTasks(
+    $input: CreateTasksInput!
+    $condition: ModelTasksConditionInput
+  ) {
+    createTasks(input: $input, condition: $condition) {
+      id
+      title
+      description
+      username
+      user {
+        userId
+        name
+        family_name
+        icon
+      }
+      time
+      status
+      workplace {
+        workId
+        name
+      }
+      interval {
+        duration
+        end
+        start
+      }
+      comments {
+        title
+        comment
+      }
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+    }
+  }
+`;
+export const updateTasks = /* GraphQL */ `
+  mutation UpdateTasks(
+    $input: UpdateTasksInput!
+    $condition: ModelTasksConditionInput
+  ) {
+    updateTasks(input: $input, condition: $condition) {
+      id
+      title
+      description
+      username
+      user {
+        userId
+        name
+        family_name
+        icon
+      }
+      time
+      status
+      workplace {
+        workId
+        name
+      }
+      interval {
+        duration
+        end
+        start
+      }
+      comments {
+        title
+        comment
+      }
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+    }
+  }
+`;
+export const deleteTasks = /* GraphQL */ `
+  mutation DeleteTasks(
+    $input: DeleteTasksInput!
+    $condition: ModelTasksConditionInput
+  ) {
+    deleteTasks(input: $input, condition: $condition) {
+      id
+      title
+      description
+      username
+      user {
+        userId
+        name
+        family_name
+        icon
+      }
+      time
+      status
+      workplace {
+        workId
+        name
+      }
+      interval {
+        duration
+        end
+        start
+      }
+      comments {
+        title
+        comment
+      }
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+    }
+  }
+`;
 export const createTimeEntry = /* GraphQL */ `
   mutation CreateTimeEntry(
     $input: CreateTimeEntryInput!
@@ -21,11 +138,11 @@ export const createTimeEntry = /* GraphQL */ `
       isSent
       isConfirmed
       billable
+      createdAt
+      updatedAt
       _version
       _deleted
       _lastChangedAt
-      createdAt
-      updatedAt
       owner
     }
   }
@@ -50,11 +167,11 @@ export const updateTimeEntry = /* GraphQL */ `
       isSent
       isConfirmed
       billable
+      createdAt
+      updatedAt
       _version
       _deleted
       _lastChangedAt
-      createdAt
-      updatedAt
       owner
     }
   }
@@ -79,11 +196,11 @@ export const deleteTimeEntry = /* GraphQL */ `
       isSent
       isConfirmed
       billable
+      createdAt
+      updatedAt
       _version
       _deleted
       _lastChangedAt
-      createdAt
-      updatedAt
       owner
     }
   }
@@ -111,12 +228,14 @@ export const createAllWorkSpaces = /* GraphQL */ `
         shortBreak
         dinnerBreak
       }
-      customOwner
+      clientId
+      adminId
+      managerId
+      createdAt
+      updatedAt
       _version
       _deleted
       _lastChangedAt
-      createdAt
-      updatedAt
     }
   }
 `;
@@ -143,12 +262,14 @@ export const updateAllWorkSpaces = /* GraphQL */ `
         shortBreak
         dinnerBreak
       }
-      customOwner
+      clientId
+      adminId
+      managerId
+      createdAt
+      updatedAt
       _version
       _deleted
       _lastChangedAt
-      createdAt
-      updatedAt
     }
   }
 `;
@@ -175,12 +296,14 @@ export const deleteAllWorkSpaces = /* GraphQL */ `
         shortBreak
         dinnerBreak
       }
-      customOwner
+      clientId
+      adminId
+      managerId
+      createdAt
+      updatedAt
       _version
       _deleted
       _lastChangedAt
-      createdAt
-      updatedAt
     }
   }
 `;
@@ -205,11 +328,6 @@ export const createUserCredentials = /* GraphQL */ `
         profile_picture
         first_name
         last_name
-        username
-        phone_number
-        address
-        zip_code
-        contry
         email
       }
       formChecked
@@ -220,11 +338,11 @@ export const createUserCredentials = /* GraphQL */ `
         modalSendConfirm
         modalConfirmConfirm
       }
+      createdAt
+      updatedAt
       _version
       _deleted
       _lastChangedAt
-      createdAt
-      updatedAt
       owner
     }
   }
@@ -250,11 +368,6 @@ export const updateUserCredentials = /* GraphQL */ `
         profile_picture
         first_name
         last_name
-        username
-        phone_number
-        address
-        zip_code
-        contry
         email
       }
       formChecked
@@ -265,11 +378,11 @@ export const updateUserCredentials = /* GraphQL */ `
         modalSendConfirm
         modalConfirmConfirm
       }
+      createdAt
+      updatedAt
       _version
       _deleted
       _lastChangedAt
-      createdAt
-      updatedAt
       owner
     }
   }
@@ -295,11 +408,6 @@ export const deleteUserCredentials = /* GraphQL */ `
         profile_picture
         first_name
         last_name
-        username
-        phone_number
-        address
-        zip_code
-        contry
         email
       }
       formChecked
@@ -310,11 +418,11 @@ export const deleteUserCredentials = /* GraphQL */ `
         modalSendConfirm
         modalConfirmConfirm
       }
+      createdAt
+      updatedAt
       _version
       _deleted
       _lastChangedAt
-      createdAt
-      updatedAt
       owner
     }
   }

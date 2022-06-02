@@ -146,9 +146,9 @@ export const UserSelect = (props) => {
 };
 
 export const WorkSelect = (props) => {
+  const { setWork, id = "" } = props;
   const [works, setWorks] = useState([]);
-  const [selected, setSelected] = useState("");
-  const { setWork } = props;
+  const [selected, setSelected] = useState(id);
 
   useEffect(() => {
     let isActive = false;
@@ -380,6 +380,8 @@ const CreateTask = (props) => {
                       label="Description"
                       name="description"
                       autoComplete="description"
+                      multiline
+                      rows={4}
                       onChange={handleChange}
                       onBlur={handleBlur}
                       value={values.description}

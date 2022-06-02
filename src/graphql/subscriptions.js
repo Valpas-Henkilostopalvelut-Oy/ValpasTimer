@@ -1,6 +1,114 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
+export const onCreateTasks = /* GraphQL */ `
+  subscription OnCreateTasks($username: String) {
+    onCreateTasks(username: $username) {
+      id
+      title
+      description
+      username
+      user {
+        userId
+        name
+        family_name
+        icon
+      }
+      time
+      status
+      workplace {
+        workId
+        name
+      }
+      interval {
+        duration
+        end
+        start
+      }
+      comments {
+        title
+        comment
+      }
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+    }
+  }
+`;
+export const onUpdateTasks = /* GraphQL */ `
+  subscription OnUpdateTasks($username: String) {
+    onUpdateTasks(username: $username) {
+      id
+      title
+      description
+      username
+      user {
+        userId
+        name
+        family_name
+        icon
+      }
+      time
+      status
+      workplace {
+        workId
+        name
+      }
+      interval {
+        duration
+        end
+        start
+      }
+      comments {
+        title
+        comment
+      }
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+    }
+  }
+`;
+export const onDeleteTasks = /* GraphQL */ `
+  subscription OnDeleteTasks($username: String) {
+    onDeleteTasks(username: $username) {
+      id
+      title
+      description
+      username
+      user {
+        userId
+        name
+        family_name
+        icon
+      }
+      time
+      status
+      workplace {
+        workId
+        name
+      }
+      interval {
+        duration
+        end
+        start
+      }
+      comments {
+        title
+        comment
+      }
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+    }
+  }
+`;
 export const onCreateTimeEntry = /* GraphQL */ `
   subscription OnCreateTimeEntry($owner: String) {
     onCreateTimeEntry(owner: $owner) {
@@ -18,11 +126,11 @@ export const onCreateTimeEntry = /* GraphQL */ `
       isSent
       isConfirmed
       billable
+      createdAt
+      updatedAt
       _version
       _deleted
       _lastChangedAt
-      createdAt
-      updatedAt
       owner
     }
   }
@@ -44,11 +152,11 @@ export const onUpdateTimeEntry = /* GraphQL */ `
       isSent
       isConfirmed
       billable
+      createdAt
+      updatedAt
       _version
       _deleted
       _lastChangedAt
-      createdAt
-      updatedAt
       owner
     }
   }
@@ -70,11 +178,11 @@ export const onDeleteTimeEntry = /* GraphQL */ `
       isSent
       isConfirmed
       billable
+      createdAt
+      updatedAt
       _version
       _deleted
       _lastChangedAt
-      createdAt
-      updatedAt
       owner
     }
   }
@@ -99,12 +207,14 @@ export const onCreateAllWorkSpaces = /* GraphQL */ `
         shortBreak
         dinnerBreak
       }
-      customOwner
+      clientId
+      adminId
+      managerId
+      createdAt
+      updatedAt
       _version
       _deleted
       _lastChangedAt
-      createdAt
-      updatedAt
     }
   }
 `;
@@ -128,12 +238,14 @@ export const onUpdateAllWorkSpaces = /* GraphQL */ `
         shortBreak
         dinnerBreak
       }
-      customOwner
+      clientId
+      adminId
+      managerId
+      createdAt
+      updatedAt
       _version
       _deleted
       _lastChangedAt
-      createdAt
-      updatedAt
     }
   }
 `;
@@ -157,12 +269,14 @@ export const onDeleteAllWorkSpaces = /* GraphQL */ `
         shortBreak
         dinnerBreak
       }
-      customOwner
+      clientId
+      adminId
+      managerId
+      createdAt
+      updatedAt
       _version
       _deleted
       _lastChangedAt
-      createdAt
-      updatedAt
     }
   }
 `;
@@ -184,11 +298,6 @@ export const onCreateUserCredentials = /* GraphQL */ `
         profile_picture
         first_name
         last_name
-        username
-        phone_number
-        address
-        zip_code
-        contry
         email
       }
       formChecked
@@ -199,11 +308,11 @@ export const onCreateUserCredentials = /* GraphQL */ `
         modalSendConfirm
         modalConfirmConfirm
       }
+      createdAt
+      updatedAt
       _version
       _deleted
       _lastChangedAt
-      createdAt
-      updatedAt
       owner
     }
   }
@@ -226,11 +335,6 @@ export const onUpdateUserCredentials = /* GraphQL */ `
         profile_picture
         first_name
         last_name
-        username
-        phone_number
-        address
-        zip_code
-        contry
         email
       }
       formChecked
@@ -241,11 +345,11 @@ export const onUpdateUserCredentials = /* GraphQL */ `
         modalSendConfirm
         modalConfirmConfirm
       }
+      createdAt
+      updatedAt
       _version
       _deleted
       _lastChangedAt
-      createdAt
-      updatedAt
       owner
     }
   }
@@ -268,11 +372,6 @@ export const onDeleteUserCredentials = /* GraphQL */ `
         profile_picture
         first_name
         last_name
-        username
-        phone_number
-        address
-        zip_code
-        contry
         email
       }
       formChecked
@@ -283,11 +382,11 @@ export const onDeleteUserCredentials = /* GraphQL */ `
         modalSendConfirm
         modalConfirmConfirm
       }
+      createdAt
+      updatedAt
       _version
       _deleted
       _lastChangedAt
-      createdAt
-      updatedAt
       owner
     }
   }

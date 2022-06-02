@@ -8,7 +8,6 @@ import { groupBy } from "../../../services/group";
 import InList from "../InList";
 
 const TotalLatest = ({ users, selOption, isAdmin, isClient, reload }) => {
-  const [time, setTime] = useState(null);
   const [open, setOpen] = React.useState(false);
   const [grouped, setGrouped] = useState(null);
 

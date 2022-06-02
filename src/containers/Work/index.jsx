@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import {
   Box,
-  Typography,
   Container,
   Table,
   TableBody,
@@ -10,8 +9,6 @@ import {
   TableHead,
   TableRow,
   Paper,
-  Button,
-  Tooltip,
 } from "@mui/material";
 import { DataStore, Auth } from "aws-amplify";
 import { Tasks } from "../../models";
