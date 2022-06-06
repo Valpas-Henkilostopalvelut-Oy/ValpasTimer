@@ -1,5 +1,31 @@
-type Comment {
+type UserAgreement {
+  id: ID
+  status: Status
+  addedAt: AWSDateTime
   user: User
+  title: String
+  description: String
+}
+
+type SubInfo {
+  title: String
+  description: String
+  user: UserAgreement
+  createdAt: AWSDateTime
+  id: ID!
+}
+
+type Agreement @model @auth(rules: [{allow: groups, groups: ["Admins"], operations: [read, create, update, delete]}, {allow: groups, groups: ["Clients"], operations: [read, update]}, {allow: groups, groups: ["Workers"], operations: [read]}]) {
+  id: ID!
+  title: String
+  description: String
+  createdAt: AWSDateTime
+  user: User
+  subInfo: [SubInfo]
+}
+
+type Comment {
+  user: UserAgreement
   title: String
   comment: String
 }
@@ -123,6 +149,7 @@ type UserCredentials @model @auth(rules: [{allow: owner}, {allow: groups, groups
   profile: Profile
   formChecked: [String]
   settings: UserSettings
+  agreement: UserAgreement
 }
 
 type FormItem {

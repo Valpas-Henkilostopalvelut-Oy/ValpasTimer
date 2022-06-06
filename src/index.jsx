@@ -1,5 +1,5 @@
 import React from "react";
-import ReactDOM from "react-dom";
+import { createRoot } from "react-dom/client";
 import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
@@ -10,6 +10,9 @@ import { StyledEngineProvider } from "@mui/material/styles";
 import { Amplify, Hub, DataStore } from "aws-amplify";
 import awsconfig from "./aws-exports";
 import { createUser } from "./services/createUser";
+
+const rootElement = document.getElementById("root");
+const root = createRoot(rootElement);
 
 Amplify.configure(awsconfig);
 
@@ -42,7 +45,7 @@ Hub.listen("datastore", (data) => {
   }
 });
 
-ReactDOM.render(
+root.render(
   <React.StrictMode>
     <BrowserRouter>
       <StyledEngineProvider>
@@ -50,7 +53,6 @@ ReactDOM.render(
       </StyledEngineProvider>
     </BrowserRouter>
   </React.StrictMode>,
-  document.getElementById("root")
 );
 
 // If you want to start measuring performance in your app, pass a function

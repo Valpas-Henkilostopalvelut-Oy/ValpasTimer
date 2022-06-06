@@ -14,6 +14,7 @@ import NoAccessPage from "./containers/NoAccessPage";
 import ForgotPassword from "./containers/ForgotPassword";
 import TasksPage from "./containers/Work";
 import Works from "./containers/Works";
+import { AgreementPage } from "./containers/Agreement";
 
 const Navigation = ({ isAuthenticated, groups }) => {
   const Redirect = () => <Navigate replace to="/login" />;
@@ -30,6 +31,7 @@ const Navigation = ({ isAuthenticated, groups }) => {
 
       <Route exact path="home" element={isAuthenticated ? <Home /> : <Redirect />} />
       <Route exact path="/" element={<Navigate replace to="/home" />} />
+      <Route exact path="onboarding" element={isAuthenticated ? <AgreementPage /> : <Redirect />} />
       <Route exact path="work" element={isAuthenticated ? <TasksPage /> : <Redirect />} />
       <Route
         exact

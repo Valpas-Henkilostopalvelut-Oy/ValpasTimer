@@ -6,11 +6,14 @@ export enum Status {
   INWAITTING = "INWAITTING"
 }
 
-export declare class Comment {
+export declare class UserAgreement {
+  readonly id?: string | null;
+  readonly status?: Status | keyof typeof Status | null;
+  readonly addedAt?: string | null;
   readonly user?: User | null;
   readonly title?: string | null;
-  readonly comment?: string | null;
-  constructor(init: ModelInit<Comment>);
+  readonly description?: string | null;
+  constructor(init: ModelInit<UserAgreement>);
 }
 
 export declare class User {
@@ -19,6 +22,22 @@ export declare class User {
   readonly family_name?: string | null;
   readonly icon?: string | null;
   constructor(init: ModelInit<User>);
+}
+
+export declare class SubInfo {
+  readonly title?: string | null;
+  readonly description?: string | null;
+  readonly user?: UserAgreement | null;
+  readonly createdAt?: string | null;
+  readonly id: string;
+  constructor(init: ModelInit<SubInfo>);
+}
+
+export declare class Comment {
+  readonly user?: UserAgreement | null;
+  readonly title?: string | null;
+  readonly comment?: string | null;
+  constructor(init: ModelInit<Comment>);
 }
 
 export declare class Workplace {
@@ -94,6 +113,10 @@ export declare class FormItem {
   constructor(init: ModelInit<FormItem>);
 }
 
+type AgreementMetaData = {
+  readOnlyFields: 'updatedAt';
+}
+
 type TasksMetaData = {
   readOnlyFields: 'createdAt' | 'updatedAt';
 }
@@ -108,6 +131,18 @@ type AllWorkSpacesMetaData = {
 
 type UserCredentialsMetaData = {
   readOnlyFields: 'createdAt' | 'updatedAt';
+}
+
+export declare class Agreement {
+  readonly id: string;
+  readonly title?: string | null;
+  readonly description?: string | null;
+  readonly createdAt?: string | null;
+  readonly user?: User | null;
+  readonly subInfo?: (SubInfo | null)[] | null;
+  readonly updatedAt?: string | null;
+  constructor(init: ModelInit<Agreement, AgreementMetaData>);
+  static copyOf(source: Agreement, mutator: (draft: MutableModel<Agreement, AgreementMetaData>) => MutableModel<Agreement, AgreementMetaData> | void): Agreement;
 }
 
 export declare class Tasks {
@@ -170,6 +205,7 @@ export declare class UserCredentials {
   readonly profile?: Profile | null;
   readonly formChecked?: (string | null)[] | null;
   readonly settings?: UserSettings | null;
+  readonly agreement?: UserAgreement | null;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
   constructor(init: ModelInit<UserCredentials, UserCredentialsMetaData>);

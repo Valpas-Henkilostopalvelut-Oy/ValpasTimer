@@ -29,6 +29,7 @@ export async function createUser() {
             modalConfirmConfirm: true,
             modalSendConfirm: true,
           },
+          agreement: [],
         })
       );
 

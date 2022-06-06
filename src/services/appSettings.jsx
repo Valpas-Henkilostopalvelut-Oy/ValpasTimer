@@ -1,5 +1,8 @@
 export const customPalette = {
   palette: {
+    default: {
+      white: "#ffffff",
+    },
     navbar: {
       main: "#00adef",
     },

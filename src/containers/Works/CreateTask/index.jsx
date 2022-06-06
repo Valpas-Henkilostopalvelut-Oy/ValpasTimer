@@ -313,6 +313,8 @@ const CreateTask = (props) => {
         onSubmit={async (values, { setSubmitting }) => {
           setSubmitting(true);
           try {
+            console.log(user);
+
             await DataStore.save(
               new Tasks({
                 title: values.title,
@@ -346,8 +348,8 @@ const CreateTask = (props) => {
                 display: "flex",
                 flexDirection: "column",
                 alignItems: "center",
-                mt: 8,
-                mb: 8,
+                mt: 4,
+                mb: 4,
               }}
             >
               <Typography component="h1" variant="h5">
