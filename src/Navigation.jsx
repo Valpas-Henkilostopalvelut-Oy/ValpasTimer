@@ -14,6 +14,7 @@ import NoAccessPage from "./containers/NoAccessPage";
 import ForgotPassword from "./containers/ForgotPassword";
 import TasksPage from "./containers/Work";
 import Works from "./containers/Works";
+import {AgreementAdminPanel} from "./containers/Agreement/AdminPanel";
 import { AgreementPage } from "./containers/Agreement";
 
 const Navigation = ({ isAuthenticated, groups }) => {
@@ -86,6 +87,21 @@ const Navigation = ({ isAuthenticated, groups }) => {
           isAuthenticated ? (
             groups.includes("Admins") || groups.includes("Clients") ? (
               <Dashboard />
+            ) : (
+              <NoAccessPage />
+            )
+          ) : (
+            <Redirect />
+          )
+        }
+      />
+      <Route
+        exact
+        path="agreementadminpanel"
+        element={
+          isAuthenticated ? (
+            groups.includes("Admins") || groups.includes("Clients") ? (
+              <AgreementAdminPanel />
             ) : (
               <NoAccessPage />
             )

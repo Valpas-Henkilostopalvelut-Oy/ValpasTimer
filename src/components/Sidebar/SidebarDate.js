@@ -42,6 +42,7 @@ export const SidebarData = [
     default: false,
     access: ["Workers", "Clients", "Admins"],
   },
+
   {
     title: "Analyze",
     type: "text",
@@ -63,6 +64,7 @@ export const SidebarData = [
     default: false,
     access: ["Clients", "Admins"],
   },
+
   {
     title: "Admin panel",
     type: "text",
@@ -91,5 +93,13 @@ export const SidebarData = [
     link: "/workspaces",
     default: false,
     access: ["Admins"],
+  },
+  {
+    title: "Agreements",
+    type: "page",
+    icon: <AssignmentLateIcon />,
+    link: "/agreementadminpanel",
+    default: false,
+    access: ["Workers", "Clients", "Admins"],
   },
 ];

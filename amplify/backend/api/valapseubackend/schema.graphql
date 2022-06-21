@@ -1,27 +1,33 @@
 type UserAgreement {
   id: ID
   status: Status
-  addedAt: AWSDateTime
   user: User
-  title: String
-  description: String
 }
 
-type SubInfo {
-  title: String
+type AditionalInfo {
+  name: String
   description: String
-  user: UserAgreement
-  createdAt: AWSDateTime
-  id: ID!
+  id: ID
 }
 
-type Agreement @model @auth(rules: [{allow: groups, groups: ["Admins"], operations: [read, create, update, delete]}, {allow: groups, groups: ["Clients"], operations: [read, update]}, {allow: groups, groups: ["Workers"], operations: [read]}]) {
+type Agreement
+  @model
+  @auth(
+    rules: [
+      { allow: groups, groups: ["Admins"], operations: [read, create, update, delete] }
+      { allow: owner, ownerField: "Clients", operations: [read, update] }
+      { allow: owner, ownerField: "Workers", operations: [read] }
+    ]
+  ) {
   id: ID!
-  title: String
-  description: String
+  name: String
+  workers: [ID]
+  clients: [ID]
   createdAt: AWSDateTime
   user: User
-  subInfo: [SubInfo]
+  aditionalInfo: [AditionalInfo]
+  userAgreement: [UserAgreement]
+  workspaceId: [ID]
 }
 
 type Comment {
@@ -48,7 +54,14 @@ enum Status {
   INWAITTING
 }
 
-type Tasks @model @auth(rules: [{allow: owner, ownerField: "username"}, {allow: groups, groups: ["Admins"], operations: [read, create, update, delete]}]) {
+type Tasks
+  @model
+  @auth(
+    rules: [
+      { allow: owner, ownerField: "username" }
+      { allow: groups, groups: ["Admins"], operations: [read, create, update, delete] }
+    ]
+  ) {
   id: ID!
   title: String
   description: String
@@ -96,7 +109,15 @@ type TimeInterval {
   start: AWSDateTime
 }
 
-type TimeEntry @model @auth(rules: [{allow: owner}, {allow: groups, groups: ["Admins"], operations: [read, create, update, delete]}, {allow: groups, groups: ["Clients"], operations: [read, update]}]) {
+type TimeEntry
+  @model
+  @auth(
+    rules: [
+      { allow: owner }
+      { allow: groups, groups: ["Admins"], operations: [read, create, update, delete] }
+      { allow: groups, groups: ["Clients"], operations: [read, update] }
+    ]
+  ) {
   id: ID!
   description: String
   userId: ID
@@ -127,7 +148,15 @@ type HourlyRate {
   currency: String
 }
 
-type AllWorkSpaces @model @auth(rules: [{allow: groups, groups: ["Admins"], operations: [read, create, update, delete]}, {allow: groups, groups: ["Workers"], operations: [read]}, {allow: groups, groups: ["Clients"], operations: [read]}]) {
+type AllWorkSpaces
+  @model
+  @auth(
+    rules: [
+      { allow: groups, groups: ["Admins"], operations: [read, create, update, delete] }
+      { allow: groups, groups: ["Workers"], operations: [read] }
+      { allow: groups, groups: ["Clients"], operations: [read] }
+    ]
+  ) {
   id: ID!
   hourlyRate: HourlyRate
   imageUrl: AWSURL
@@ -139,7 +168,15 @@ type AllWorkSpaces @model @auth(rules: [{allow: groups, groups: ["Admins"], oper
   managerId: [ID]
 }
 
-type UserCredentials @model @auth(rules: [{allow: owner}, {allow: groups, groups: ["Admins"], operations: [read, create, update, delete]}, {allow: groups, groups: ["Clients"], operations: [update, read]}]) {
+type UserCredentials
+  @model
+  @auth(
+    rules: [
+      { allow: owner }
+      { allow: groups, groups: ["Admins"], operations: [read, create, update, delete] }
+      { allow: groups, groups: ["Clients"], operations: [update, read] }
+    ]
+  ) {
   id: ID!
   userId: ID!
   activeTimeEntry: ID
@@ -156,4 +193,3 @@ type FormItem {
   name: String
   text: String
 }
- 

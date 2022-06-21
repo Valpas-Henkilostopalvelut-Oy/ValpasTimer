@@ -1,6 +1,114 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
+export const createAgreement = /* GraphQL */ `
+  mutation CreateAgreement(
+    $input: CreateAgreementInput!
+    $condition: ModelAgreementConditionInput
+  ) {
+    createAgreement(input: $input, condition: $condition) {
+      id
+      name
+      workers
+      clients
+      createdAt
+      user {
+        userId
+        name
+        family_name
+        icon
+      }
+      aditionalInfo {
+        name
+        description
+        id
+      }
+      userAgreement {
+        id
+        status
+      }
+      workspaceId
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      Clients
+      Workers
+    }
+  }
+`;
+export const updateAgreement = /* GraphQL */ `
+  mutation UpdateAgreement(
+    $input: UpdateAgreementInput!
+    $condition: ModelAgreementConditionInput
+  ) {
+    updateAgreement(input: $input, condition: $condition) {
+      id
+      name
+      workers
+      clients
+      createdAt
+      user {
+        userId
+        name
+        family_name
+        icon
+      }
+      aditionalInfo {
+        name
+        description
+        id
+      }
+      userAgreement {
+        id
+        status
+      }
+      workspaceId
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      Clients
+      Workers
+    }
+  }
+`;
+export const deleteAgreement = /* GraphQL */ `
+  mutation DeleteAgreement(
+    $input: DeleteAgreementInput!
+    $condition: ModelAgreementConditionInput
+  ) {
+    deleteAgreement(input: $input, condition: $condition) {
+      id
+      name
+      workers
+      clients
+      createdAt
+      user {
+        userId
+        name
+        family_name
+        icon
+      }
+      aditionalInfo {
+        name
+        description
+        id
+      }
+      userAgreement {
+        id
+        status
+      }
+      workspaceId
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      Clients
+      Workers
+    }
+  }
+`;
 export const createTasks = /* GraphQL */ `
   mutation CreateTasks(
     $input: CreateTasksInput!
@@ -338,6 +446,10 @@ export const createUserCredentials = /* GraphQL */ `
         modalSendConfirm
         modalConfirmConfirm
       }
+      agreement {
+        id
+        status
+      }
       createdAt
       updatedAt
       _version
@@ -378,6 +490,10 @@ export const updateUserCredentials = /* GraphQL */ `
         modalSendConfirm
         modalConfirmConfirm
       }
+      agreement {
+        id
+        status
+      }
       createdAt
       updatedAt
       _version
@@ -417,6 +533,10 @@ export const deleteUserCredentials = /* GraphQL */ `
         dateFormat
         modalSendConfirm
         modalConfirmConfirm
+      }
+      agreement {
+        id
+        status
       }
       createdAt
       updatedAt

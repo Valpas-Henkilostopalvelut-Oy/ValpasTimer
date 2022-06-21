@@ -10,19 +10,28 @@ export const schema = {
                     "isRequired": true,
                     "attributes": []
                 },
-                "title": {
-                    "name": "title",
+                "name": {
+                    "name": "name",
                     "isArray": false,
                     "type": "String",
                     "isRequired": false,
                     "attributes": []
                 },
-                "description": {
-                    "name": "description",
-                    "isArray": false,
-                    "type": "String",
+                "workers": {
+                    "name": "workers",
+                    "isArray": true,
+                    "type": "ID",
                     "isRequired": false,
-                    "attributes": []
+                    "attributes": [],
+                    "isArrayNullable": true
+                },
+                "clients": {
+                    "name": "clients",
+                    "isArray": true,
+                    "type": "ID",
+                    "isRequired": false,
+                    "attributes": [],
+                    "isArrayNullable": true
                 },
                 "createdAt": {
                     "name": "createdAt",
@@ -40,12 +49,30 @@ export const schema = {
                     "isRequired": false,
                     "attributes": []
                 },
-                "subInfo": {
-                    "name": "subInfo",
+                "aditionalInfo": {
+                    "name": "aditionalInfo",
                     "isArray": true,
                     "type": {
-                        "nonModel": "SubInfo"
+                        "nonModel": "AditionalInfo"
                     },
+                    "isRequired": false,
+                    "attributes": [],
+                    "isArrayNullable": true
+                },
+                "userAgreement": {
+                    "name": "userAgreement",
+                    "isArray": true,
+                    "type": {
+                        "nonModel": "UserAgreement"
+                    },
+                    "isRequired": false,
+                    "attributes": [],
+                    "isArrayNullable": true
+                },
+                "workspaceId": {
+                    "name": "workspaceId",
+                    "isArray": true,
+                    "type": "ID",
                     "isRequired": false,
                     "attributes": [],
                     "isArrayNullable": true
@@ -85,27 +112,23 @@ export const schema = {
                                 ]
                             },
                             {
-                                "groupClaim": "cognito:groups",
                                 "provider": "userPools",
-                                "allow": "groups",
-                                "groups": [
-                                    "Clients"
-                                ],
+                                "ownerField": "Clients",
+                                "allow": "owner",
                                 "operations": [
                                     "read",
                                     "update"
-                                ]
+                                ],
+                                "identityClaim": "cognito:username"
                             },
                             {
-                                "groupClaim": "cognito:groups",
                                 "provider": "userPools",
-                                "allow": "groups",
-                                "groups": [
-                                    "Workers"
-                                ],
+                                "ownerField": "Workers",
+                                "allow": "owner",
                                 "operations": [
                                     "read"
-                                ]
+                                ],
+                                "identityClaim": "cognito:username"
                             }
                         ]
                     }
@@ -731,33 +754,12 @@ export const schema = {
                     "isRequired": false,
                     "attributes": []
                 },
-                "addedAt": {
-                    "name": "addedAt",
-                    "isArray": false,
-                    "type": "AWSDateTime",
-                    "isRequired": false,
-                    "attributes": []
-                },
                 "user": {
                     "name": "user",
                     "isArray": false,
                     "type": {
                         "nonModel": "User"
                     },
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "title": {
-                    "name": "title",
-                    "isArray": false,
-                    "type": "String",
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "description": {
-                    "name": "description",
-                    "isArray": false,
-                    "type": "String",
                     "isRequired": false,
                     "attributes": []
                 }
@@ -796,11 +798,11 @@ export const schema = {
                 }
             }
         },
-        "SubInfo": {
-            "name": "SubInfo",
+        "AditionalInfo": {
+            "name": "AditionalInfo",
             "fields": {
-                "title": {
-                    "name": "title",
+                "name": {
+                    "name": "name",
                     "isArray": false,
                     "type": "String",
                     "isRequired": false,
@@ -813,27 +815,11 @@ export const schema = {
                     "isRequired": false,
                     "attributes": []
                 },
-                "user": {
-                    "name": "user",
-                    "isArray": false,
-                    "type": {
-                        "nonModel": "UserAgreement"
-                    },
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "createdAt": {
-                    "name": "createdAt",
-                    "isArray": false,
-                    "type": "AWSDateTime",
-                    "isRequired": false,
-                    "attributes": []
-                },
                 "id": {
                     "name": "id",
                     "isArray": false,
                     "type": "ID",
-                    "isRequired": true,
+                    "isRequired": false,
                     "attributes": []
                 }
             }
@@ -1154,5 +1140,5 @@ export const schema = {
             }
         }
     },
-    "version": "ca7c036c44afa02a1db49bb169910f88"
+    "version": "a9f09fbf46d3b3b2f58fe81067a6006e"
 };

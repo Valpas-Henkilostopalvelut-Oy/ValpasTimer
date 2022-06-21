@@ -9,10 +9,7 @@ export enum Status {
 export declare class UserAgreement {
   readonly id?: string | null;
   readonly status?: Status | keyof typeof Status | null;
-  readonly addedAt?: string | null;
   readonly user?: User | null;
-  readonly title?: string | null;
-  readonly description?: string | null;
   constructor(init: ModelInit<UserAgreement>);
 }
 
@@ -24,13 +21,11 @@ export declare class User {
   constructor(init: ModelInit<User>);
 }
 
-export declare class SubInfo {
-  readonly title?: string | null;
+export declare class AditionalInfo {
+  readonly name?: string | null;
   readonly description?: string | null;
-  readonly user?: UserAgreement | null;
-  readonly createdAt?: string | null;
-  readonly id: string;
-  constructor(init: ModelInit<SubInfo>);
+  readonly id?: string | null;
+  constructor(init: ModelInit<AditionalInfo>);
 }
 
 export declare class Comment {
@@ -135,11 +130,14 @@ type UserCredentialsMetaData = {
 
 export declare class Agreement {
   readonly id: string;
-  readonly title?: string | null;
-  readonly description?: string | null;
+  readonly name?: string | null;
+  readonly workers?: (string | null)[] | null;
+  readonly clients?: (string | null)[] | null;
   readonly createdAt?: string | null;
   readonly user?: User | null;
-  readonly subInfo?: (SubInfo | null)[] | null;
+  readonly aditionalInfo?: (AditionalInfo | null)[] | null;
+  readonly userAgreement?: (UserAgreement | null)[] | null;
+  readonly workspaceId?: (string | null)[] | null;
   readonly updatedAt?: string | null;
   constructor(init: ModelInit<Agreement, AgreementMetaData>);
   static copyOf(source: Agreement, mutator: (draft: MutableModel<Agreement, AgreementMetaData>) => MutableModel<Agreement, AgreementMetaData> | void): Agreement;

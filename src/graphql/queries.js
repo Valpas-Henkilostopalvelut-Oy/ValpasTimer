@@ -1,6 +1,97 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
+export const getAgreement = /* GraphQL */ `
+  query GetAgreement($id: ID!) {
+    getAgreement(id: $id) {
+      id
+      name
+      workers
+      clients
+      createdAt
+      user {
+        userId
+        name
+        family_name
+        icon
+      }
+      aditionalInfo {
+        name
+        description
+        id
+      }
+      userAgreement {
+        id
+        status
+      }
+      workspaceId
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      Clients
+      Workers
+    }
+  }
+`;
+export const listAgreements = /* GraphQL */ `
+  query ListAgreements(
+    $filter: ModelAgreementFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listAgreements(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        name
+        workers
+        clients
+        createdAt
+        workspaceId
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        Clients
+        Workers
+      }
+      nextToken
+      startedAt
+    }
+  }
+`;
+export const syncAgreements = /* GraphQL */ `
+  query SyncAgreements(
+    $filter: ModelAgreementFilterInput
+    $limit: Int
+    $nextToken: String
+    $lastSync: AWSTimestamp
+  ) {
+    syncAgreements(
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      lastSync: $lastSync
+    ) {
+      items {
+        id
+        name
+        workers
+        clients
+        createdAt
+        workspaceId
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        Clients
+        Workers
+      }
+      nextToken
+      startedAt
+    }
+  }
+`;
 export const getTasks = /* GraphQL */ `
   query GetTasks($id: ID!) {
     getTasks(id: $id) {
@@ -297,6 +388,10 @@ export const getUserCredentials = /* GraphQL */ `
         dateFormat
         modalSendConfirm
         modalConfirmConfirm
+      }
+      agreement {
+        id
+        status
       }
       createdAt
       updatedAt

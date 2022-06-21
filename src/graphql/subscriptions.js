@@ -1,6 +1,105 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
+export const onCreateAgreement = /* GraphQL */ `
+  subscription OnCreateAgreement($Clients: String, $Workers: String) {
+    onCreateAgreement(Clients: $Clients, Workers: $Workers) {
+      id
+      name
+      workers
+      clients
+      createdAt
+      user {
+        userId
+        name
+        family_name
+        icon
+      }
+      aditionalInfo {
+        name
+        description
+        id
+      }
+      userAgreement {
+        id
+        status
+      }
+      workspaceId
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      Clients
+      Workers
+    }
+  }
+`;
+export const onUpdateAgreement = /* GraphQL */ `
+  subscription OnUpdateAgreement($Clients: String, $Workers: String) {
+    onUpdateAgreement(Clients: $Clients, Workers: $Workers) {
+      id
+      name
+      workers
+      clients
+      createdAt
+      user {
+        userId
+        name
+        family_name
+        icon
+      }
+      aditionalInfo {
+        name
+        description
+        id
+      }
+      userAgreement {
+        id
+        status
+      }
+      workspaceId
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      Clients
+      Workers
+    }
+  }
+`;
+export const onDeleteAgreement = /* GraphQL */ `
+  subscription OnDeleteAgreement($Clients: String, $Workers: String) {
+    onDeleteAgreement(Clients: $Clients, Workers: $Workers) {
+      id
+      name
+      workers
+      clients
+      createdAt
+      user {
+        userId
+        name
+        family_name
+        icon
+      }
+      aditionalInfo {
+        name
+        description
+        id
+      }
+      userAgreement {
+        id
+        status
+      }
+      workspaceId
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      Clients
+      Workers
+    }
+  }
+`;
 export const onCreateTasks = /* GraphQL */ `
   subscription OnCreateTasks($username: String) {
     onCreateTasks(username: $username) {
@@ -308,6 +407,10 @@ export const onCreateUserCredentials = /* GraphQL */ `
         modalSendConfirm
         modalConfirmConfirm
       }
+      agreement {
+        id
+        status
+      }
       createdAt
       updatedAt
       _version
@@ -345,6 +448,10 @@ export const onUpdateUserCredentials = /* GraphQL */ `
         modalSendConfirm
         modalConfirmConfirm
       }
+      agreement {
+        id
+        status
+      }
       createdAt
       updatedAt
       _version
@@ -381,6 +488,10 @@ export const onDeleteUserCredentials = /* GraphQL */ `
         dateFormat
         modalSendConfirm
         modalConfirmConfirm
+      }
+      agreement {
+        id
+        status
       }
       createdAt
       updatedAt

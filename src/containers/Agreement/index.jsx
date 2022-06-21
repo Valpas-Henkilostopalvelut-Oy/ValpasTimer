@@ -1,7 +1,5 @@
 import React, { useState, useEffect, Fragment } from "react";
-import { Container, Typography, Accordion, AccordionSummary, AccordionDetails } from "@mui/material";
-import { AgreementToolbar } from "./Toolbar";
-import { AdminPanel } from "./AdminPanel";
+import { Container, Typography, Accordion, AccordionSummary, AccordionDetails, Toolbar, Paper } from "@mui/material";
 import { DataStore } from "aws-amplify";
 import { Agreement } from "../../models";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
@@ -13,7 +11,7 @@ export const AgreementPage = () => {
   const loadAgreements = async () => {
     await DataStore.query(Agreement)
       .then((agreements) => {
-        setAgreements(agreements.sort((a, b) => a.title.localeCompare(b.title)));
+        setAgreements(agreements.sort((a, b) => a.name.localeCompare(b.title)));
       })
       .catch((error) => console.log(error));
   };
@@ -21,6 +19,7 @@ export const AgreementPage = () => {
   useEffect(() => {
     let isActive = false;
     !isActive && loadAgreements();
+    console.log(agreements);
     return () => (isActive = true);
   }, []);
 
@@ -30,21 +29,32 @@ export const AgreementPage = () => {
 
   return (
     <Container>
-      <AgreementToolbar isAdmin={false} reload={loadAgreements} />
+      <Toolbar
+        sx={{
+          pl: { sm: 2 },
+          pr: { xs: 1, sm: 1 },
+          bgcolor: "default.white",
+          borderRadius: "4px 4px 0 0",
+        }}
+        component={Paper}
+      >
+        <Typography color="inherit" variant="subtitle1" component="div" sx={{ flex: "1 1 100%" }}>
+          Perehdykset
+        </Typography>
+      </Toolbar>
       {agreements &&
         agreements.map((item, k) => (
           <Fragment key={k}>
-            <Accordion expanded={expanded === k} onChange={handleChange(k)}>
-              <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls={item.title} id={item.title}>
-                <Typography sx={{ width: "33%", flexShrink: 0 }}>{item.title}</Typography>
+            <Accordion expanded={expanded === k} onChange={handleChange(k)} sx={{}}>
+              <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls={item.name} id={item.name}>
+                <Typography sx={{ width: "33%", flexShrink: 0 }}>{item.name}</Typography>
                 <Typography sx={{ pr: 4, pl: 4 }}>3/4 complete (example)</Typography>
               </AccordionSummary>
               <AccordionDetails sx={{ padding: 0 }}>
-                <AdminPanel id={item.id} data={item} reload={loadAgreements} onOpen={expanded === k} />
-                {item.subInfo.map((subItem, k) => (
+                {item.aditionalInfo.map((subItem, k) => (
                   <Accordion key={k}>
-                    <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls={subItem.title} id={subItem.title}>
-                      <Typography>{subItem.title}</Typography>
+                    <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls={subItem.name} id={subItem.name}>
+                      <Typography>{subItem.name}</Typography>
                     </AccordionSummary>
                     <AccordionDetails>{subItem.description}</AccordionDetails>
                   </Accordion>
