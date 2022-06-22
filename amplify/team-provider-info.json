@@ -1,25 +1,24 @@
 {
   "staging": {
     "awscloudformation": {
-      "AuthRoleName": "amplify-valapseubackend-staging-82526-authRole",
-      "UnauthRoleArn": "arn:aws:iam::988281547160:role/amplify-valapseubackend-staging-82526-unauthRole",
-      "AuthRoleArn": "arn:aws:iam::988281547160:role/amplify-valapseubackend-staging-82526-authRole",
+      "AuthRoleName": "amplify-valpaseu-staging-120019-authRole",
+      "UnauthRoleArn": "arn:aws:iam::988281547160:role/amplify-valpaseu-staging-120019-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::988281547160:role/amplify-valpaseu-staging-120019-authRole",
       "Region": "eu-central-1",
-      "DeploymentBucketName": "amplify-valapseubackend-staging-82526-deployment",
-      "UnauthRoleName": "amplify-valapseubackend-staging-82526-unauthRole",
-      "StackName": "amplify-valapseubackend-staging-82526",
-      "StackId": "arn:aws:cloudformation:eu-central-1:988281547160:stack/amplify-valapseubackend-staging-82526/e93a9380-d103-11ec-b3d3-06648b5cb058",
-      "AmplifyAppId": "d2pvts7x5emqcf"
+      "DeploymentBucketName": "amplify-valpaseu-staging-120019-deployment",
+      "UnauthRoleName": "amplify-valpaseu-staging-120019-unauthRole",
+      "StackName": "amplify-valpaseu-staging-120019",
+      "StackId": "arn:aws:cloudformation:eu-central-1:988281547160:stack/amplify-valpaseu-staging-120019/e3579360-f222-11ec-ae72-065a23a98cc8",
+      "AmplifyAppId": "dnklquz5sn34f"
     },
     "categories": {
       "auth": {
-        "valapseubackend58ebb5e2": {},
-        "userPoolGroups": {}
+        "valpaseu": {}
       },
       "function": {
-        "AdminQueriesb5e05924": {
-          "deploymentBucketName": "amplify-valapseubackend-staging-82526-deployment",
-          "s3Key": "amplify-builds/AdminQueriesb5e05924-5967576e376943574537-build.zip"
+        "AdminQueries85a16d04": {
+          "deploymentBucketName": "amplify-valpaseu-staging-120019-deployment",
+          "s3Key": "amplify-builds/AdminQueries85a16d04-6b71383777636b443934-build.zip"
         }
       }
     }

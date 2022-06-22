@@ -19,7 +19,6 @@ export const AgreementPage = () => {
   useEffect(() => {
     let isActive = false;
     !isActive && loadAgreements();
-    console.log(agreements);
     return () => (isActive = true);
   }, []);
 

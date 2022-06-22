@@ -1,6 +1,5 @@
 import AddIcon from "@mui/icons-material/Add";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import EditIcon from "@mui/icons-material/Edit";
 import {
   Accordion,
   AccordionDetails,
@@ -15,12 +14,20 @@ import {
   Toolbar,
   Tooltip,
   Typography,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  Checkbox,
+  ListItemText,
+  Chip,
+  OutlinedInput,
 } from "@mui/material";
 import { Auth, DataStore } from "aws-amplify";
 import { Formik } from "formik";
 import React, { useEffect, useState } from "react";
 import LoaderButton from "../../../components/LoaderButton";
-import { Agreement } from "../../../models";
+import { Agreement, AllWorkSpaces } from "../../../models";
 
 const AdminToolbar = ({ reload }) => {
   const [anchorEl, setAnchorEl] = useState(null);
@@ -144,25 +151,85 @@ const AdminToolbar = ({ reload }) => {
   );
 };
 
-const AditionalInfo = ({ item, reload }) => {
+const renameAditionalInfo = async ({ id, val, item, setSubmitting, setName }) => {
+  await DataStore.query(Agreement, id)
+    .then((agreement) => {
+      DataStore.save(
+        Agreement.copyOf(agreement, (updated) => {
+          updated.aditionalInfo = updated.aditionalInfo.map((info) => {
+            if (info.id === item.id) {
+              info.name = val.name;
+            }
+            return info;
+          });
+        })
+      ).catch((error) => console.warn(error));
+    })
+    .catch((error) => console.warn(error));
+  setTimeout(() => {
+    setName(val.name);
+    setSubmitting(false);
+  }, 1000);
+};
+
+const deelteAditionalInfo = async ({ id, item, setDeleting, isDeleting, reload }) => {
+  setDeleting(true);
+  await DataStore.query(Agreement, id)
+    .then(async (agreement) => {
+      await DataStore.save(
+        Agreement.copyOf(agreement, (updated) => {
+          updated.aditionalInfo = updated.aditionalInfo.filter((info) => info.id !== item.id);
+        })
+      ).catch((error) => console.warn(error));
+
+      setTimeout(() => {
+        setDeleting(false);
+        reload();
+      }, 1000);
+    })
+    .catch((error) => console.warn(error));
+};
+
+const editAditionalInfoDescription = async ({ values, reload, id, setSubmitting, setDescription, item }) => {
+  await DataStore.query(Agreement, id)
+    .then(async (agreement) => {
+      await DataStore.save(
+        Agreement.copyOf(agreement, (updated) => {
+          updated.aditionalInfo = updated.aditionalInfo.map((info) => {
+            if (info.id === item.id) {
+              info.description = values.description;
+            }
+            return info;
+          });
+        })
+      ).catch((error) => console.warn(error));
+      setTimeout(() => {
+        setDescription(values.description);
+        setSubmitting(false);
+        reload();
+      }, 1000);
+    })
+    .catch((error) => console.warn(error));
+};
+
+const AditionalInfo = ({ id, item, reload, handleOpen, expanded }) => {
+  const [isDeleting, setDeleting] = useState(false);
+  const [isEditing, setEditing] = useState(false);
   const [description, setDescription] = useState(item.description);
   const [name, setName] = useState(item.name);
 
   return (
-    <Accordion>
+    <Accordion expanded={expanded === item.id} onChange={handleOpen(item.id)}>
       <AccordionSummary expandIcon={<ExpandMoreIcon />}>
         <Typography sx={{ flex: "1 1 100%" }}>{name}</Typography>
       </AccordionSummary>
       <AccordionDetails>
-        <Grid container spacing={2}>
+        <Grid container spacing={2} alignItems="center">
           <Grid item xs={8}>
             <Formik
               initialValues={{ name: name }}
               onSubmit={(val, { setSubmitting }) => {
-                console.log(val);
-                setTimeout(() => {
-                  setSubmitting(false);
-                }, 1000);
+                renameAditionalInfo({ id, val, item, setSubmitting, setName });
               }}
             >
               {({ values, handleSubmit, handleChange, handleBlur, isSubmitting }) => (
@@ -198,13 +265,61 @@ const AditionalInfo = ({ item, reload }) => {
             </Formik>
           </Grid>
           <Grid item xs={2}>
-            Edit description
+            <LoaderButton
+              fullWidth
+              variant="contained"
+              color="primary"
+              text="Edit desc"
+              onClick={() => setEditing(!isEditing)}
+            />
           </Grid>
           <Grid item xs={2}>
-            Delete
+            <LoaderButton
+              fullWidth
+              variant="contained"
+              color="primary"
+              isLoading={isDeleting}
+              text="Delete"
+              loadingText="Deleting…"
+              onClick={() => deelteAditionalInfo({ id, item, setDeleting, isDeleting, reload })}
+            />
           </Grid>
           <Grid item xs={12}>
-            <Typography>{description}</Typography>
+            {!isEditing ? (
+              <Typography>{description}</Typography>
+            ) : (
+              <Formik
+                initialValues={{ description: description }}
+                onSubmit={(values, { setSubmitting }) => {
+                  editAditionalInfoDescription({ values, reload, id, setSubmitting, setDescription, item });
+                }}
+              >
+                {({ values, handleSubmit, handleChange, handleBlur, isSubmitting }) => (
+                  <Box component="form" onSubmit={handleSubmit}>
+                    <TextField
+                      fullWidth
+                      id="description"
+                      name="description"
+                      label="Description"
+                      autoComplete="description"
+                      value={values.description}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                    />
+                    <LoaderButton
+                      type="submit"
+                      fullWidth
+                      variant="contained"
+                      color="primary"
+                      disabled={!values.description}
+                      isLoading={isSubmitting}
+                      text="Save"
+                      loadingText="Saving…"
+                    />
+                  </Box>
+                )}
+              </Formik>
+            )}
           </Grid>
         </Grid>
       </AccordionDetails>
@@ -228,9 +343,7 @@ const renameAgreement = async ({ values, reload, id, setSubmitting }) => {
 };
 
 const addAditionalInfo = async ({ values, reload, id, setSubmitting }) => {
-  const count = (await DataStore.query(Agreement, id)).aditionalInfo.length;
-
-  console.log(count);
+  const count = Math.floor(Math.random() * 100000) + 1;
 
   await DataStore.query(Agreement, id)
     .then(async (agreement) => {
@@ -239,7 +352,7 @@ const addAditionalInfo = async ({ values, reload, id, setSubmitting }) => {
           updated.aditionalInfo.push({
             name: values.newAditionalInfo,
             description: "",
-            id: count + 1,
+            id: count,
           });
         })
       ).catch((error) => console.warn(error));
@@ -251,8 +364,118 @@ const addAditionalInfo = async ({ values, reload, id, setSubmitting }) => {
     .catch((error) => console.warn(error));
 };
 
+const SelectWorkspaces = ({ id, agreement }) => {
+  const [selectedWorkspaces, setSelectedWorkspaces] = useState([]);
+  const [avalibleWorkspaces, setAvalibleWorkspaces] = useState([]);
+
+  console.log();
+
+  useEffect(() => {
+    let isActive = false;
+
+    const loadWorkspaces = async () => {
+      await DataStore.query(AllWorkSpaces)
+        .then((workspaces) => {
+          let q = [];
+
+          for (let i = 0; i < workspaces.length; i++) {
+            q.push({
+              id: workspaces[i].id,
+              name: workspaces[i].name,
+            });
+          }
+
+          setAvalibleWorkspaces(q);
+
+          let w = [];
+
+          for (let i = 0; i < agreement.workspaceId.length; i++) {
+            const e = workspaces.find((w) => w.id === agreement.workspaceId[i]).name;
+            w.push({
+              id: agreement.workspaceId[i],
+              name: e,
+            });
+          }
+
+          setSelectedWorkspaces(w);
+        })
+        .catch((error) => console.warn(error));
+    };
+
+    !isActive && loadWorkspaces();
+
+    return () => (isActive = true);
+  }, [agreement.workspaceId]);
+
+  const handleChange = async (event) => {
+    const {
+      target: { value },
+    } = event;
+
+    if (selectedWorkspaces.length > value.length) {
+      console.log(selectedWorkspaces.filter((w) => w.id === value[value.length - 1].id));
+    } else if (selectedWorkspaces.length < value.length) {
+      let q = [];
+
+      for (let i = 0; i < value.length; i++) {
+        q.push(value[i].id);
+      }
+
+      await DataStore.query(Agreement, id)
+        .then((agreement) => {
+          DataStore.save(
+            Agreement.copyOf(agreement, (updated) => {
+              updated.workspaceId = q;
+            })
+          ).catch((error) => console.warn(error));
+        })
+        .catch((error) => console.warn(error));
+    }
+
+    setSelectedWorkspaces(value);
+  };
+
+  return (
+    <FormControl sx={{ minWidth: 300 }}>
+      <InputLabel id="workspace-select-label">Workspaces</InputLabel>
+      <Select
+        labelId="workspace-select-label"
+        id="workspace-select"
+        multiple
+        value={selectedWorkspaces}
+        onChange={handleChange}
+        input={<OutlinedInput id="select-multiple-chip" label="Works" />}
+        renderValue={(selected) => (
+          <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
+            {selected.map((value) => {
+              return <Chip key={value.id} label={value.name} />;
+            })}
+          </Box>
+        )}
+      >
+        {avalibleWorkspaces.map((workspace) => (
+          <MenuItem key={workspace.id} value={workspace} selected={true}>
+            <Checkbox checked={avalibleWorkspaces.filter((w) => w.id === workspace.id).length > 0} />
+            <ListItemText primary={workspace.name} />
+          </MenuItem>
+        ))}
+      </Select>
+    </FormControl>
+  );
+};
+
 export const AgreementAdminPanel = () => {
   const [agreement, setAgreements] = useState([]);
+  const [agreementExpanded, setAgreementExpanded] = useState(false);
+  const [aditionalInfoExpanded, setAditionalInfoExpanded] = useState(false);
+
+  const handleChangeAditionalInfo = (panel) => (event, expanded) => {
+    setAditionalInfoExpanded(expanded ? panel : false);
+  };
+
+  const handleChange = (panel) => (event, isExpanded) => {
+    setAgreementExpanded(isExpanded ? panel : false);
+  };
 
   const loadData = async () => {
     await DataStore.query(Agreement)
@@ -275,7 +498,7 @@ export const AgreementAdminPanel = () => {
       <AdminToolbar reload={loadData} />
       {agreement.length > 0 &&
         agreement.map((agreement, k) => (
-          <Accordion key={k}>
+          <Accordion key={k} expanded={agreementExpanded === agreement.id} onChange={handleChange(agreement.id)}>
             <AccordionSummary
               expandIcon={<ExpandMoreIcon />}
               aria-controls={`${agreement.name}-content`}
@@ -285,12 +508,15 @@ export const AgreementAdminPanel = () => {
             </AccordionSummary>
             <AccordionDetails>
               <Grid container spacing={3}>
-                <Grid item xs={12}>
+                <Grid item xs={6}>
                   <Typography>Admin Panel for {agreement.name}</Typography>
                   <Typography>Created at: {new Date(agreement.createdAt).toDateString()}</Typography>
                   <Typography>
                     Created by: {agreement.user.name} {agreement.user.family_name}
                   </Typography>
+                </Grid>
+                <Grid item xs={6}>
+                  <SelectWorkspaces agreement={agreement} id={agreement.id} />
                 </Grid>
                 <Grid item xs={6}>
                   <Formik
@@ -382,7 +608,14 @@ export const AgreementAdminPanel = () => {
                     Aditional info
                   </Typography>
                   {agreement.aditionalInfo.map((aditionalInfo, k) => (
-                    <AditionalInfo key={k} item={aditionalInfo} />
+                    <AditionalInfo
+                      key={k}
+                      id={agreement.id}
+                      item={aditionalInfo}
+                      reload={loadData}
+                      expanded={aditionalInfoExpanded}
+                      handleOpen={handleChangeAditionalInfo}
+                    />
                   ))}
                 </Grid>
               </Grid>

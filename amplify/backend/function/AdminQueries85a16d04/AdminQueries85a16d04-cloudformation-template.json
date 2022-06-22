@@ -1,13 +1,13 @@
 {
   "AWSTemplateFormatVersion": "2010-09-09",
-  "Description": "{\"createdOn\":\"Mac\",\"createdBy\":\"Amplify\",\"createdWith\":\"8.1.0\",\"stackType\":\"function-Lambda\",\"metadata\":{}}",
+  "Description": "{\"createdOn\":\"Mac\",\"createdBy\":\"Amplify\",\"createdWith\":\"9.0.0\",\"stackType\":\"function-Lambda\",\"metadata\":{}}",
   "Parameters": {
     "env": {
       "Type": "String"
     },
-    "authvalapseubackend58ebb5e2UserPoolId": {
+    "authvalpaseuUserPoolId": {
       "Type": "String",
-      "Default": "authvalapseubackend58ebb5e2UserPoolId"
+      "Default": "authvalpaseuUserPoolId"
     },
     "deploymentBucketName": {
       "Type": "String"
@@ -38,12 +38,12 @@
         "FunctionName": {
           "Fn::If": [
             "ShouldNotCreateEnvResources",
-            "AdminQueriesb5e05924",
+            "AdminQueries85a16d04",
             {
               "Fn::Join": [
                 "",
                 [
-                  "AdminQueriesb5e05924",
+                  "AdminQueries85a16d04",
                   "-",
                   {
                     "Ref": "env"
@@ -60,7 +60,7 @@
             },
             "GROUP": "Admins",
             "USERPOOL": {
-              "Ref": "authvalapseubackend58ebb5e2UserPoolId"
+              "Ref": "authvalpaseuUserPoolId"
             }
           }
         },
@@ -88,12 +88,12 @@
         "RoleName": {
           "Fn::If": [
             "ShouldNotCreateEnvResources",
-            "AdminQueriesb5e05924LambdaRole",
+            "AdminQueries85a16d04LambdaRole",
             {
               "Fn::Join": [
                 "",
                 [
-                  "AdminQueriesb5e05924LambdaRole",
+                  "AdminQueries85a16d04LambdaRole",
                   "-",
                   {
                     "Ref": "env"
@@ -189,7 +189,7 @@
                     },
                     ":userpool/",
                     {
-                      "Ref": "authvalapseubackend58ebb5e2UserPoolId"
+                      "Ref": "authvalpaseuUserPoolId"
                     }
                   ]
                 ]
