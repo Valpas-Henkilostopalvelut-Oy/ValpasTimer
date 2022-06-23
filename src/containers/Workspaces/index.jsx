@@ -509,7 +509,10 @@ const Workspaces = () => {
             memberships: [],
             name: val.name,
             workspaceSettings: { shortBreak: 15, dinnerBreak: 15 },
-            customOwner: "",
+            workers: [],
+            clientId: [],
+            adminId: [],
+            managerId: [],
           })
         );
 

@@ -100,6 +100,6 @@ export const SidebarData = [
     icon: <AssignmentLateIcon />,
     link: "/agreementadminpanel",
     default: false,
-    access: ["Workers", "Clients", "Admins"],
+    access: ["Admins"],
   },
 ];

@@ -12,6 +12,8 @@ export const ChangeRole = ({ userId, workId, isAdmin }) => {
     const loadRole = async () => {
       const work = await DataStore.query(AllWorkSpaces, workId);
 
+      console.log(work);
+
       if (work.adminId.includes(userId)) {
         setRole("Admin");
       } else if (work.managerId.includes(userId)) {

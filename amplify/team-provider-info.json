@@ -1,24 +1,25 @@
 {
   "staging": {
     "awscloudformation": {
-      "AuthRoleName": "amplify-valpaseu-staging-120019-authRole",
-      "UnauthRoleArn": "arn:aws:iam::988281547160:role/amplify-valpaseu-staging-120019-unauthRole",
-      "AuthRoleArn": "arn:aws:iam::988281547160:role/amplify-valpaseu-staging-120019-authRole",
-      "Region": "eu-central-1",
-      "DeploymentBucketName": "amplify-valpaseu-staging-120019-deployment",
-      "UnauthRoleName": "amplify-valpaseu-staging-120019-unauthRole",
-      "StackName": "amplify-valpaseu-staging-120019",
-      "StackId": "arn:aws:cloudformation:eu-central-1:988281547160:stack/amplify-valpaseu-staging-120019/e3579360-f222-11ec-ae72-065a23a98cc8",
-      "AmplifyAppId": "dnklquz5sn34f"
+      "AuthRoleName": "amplify-valpasapplication-staging-64726-authRole",
+      "UnauthRoleArn": "arn:aws:iam::988281547160:role/amplify-valpasapplication-staging-64726-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::988281547160:role/amplify-valpasapplication-staging-64726-authRole",
+      "Region": "eu-west-1",
+      "DeploymentBucketName": "amplify-valpasapplication-staging-64726-deployment",
+      "UnauthRoleName": "amplify-valpasapplication-staging-64726-unauthRole",
+      "StackName": "amplify-valpasapplication-staging-64726",
+      "StackId": "arn:aws:cloudformation:eu-west-1:988281547160:stack/amplify-valpasapplication-staging-64726/580d9310-f2c0-11ec-a7a4-0ae8e214568f",
+      "AmplifyAppId": "d1o4vhcocnswry"
     },
     "categories": {
       "auth": {
-        "valpaseu": {}
+        "valpasapplicationd66e1b4f": {},
+        "userPoolGroups": {}
       },
       "function": {
-        "AdminQueries85a16d04": {
-          "deploymentBucketName": "amplify-valpaseu-staging-120019-deployment",
-          "s3Key": "amplify-builds/AdminQueries85a16d04-6b71383777636b443934-build.zip"
+        "AdminQueries2c95f1df": {
+          "deploymentBucketName": "amplify-valpasapplication-staging-64726-deployment",
+          "s3Key": "amplify-builds/AdminQueries2c95f1df-496d642b6156785a7267-build.zip"
         }
       }
     }

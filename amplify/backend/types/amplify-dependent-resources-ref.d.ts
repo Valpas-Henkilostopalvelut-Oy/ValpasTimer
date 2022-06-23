@@ -1,6 +1,6 @@
 export type AmplifyDependentResourcesAttributes = {
     "auth": {
-        "valpaseu": {
+        "valpasapplicationd66e1b4f": {
             "IdentityPoolId": "string",
             "IdentityPoolName": "string",
             "UserPoolId": "string",
@@ -16,7 +16,7 @@ export type AmplifyDependentResourcesAttributes = {
         }
     },
     "function": {
-        "AdminQueries85a16d04": {
+        "AdminQueries2c95f1df": {
             "Name": "string",
             "Arn": "string",
             "Region": "string",
@@ -29,8 +29,7 @@ export type AmplifyDependentResourcesAttributes = {
             "ApiName": "string",
             "ApiId": "string"
         },
-        "valpaseu": {
-            "GraphQLAPIKeyOutput": "string",
+        "valpasapplication": {
             "GraphQLAPIIdOutput": "string",
             "GraphQLAPIEndpointOutput": "string"
         }

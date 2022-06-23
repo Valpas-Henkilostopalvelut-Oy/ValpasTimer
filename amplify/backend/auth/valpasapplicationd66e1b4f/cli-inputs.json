@@ -1,10 +1,10 @@
 {
   "version": "1",
   "cognitoConfig": {
-    "identityPoolName": "testAuthIdentityPool",
+    "identityPoolName": "valpasapplicationd66e1b4f_identitypool_d66e1b4f",
     "allowUnauthenticatedIdentities": false,
-    "resourceNameTruncated": "valpas2c85d35e",
-    "userPoolName": "valpaseu",
+    "resourceNameTruncated": "valpasd66e1b4f",
+    "userPoolName": "valpasapplicationd66e1b4f_userpool_d66e1b4f",
     "autoVerifiedAttributes": [
       "email"
     ],
@@ -14,41 +14,38 @@
     ],
     "smsAuthenticationMessage": "Your authentication code is {####}",
     "smsVerificationMessage": "Your verification code is {####}",
-    "emailVerificationSubject": "Verification code: {####}",
-    "emailVerificationMessage": "Verification code: {####}",
+    "emailVerificationSubject": "Your verification code",
+    "emailVerificationMessage": "Your verification code is {####}",
     "defaultPasswordPolicy": false,
     "passwordPolicyMinLength": 8,
-    "passwordPolicyCharacters": [
-      "Requires Lowercase",
-      "Requires Numbers",
-      "Requires Symbols",
-      "Requires Uppercase"
+    "passwordPolicyCharacters": [],
+    "requiredAttributes": [
+      "email"
     ],
-    "requiredAttributes": [],
     "aliasAttributes": [],
     "userpoolClientGenerateSecret": false,
     "userpoolClientRefreshTokenValidity": 30,
-    "userpoolClientWriteAttributes": [],
-    "userpoolClientReadAttributes": [],
-    "userpoolClientLambdaRole": "valpas2c85d35e_userpoolclient_lambda_role",
+    "userpoolClientWriteAttributes": [
+      "email"
+    ],
+    "userpoolClientReadAttributes": [
+      "email"
+    ],
+    "userpoolClientLambdaRole": "valpasd66e1b4f_userpoolclient_lambda_role",
     "userpoolClientSetAttributes": false,
-    "sharedId": "2c85d35e",
-    "resourceName": "valpaseu",
+    "sharedId": "d66e1b4f",
+    "resourceName": "valpasapplicationd66e1b4f",
     "authSelections": "identityPoolAndUserPool",
-    "serviceName": "Cognito",
+    "useDefault": "default",
     "usernameAttributes": [
       "email"
     ],
-    "useDefault": "manual",
-    "userPoolGroups": false,
     "userPoolGroupList": [
       "Admins",
       "Clients",
       "Workers"
     ],
-    "adminQueries": false,
-    "thirdPartyAuth": false,
-    "authProviders": [],
+    "serviceName": "Cognito",
     "usernameCaseSensitive": false,
     "useEnabledMfas": true,
     "authRoleArn": {

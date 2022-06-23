@@ -28,6 +28,7 @@ import { Formik } from "formik";
 import React, { useEffect, useState } from "react";
 import LoaderButton from "../../../components/LoaderButton";
 import { Agreement, AllWorkSpaces } from "../../../models";
+import { UserTable } from "./UserTable";
 
 const AdminToolbar = ({ reload }) => {
   const [anchorEl, setAnchorEl] = useState(null);
@@ -365,7 +366,7 @@ const addAditionalInfo = async ({ values, reload, id, setSubmitting }) => {
 };
 
 const SelectWorkspaces = ({ id, agreement }) => {
-  const [selectedWorkspaces, setSelectedWorkspaces] = useState([]);
+  const [selectedWorkspaces, setSelectedWorkspaces] = useState(agreement.workspaceId);
   const [avalibleWorkspaces, setAvalibleWorkspaces] = useState([]);
 
   console.log();
@@ -379,25 +380,10 @@ const SelectWorkspaces = ({ id, agreement }) => {
           let q = [];
 
           for (let i = 0; i < workspaces.length; i++) {
-            q.push({
-              id: workspaces[i].id,
-              name: workspaces[i].name,
-            });
+            q.push(workspaces[i].id);
           }
 
           setAvalibleWorkspaces(q);
-
-          let w = [];
-
-          for (let i = 0; i < agreement.workspaceId.length; i++) {
-            const e = workspaces.find((w) => w.id === agreement.workspaceId[i]).name;
-            w.push({
-              id: agreement.workspaceId[i],
-              name: e,
-            });
-          }
-
-          setSelectedWorkspaces(w);
         })
         .catch((error) => console.warn(error));
     };
@@ -413,7 +399,8 @@ const SelectWorkspaces = ({ id, agreement }) => {
     } = event;
 
     if (selectedWorkspaces.length > value.length) {
-      console.log(selectedWorkspaces.filter((w) => w.id === value[value.length - 1].id));
+      console.log("old", selectedWorkspaces);
+      console.log("new", value);
     } else if (selectedWorkspaces.length < value.length) {
       let q = [];
 
@@ -448,15 +435,14 @@ const SelectWorkspaces = ({ id, agreement }) => {
         renderValue={(selected) => (
           <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
             {selected.map((value) => {
-              return <Chip key={value.id} label={value.name} />;
+              return <Chip key={value} label={value} />;
             })}
           </Box>
         )}
       >
         {avalibleWorkspaces.map((workspace) => (
-          <MenuItem key={workspace.id} value={workspace} selected={true}>
-            <Checkbox checked={avalibleWorkspaces.filter((w) => w.id === workspace.id).length > 0} />
-            <ListItemText primary={workspace.name} />
+          <MenuItem key={workspace} value={workspace}>
+            <ListItemText primary={workspace} />
           </MenuItem>
         ))}
       </Select>
@@ -517,6 +503,9 @@ export const AgreementAdminPanel = () => {
                 </Grid>
                 <Grid item xs={6}>
                   <SelectWorkspaces agreement={agreement} id={agreement.id} />
+                </Grid>
+                <Grid item xs={12}>
+                  <UserTable data={agreement} id={agreement.id} />
                 </Grid>
                 <Grid item xs={6}>
                   <Formik

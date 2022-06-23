@@ -132,7 +132,7 @@ export declare class Agreement {
   readonly id: string;
   readonly name?: string | null;
   readonly workers?: (string | null)[] | null;
-  readonly clients?: (string | null)[] | null;
+  readonly client?: (string | null)[] | null;
   readonly createdAt?: string | null;
   readonly user?: User | null;
   readonly aditionalInfo?: (AditionalInfo | null)[] | null;
@@ -184,6 +184,7 @@ export declare class AllWorkSpaces {
   readonly memberships?: (Membership | null)[] | null;
   readonly name?: string | null;
   readonly workspaceSettings?: WorkspaceSettings | null;
+  readonly workers?: (string | null)[] | null;
   readonly clientId?: (string | null)[] | null;
   readonly adminId?: (string | null)[] | null;
   readonly managerId?: (string | null)[] | null;
@@ -203,7 +204,6 @@ export declare class UserCredentials {
   readonly profile?: Profile | null;
   readonly formChecked?: (string | null)[] | null;
   readonly settings?: UserSettings | null;
-  readonly agreement?: UserAgreement | null;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
   constructor(init: ModelInit<UserCredentials, UserCredentialsMetaData>);

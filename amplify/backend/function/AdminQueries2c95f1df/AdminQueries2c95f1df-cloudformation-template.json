@@ -5,9 +5,9 @@
     "env": {
       "Type": "String"
     },
-    "authvalpaseuUserPoolId": {
+    "authvalpasapplicationd66e1b4fUserPoolId": {
       "Type": "String",
-      "Default": "authvalpaseuUserPoolId"
+      "Default": "authvalpasapplicationd66e1b4fUserPoolId"
     },
     "deploymentBucketName": {
       "Type": "String"
@@ -38,12 +38,12 @@
         "FunctionName": {
           "Fn::If": [
             "ShouldNotCreateEnvResources",
-            "AdminQueries85a16d04",
+            "AdminQueries2c95f1df",
             {
               "Fn::Join": [
                 "",
                 [
-                  "AdminQueries85a16d04",
+                  "AdminQueries2c95f1df",
                   "-",
                   {
                     "Ref": "env"
@@ -60,7 +60,7 @@
             },
             "GROUP": "Admins",
             "USERPOOL": {
-              "Ref": "authvalpaseuUserPoolId"
+              "Ref": "authvalpasapplicationd66e1b4fUserPoolId"
             }
           }
         },
@@ -88,12 +88,12 @@
         "RoleName": {
           "Fn::If": [
             "ShouldNotCreateEnvResources",
-            "AdminQueries85a16d04LambdaRole",
+            "AdminQueries2c95f1dfLambdaRole",
             {
               "Fn::Join": [
                 "",
                 [
-                  "AdminQueries85a16d04LambdaRole",
+                  "AdminQueries2c95f1dfLambdaRole",
                   "-",
                   {
                     "Ref": "env"
@@ -189,7 +189,7 @@
                     },
                     ":userpool/",
                     {
-                      "Ref": "authvalpaseuUserPoolId"
+                      "Ref": "authvalpasapplicationd66e1b4fUserPoolId"
                     }
                   ]
                 ]
