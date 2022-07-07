@@ -1,29 +1,65 @@
 import React, { useState } from "react";
-import { Button, Box, Container, Typography, Grid } from "@mui/material";
-import { Height } from "@mui/icons-material";
+import { Button, Box, Container, Typography, Grid, CssBaseline } from "@mui/material";
+import { LinkContainer } from "react-router-bootstrap";
 
 export const LandingPage = () => {
   //Landing page with a button to login or signup in center of screen in column
   return (
-    <Container maxWidth="xs">
-      <Grid container direction="row" justifyContent="center" alignItems="center" sx={{ height: "100vh" }}>
+    <Container maxWidth="sm" component="main" sx={{ height: "80vh", alignItems: "center", display: "flex" }}>
+      <Grid container direction="column" justifyContent="center" alignItems="center">
+        <CssBaseline />
         <Grid
           item
           sx={{
-            width: "90px",
-            height: "100%",
-            backgroundImage: "url(https://source.unsplash.com/random)",
+            width: 183,
+            height: 48,
+            marginRight: 2,
+            backgroundImage: "url(https://i.imgur.com/9y9VvOm.png)",
             backgroundRepeat: "no-repeat",
-            backgroundSize: "cover",
+            backgroundSize: "contain",
             backgroundPosition: "center",
           }}
         />
         <Grid item xs={12}>
-          <Button>Register</Button>
+          <LinkContainer to="/signup">
+            <Button
+              sx={{
+                backgroundColor: "#00ADEF",
+                width: 276,
+                height: 51,
+                fontSize: 16,
+                marginTop: "60px",
+                ":hover": {
+                  backgroundColor: "#666666",
+                  color: "#ffffff",
+                },
+              }}
+              variant="contained"
+            >
+              Register
+            </Button>
+          </LinkContainer>
         </Grid>
 
         <Grid item xs={12}>
-          <Button>Login</Button>
+          <LinkContainer to="/login">
+            <Button
+              sx={{
+                backgroundColor: "#50A7C2",
+                width: 276,
+                height: 51,
+                fontSize: 16,
+                marginTop: "20px",
+                ":hover": {
+                  backgroundColor: "#666666",
+                  color: "#ffffff",
+                },
+              }}
+              variant="contained"
+            >
+              Login
+            </Button>
+          </LinkContainer>
         </Grid>
       </Grid>
     </Container>

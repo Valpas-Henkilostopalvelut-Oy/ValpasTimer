@@ -43,7 +43,7 @@ const Profile = () => {
     await Auth.signOut();
     setGroups([]);
     userHasAuthenticated(false);
-    navigate("login", { replace: true });
+    navigate("/", { replace: true });
     await DataStore.clear();
   };
 

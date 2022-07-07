@@ -86,14 +86,13 @@ function App() {
         <ThemeProvider theme={theme}>
           <Box sx={{ display: "flex" }}>
             <CssBaseline />
-
             {isAuthenticated && (
               <Fragment>
                 <Sidebar open={openDrawer} setOpen={setOpenDrawer} />
                 <Navbar open={openDrawer} setOpenDrawer={setOpenDrawer} isAuthenticated={isAuthenticated} />
               </Fragment>
             )}
-            <Box component="main" sx={{ flexGrow: 1, p: 3, minWidth: isAuthenticated && 750 }}>
+            <Box component="main" sx={{ flexGrow: 1, pt: 3, minWidth: isAuthenticated && 300 }}>
               {isAuthenticated && <Header />}
               <Navigation isAuthenticated={isAuthenticated} groups={groups} />
             </Box>

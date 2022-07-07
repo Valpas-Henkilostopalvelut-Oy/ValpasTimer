@@ -1,5 +1,6 @@
 import React, { useEffect, useState, Fragment } from "react";
-import { TextField, Button, Grid, Switch, Typography } from "@mui/material";
+import { TextField, Button, Grid, Switch, Typography, Box, Tab } from "@mui/material";
+import { TabContext, TabList, TabPanel } from "@mui/lab";
 import { Auth, DataStore } from "aws-amplify";
 import { UserCredentials, TimeEntry } from "../../../models";
 import { TimeEditing } from "../../../components/TimeEditing";
@@ -90,13 +91,14 @@ const Manual = ({ reload, description, selectedOption }) => {
   );
 };
 
-const Timer = ({ description, selectedOption, reload }) => {
+const Timer = ({ description, reload }) => {
   const [time, setTime] = useState({
     seconds: 0,
     minutes: 0,
     hours: 0,
   });
   const [started, setStarted] = useState(false);
+  const [selectedOption, setSelectedOption] = useState("");
 
   useEffect(() => {
     let isActive = false;
@@ -237,22 +239,25 @@ const Timer = ({ description, selectedOption, reload }) => {
     }
   };
 
-  //timer form fields and logic for adding new time
+  //description, workselect, start stop
   return (
-    <Fragment>
-      <Grid item md>
+    <Grid container spacing={2} direction="row" justifyContent="center" alignItems="center">
+      <Grid item xs={12}>
+        <WorkspaceSelect selectedOption={selectedOption} setSelectedOption={setSelectedOption} />
+      </Grid>
+      <Grid item xs={6} sx={{ display: "flex", justifyContent: "center" }}>
         <Typography variant="h6">
           {String("0" + time.hours).slice(-2)}:{String("0" + time.minutes).slice(-2)}:
           {String("0" + time.seconds).slice(-2)}
         </Typography>
       </Grid>
 
-      <Grid item md>
+      <Grid item xs={6} sx={{ display: "flex", justifyContent: "center" }}>
         <Button onClick={addItem} variant="contained">
           {!started ? "Start" : "Stop"}
         </Button>
       </Grid>
-    </Fragment>
+    </Grid>
   );
 };
 
@@ -263,43 +268,26 @@ const Recorder = ({ loadTimeList }) => {
   const [description, setDescription] = useState("");
   const handleChange = (event) => setDescription(event.target.value);
 
-  return (
-    <Grid container spacing={2} alignItems="center" direction="row">
-      <Grid item container md={manual ? 4 : 8} lg={manual ? 6 : 9} spacing={2}>
-        <Grid item xs={10}>
-          <TextField
-            fullWidth
-            label="Description"
-            placeholder="Description"
-            onChange={handleChange}
-            value={description}
-          />
-        </Grid>
-        <Grid item xs={2}>
-          <WorkspaceSelect selectedOption={selectedOption} setSelectedOption={setSelectedOption} />
-        </Grid>
-      </Grid>
+  const [value, setValue] = React.useState("1");
+  const handleChangeTab = (event, newValue) => {
+    setValue(newValue);
+  };
 
-      <Grid
-        item
-        container
-        md={manual ? 8 : 4}
-        lg={manual ? 6 : 3}
-        alignItems="center"
-        direction="row"
-        justifyContent="space-around"
-        spacing={2}
-      >
-        {!manual ? (
-          <Timer reload={loadTimeList} description={description} selectedOption={selectedOption} />
-        ) : (
-          <Manual reload={loadTimeList} description={description} selectedOption={selectedOption} />
-        )}
-        <Grid item md>
-          <Switch onChange={() => setManual(!manual)} value={manual} />
-        </Grid>
-      </Grid>
-    </Grid>
+  return (
+    <Box sx={{ width: "100%", typography: "body1" }}>
+      <TabContext value={value}>
+        <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+          <TabList onChange={handleChangeTab} aria-label="Manual and Timer Tabs">
+            <Tab label="Timer" value="1" />
+            <Tab label="Manual" value="2" />
+          </TabList>
+        </Box>
+        <TabPanel value="1">
+          <Timer />
+        </TabPanel>
+        <TabPanel value="2">Tab 2</TabPanel>
+      </TabContext>
+    </Box>
   );
 };
 

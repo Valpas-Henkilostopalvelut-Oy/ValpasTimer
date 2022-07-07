@@ -2,7 +2,16 @@ import React from "react";
 import "../../App.css";
 import { SidebarData } from "./SidebarDate";
 import { LinkContainer } from "react-router-bootstrap";
-import { ListItemText, Divider, IconButton, List, ListItemButton, ListItemIcon, ListItem } from "@mui/material";
+import {
+  ListItemText,
+  Divider,
+  IconButton,
+  List,
+  ListItemButton,
+  ListItemIcon,
+  ListItem,
+  useMediaQuery,
+} from "@mui/material";
 import MuiDrawer from "@mui/material/Drawer";
 import { styled, useTheme } from "@mui/material/styles";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
@@ -28,8 +37,8 @@ const Sidebar = ({ open, setOpen }) => {
       duration: theme.transitions.duration.leavingScreen,
     }),
     overflowX: "hidden",
-    width: `calc(${theme.spacing(7)} + 1px)`,
-    [theme.breakpoints.up("sm")]: {
+    width: 0,
+    [theme.breakpoints.up("md")]: {
       width: `calc(${theme.spacing(8)} + 1px)`,
     },
   });
@@ -84,6 +93,7 @@ const Sidebar = ({ open, setOpen }) => {
                       justifyContent: open ? "initial" : "center",
                       px: 2.5,
                     }}
+                    onClick={handleDrawerClose}
                   >
                     <ListItemIcon
                       sx={{

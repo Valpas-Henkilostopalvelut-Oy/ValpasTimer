@@ -1,11 +1,15 @@
 import React, { useState } from "react";
 import { useAppContext } from "../../services/contextLib";
-import { Container, CssBaseline, Box, Typography, Grid, TextField } from "@mui/material";
+import { Container, CssBaseline, Box, Typography, Grid, TextField, Checkbox, FormControlLabel } from "@mui/material";
 import { Formik } from "formik";
+import { useTheme } from "@mui/material/styles";
 import LoaderButton from "../../components/LoaderButton";
 import { Auth } from "aws-amplify";
 import { useNavigate } from "react-router-dom";
 import * as yup from "yup";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 
 const phone = (phone) => {
   if (phone.length === 13) {
@@ -18,6 +22,7 @@ const phone = (phone) => {
 const ConfirmForm = ({ password, email }) => {
   const { userHasAuthenticated } = useAppContext();
   const navigate = useNavigate();
+  const [warnText, setWarnText] = useState("");
 
   const enableButton = (values) => {
     return values.confirmationCode.length > 0 && values.confirmationCode.length === 6;
@@ -41,6 +46,7 @@ const ConfirmForm = ({ password, email }) => {
           userHasAuthenticated(true);
           navigate("/home", { replace: true });
         } catch (e) {
+          setWarnText(e.message);
           console.warn(e);
           setSubmitting(false);
         }
@@ -60,7 +66,7 @@ const ConfirmForm = ({ password, email }) => {
             <Typography component="h1" variant="h5">
               Confirm Sign up
             </Typography>
-            <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
+            <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3, maxWidth: "300px" }}>
               <TextField
                 variant="outlined"
                 required
@@ -69,7 +75,10 @@ const ConfirmForm = ({ password, email }) => {
                 label="Confirmation Code"
                 name="confirmationCode"
                 autoComplete="confirmationCode"
-                onChange={handleChange}
+                onChange={(event) => {
+                  handleChange(event);
+                  setWarnText("");
+                }}
                 onBlur={handleBlur}
                 value={values.confirmationCode}
                 error={errors.confirmationCode}
@@ -77,6 +86,11 @@ const ConfirmForm = ({ password, email }) => {
               {errors.confirmationCode && (
                 <Typography variant="caption" color="error">
                   {errors.confirmationCode}
+                </Typography>
+              )}
+              {warnText !== "" && (
+                <Typography variant="caption" color="error">
+                  {warnText}
                 </Typography>
               )}
               <LoaderButton
@@ -102,10 +116,14 @@ const Signup = () => {
     email: "",
     password: "",
   });
+  const [dateOfBirth, setDateOfBirth] = useState(null);
+  const [terms, setTerms] = useState(false);
+  const phoneRegExp = /^(\+?\d{0,4})?\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{4}\)?)?$/;
+  const theme = useTheme();
 
   const SignupSchema = yup.object().shape({
     email: yup.string().email("Invalid email").required("Email is required"),
-    phoneNumber: yup.string().required("Phone number is required"),
+    phone: yup.string().matches(phoneRegExp, "*Phone number is not valid").required("*Phone number required"),
     lastName: yup
       .string()
       .min(2, "Last name is short")
@@ -116,6 +134,7 @@ const Signup = () => {
       .min(2, "First name is short")
       .max(50, "First name too long")
       .required("First name is required"),
+    country: yup.string().min(2, "Country is short").max(50, "Country is too long").required("Country is required"),
     password: yup
       .string()
       .min(8, "Password is too short")
@@ -135,6 +154,10 @@ const Signup = () => {
       values.password &&
       values.firstName &&
       values.lastName &&
+      values.country &&
+      values.phoneNumber &&
+      dateOfBirth !== null &&
+      terms &&
       values.password === values.confirmPassword
     );
   };
@@ -145,12 +168,14 @@ const Signup = () => {
     <Formik
       validationSchema={SignupSchema}
       initialValues={{
-        email: "",
-        phoneNumber: "",
         lastName: "",
         firstName: "",
+        country: "",
+        email: "",
+        phoneNumber: "",
         password: "",
         confirmPassword: "",
+        confiming: false,
       }}
       onSubmit={async (val, { setSubmitting }) => {
         try {
@@ -158,6 +183,8 @@ const Signup = () => {
             username: val.email,
             password: val.password,
             attributes: {
+              birthdate: new Date(dateOfBirth).toLocaleDateString(),
+              locale: val.country,
               "custom:UserCreditails": "null",
               "custom:RuningTimeEntry": "null",
               name: val.firstName,
@@ -184,14 +211,18 @@ const Signup = () => {
           <CssBaseline />
           <Box
             sx={{
-              marginTop: 8,
+              marginTop: 6,
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
+              [theme.breakpoints.down("md")]: {
+                pl: 3,
+                pr: 3,
+              },
             }}
           >
-            <Typography component="h1" variant="h5">
-              Sign up
+            <Typography component="p" sx={{ color: "#666666", fontSize: 16 }}>
+              Join Valaps NextApp
             </Typography>
             <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
               <Grid container spacing={2}>
@@ -232,6 +263,48 @@ const Signup = () => {
                   {errors.lastName && touched.lastName && (
                     <Typography variant="caption" color="error">
                       {errors.lastName}
+                    </Typography>
+                  )}
+                </Grid>
+                <Grid item xs={12}>
+                  <LocalizationProvider dateAdapter={AdapterDateFns}>
+                    <DatePicker
+                      label="Date of Birth"
+                      name="dateOfBirth"
+                      onChange={(date) => setDateOfBirth(date)}
+                      value={dateOfBirth}
+                      renderInput={(params) => (
+                        <TextField
+                          {...params}
+                          variant="outlined"
+                          required
+                          fullWidth
+                          id="dateOfBirth"
+                          label="Date of Birth"
+                          name="dateOfBirth"
+                          autoComplete="dateOfBirth"
+                        />
+                      )}
+                    />
+                  </LocalizationProvider>
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    variant="outlined"
+                    required
+                    fullWidth
+                    id="contry"
+                    label="Country"
+                    name="country"
+                    autoComplete="country"
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    value={values.country}
+                    error={errors.country && touched.country}
+                  />
+                  {errors.country && touched.country && (
+                    <Typography variant="caption" color="error">
+                      {errors.country}
                     </Typography>
                   )}
                 </Grid>
@@ -316,6 +389,24 @@ const Signup = () => {
                       {errors.confirmPassword}
                     </Typography>
                   )}
+                </Grid>
+                <Grid item xs={12}>
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        checked={terms}
+                        onChange={(event) => {
+                          setTerms(event.target.checked);
+                        }}
+                        name="confiming"
+                        color="primary"
+                      />
+                    }
+                    label="I agree to Valpas NextApp's Terms of Service"
+                  />
+                  <Typography variant="caption" color="error">
+                    {errors.terms && touched.terms && errors.terms}
+                  </Typography>
                 </Grid>
               </Grid>
               <LoaderButton

@@ -79,7 +79,7 @@ const WorkspaceSelect = ({ selectedOption, setSelectedOption }) => {
 
   return (
     list.length > 0 && (
-      <FormControl>
+      <FormControl fullWidth>
         <InputLabel>Workspaces</InputLabel>
         <Select
           labelId="demo-simple-select-standard-label"
