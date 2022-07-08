@@ -155,6 +155,7 @@ type AllWorkSpaces
     rules: [
       { allow: private, operations: [read] }
       { allow: groups, groups: ["Admins"], operations: [read, create, update, delete] }
+      { allow: groups, groups: ["Clients"], operations: [read, update] }
     ]
   ) {
   id: ID!

@@ -30,7 +30,7 @@ export const ChangeRole = ({ userId, workId, isAdmin }) => {
     !isActive && loadRole();
 
     return () => (isActive = true);
-  }, []);
+  }, [userId, workId]);
 
   const updateRole = async (e) => {
     setRole(e.target.value);

@@ -10,6 +10,7 @@ import * as yup from "yup";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { de } from "date-fns/locale";
 
 const phone = (phone) => {
   if (phone.length === 13) {
@@ -267,9 +268,10 @@ const Signup = () => {
                   )}
                 </Grid>
                 <Grid item xs={12}>
-                  <LocalizationProvider dateAdapter={AdapterDateFns}>
+                  <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={de}>
                     <DatePicker
                       label="Date of Birth"
+                      mask="__.__.____"
                       name="dateOfBirth"
                       onChange={(date) => setDateOfBirth(date)}
                       value={dateOfBirth}

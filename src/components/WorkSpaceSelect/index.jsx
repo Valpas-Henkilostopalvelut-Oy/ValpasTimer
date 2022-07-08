@@ -19,6 +19,8 @@ const WorkspaceSelect = ({ selectedOption, setSelectedOption }) => {
         const user = await Auth.currentAuthenticatedUser();
         const creditails = await DataStore.query(UserCredentials, user.attributes["custom:UserCreditails"]);
 
+        
+
         let q = [];
 
         if (creditails.memberships.length > 0) {
@@ -59,7 +61,7 @@ const WorkspaceSelect = ({ selectedOption, setSelectedOption }) => {
     !isActive && list.length !== 0 && lastWorkspaceLoad();
 
     return () => (isActive = true);
-  }, [list, selectedOption]);
+  }, [list]);
 
   const changeLastValue = async (val) => {
     try {

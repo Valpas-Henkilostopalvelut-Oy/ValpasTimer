@@ -27,6 +27,7 @@ import RadioButtonUncheckedIcon from "@mui/icons-material/RadioButtonUnchecked";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import { SendForm, DeleteForm, WorkOfTime } from "./Tools";
+import WorkspaceSelect from "../../components/WorkSpaceSelect";
 
 const updateValue = async ({ val, type, reload, id, time }) => {
   try {
@@ -286,6 +287,7 @@ const Timer = () => {
   const { isAuthenticated } = useAppContext();
   const [grouped, setGrouped] = useState([]);
   const [dense, setDense] = useState(false);
+  const [selected, setSelected] = useState("");
 
   const loadTimeList = async () => {
     try {
@@ -299,7 +301,8 @@ const Timer = () => {
           return d1 - d2;
         })
         .filter((a) => !a.isActive)
-        .filter((u) => u.userId === currentUser.username);
+        .filter((u) => u.userId === currentUser.username)
+        .filter((w) => w.workspaceId === selected);
 
       setGrouped(groupBy(filtered));
     } catch (error) {
@@ -313,7 +316,7 @@ const Timer = () => {
     !isActive && isAuthenticated && loadTimeList();
 
     return () => (isActive = true);
-  }, [isAuthenticated]);
+  }, [isAuthenticated, selected]);
 
   //loading if grouped, timelist and selected option are null
 
@@ -322,6 +325,7 @@ const Timer = () => {
       {grouped != null ? (
         <Fragment>
           <Recorder loadTimeList={loadTimeList} />
+          <WorkspaceSelect selectedOption={selected} setSelectedOption={setSelected} />
           <TableContainer component={Paper} sx={{ mt: 2 }}>
             <Table sx={{ minWidth: 750 }} aria-label="workTable" size={dense ? "small" : "medium"}>
               <TableHead>
