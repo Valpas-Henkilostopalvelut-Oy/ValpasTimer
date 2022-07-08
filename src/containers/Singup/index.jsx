@@ -124,7 +124,6 @@ const Signup = () => {
 
   const SignupSchema = yup.object().shape({
     email: yup.string().email("Invalid email").required("Email is required"),
-    phone: yup.string().matches(phoneRegExp, "*Phone number is not valid").required("*Phone number required"),
     lastName: yup
       .string()
       .min(2, "Last name is short")
@@ -179,6 +178,7 @@ const Signup = () => {
         confiming: false,
       }}
       onSubmit={async (val, { setSubmitting }) => {
+        console.log(val);
         try {
           await Auth.signUp({
             username: val.email,

@@ -7,6 +7,7 @@ import { Formik } from "formik";
 import { Box, Container, CssBaseline, Typography, TextField, Grid, Link } from "@mui/material";
 import * as yup from "yup";
 import { LinkContainer } from "react-router-bootstrap";
+import { useTheme } from "@mui/material/styles";
 
 const Login = () => {
   const { userHasAuthenticated } = useAppContext();
@@ -23,6 +24,8 @@ const Login = () => {
   const enable = (values) => {
     return !(values.email.length === 0 || values.password.length === 0);
   };
+
+  const theme = useTheme();
 
   return (
     <Formik
@@ -51,7 +54,18 @@ const Login = () => {
         //login form
         <Container component="main" maxWidth="xs">
           <CssBaseline />
-          <Box sx={{ marginTop: 8, display: "flex", flexDirection: "column", alignItems: "center" }}>
+          <Box
+            sx={{
+              marginTop: 8,
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              [theme.breakpoints.down("md")]: {
+                pl: 3,
+                pr: 3,
+              },
+            }}
+          >
             <Typography component="h1" variant="h5">
               Sign in
             </Typography>
@@ -110,14 +124,24 @@ const Login = () => {
                 loadingText="Logging in…"
                 disabled={!enable(values)}
               />
-              <Grid container>
-                <Grid item xs>
+              <Grid container spacing={2}>
+                <Grid
+                  item
+                  xs={12}
+                  md={4}
+                  sx={{ [theme.breakpoints.up("md")]: { display: "flex", justifyContent: "flex-start" } }}
+                >
                   <LinkContainer to="/forgot-password">
                     <Link variant="body2">Forgot password?</Link>
                   </LinkContainer>
                 </Grid>
 
-                <Grid item>
+                <Grid
+                  item
+                  xs={12}
+                  md={8}
+                  sx={{ [theme.breakpoints.up("md")]: { display: "flex", justifyContent: "flex-end" } }}
+                >
                   <LinkContainer to="/signup">
                     <Link variant="body2">Don't have an account? Sign Up</Link>
                   </LinkContainer>
