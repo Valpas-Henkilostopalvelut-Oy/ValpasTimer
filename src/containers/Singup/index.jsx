@@ -13,6 +13,7 @@ import {
   MenuItem,
   FormControl,
   Select,
+  Autocomplete,
 } from "@mui/material";
 import { Formik } from "formik";
 import { useTheme } from "@mui/material/styles";
@@ -127,23 +128,24 @@ const ConfirmForm = ({ password, email }) => {
 };
 
 const Citizenship = ({ citizenship, setCitizenship }) => {
+  const [value, setValue] = React.useState(country[0]);
+  const [inputValue, setInputValue] = React.useState("");
+
   return (
-    <FormControl fullWidth>
-      <InputLabel id="label-select-citizenship">Citizenship</InputLabel>
-      <Select
-        labelId="label-select-citizenship"
-        id="select-citizenship"
-        value={citizenship}
-        label="Citizenship"
-        onChange={(event) => setCitizenship(event.target.value)}
-      >
-        {country.map((c) => (
-          <MenuItem key={c} value={c}>
-            {c}
-          </MenuItem>
-        ))}
-      </Select>
-    </FormControl>
+    <Autocomplete
+      value={value}
+      onChange={(event, newValue) => {
+        setValue(newValue);
+      }}
+      inputValue={inputValue}
+      onInputChange={(event, newInputValue) => {
+        setInputValue(newInputValue);
+      }}
+      id="combo-box"
+      options={country}
+      sx={{ width: "100%" }}
+      renderInput={(params) => <TextField {...params} label="Citizenship" variant="outlined" />}
+    />
   );
 };
 
