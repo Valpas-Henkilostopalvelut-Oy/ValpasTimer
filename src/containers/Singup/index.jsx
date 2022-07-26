@@ -219,7 +219,7 @@ const Signup = () => {
             username: val.email,
             password: val.password,
             attributes: {
-              birthdate: new Date(dateOfBirth).toLocaleDateString(),
+              //birthdate: new Date(dateOfBirth).toLocaleDateString(),
               locale: val.country,
               "custom:UserCreditails": "null",
               "custom:RuningTimeEntry": "null",
