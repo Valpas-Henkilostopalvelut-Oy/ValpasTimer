@@ -9,7 +9,6 @@ import {
   TextField,
   Checkbox,
   FormControlLabel,
-  OutlinedInput,
   InputLabel,
   MenuItem,
   FormControl,
@@ -25,6 +24,7 @@ import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { de } from "date-fns/locale";
+import { country } from "./country";
 
 const phone = (phone) => {
   if (phone.length === 13) {
@@ -125,8 +125,6 @@ const ConfirmForm = ({ password, email }) => {
     </Formik>
   );
 };
-
-const country = ["Finland", "Sweden", "Norway", "Denmark", "Iceland"];
 
 const Citizenship = ({ citizenship, setCitizenship }) => {
   return (
