@@ -1,6 +1,20 @@
 import React, { useState } from "react";
 import { useAppContext } from "../../services/contextLib";
-import { Container, CssBaseline, Box, Typography, Grid, TextField, Checkbox, FormControlLabel } from "@mui/material";
+import {
+  Container,
+  CssBaseline,
+  Box,
+  Typography,
+  Grid,
+  TextField,
+  Checkbox,
+  FormControlLabel,
+  OutlinedInput,
+  InputLabel,
+  MenuItem,
+  FormControl,
+  Select,
+} from "@mui/material";
 import { Formik } from "formik";
 import { useTheme } from "@mui/material/styles";
 import LoaderButton from "../../components/LoaderButton";
@@ -112,6 +126,29 @@ const ConfirmForm = ({ password, email }) => {
   );
 };
 
+const country = ["Finland", "Sweden", "Norway", "Denmark", "Iceland"];
+
+const Citizenship = ({ citizenship, setCitizenship }) => {
+  return (
+    <FormControl fullWidth>
+      <InputLabel id="label-select-citizenship">Citizenship</InputLabel>
+      <Select
+        labelId="label-select-citizenship"
+        id="select-citizenship"
+        value={citizenship}
+        label="Citizenship"
+        onChange={(event) => setCitizenship(event.target.value)}
+      >
+        {country.map((c) => (
+          <MenuItem key={c} value={c}>
+            {c}
+          </MenuItem>
+        ))}
+      </Select>
+    </FormControl>
+  );
+};
+
 const Signup = () => {
   const [credentials, setCredentials] = useState({
     email: "",
@@ -119,9 +156,9 @@ const Signup = () => {
   });
   const [dateOfBirth, setDateOfBirth] = useState(null);
   const [terms, setTerms] = useState(false);
-  const phoneRegExp = /^(\+?\d{0,4})?\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{4}\)?)?$/;
   const theme = useTheme();
   const [message, setMessage] = useState("");
+  const [citizenship, setCitizenship] = useState("");
 
   const SignupSchema = yup.object().shape({
     email: yup.string().email("Invalid email").required("Email is required"),
@@ -135,7 +172,6 @@ const Signup = () => {
       .min(2, "First name is short")
       .max(50, "First name too long")
       .required("First name is required"),
-    country: yup.string().min(2, "Country is short").max(50, "Country is too long").required("Country is required"),
     password: yup
       .string()
       .min(8, "Password is too short")
@@ -155,7 +191,7 @@ const Signup = () => {
       values.password &&
       values.firstName &&
       values.lastName &&
-      values.country &&
+      citizenship !== "" &&
       values.phoneNumber &&
       dateOfBirth !== null &&
       terms &&
@@ -171,7 +207,6 @@ const Signup = () => {
       initialValues={{
         lastName: "",
         firstName: "",
-        country: "",
         email: "",
         phoneNumber: "",
         password: "",
@@ -184,7 +219,7 @@ const Signup = () => {
             username: val.email,
             password: val.password,
             attributes: {
-              birthdate: "01-01-2000",
+              birthdate: new Date(dateOfBirth).toLocaleDateString(),
               locale: val.country,
               "custom:UserCreditails": "null",
               "custom:RuningTimeEntry": "null",
@@ -193,7 +228,7 @@ const Signup = () => {
               phone_number: phone(val.phoneNumber),
               picture: "https://source.unsplash.com/random/256x256",
             },
-          }).then((e) => console.log(e));
+          });
           setCredentials({
             email: val.email,
             password: val.password,
@@ -292,24 +327,7 @@ const Signup = () => {
                   </LocalizationProvider>
                 </Grid>
                 <Grid item xs={12}>
-                  <TextField
-                    variant="outlined"
-                    required
-                    fullWidth
-                    id="contry"
-                    label="Country"
-                    name="country"
-                    autoComplete="country"
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    value={values.country}
-                    error={errors.country && touched.country}
-                  />
-                  {errors.country && touched.country && (
-                    <Typography variant="caption" color="error">
-                      {errors.country}
-                    </Typography>
-                  )}
+                  <Citizenship citizenship={citizenship} setCitizenship={setCitizenship} />
                 </Grid>
                 <Grid item xs={12}>
                   <TextField
@@ -339,7 +357,6 @@ const Signup = () => {
                     id="phoneNumber"
                     label="Phone Number"
                     name="phoneNumber"
-                    pa
                     autoComplete="phoneNumber"
                     onChange={handleChange}
                     onBlur={handleBlur}
