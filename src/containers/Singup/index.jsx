@@ -121,6 +121,7 @@ const Signup = () => {
   const [terms, setTerms] = useState(false);
   const phoneRegExp = /^(\+?\d{0,4})?\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{4}\)?)?$/;
   const theme = useTheme();
+  const [message, setMessage] = useState("");
 
   const SignupSchema = yup.object().shape({
     email: yup.string().email("Invalid email").required("Email is required"),
@@ -203,6 +204,7 @@ const Signup = () => {
         } catch (e) {
           //An account with the given email already exists.
           setSubmitting(false);
+          setMessage(e.message);
           console.warn(e);
         }
       }}
@@ -411,6 +413,11 @@ const Signup = () => {
                   </Typography>
                 </Grid>
               </Grid>
+              {message && (
+                <Typography variant="caption" color="error">
+                  {message}
+                </Typography>
+              )}
               <LoaderButton
                 type="submit"
                 variant="contained"
