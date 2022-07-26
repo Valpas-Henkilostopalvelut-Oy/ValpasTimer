@@ -450,6 +450,29 @@ const SelectWorkspaces = ({ id, agreement }) => {
   );
 };
 
+const DeleteAgreement = ({ id, reload }) => {
+  const [isDeleting, setIsDeleting] = useState(false);
+  const deleteAgg = async () => {
+    setIsDeleting(true);
+    await DataStore.query(Agreement, id).then((item) => {
+      DataStore.delete(item).catch((error) => console.warn(error));
+      setIsDeleting(false);
+      reload();
+    });
+  };
+
+  return (
+    <LoaderButton
+      variant="contained"
+      color="primary"
+      text="Delete"
+      loadingText={"Deleting..."}
+      isLoading={isDeleting}
+      onClick={deleteAgg}
+    />
+  );
+};
+
 export const AgreementAdminPanel = () => {
   const [agreement, setAgreements] = useState([]);
   const [agreementExpanded, setAgreementExpanded] = useState(false);
@@ -502,7 +525,7 @@ export const AgreementAdminPanel = () => {
                   </Typography>
                 </Grid>
                 <Grid item xs={6}>
-                  <SelectWorkspaces agreement={agreement} id={agreement.id} />
+                  <DeleteAgreement id={agreement.id} reload={loadData} />
                 </Grid>
                 <Grid item xs={12}>
                   <UserTable data={agreement} id={agreement.id} />

@@ -2,7 +2,7 @@ import { Auth } from "aws-amplify";
 import React, { useEffect, useState } from "react";
 import { useAppContext } from "../../services/contextLib";
 import "../../App.css";
-import { Typography, Box } from "@mui/material";
+import { Typography, Box, Container } from "@mui/material";
 
 const Home = () => {
   const { isAuthenticated } = useAppContext();
@@ -16,10 +16,14 @@ const Home = () => {
     isAuthenticated && loadUser();
   }, [isAuthenticated]);
 
-  return currentUser !== null ? (
-    <Typography>Welcome {currentUser.attributes.email}</Typography>
-  ) : (
-    <Typography>Loading...</Typography>
+  return (
+    <Container>
+      {currentUser ? (
+        <Typography>Welcome {currentUser.attributes.email}</Typography>
+      ) : (
+        <Typography>Loading...</Typography>
+      )}
+    </Container>
   );
 };
 
