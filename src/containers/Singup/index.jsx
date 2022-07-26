@@ -179,13 +179,12 @@ const Signup = () => {
         confiming: false,
       }}
       onSubmit={async (val, { setSubmitting }) => {
-        console.log(val);
         try {
           await Auth.signUp({
             username: val.email,
             password: val.password,
             attributes: {
-              birthdate: new Date(dateOfBirth).toLocaleDateString(),
+              birthdate: "01-01-2000",
               locale: val.country,
               "custom:UserCreditails": "null",
               "custom:RuningTimeEntry": "null",
@@ -194,7 +193,7 @@ const Signup = () => {
               phone_number: phone(val.phoneNumber),
               picture: "https://source.unsplash.com/random/256x256",
             },
-          });
+          }).then((e) => console.log(e));
           setCredentials({
             email: val.email,
             password: val.password,
@@ -340,6 +339,7 @@ const Signup = () => {
                     id="phoneNumber"
                     label="Phone Number"
                     name="phoneNumber"
+                    pa
                     autoComplete="phoneNumber"
                     onChange={handleChange}
                     onBlur={handleBlur}
