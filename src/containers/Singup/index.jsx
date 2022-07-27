@@ -259,7 +259,7 @@ const Signup = () => {
             }}
           >
             <Typography component="p" sx={{ color: "#666666", fontSize: 16 }}>
-              Join Valaps NextApp
+              Join Valpas NextApp
             </Typography>
             <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
               <Grid container spacing={2}>

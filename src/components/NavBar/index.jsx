@@ -6,7 +6,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 import Profile from "../Profile";
 
 const Navbar = ({ position, open, setOpenDrawer, isAuthenticated }) => {
-  const drawerWidth = 240;
+  const drawerWidth = 310;
 
   const AppBar = styled(MuiAppBar, {
     shouldForwardProp: (prop) => prop !== "open",

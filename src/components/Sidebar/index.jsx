@@ -21,7 +21,7 @@ import { useAppContext } from "../../services/contextLib";
 const Sidebar = ({ open, setOpen }) => {
   const { groups } = useAppContext();
   const theme = useTheme();
-  const drawerWidth = 240;
+  const drawerWidth = 310;
 
   const DrawerHeader = styled("div")(({ theme }) => ({
     display: "flex",

@@ -530,7 +530,7 @@ export const AgreementAdminPanel = () => {
                 <Grid item xs={12}>
                   <UserTable data={agreement} id={agreement.id} />
                 </Grid>
-                <Grid item xs={6}>
+                <Grid item xs={12} md={6}>
                   <Formik
                     initialValues={{
                       name: agreement.name,
@@ -571,7 +571,7 @@ export const AgreementAdminPanel = () => {
                     )}
                   </Formik>
                 </Grid>
-                <Grid item xs={6}>
+                <Grid item xs={12} md={6}>
                   <Formik
                     initialValues={{ newAditionalInfo: "" }}
                     onSubmit={(val, { setSubmitting }) => {

@@ -12,6 +12,7 @@ import {
   CircularProgress,
   IconButton,
   Tooltip,
+  Container,
 } from "@mui/material";
 import { EnhancedWorks } from "./CreateTask";
 import { DataStore } from "aws-amplify";
@@ -120,7 +121,7 @@ const Works = () => {
   }, [addAnchorEl]);
 
   return works !== null ? (
-    <Box sx={{ width: "100%" }}>
+    <Container>
       <Paper sx={{ width: "100%", mb: 2 }}>
         <EnhancedWorks anchorEl={addAnchorEl} setAnchorEl={setAddAnchorEl} />
         <TableContainer>
@@ -152,9 +153,9 @@ const Works = () => {
           </Table>
         </TableContainer>
       </Paper>
-    </Box>
+    </Container>
   ) : (
-    <Box
+    <Container
       component={Paper}
       sx={{
         width: "100%",
@@ -168,7 +169,7 @@ const Works = () => {
       }}
     >
       <CircularProgress />
-    </Box>
+    </Container>
   );
 };
 

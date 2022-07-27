@@ -1,11 +1,24 @@
-import { IconButton, Toolbar, Typography, Tooltip } from "@mui/material";
-import React, { Fragment } from "react";
+import {
+  IconButton,
+  Toolbar,
+  Typography,
+  Tooltip,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Button,
+  DialogContentText,
+  TextField,
+} from "@mui/material";
+import React, { Fragment, useState, useEffect } from "react";
 import DeleteIcon from "@mui/icons-material/Delete";
 import DoDisturbIcon from "@mui/icons-material/DoDisturb";
 import CheckIcon from "@mui/icons-material/Check";
 import { alpha } from "@mui/material/styles";
 import { DataStore, Auth, API } from "aws-amplify";
 import { UserCredentials } from "../../../models";
+import { Formik } from "formik";
 
 const ListToolbar = ({ numSelected, selected, setSelected, reload }) => {
   const deleteUser = async () => {
@@ -126,7 +139,7 @@ const ListToolbar = ({ numSelected, selected, setSelected, reload }) => {
         </Typography>
       )}
 
-      {numSelected > 0 && (
+      {numSelected > 0 ? (
         <Fragment>
           <Tooltip title="Deactivate/Activate">
             <IconButton onClick={enableDisable}>
@@ -140,8 +153,50 @@ const ListToolbar = ({ numSelected, selected, setSelected, reload }) => {
             </IconButton>
           </Tooltip>
         </Fragment>
+      ) : (
+        <CreateNewUser />
       )}
     </Toolbar>
+  );
+};
+
+const CreateNewUser = ({ reload }) => {
+  const [open, setOpen] = useState(false);
+  const [created, setCreated] = useState(false);
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const handleOpen = () => {
+    setOpen(true);
+  };
+
+  return (
+    <Fragment>
+      <Button variant="contained" onClick={handleOpen}>
+        Create new user
+      </Button>
+
+      <Dialog open={open} onClose={handleClose}>
+        <DialogTitle>Add new user to Valpas NextApp</DialogTitle>
+
+        {!created && (
+          <DialogContent>
+            <DialogContentText>To create a new user, please enter the following information:</DialogContentText>
+          </DialogContent>
+        )}
+
+        <DialogActions>
+          <Button onClick={handleClose} color="primary">
+            Cancel
+          </Button>
+          <Button onClick={handleClose} color="primary">
+            Create
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </Fragment>
   );
 };
 

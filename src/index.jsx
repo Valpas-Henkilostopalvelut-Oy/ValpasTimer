@@ -48,7 +48,7 @@ Hub.listen("datastore", (data) => {
 root.render(
   <React.StrictMode>
     <BrowserRouter>
-      <StyledEngineProvider>
+      <StyledEngineProvider injectFirst>
         <App />
       </StyledEngineProvider>
     </BrowserRouter>
