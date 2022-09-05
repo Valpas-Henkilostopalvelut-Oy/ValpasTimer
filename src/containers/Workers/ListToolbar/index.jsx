@@ -10,6 +10,10 @@ import {
   Button,
   DialogContentText,
   TextField,
+  Container,
+  CssBaseline,
+  Box,
+  Grid,
 } from "@mui/material";
 import React, { Fragment, useState, useEffect } from "react";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -19,6 +23,52 @@ import { alpha } from "@mui/material/styles";
 import { DataStore, Auth, API } from "aws-amplify";
 import { UserCredentials } from "../../../models";
 import { Formik } from "formik";
+
+const createUser = async (values) => {
+  let apiName = "AdminQueries";
+  let path = "/adminCreateUser";
+  let myInit = {
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `${(await Auth.currentSession()).getAccessToken().getJwtToken()}`,
+    },
+    userpoolid: "eu-west-1_tYXLeogj0",
+    body: {
+      username: values.email,
+      userattributes: [
+        {
+          Name: "locale",
+          Value: "Finland",
+        },
+        {
+          Name: "custom:UserCreditails",
+          Value: "null",
+        },
+        {
+          Name: "custom:RuningTimeEntry",
+          Value: "null",
+        },
+        {
+          Name: "name",
+          Value: values.first_name,
+        },
+        {
+          Name: "family_name",
+          Value: values.last_name,
+        },
+        {
+          Name: "email",
+          Value: values.email,
+        },
+        {
+          Name: "picture",
+          Value: "https://source.unsplash.com/random/256x256",
+        },
+      ],
+    },
+  };
+  return await API.post(apiName, path, myInit);
+};
 
 const ListToolbar = ({ numSelected, selected, setSelected, reload }) => {
   const deleteUser = async () => {
@@ -184,17 +234,79 @@ const CreateNewUser = ({ reload }) => {
         {!created && (
           <DialogContent>
             <DialogContentText>To create a new user, please enter the following information:</DialogContentText>
+            <Formik
+              initialValues={{
+                email: "",
+                first_name: "",
+                last_name: "",
+                phone_number: "",
+              }}
+              onSubmit={async (values, { setSubmitting }) => {
+                try {
+                  console.log(await createUser(values));
+                  //setCreated(true);
+                } catch (error) {
+                  console.warn(error);
+                }
+              }}
+            >
+              {({ values, handleChange, handleSubmit }) => (
+                <Box component="form" onSubmit={handleSubmit} sx={{ mt: 2, maxWidth: "480px" }}>
+                  <Grid container spacing={2}>
+                    <Grid item xs={12}>
+                      <TextField
+                        variant="outlined"
+                        required
+                        fullWidth
+                        id="email"
+                        label="Email Address"
+                        name="email"
+                        autoComplete="email"
+                        value={values.email}
+                        onChange={handleChange}
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                      <TextField
+                        autoComplete="fname"
+                        name="first_name"
+                        variant="outlined"
+                        required
+                        fullWidth
+                        id="first_name"
+                        label="First Name"
+                        autoFocus
+                        value={values.first_name}
+                        onChange={handleChange}
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                      <TextField
+                        variant="outlined"
+                        required
+                        fullWidth
+                        id="last_name"
+                        label="Last Name"
+                        name="last_name"
+                        autoComplete="lname"
+                        value={values.last_name}
+                        onChange={handleChange}
+                      />
+                    </Grid>
+                  </Grid>
+                  <DialogActions>
+                    <Button onClick={handleClose} color="primary">
+                      Cancel
+                    </Button>
+                    <Button onClick={handleSubmit} color="primary">
+                      Create
+                    </Button>
+                  </DialogActions>
+                </Box>
+              )}
+            </Formik>
           </DialogContent>
         )}
-
-        <DialogActions>
-          <Button onClick={handleClose} color="primary">
-            Cancel
-          </Button>
-          <Button onClick={handleClose} color="primary">
-            Create
-          </Button>
-        </DialogActions>
       </Dialog>
     </Fragment>
   );
