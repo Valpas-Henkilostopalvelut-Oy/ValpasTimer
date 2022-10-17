@@ -1,12 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { Auth, DataStore, Hub } from "aws-amplify";
+import { Auth, DataStore } from "aws-amplify";
 import { AllWorkSpaces, UserCredentials } from "../../models";
-import { useAppContext } from "../../services/contextLib.jsx";
-import { Box, InputLabel, MenuItem, FormControl, Select } from "@mui/material";
+import { InputLabel, MenuItem, FormControl, Select } from "@mui/material";
 
 const WorkspaceSelect = ({ selectedOption, setSelectedOption }) => {
   const [list, setList] = useState([]);
-  const { groups } = useAppContext();
 
   useEffect(() => {
     let isActive = false;
@@ -17,8 +15,6 @@ const WorkspaceSelect = ({ selectedOption, setSelectedOption }) => {
 
         const user = await Auth.currentAuthenticatedUser();
         const creditails = await DataStore.query(UserCredentials, user.attributes["custom:UserCreditails"]);
-
-        
 
         let q = [];
 
@@ -60,7 +56,8 @@ const WorkspaceSelect = ({ selectedOption, setSelectedOption }) => {
     !isActive && list.length !== 0 && lastWorkspaceLoad();
 
     return () => (isActive = true);
-  }, [list]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [list.length]);
 
   const changeLastValue = async (val) => {
     try {

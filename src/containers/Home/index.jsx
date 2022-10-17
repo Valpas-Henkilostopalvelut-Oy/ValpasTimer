@@ -1,7 +1,7 @@
 import { Auth } from "aws-amplify";
 import React, { useEffect, useState } from "react";
 import { useAppContext } from "../../services/contextLib.jsx";
-import { Typography, Box, Container } from "@mui/material";
+import { Typography, Container } from "@mui/material";
 
 const Home = () => {
   const { isAuthenticated } = useAppContext();

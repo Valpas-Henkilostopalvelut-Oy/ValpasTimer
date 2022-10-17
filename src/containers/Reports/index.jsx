@@ -1,15 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useAppContext } from "../../services/contextLib.jsx";
 import TotalLatest from "./TotalTracked/index.jsx";
-import {
-  Container,
-  Table,
-  TableContainer,
-  TableBody,
-  Paper,
-  Box,
-  CircularProgress,
-} from "@mui/material";
+import { Container, Table, TableContainer, TableBody, Paper, Box, CircularProgress } from "@mui/material";
 
 import { DataStore, Auth } from "aws-amplify";
 import { UserCredentials, AllWorkSpaces } from "../../models";
@@ -20,8 +12,6 @@ const Dashboard = () => {
   const { groups } = useAppContext();
   const [selectedOption, setSelectedOption] = useState("");
   const [isClient, setIsClient] = useState(false);
-  const [dense, setDense] = useState(false);
-
   const loadTeamActivities = async () => {
     const usersCredentials = await DataStore.query(UserCredentials);
 
@@ -60,6 +50,7 @@ const Dashboard = () => {
     !isActive && selectedOption !== "" && loadTeamActivities();
 
     return () => (isActive = true);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedOption]);
 
   return (
@@ -73,7 +64,7 @@ const Dashboard = () => {
         />
         {usersList !== null ? (
           <TableContainer>
-            <Table aria-label="collapsible table" sx={{ minWidth: 750 }} size={dense ? "small" : "medium"}>
+            <Table aria-label="collapsible table" sx={{ minWidth: 750 }} size={"medium"}>
               <TableBody>
                 {usersList.map((users, key) => (
                   <TotalLatest

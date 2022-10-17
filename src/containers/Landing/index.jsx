@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Button, Box, Container, Typography, Grid, CssBaseline } from "@mui/material";
+import React from "react";
+import { Button, Container, Grid, CssBaseline } from "@mui/material";
 import { LinkContainer } from "react-router-bootstrap";
 
 export const LandingPage = () => {

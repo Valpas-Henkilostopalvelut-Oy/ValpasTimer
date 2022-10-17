@@ -2,7 +2,6 @@ import React from "react";
 
 import {
   Table,
-  TableBody,
   TableCell,
   TableContainer,
   TableHead,
@@ -16,7 +15,6 @@ import {
 } from "@mui/material";
 import { visuallyHidden } from "@mui/utils";
 
-const addUserToTable = ({ userId, id }) => {};
 
 const UserTableToolbar = ({ numSelected, selected, setSelected }) => {
   return (
@@ -89,8 +87,6 @@ export const UserTable = ({ id, data }) => {
   const [selected, setSelected] = React.useState([]);
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("name");
-  const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";

@@ -9,7 +9,6 @@ import {
   ListItemButton,
   ListItemIcon,
   ListItem,
-  useMediaQuery,
 } from "@mui/material";
 import MuiDrawer from "@mui/material/Drawer";
 import { styled, useTheme } from "@mui/material/styles";

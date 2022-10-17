@@ -18,7 +18,6 @@ import {
   InputLabel,
   Select,
   MenuItem,
-  Checkbox,
   ListItemText,
   Chip,
   OutlinedInput,
