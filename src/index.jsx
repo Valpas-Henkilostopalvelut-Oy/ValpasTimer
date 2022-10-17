@@ -9,13 +9,10 @@ import { StyledEngineProvider } from "@mui/material/styles";
 import { Amplify, Hub, DataStore } from "aws-amplify";
 import awsconfig from "./aws-exports";
 import { createUser } from "./services/createUser.jsx";
-import * as dotenv from "dotenv";
-
 
 const rootElement = document.getElementById("root");
 const root = createRoot(rootElement);
 
-dotenv.config()
 Amplify.configure(awsconfig);
 
 Hub.listen("auth", async (data) => {
