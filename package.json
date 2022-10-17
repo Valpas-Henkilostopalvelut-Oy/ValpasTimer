@@ -4,6 +4,9 @@
   "description": "Valpas Next App",
   "main": "index.jsx",
   "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "eject": "react-scripts eject",
     "develop": "webpack-dev-server",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
