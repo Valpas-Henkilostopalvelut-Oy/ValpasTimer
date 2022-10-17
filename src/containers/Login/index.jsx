@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { Auth } from "aws-amplify";
-import { useAppContext } from "../../services/contextLib";
+import { useAppContext } from "../../services/contextLib.jsx";
 import { useNavigate } from "react-router-dom";
-import LoaderButton from "../../components/LoaderButton";
+import LoaderButton from "../../components/LoaderButton/index.jsx";
 import { Formik } from "formik";
 import { Box, Container, CssBaseline, Typography, TextField, Grid, Link } from "@mui/material";
 import * as yup from "yup";

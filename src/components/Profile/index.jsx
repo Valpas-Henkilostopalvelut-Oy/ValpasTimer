@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Auth, DataStore } from "aws-amplify";
 import { Menu, MenuItem, IconButton, Box } from "@mui/material";
-import { useAppContext } from "../../services/contextLib";
+import { useAppContext } from "../../services/contextLib.jsx";
 import { useNavigate } from "react-router-dom";
 import { LinkContainer } from "react-router-bootstrap";
 import AccountCircle from "@mui/icons-material/AccountCircle";

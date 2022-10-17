@@ -1,6 +1,5 @@
 import React from "react";
-import "../../App.css";
-import { SidebarData } from "./SidebarDate";
+import { SidebarData } from "./SidebarDate.js";
 import { LinkContainer } from "react-router-bootstrap";
 import {
   ListItemText,
@@ -16,7 +15,7 @@ import MuiDrawer from "@mui/material/Drawer";
 import { styled, useTheme } from "@mui/material/styles";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
-import { useAppContext } from "../../services/contextLib";
+import { useAppContext } from "../../services/contextLib.jsx";
 
 const Sidebar = ({ open, setOpen }) => {
   const { groups } = useAppContext();

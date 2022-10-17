@@ -19,7 +19,7 @@ import { alpha } from "@mui/material/styles";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from "@mui/icons-material/Add";
 import { Formik } from "formik";
-import LoaderButton from "../../../components/LoaderButton";
+import LoaderButton from "../../../components/LoaderButton/index.jsx";
 import { DataStore, Auth, API } from "aws-amplify";
 import { Tasks, Status, AllWorkSpaces } from "../../../models";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";

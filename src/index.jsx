@@ -1,7 +1,6 @@
 import React from "react";
 import { createRoot } from "react-dom/client";
-import "./index.css";
-import App from "./App";
+import App from "./App.jsx";
 import reportWebVitals from "./reportWebVitals";
 
 //Custom imports
@@ -9,11 +8,14 @@ import { BrowserRouter } from "react-router-dom";
 import { StyledEngineProvider } from "@mui/material/styles";
 import { Amplify, Hub, DataStore } from "aws-amplify";
 import awsconfig from "./aws-exports";
-import { createUser } from "./services/createUser";
+import { createUser } from "./services/createUser.jsx";
+import * as dotenv from "dotenv";
+
 
 const rootElement = document.getElementById("root");
 const root = createRoot(rootElement);
 
+dotenv.config()
 Amplify.configure(awsconfig);
 
 Hub.listen("auth", async (data) => {

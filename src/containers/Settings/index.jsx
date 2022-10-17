@@ -11,12 +11,12 @@ import {
   Modal,
 } from "@mui/material";
 import { Auth, DataStore } from "aws-amplify";
-import { useAppContext } from "../../services/contextLib";
+import { useAppContext } from "../../services/contextLib.jsx";
 import { Formik } from "formik";
 import * as yup from "yup";
-import LoaderButton from "../../components/LoaderButton";
+import LoaderButton from "../../components/LoaderButton/index.jsx";
 import { UserCredentials } from "../../models";
-import ChangePassword from "./ChangePassword";
+import ChangePassword from "./ChangePassword/index.jsx";
 import { useNavigate } from "react-router-dom";
 
 const ModalDelete = ({ open, setOpen }) => {

@@ -1,16 +1,15 @@
 import React, { Fragment, useEffect, useState } from "react";
-import "./App.css";
 
 //Custom
-import Navigation from "./Navigation";
-import { AppContext } from "./services/contextLib";
+import Navigation from "./Navigation.jsx";
+import { AppContext } from "./services/contextLib.jsx";
 import { Auth, DataStore } from "aws-amplify";
-import { onError } from "./services/errorLib";
-import Sidebar from "./components/Sidebar";
-import Navbar from "./components/NavBar";
+import { onError } from "./services/errorLib.jsx";
+import Sidebar from "./components/Sidebar/index.jsx";
+import Navbar from "./components/NavBar/index.jsx";
 import { Box, CssBaseline } from "@mui/material";
 import { styled, createTheme, ThemeProvider } from "@mui/material/styles";
-import { customPalette } from "./services/appSettings";
+import { customPalette } from "./services/appSettings.jsx";
 
 function App() {
   const [isAuthenticated, userHasAuthenticated] = useState(false);

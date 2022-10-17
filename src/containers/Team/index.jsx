@@ -14,7 +14,7 @@ import {
   Box,
   CircularProgress,
 } from "@mui/material";
-import { useAppContext } from "../../services/contextLib";
+import { useAppContext } from "../../services/contextLib.jsx";
 
 const Team = () => {
   const [users, setUsers] = useState(null);

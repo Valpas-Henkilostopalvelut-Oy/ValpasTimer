@@ -1,10 +1,10 @@
 import React, { Fragment, useState } from "react";
 import { Dialog, DialogTitle, DialogContent, Box, TextField, Grid } from "@mui/material";
 import { Formik } from "formik";
-import LoaderButton from "../../../components/LoaderButton";
+import LoaderButton from "../../../components/LoaderButton/index.jsx";
 import { DataStore } from "aws-amplify";
 import { Tasks } from "../../../models";
-import { UserSelect, SelectDuration, SelectEndDate, SelectStartDate, SelectStartTime, WorkSelect } from "../CreateTask";
+import { UserSelect, SelectDuration, SelectEndDate, SelectStartDate, SelectStartTime, WorkSelect } from "../CreateTask/index.jsx";
 
 export const EditTask = ({ data = null, open = false, handleClose, reload }) => {
   const [user, setUser] = useState(data.user);

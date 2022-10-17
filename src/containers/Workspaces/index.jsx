@@ -1,8 +1,6 @@
 import React, { Fragment, useEffect, useState } from "react";
 import { API, DataStore, Auth } from "aws-amplify";
 import { AllWorkSpaces, UserCredentials } from "../../models";
-import "./Workspaces.css";
-import "../../App.css";
 import { alpha } from "@mui/material/styles";
 import {
   Container,
@@ -27,10 +25,10 @@ import {
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from "@mui/icons-material/Add";
 import { Formik } from "formik";
-import { useAppContext } from "../../services/contextLib";
+import { useAppContext } from "../../services/contextLib.jsx";
 import * as yup from "yup";
-import LoaderButton from "../../components/LoaderButton";
-import { ChangeRole } from "./Tools";
+import LoaderButton from "../../components/LoaderButton/index.jsx";
+import { ChangeRole } from "./Tools/index.jsx";
 
 const UserList = ({ member, data, index, selected, setSelected }) => {
   const [user, setUser] = useState(null);

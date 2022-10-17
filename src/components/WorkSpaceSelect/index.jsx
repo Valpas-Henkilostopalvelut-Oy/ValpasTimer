@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
-import "./WorkspaceSelect.css";
 import { Auth, DataStore, Hub } from "aws-amplify";
 import { AllWorkSpaces, UserCredentials } from "../../models";
-import { useAppContext } from "../../services/contextLib";
+import { useAppContext } from "../../services/contextLib.jsx";
 import { Box, InputLabel, MenuItem, FormControl, Select } from "@mui/material";
 
 const WorkspaceSelect = ({ selectedOption, setSelectedOption }) => {

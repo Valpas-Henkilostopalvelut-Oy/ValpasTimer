@@ -1,6 +1,6 @@
 import { DataStore, Auth } from "aws-amplify";
 import { UserCredentials } from "../models";
-import { onError } from "./errorLib";
+import { onError } from "./errorLib.jsx";
 
 export async function createUser() {
   try {

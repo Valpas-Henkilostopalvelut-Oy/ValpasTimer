@@ -16,11 +16,11 @@ import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import RadioButtonUncheckedIcon from "@mui/icons-material/RadioButtonUnchecked";
-import { useAppContext } from "../../../services/contextLib";
-import { TimeEditing } from "../../../components/TimeEditing";
+import { useAppContext } from "../../../services/contextLib.jsx";
+import { TimeEditing } from "../../../components/TimeEditing/index.jsx";
 import { DataStore } from "aws-amplify";
 import { TimeEntry } from "../../../models";
-import { Confirm, Unconfirm, Delete } from "../Tools";
+import { Confirm, Unconfirm, Delete } from "../Tools/index.jsx";
 
 const start = (val) => {
   let start = new Date(val);

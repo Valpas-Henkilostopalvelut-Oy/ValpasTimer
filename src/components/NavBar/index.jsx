@@ -3,7 +3,7 @@ import { Box, Toolbar, Typography, IconButton } from "@mui/material";
 import MuiAppBar from "@mui/material/AppBar";
 import { styled } from "@mui/material/styles";
 import MenuIcon from "@mui/icons-material/Menu";
-import Profile from "../Profile";
+import Profile from "../Profile/index.jsx";
 
 const Navbar = ({ position, open, setOpenDrawer, isAuthenticated }) => {
   const drawerWidth = 310;

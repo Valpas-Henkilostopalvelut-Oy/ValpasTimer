@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import * as yup from "yup";
 import { Formik } from "formik";
-import LoaderButton from "../../../components/LoaderButton";
+import LoaderButton from "../../../components/LoaderButton/index.jsx";
 import { Container, Box, Typography, TextField, CssBaseline, Grid, Button } from "@mui/material";
 import { Auth } from "aws-amplify";
 

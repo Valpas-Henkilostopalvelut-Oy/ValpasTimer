@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useAppContext } from "../../services/contextLib";
+import { useAppContext } from "../../services/contextLib.jsx";
 import {
   Container,
   CssBaseline,
@@ -13,7 +13,7 @@ import {
 } from "@mui/material";
 import { Formik } from "formik";
 import { useTheme } from "@mui/material/styles";
-import LoaderButton from "../../components/LoaderButton";
+import LoaderButton from "../../components/LoaderButton/index.jsx";
 import { Auth } from "aws-amplify";
 import { useNavigate } from "react-router-dom";
 import * as yup from "yup";
@@ -21,7 +21,7 @@ import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { de } from "date-fns/locale";
-import { country } from "./country";
+import { country } from "./country.jsx";
 
 const phone = (phone) => {
   if (phone.length === 13) {

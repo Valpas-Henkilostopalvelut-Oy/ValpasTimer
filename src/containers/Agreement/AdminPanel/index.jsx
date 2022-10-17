@@ -26,9 +26,9 @@ import {
 import { Auth, DataStore } from "aws-amplify";
 import { Formik } from "formik";
 import React, { useEffect, useState } from "react";
-import LoaderButton from "../../../components/LoaderButton";
+import LoaderButton from "../../../components/LoaderButton/index.jsx";
 import { Agreement, AllWorkSpaces } from "../../../models";
-import { UserTable } from "./UserTable";
+import { UserTable } from "./UserTable/index.jsx";
 
 const AdminToolbar = ({ reload }) => {
   const [anchorEl, setAnchorEl] = useState(null);

@@ -13,7 +13,7 @@ import {
 import { DataStore, Auth } from "aws-amplify";
 import { Tasks } from "../../models";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
-import { WorkStatus } from "../../services/workLib";
+import { WorkStatus } from "../../services/workLib.jsx";
 
 const TasksPage = () => {
   const [tasks, setTasks] = useState(null);

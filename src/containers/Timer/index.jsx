@@ -1,7 +1,7 @@
 import React, { Fragment, useEffect, useState } from "react";
 import { DataStore, Auth } from "aws-amplify";
 import { TimeEntry } from "../../models";
-import { useAppContext } from "../../services/contextLib";
+import { useAppContext } from "../../services/contextLib.jsx";
 import {
   Container,
   Table,
@@ -18,16 +18,16 @@ import {
   Typography,
   CircularProgress,
 } from "@mui/material";
-import Recorder from "./Recorder";
-import { TimeEditing } from "../../components/TimeEditing";
-import { groupBy } from "../../services/group";
+import Recorder from "./Recorder/index.jsx";
+import { TimeEditing } from "../../components/TimeEditing/index.jsx";
+import { groupBy } from "../../services/group.jsx";
 
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import RadioButtonUncheckedIcon from "@mui/icons-material/RadioButtonUnchecked";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
-import { SendForm, DeleteForm, WorkOfTime } from "./Tools";
-import WorkspaceSelect from "../../components/WorkSpaceSelect";
+import { SendForm, DeleteForm, WorkOfTime } from "./Tools/index.jsx";
+import WorkspaceSelect from "../../components/WorkSpaceSelect/index.jsx";
 
 const updateValue = async ({ val, type, reload, id, time }) => {
   try {

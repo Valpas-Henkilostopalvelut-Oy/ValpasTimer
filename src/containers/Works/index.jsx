@@ -14,13 +14,13 @@ import {
   Tooltip,
   Container,
 } from "@mui/material";
-import { EnhancedWorks } from "./CreateTask";
+import { EnhancedWorks } from "./CreateTask/index.jsx";
 import { DataStore } from "aws-amplify";
 import { Tasks } from "../../models";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
-import { deleteTask } from "./Tools";
-import { WorkStatus } from "../../services/workLib";
-import { EditTask } from "./EditTask";
+import { deleteTask } from "./Tools/index.jsx";
+import { WorkStatus } from "../../services/workLib.jsx";
+import { EditTask } from "./EditTask/index.jsx";
 
 const More = ({ data = null, reload }) => {
   const [anchorEl, setAnchorEl] = React.useState(null);

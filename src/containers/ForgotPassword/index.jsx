@@ -3,7 +3,7 @@ import { Container, Box, Typography, CssBaseline, TextField, Link } from "@mui/m
 import * as yup from "yup";
 import { Formik } from "formik";
 import { Auth } from "aws-amplify";
-import LoaderButton from "../../components/LoaderButton";
+import LoaderButton from "../../components/LoaderButton/index.jsx";
 import { useNavigate } from "react-router-dom";
 
 const NewPasswordForm = ({ email, haveCode }) => {

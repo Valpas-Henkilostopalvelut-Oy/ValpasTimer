@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { useAppContext } from "../../services/contextLib";
-import TotalLatest from "./TotalTracked";
+import { useAppContext } from "../../services/contextLib.jsx";
+import TotalLatest from "./TotalTracked/index.jsx";
 import {
   Container,
   Table,
@@ -13,7 +13,7 @@ import {
 
 import { DataStore, Auth } from "aws-amplify";
 import { UserCredentials, AllWorkSpaces } from "../../models";
-import { Header } from "./Tools";
+import { Header } from "./Tools/index.jsx";
 
 const Dashboard = () => {
   const [usersList, setUsers] = useState(null);

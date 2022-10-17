@@ -21,7 +21,7 @@ import {
   Typography,
 } from "@mui/material";
 import { Auth, API } from "aws-amplify";
-import ListToolbar from "./ListToolbar";
+import ListToolbar from "./ListToolbar/index.jsx";
 
 const IBAN = ({ row }) => {
   const iban = row.Attributes.find((a) => a.Name === "custom:iban");

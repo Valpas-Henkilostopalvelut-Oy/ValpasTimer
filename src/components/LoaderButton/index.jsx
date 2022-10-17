@@ -1,7 +1,6 @@
 import React from "react";
 import { Button } from "@mui/material";
 import LoopIcon from "@mui/icons-material/Loop";
-import "./LoaderButton.css";
 
 const LoaderButton = ({ isLoading, className = "", disabled = false, loadingText, text, ...props }) => {
   return (

@@ -4,8 +4,8 @@ import { TimeEntry } from "../../../models";
 import { TableRow, TableCell, IconButton, Collapse, Box, Table, TableBody } from "@mui/material";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
-import { groupBy } from "../../../services/group";
-import InList from "../InList";
+import { groupBy } from "../../../services/group.jsx";
+import InList from "../InList/index.jsx";
 
 const TotalLatest = ({ users, selOption, isAdmin, isClient, reload }) => {
   const [open, setOpen] = React.useState(false);
