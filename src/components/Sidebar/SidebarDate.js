@@ -34,14 +34,7 @@ export const SidebarData = [
     default: false,
     access: ["Workers", "Clients", "Admins"],
   },
-  {
-    title: "Perehdykset",
-    type: "page",
-    icon: <AssignmentLateIcon />,
-    link: "/onboarding",
-    default: false,
-    access: ["Workers", "Clients", "Admins"],
-  },
+
 
   {
     title: "Analyze",
@@ -91,14 +84,6 @@ export const SidebarData = [
     type: "page",
     icon: <WorkIcon />,
     link: "/workspaces",
-    default: false,
-    access: ["Admins"],
-  },
-  {
-    title: "Agreements",
-    type: "page",
-    icon: <AssignmentLateIcon />,
-    link: "/agreementadminpanel",
     default: false,
     access: ["Admins"],
   },
