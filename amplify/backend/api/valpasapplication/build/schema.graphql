@@ -1,0 +1,808 @@
+
+enum Break {
+  MIN15
+  MIN30
+  MIN45
+  H1
+}
+
+type Breaks {
+  start: AWSDateTime
+  duration: Break
+  reasone: String
+}
+
+type UserAgreement @aws_iam @aws_cognito_user_pools {
+  id: ID
+  status: Status
+  user: User
+}
+
+type AditionalInfo @aws_iam @aws_cognito_user_pools {
+  name: String
+  description: String
+  id: ID
+}
+
+type Agreement @aws_iam @aws_cognito_user_pools {
+  id: ID!
+  name: String
+  workers: [ID]
+  client: [ID]
+  createdAt: AWSDateTime
+  userId: String
+  user: User
+  aditionalInfo: [AditionalInfo]
+  userAgreement: [UserAgreement]
+  workspaceId: [ID]
+  updatedAt: AWSDateTime!
+  _version: Int!
+  _deleted: Boolean
+  _lastChangedAt: AWSTimestamp!
+}
+
+type Comment @aws_iam @aws_cognito_user_pools {
+  user: UserAgreement
+  title: String
+  comment: String
+}
+
+type Workplace @aws_iam @aws_cognito_user_pools {
+  workId: ID
+  name: String
+}
+
+type User @aws_iam @aws_cognito_user_pools {
+  userId: ID
+  name: String
+  family_name: String
+  icon: AWSURL
+}
+
+enum Status {
+  COMPLETE
+  ACTIVE
+  INWAITTING
+}
+
+type Tasks @aws_iam @aws_cognito_user_pools {
+  id: ID!
+  title: String
+  description: String
+  username: String
+  user: User
+  time: AWSTime
+  status: Status
+  workplace: Workplace
+  interval: TimeInterval
+  comments: [Comment]
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+  _version: Int!
+  _deleted: Boolean
+  _lastChangedAt: AWSTimestamp!
+}
+
+type Profile @aws_iam @aws_cognito_user_pools {
+  profile_picture: AWSURL
+  first_name: String
+  last_name: String
+  email: AWSEmail
+}
+
+type UserSettings @aws_iam @aws_cognito_user_pools {
+  timeFormat: String
+  timeZone: String
+  dateFormat: String
+  modalSendConfirm: Boolean
+  modalConfirmConfirm: Boolean
+}
+
+type CostRate @aws_iam @aws_cognito_user_pools {
+  amount: Int
+  currency: String
+}
+
+type UserMemberships @aws_iam @aws_cognito_user_pools {
+  hourlyRate: HourlyRate
+  costRate: CostRate
+  membershipStatus: String
+  membershipType: String
+  userId: ID
+  targetId: ID
+}
+
+type TimeInterval @aws_iam @aws_cognito_user_pools {
+  duration: String
+  end: AWSDateTime
+  start: AWSDateTime
+}
+
+type TimeEntry @aws_iam @aws_cognito_user_pools {
+  id: ID!
+  description: String
+  userId: String
+  workspaceId: ID
+  timeInterval: TimeInterval
+  isActive: Boolean
+  isLocked: Boolean
+  isSent: Boolean
+  isConfirmed: Boolean
+  billable: Boolean
+  breaks: [Break]
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+  _version: Int!
+  _deleted: Boolean
+  _lastChangedAt: AWSTimestamp!
+}
+
+type WorkspaceSettings @aws_iam @aws_cognito_user_pools {
+  shortBreak: Int
+  dinnerBreak: Int
+}
+
+type Membership @aws_iam @aws_cognito_user_pools {
+  hourlyRate: HourlyRate
+  membershipType: String
+  membershipStatus: String
+  userId: ID
+  targetId: String
+}
+
+type HourlyRate @aws_iam @aws_cognito_user_pools {
+  amount: Int
+  currency: String
+}
+
+type AllWorkSpaces @aws_iam @aws_cognito_user_pools {
+  id: ID!
+  hourlyRate: HourlyRate
+  imageUrl: AWSURL
+  memberships: [Membership]
+  name: String
+  workspaceSettings: WorkspaceSettings
+  workers: [String]
+  adminId: [String]
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+  _version: Int!
+  _deleted: Boolean
+  _lastChangedAt: AWSTimestamp!
+}
+
+type UserCredentials @aws_iam @aws_cognito_user_pools {
+  id: ID!
+  userId: String
+  activeTimeEntry: ID
+  status: String
+  defaultWorkspace: ID
+  memberships: [UserMemberships]
+  profile: Profile
+  formChecked: [String]
+  settings: UserSettings
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+  _version: Int!
+  _deleted: Boolean
+  _lastChangedAt: AWSTimestamp!
+}
+
+type FormItem {
+  name: String
+  text: String
+}
+
+input ModelStringInput {
+  ne: String
+  eq: String
+  le: String
+  lt: String
+  ge: String
+  gt: String
+  contains: String
+  notContains: String
+  between: [String]
+  beginsWith: String
+  attributeExists: Boolean
+  attributeType: ModelAttributeTypes
+  size: ModelSizeInput
+}
+
+input ModelIntInput {
+  ne: Int
+  eq: Int
+  le: Int
+  lt: Int
+  ge: Int
+  gt: Int
+  between: [Int]
+  attributeExists: Boolean
+  attributeType: ModelAttributeTypes
+}
+
+input ModelFloatInput {
+  ne: Float
+  eq: Float
+  le: Float
+  lt: Float
+  ge: Float
+  gt: Float
+  between: [Float]
+  attributeExists: Boolean
+  attributeType: ModelAttributeTypes
+}
+
+input ModelBooleanInput {
+  ne: Boolean
+  eq: Boolean
+  attributeExists: Boolean
+  attributeType: ModelAttributeTypes
+}
+
+input ModelIDInput {
+  ne: ID
+  eq: ID
+  le: ID
+  lt: ID
+  ge: ID
+  gt: ID
+  contains: ID
+  notContains: ID
+  between: [ID]
+  beginsWith: ID
+  attributeExists: Boolean
+  attributeType: ModelAttributeTypes
+  size: ModelSizeInput
+}
+
+input ModelSubscriptionStringInput {
+  ne: String
+  eq: String
+  le: String
+  lt: String
+  ge: String
+  gt: String
+  contains: String
+  notContains: String
+  between: [String]
+  beginsWith: String
+  in: [String]
+  notIn: [String]
+}
+
+input ModelSubscriptionIntInput {
+  ne: Int
+  eq: Int
+  le: Int
+  lt: Int
+  ge: Int
+  gt: Int
+  between: [Int]
+  in: [Int]
+  notIn: [Int]
+}
+
+input ModelSubscriptionFloatInput {
+  ne: Float
+  eq: Float
+  le: Float
+  lt: Float
+  ge: Float
+  gt: Float
+  between: [Float]
+  in: [Float]
+  notIn: [Float]
+}
+
+input ModelSubscriptionBooleanInput {
+  ne: Boolean
+  eq: Boolean
+}
+
+input ModelSubscriptionIDInput {
+  ne: ID
+  eq: ID
+  le: ID
+  lt: ID
+  ge: ID
+  gt: ID
+  contains: ID
+  notContains: ID
+  between: [ID]
+  beginsWith: ID
+  in: [ID]
+  notIn: [ID]
+}
+
+enum ModelAttributeTypes {
+  binary
+  binarySet
+  bool
+  list
+  map
+  number
+  numberSet
+  string
+  stringSet
+  _null
+}
+
+input ModelSizeInput {
+  ne: Int
+  eq: Int
+  le: Int
+  lt: Int
+  ge: Int
+  gt: Int
+  between: [Int]
+}
+
+enum ModelSortDirection {
+  ASC
+  DESC
+}
+
+input UserInput {
+  userId: ID
+  name: String
+  family_name: String
+  icon: AWSURL
+}
+
+input AditionalInfoInput {
+  name: String
+  description: String
+  id: ID
+}
+
+input UserAgreementInput {
+  id: ID
+  status: Status
+  user: UserInput
+}
+
+type ModelAgreementConnection @aws_iam @aws_cognito_user_pools {
+  items: [Agreement]!
+  nextToken: String
+  startedAt: AWSTimestamp
+}
+
+input ModelAgreementFilterInput {
+  id: ModelIDInput
+  name: ModelStringInput
+  workers: ModelIDInput
+  client: ModelIDInput
+  createdAt: ModelStringInput
+  userId: ModelStringInput
+  workspaceId: ModelIDInput
+  and: [ModelAgreementFilterInput]
+  or: [ModelAgreementFilterInput]
+  not: ModelAgreementFilterInput
+}
+
+type Query {
+  getAgreement(id: ID!): Agreement @aws_iam @aws_cognito_user_pools
+  listAgreements(filter: ModelAgreementFilterInput, limit: Int, nextToken: String): ModelAgreementConnection @aws_iam @aws_cognito_user_pools
+  syncAgreements(filter: ModelAgreementFilterInput, limit: Int, nextToken: String, lastSync: AWSTimestamp): ModelAgreementConnection @aws_iam @aws_cognito_user_pools
+  getTasks(id: ID!): Tasks @aws_iam @aws_cognito_user_pools
+  listTasks(filter: ModelTasksFilterInput, limit: Int, nextToken: String): ModelTasksConnection @aws_iam @aws_cognito_user_pools
+  syncTasks(filter: ModelTasksFilterInput, limit: Int, nextToken: String, lastSync: AWSTimestamp): ModelTasksConnection @aws_iam @aws_cognito_user_pools
+  getTimeEntry(id: ID!): TimeEntry @aws_iam @aws_cognito_user_pools
+  listTimeEntries(filter: ModelTimeEntryFilterInput, limit: Int, nextToken: String): ModelTimeEntryConnection @aws_iam @aws_cognito_user_pools
+  syncTimeEntries(filter: ModelTimeEntryFilterInput, limit: Int, nextToken: String, lastSync: AWSTimestamp): ModelTimeEntryConnection @aws_iam @aws_cognito_user_pools
+  getAllWorkSpaces(id: ID!): AllWorkSpaces @aws_iam @aws_cognito_user_pools
+  listAllWorkSpaces(filter: ModelAllWorkSpacesFilterInput, limit: Int, nextToken: String): ModelAllWorkSpacesConnection @aws_iam @aws_cognito_user_pools
+  syncAllWorkSpaces(filter: ModelAllWorkSpacesFilterInput, limit: Int, nextToken: String, lastSync: AWSTimestamp): ModelAllWorkSpacesConnection @aws_iam @aws_cognito_user_pools
+  getUserCredentials(id: ID!): UserCredentials @aws_iam @aws_cognito_user_pools
+  listUserCredentials(filter: ModelUserCredentialsFilterInput, limit: Int, nextToken: String): ModelUserCredentialsConnection @aws_iam @aws_cognito_user_pools
+  syncUserCredentials(filter: ModelUserCredentialsFilterInput, limit: Int, nextToken: String, lastSync: AWSTimestamp): ModelUserCredentialsConnection @aws_iam @aws_cognito_user_pools
+}
+
+input ModelAgreementConditionInput {
+  name: ModelStringInput
+  workers: ModelIDInput
+  client: ModelIDInput
+  createdAt: ModelStringInput
+  userId: ModelStringInput
+  workspaceId: ModelIDInput
+  and: [ModelAgreementConditionInput]
+  or: [ModelAgreementConditionInput]
+  not: ModelAgreementConditionInput
+}
+
+input CreateAgreementInput {
+  id: ID
+  name: String
+  workers: [ID]
+  client: [ID]
+  createdAt: AWSDateTime
+  userId: String
+  user: UserInput
+  aditionalInfo: [AditionalInfoInput]
+  userAgreement: [UserAgreementInput]
+  workspaceId: [ID]
+  _version: Int
+}
+
+input UpdateAgreementInput {
+  id: ID!
+  name: String
+  workers: [ID]
+  client: [ID]
+  createdAt: AWSDateTime
+  userId: String
+  user: UserInput
+  aditionalInfo: [AditionalInfoInput]
+  userAgreement: [UserAgreementInput]
+  workspaceId: [ID]
+  _version: Int
+}
+
+input DeleteAgreementInput {
+  id: ID!
+  _version: Int
+}
+
+type Mutation {
+  createAgreement(input: CreateAgreementInput!, condition: ModelAgreementConditionInput): Agreement @aws_iam @aws_cognito_user_pools
+  updateAgreement(input: UpdateAgreementInput!, condition: ModelAgreementConditionInput): Agreement @aws_iam @aws_cognito_user_pools
+  deleteAgreement(input: DeleteAgreementInput!, condition: ModelAgreementConditionInput): Agreement @aws_iam @aws_cognito_user_pools
+  createTasks(input: CreateTasksInput!, condition: ModelTasksConditionInput): Tasks @aws_iam @aws_cognito_user_pools
+  updateTasks(input: UpdateTasksInput!, condition: ModelTasksConditionInput): Tasks @aws_iam @aws_cognito_user_pools
+  deleteTasks(input: DeleteTasksInput!, condition: ModelTasksConditionInput): Tasks @aws_iam @aws_cognito_user_pools
+  createTimeEntry(input: CreateTimeEntryInput!, condition: ModelTimeEntryConditionInput): TimeEntry @aws_iam @aws_cognito_user_pools
+  updateTimeEntry(input: UpdateTimeEntryInput!, condition: ModelTimeEntryConditionInput): TimeEntry @aws_iam @aws_cognito_user_pools
+  deleteTimeEntry(input: DeleteTimeEntryInput!, condition: ModelTimeEntryConditionInput): TimeEntry @aws_iam @aws_cognito_user_pools
+  createAllWorkSpaces(input: CreateAllWorkSpacesInput!, condition: ModelAllWorkSpacesConditionInput): AllWorkSpaces @aws_iam @aws_cognito_user_pools
+  updateAllWorkSpaces(input: UpdateAllWorkSpacesInput!, condition: ModelAllWorkSpacesConditionInput): AllWorkSpaces @aws_iam @aws_cognito_user_pools
+  deleteAllWorkSpaces(input: DeleteAllWorkSpacesInput!, condition: ModelAllWorkSpacesConditionInput): AllWorkSpaces @aws_iam @aws_cognito_user_pools
+  createUserCredentials(input: CreateUserCredentialsInput!, condition: ModelUserCredentialsConditionInput): UserCredentials @aws_iam @aws_cognito_user_pools
+  updateUserCredentials(input: UpdateUserCredentialsInput!, condition: ModelUserCredentialsConditionInput): UserCredentials @aws_iam @aws_cognito_user_pools
+  deleteUserCredentials(input: DeleteUserCredentialsInput!, condition: ModelUserCredentialsConditionInput): UserCredentials @aws_iam @aws_cognito_user_pools
+}
+
+type Subscription {
+  onCreateAgreement(userId: String): Agreement @aws_subscribe(mutations: ["createAgreement"]) @aws_iam @aws_cognito_user_pools
+  onUpdateAgreement(userId: String): Agreement @aws_subscribe(mutations: ["updateAgreement"]) @aws_iam @aws_cognito_user_pools
+  onDeleteAgreement(userId: String): Agreement @aws_subscribe(mutations: ["deleteAgreement"]) @aws_iam @aws_cognito_user_pools
+  onCreateTasks(username: String): Tasks @aws_subscribe(mutations: ["createTasks"]) @aws_iam @aws_cognito_user_pools
+  onUpdateTasks(username: String): Tasks @aws_subscribe(mutations: ["updateTasks"]) @aws_iam @aws_cognito_user_pools
+  onDeleteTasks(username: String): Tasks @aws_subscribe(mutations: ["deleteTasks"]) @aws_iam @aws_cognito_user_pools
+  onCreateTimeEntry(userId: String): TimeEntry @aws_subscribe(mutations: ["createTimeEntry"]) @aws_iam @aws_cognito_user_pools
+  onUpdateTimeEntry(userId: String): TimeEntry @aws_subscribe(mutations: ["updateTimeEntry"]) @aws_iam @aws_cognito_user_pools
+  onDeleteTimeEntry(userId: String): TimeEntry @aws_subscribe(mutations: ["deleteTimeEntry"]) @aws_iam @aws_cognito_user_pools
+  onCreateAllWorkSpaces: AllWorkSpaces @aws_subscribe(mutations: ["createAllWorkSpaces"]) @aws_iam @aws_cognito_user_pools
+  onUpdateAllWorkSpaces: AllWorkSpaces @aws_subscribe(mutations: ["updateAllWorkSpaces"]) @aws_iam @aws_cognito_user_pools
+  onDeleteAllWorkSpaces: AllWorkSpaces @aws_subscribe(mutations: ["deleteAllWorkSpaces"]) @aws_iam @aws_cognito_user_pools
+  onCreateUserCredentials(userId: String): UserCredentials @aws_subscribe(mutations: ["createUserCredentials"]) @aws_iam @aws_cognito_user_pools
+  onUpdateUserCredentials(userId: String): UserCredentials @aws_subscribe(mutations: ["updateUserCredentials"]) @aws_iam @aws_cognito_user_pools
+  onDeleteUserCredentials(userId: String): UserCredentials @aws_subscribe(mutations: ["deleteUserCredentials"]) @aws_iam @aws_cognito_user_pools
+}
+
+input WorkplaceInput {
+  workId: ID
+  name: String
+}
+
+input TimeIntervalInput {
+  duration: String
+  end: AWSDateTime
+  start: AWSDateTime
+}
+
+input CommentInput {
+  user: UserAgreementInput
+  title: String
+  comment: String
+}
+
+type ModelTasksConnection @aws_iam @aws_cognito_user_pools {
+  items: [Tasks]!
+  nextToken: String
+  startedAt: AWSTimestamp
+}
+
+input ModelStatusInput {
+  eq: Status
+  ne: Status
+}
+
+input ModelTasksFilterInput {
+  id: ModelIDInput
+  title: ModelStringInput
+  description: ModelStringInput
+  username: ModelStringInput
+  time: ModelStringInput
+  status: ModelStatusInput
+  and: [ModelTasksFilterInput]
+  or: [ModelTasksFilterInput]
+  not: ModelTasksFilterInput
+}
+
+input ModelTasksConditionInput {
+  title: ModelStringInput
+  description: ModelStringInput
+  username: ModelStringInput
+  time: ModelStringInput
+  status: ModelStatusInput
+  and: [ModelTasksConditionInput]
+  or: [ModelTasksConditionInput]
+  not: ModelTasksConditionInput
+}
+
+input CreateTasksInput {
+  id: ID
+  title: String
+  description: String
+  username: String
+  user: UserInput
+  time: AWSTime
+  status: Status
+  workplace: WorkplaceInput
+  interval: TimeIntervalInput
+  comments: [CommentInput]
+  _version: Int
+}
+
+input UpdateTasksInput {
+  id: ID!
+  title: String
+  description: String
+  username: String
+  user: UserInput
+  time: AWSTime
+  status: Status
+  workplace: WorkplaceInput
+  interval: TimeIntervalInput
+  comments: [CommentInput]
+  _version: Int
+}
+
+input DeleteTasksInput {
+  id: ID!
+  _version: Int
+}
+
+type ModelTimeEntryConnection @aws_iam @aws_cognito_user_pools {
+  items: [TimeEntry]!
+  nextToken: String
+  startedAt: AWSTimestamp
+}
+
+input ModelBreakListInput {
+  eq: [Break]
+  ne: [Break]
+  contains: Break
+  notContains: Break
+}
+
+input ModelTimeEntryFilterInput {
+  id: ModelIDInput
+  description: ModelStringInput
+  userId: ModelStringInput
+  workspaceId: ModelIDInput
+  isActive: ModelBooleanInput
+  isLocked: ModelBooleanInput
+  isSent: ModelBooleanInput
+  isConfirmed: ModelBooleanInput
+  billable: ModelBooleanInput
+  breaks: ModelBreakListInput
+  and: [ModelTimeEntryFilterInput]
+  or: [ModelTimeEntryFilterInput]
+  not: ModelTimeEntryFilterInput
+}
+
+input ModelTimeEntryConditionInput {
+  description: ModelStringInput
+  userId: ModelStringInput
+  workspaceId: ModelIDInput
+  isActive: ModelBooleanInput
+  isLocked: ModelBooleanInput
+  isSent: ModelBooleanInput
+  isConfirmed: ModelBooleanInput
+  billable: ModelBooleanInput
+  breaks: ModelBreakListInput
+  and: [ModelTimeEntryConditionInput]
+  or: [ModelTimeEntryConditionInput]
+  not: ModelTimeEntryConditionInput
+}
+
+input CreateTimeEntryInput {
+  id: ID
+  description: String
+  userId: String
+  workspaceId: ID
+  timeInterval: TimeIntervalInput
+  isActive: Boolean
+  isLocked: Boolean
+  isSent: Boolean
+  isConfirmed: Boolean
+  billable: Boolean
+  breaks: [Break]
+  _version: Int
+}
+
+input UpdateTimeEntryInput {
+  id: ID!
+  description: String
+  userId: String
+  workspaceId: ID
+  timeInterval: TimeIntervalInput
+  isActive: Boolean
+  isLocked: Boolean
+  isSent: Boolean
+  isConfirmed: Boolean
+  billable: Boolean
+  breaks: [Break]
+  _version: Int
+}
+
+input DeleteTimeEntryInput {
+  id: ID!
+  _version: Int
+}
+
+input HourlyRateInput {
+  amount: Int
+  currency: String
+}
+
+input MembershipInput {
+  hourlyRate: HourlyRateInput
+  membershipType: String
+  membershipStatus: String
+  userId: ID
+  targetId: String
+}
+
+input WorkspaceSettingsInput {
+  shortBreak: Int
+  dinnerBreak: Int
+}
+
+type ModelAllWorkSpacesConnection @aws_iam @aws_cognito_user_pools {
+  items: [AllWorkSpaces]!
+  nextToken: String
+  startedAt: AWSTimestamp
+}
+
+input ModelAllWorkSpacesFilterInput {
+  id: ModelIDInput
+  imageUrl: ModelStringInput
+  name: ModelStringInput
+  workers: ModelStringInput
+  adminId: ModelStringInput
+  and: [ModelAllWorkSpacesFilterInput]
+  or: [ModelAllWorkSpacesFilterInput]
+  not: ModelAllWorkSpacesFilterInput
+}
+
+input ModelAllWorkSpacesConditionInput {
+  imageUrl: ModelStringInput
+  name: ModelStringInput
+  workers: ModelStringInput
+  adminId: ModelStringInput
+  and: [ModelAllWorkSpacesConditionInput]
+  or: [ModelAllWorkSpacesConditionInput]
+  not: ModelAllWorkSpacesConditionInput
+}
+
+input CreateAllWorkSpacesInput {
+  id: ID
+  hourlyRate: HourlyRateInput
+  imageUrl: AWSURL
+  memberships: [MembershipInput]
+  name: String
+  workspaceSettings: WorkspaceSettingsInput
+  workers: [String]
+  adminId: [String]
+  _version: Int
+}
+
+input UpdateAllWorkSpacesInput {
+  id: ID!
+  hourlyRate: HourlyRateInput
+  imageUrl: AWSURL
+  memberships: [MembershipInput]
+  name: String
+  workspaceSettings: WorkspaceSettingsInput
+  workers: [String]
+  adminId: [String]
+  _version: Int
+}
+
+input DeleteAllWorkSpacesInput {
+  id: ID!
+  _version: Int
+}
+
+input UserMembershipsInput {
+  hourlyRate: HourlyRateInput
+  costRate: CostRateInput
+  membershipStatus: String
+  membershipType: String
+  userId: ID
+  targetId: ID
+}
+
+input CostRateInput {
+  amount: Int
+  currency: String
+}
+
+input ProfileInput {
+  profile_picture: AWSURL
+  first_name: String
+  last_name: String
+  email: AWSEmail
+}
+
+input UserSettingsInput {
+  timeFormat: String
+  timeZone: String
+  dateFormat: String
+  modalSendConfirm: Boolean
+  modalConfirmConfirm: Boolean
+}
+
+type ModelUserCredentialsConnection @aws_iam @aws_cognito_user_pools {
+  items: [UserCredentials]!
+  nextToken: String
+  startedAt: AWSTimestamp
+}
+
+input ModelUserCredentialsFilterInput {
+  id: ModelIDInput
+  userId: ModelStringInput
+  activeTimeEntry: ModelIDInput
+  status: ModelStringInput
+  defaultWorkspace: ModelIDInput
+  formChecked: ModelStringInput
+  and: [ModelUserCredentialsFilterInput]
+  or: [ModelUserCredentialsFilterInput]
+  not: ModelUserCredentialsFilterInput
+}
+
+input ModelUserCredentialsConditionInput {
+  userId: ModelStringInput
+  activeTimeEntry: ModelIDInput
+  status: ModelStringInput
+  defaultWorkspace: ModelIDInput
+  formChecked: ModelStringInput
+  and: [ModelUserCredentialsConditionInput]
+  or: [ModelUserCredentialsConditionInput]
+  not: ModelUserCredentialsConditionInput
+}
+
+input CreateUserCredentialsInput {
+  id: ID
+  userId: String
+  activeTimeEntry: ID
+  status: String
+  defaultWorkspace: ID
+  memberships: [UserMembershipsInput]
+  profile: ProfileInput
+  formChecked: [String]
+  settings: UserSettingsInput
+  _version: Int
+}
+
+input UpdateUserCredentialsInput {
+  id: ID!
+  userId: String
+  activeTimeEntry: ID
+  status: String
+  defaultWorkspace: ID
+  memberships: [UserMembershipsInput]
+  profile: ProfileInput
+  formChecked: [String]
+  settings: UserSettingsInput
+  _version: Int
+}
+
+input DeleteUserCredentialsInput {
+  id: ID!
+  _version: Int
+}
+

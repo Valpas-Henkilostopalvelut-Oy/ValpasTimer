@@ -1,0 +1,19 @@
+{
+    "AppSyncApiName": "valpasapplication",
+    "DynamoDBBillingMode": "PAY_PER_REQUEST",
+    "DynamoDBEnableServerSideEncryption": false,
+    "AuthCognitoUserPoolId": {
+        "Fn::GetAtt": [
+            "authvalpasapplicationd66e1b4f",
+            "Outputs.UserPoolId"
+        ]
+    },
+    "authRoleName": {
+        "Ref": "AuthRoleName"
+    },
+    "unauthRoleName": {
+        "Ref": "UnauthRoleName"
+    },
+    "S3DeploymentBucket": "amplify-valpasapplication-staging-64726-deployment",
+    "S3DeploymentRootKey": "amplify-appsync-files/5d5c15dba8eab0fde13ee66407ca92273b563aa4"
+}
