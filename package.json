@@ -73,5 +73,6 @@
   "prettier": {
     "printWidth": 120,
     "proseWrap": "never"
-  }
+  },
+  "devDependencies": {}
 }

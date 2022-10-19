@@ -32,6 +32,9 @@
           "Id": "dc4dcd829cac4d4c94d51de57d970823",
           "Region": "eu-west-1"
         }
+      },
+      "analytics": {
+        "valpasapplication": {}
       }
     }
   }
