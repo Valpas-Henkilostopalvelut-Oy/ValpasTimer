@@ -28,13 +28,10 @@
       },
       "notifications": {
         "Pinpoint": {
-          "Name": "valpasapplicationQA9ue-staging",
-          "Id": "dc4dcd829cac4d4c94d51de57d970823",
+          "Name": "valpaswebappOwn-staging",
+          "Id": "a8315f59e68947d9ae03e1eacf390b29",
           "Region": "eu-west-1"
         }
-      },
-      "analytics": {
-        "valpasapplication": {}
       }
     }
   }

@@ -112,10 +112,5 @@
     }
   },
   "notifications": {},
-  "analytics": {
-    "valpasapplication": {
-      "service": "Pinpoint",
-      "providerPlugin": "awscloudformation"
-    }
-  }
+  "analytics": {}
 }
