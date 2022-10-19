@@ -1,9 +1,23 @@
 import { ModelInit, MutableModel } from "@aws-amplify/datastore";
 
+export enum Break {
+  MIN15 = "MIN15",
+  MIN30 = "MIN30",
+  MIN45 = "MIN45",
+  H1 = "H1"
+}
+
 export enum Status {
   COMPLETE = "COMPLETE",
   ACTIVE = "ACTIVE",
   INWAITTING = "INWAITTING"
+}
+
+export declare class Breaks {
+  readonly start?: string | null;
+  readonly duration?: Break | keyof typeof Break | null;
+  readonly reasone?: string | null;
+  constructor(init: ModelInit<Breaks>);
 }
 
 export declare class UserAgreement {
@@ -134,6 +148,7 @@ export declare class Agreement {
   readonly workers?: (string | null)[] | null;
   readonly client?: (string | null)[] | null;
   readonly createdAt?: string | null;
+  readonly userId?: string | null;
   readonly user?: User | null;
   readonly aditionalInfo?: (AditionalInfo | null)[] | null;
   readonly userAgreement?: (UserAgreement | null)[] | null;
@@ -171,6 +186,7 @@ export declare class TimeEntry {
   readonly isSent?: boolean | null;
   readonly isConfirmed?: boolean | null;
   readonly billable?: boolean | null;
+  readonly breaks?: (Break | null)[] | keyof typeof Break | null;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
   constructor(init: ModelInit<TimeEntry, TimeEntryMetaData>);
@@ -185,9 +201,7 @@ export declare class AllWorkSpaces {
   readonly name?: string | null;
   readonly workspaceSettings?: WorkspaceSettings | null;
   readonly workers?: (string | null)[] | null;
-  readonly clientId?: (string | null)[] | null;
   readonly adminId?: (string | null)[] | null;
-  readonly managerId?: (string | null)[] | null;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
   constructor(init: ModelInit<AllWorkSpaces, AllWorkSpacesMetaData>);
@@ -196,7 +210,7 @@ export declare class AllWorkSpaces {
 
 export declare class UserCredentials {
   readonly id: string;
-  readonly userId: string;
+  readonly userId?: string | null;
   readonly activeTimeEntry?: string | null;
   readonly status?: string | null;
   readonly defaultWorkspace?: string | null;

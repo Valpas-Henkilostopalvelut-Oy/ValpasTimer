@@ -110,5 +110,12 @@
         }
       }
     }
-  }
+  },
+  "notifications": {
+    "valpasapplicationQA9ue": {
+      "service": "Pinpoint",
+      "channels": []
+    }
+  },
+  "analytics": {}
 }

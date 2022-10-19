@@ -3,7 +3,7 @@ import { FormControl, MenuItem, InputLabel, Select, Typography } from "@mui/mate
 import { DataStore } from "aws-amplify";
 import { AllWorkSpaces } from "../../../models";
 
-const roles = ["Manager", "Admin", "Client", "No Role"];
+const roles = ["Admin", "No Role"];
 
 export const ChangeRole = ({ userId, workId, isAdmin }) => {
   const [role, setRole] = useState("");
@@ -16,10 +16,6 @@ export const ChangeRole = ({ userId, workId, isAdmin }) => {
 
       if (work.adminId.includes(userId)) {
         setRole("Admin");
-      } else if (work.managerId.includes(userId)) {
-        setRole("Manager");
-      } else if (work.clientId.includes(userId)) {
-        setRole("Client");
       } else {
         setRole("No Role");
       }
@@ -41,20 +37,8 @@ export const ChangeRole = ({ userId, workId, isAdmin }) => {
       AllWorkSpaces.copyOf(original, (update) => {
         if (e.target.value === "Admin") {
           update.adminId = [...update.adminId, userId];
-          update.managerId = update.managerId.filter((id) => id !== userId);
-          update.clientId = update.clientId.filter((id) => id !== userId);
-        } else if (e.target.value === "Manager") {
-          update.managerId = [...update.managerId, userId];
-          update.adminId = update.adminId.filter((id) => id !== userId);
-          update.clientId = update.clientId.filter((id) => id !== userId);
-        } else if (e.target.value === "Client") {
-          update.clientId = [...update.clientId, userId];
-          update.adminId = update.adminId.filter((id) => id !== userId);
-          update.managerId = update.managerId.filter((id) => id !== userId);
         } else if (e.target.value === "No Role") {
           update.adminId = update.adminId.filter((id) => id !== userId);
-          update.managerId = update.managerId.filter((id) => id !== userId);
-          update.clientId = update.clientId.filter((id) => id !== userId);
         }
       })
     );

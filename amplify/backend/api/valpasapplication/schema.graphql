@@ -1,3 +1,16 @@
+enum Break {
+  MIN15
+  MIN30
+  MIN45
+  H1
+}
+
+type Breaks {
+  start: AWSDateTime
+  duration: Break
+  reasone: String
+}
+
 type UserAgreement {
   id: ID
   status: Status
@@ -14,7 +27,7 @@ type Agreement
   @model
   @auth(
     rules: [
-      { allow: owner }
+      { allow: owner, ownerField: "userId" }
       { allow: groups, groups: ["Workers"], operations: [read, update] }
       { allow: groups, groups: ["Clients"], operations: [read, update] }
       { allow: groups, groups: ["Admins"], operations: [read, create, update, delete] }
@@ -25,6 +38,7 @@ type Agreement
   workers: [ID]
   client: [ID]
   createdAt: AWSDateTime
+  userId: String
   user: User
   aditionalInfo: [AditionalInfo]
   userAgreement: [UserAgreement]
@@ -114,14 +128,14 @@ type TimeEntry
   @model
   @auth(
     rules: [
-      { allow: owner }
+      { allow: owner, ownerField: "userId" }
       { allow: groups, groups: ["Admins"], operations: [read, create, update, delete] }
       { allow: groups, groups: ["Clients"], operations: [read, update] }
     ]
   ) {
   id: ID!
   description: String
-  userId: ID
+  userId: String
   workspaceId: ID
   timeInterval: TimeInterval
   isActive: Boolean
@@ -129,6 +143,7 @@ type TimeEntry
   isSent: Boolean
   isConfirmed: Boolean
   billable: Boolean
+  breaks: [Break]
 }
 
 type WorkspaceSettings {
@@ -153,9 +168,9 @@ type AllWorkSpaces
   @model
   @auth(
     rules: [
-      { allow: private, operations: [read] }
+      { allow: owner, ownerField: "workers", operations: [read] }
+      { allow: owner, ownerField: "adminId", operations: [read, update] }
       { allow: groups, groups: ["Admins"], operations: [read, create, update, delete] }
-      { allow: groups, groups: ["Clients"], operations: [read, update] }
     ]
   ) {
   id: ID!
@@ -164,23 +179,21 @@ type AllWorkSpaces
   memberships: [Membership]
   name: String
   workspaceSettings: WorkspaceSettings
-  workers: [ID]
-  clientId: [ID]
-  adminId: [ID]
-  managerId: [ID]
+  workers: [String]
+  adminId: [String]
 }
 
 type UserCredentials
   @model
   @auth(
     rules: [
-      { allow: owner }
+      { allow: owner, ownerField: "userId", operations: [read, update, delete] }
       { allow: groups, groups: ["Admins"], operations: [read, create, update, delete] }
-      { allow: groups, groups: ["Clients"], operations: [update, read] }
+      { allow: groups, groups: ["Clients"], operations: [read] }
     ]
   ) {
   id: ID!
-  userId: ID!
+  userId: String
   activeTimeEntry: ID
   status: String
   defaultWorkspace: ID
@@ -194,4 +207,3 @@ type FormItem {
   name: String
   text: String
 }
- 

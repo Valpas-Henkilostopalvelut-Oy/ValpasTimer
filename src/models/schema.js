@@ -40,6 +40,13 @@ export const schema = {
                     "isRequired": false,
                     "attributes": []
                 },
+                "userId": {
+                    "name": "userId",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
                 "user": {
                     "name": "user",
                     "isArray": false,
@@ -99,7 +106,7 @@ export const schema = {
                         "rules": [
                             {
                                 "provider": "userPools",
-                                "ownerField": "owner",
+                                "ownerField": "userId",
                                 "allow": "owner",
                                 "identityClaim": "cognito:username",
                                 "operations": [
@@ -315,7 +322,7 @@ export const schema = {
                 "userId": {
                     "name": "userId",
                     "isArray": false,
-                    "type": "ID",
+                    "type": "String",
                     "isRequired": false,
                     "attributes": []
                 },
@@ -370,6 +377,16 @@ export const schema = {
                     "isRequired": false,
                     "attributes": []
                 },
+                "breaks": {
+                    "name": "breaks",
+                    "isArray": true,
+                    "type": {
+                        "enum": "Break"
+                    },
+                    "isRequired": false,
+                    "attributes": [],
+                    "isArrayNullable": true
+                },
                 "createdAt": {
                     "name": "createdAt",
                     "isArray": false,
@@ -400,7 +417,7 @@ export const schema = {
                         "rules": [
                             {
                                 "provider": "userPools",
-                                "ownerField": "owner",
+                                "ownerField": "userId",
                                 "allow": "owner",
                                 "identityClaim": "cognito:username",
                                 "operations": [
@@ -496,15 +513,7 @@ export const schema = {
                 "workers": {
                     "name": "workers",
                     "isArray": true,
-                    "type": "ID",
-                    "isRequired": false,
-                    "attributes": [],
-                    "isArrayNullable": true
-                },
-                "clientId": {
-                    "name": "clientId",
-                    "isArray": true,
-                    "type": "ID",
+                    "type": "String",
                     "isRequired": false,
                     "attributes": [],
                     "isArrayNullable": true
@@ -512,15 +521,7 @@ export const schema = {
                 "adminId": {
                     "name": "adminId",
                     "isArray": true,
-                    "type": "ID",
-                    "isRequired": false,
-                    "attributes": [],
-                    "isArrayNullable": true
-                },
-                "managerId": {
-                    "name": "managerId",
-                    "isArray": true,
-                    "type": "ID",
+                    "type": "String",
                     "isRequired": false,
                     "attributes": [],
                     "isArrayNullable": true
@@ -554,10 +555,23 @@ export const schema = {
                     "properties": {
                         "rules": [
                             {
-                                "allow": "private",
+                                "provider": "userPools",
+                                "ownerField": "workers",
+                                "allow": "owner",
                                 "operations": [
                                     "read"
-                                ]
+                                ],
+                                "identityClaim": "cognito:username"
+                            },
+                            {
+                                "provider": "userPools",
+                                "ownerField": "adminId",
+                                "allow": "owner",
+                                "operations": [
+                                    "read",
+                                    "update"
+                                ],
+                                "identityClaim": "cognito:username"
                             },
                             {
                                 "groupClaim": "cognito:groups",
@@ -571,18 +585,6 @@ export const schema = {
                                     "create",
                                     "update",
                                     "delete"
-                                ]
-                            },
-                            {
-                                "groupClaim": "cognito:groups",
-                                "provider": "userPools",
-                                "allow": "groups",
-                                "groups": [
-                                    "Clients"
-                                ],
-                                "operations": [
-                                    "read",
-                                    "update"
                                 ]
                             }
                         ]
@@ -603,8 +605,8 @@ export const schema = {
                 "userId": {
                     "name": "userId",
                     "isArray": false,
-                    "type": "ID",
-                    "isRequired": true,
+                    "type": "String",
+                    "isRequired": false,
                     "attributes": []
                 },
                 "activeTimeEntry": {
@@ -694,15 +696,14 @@ export const schema = {
                         "rules": [
                             {
                                 "provider": "userPools",
-                                "ownerField": "owner",
+                                "ownerField": "userId",
                                 "allow": "owner",
-                                "identityClaim": "cognito:username",
                                 "operations": [
-                                    "create",
+                                    "read",
                                     "update",
-                                    "delete",
-                                    "read"
-                                ]
+                                    "delete"
+                                ],
+                                "identityClaim": "cognito:username"
                             },
                             {
                                 "groupClaim": "cognito:groups",
@@ -726,7 +727,6 @@ export const schema = {
                                     "Clients"
                                 ],
                                 "operations": [
-                                    "update",
                                     "read"
                                 ]
                             }
@@ -737,6 +737,15 @@ export const schema = {
         }
     },
     "enums": {
+        "Break": {
+            "name": "Break",
+            "values": [
+                "MIN15",
+                "MIN30",
+                "MIN45",
+                "H1"
+            ]
+        },
         "Status": {
             "name": "Status",
             "values": [
@@ -747,6 +756,34 @@ export const schema = {
         }
     },
     "nonModels": {
+        "Breaks": {
+            "name": "Breaks",
+            "fields": {
+                "start": {
+                    "name": "start",
+                    "isArray": false,
+                    "type": "AWSDateTime",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "duration": {
+                    "name": "duration",
+                    "isArray": false,
+                    "type": {
+                        "enum": "Break"
+                    },
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "reasone": {
+                    "name": "reasone",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                }
+            }
+        },
         "UserAgreement": {
             "name": "UserAgreement",
             "fields": {
@@ -1152,5 +1189,5 @@ export const schema = {
             }
         }
     },
-    "version": "ff60b3ad87f42122d2b9bea979d32bc2"
+    "version": "005d497d8b2df5841b54a174571ffe0c"
 };

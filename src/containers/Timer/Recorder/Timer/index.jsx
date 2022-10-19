@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, Fragment } from "react";
 import {
   TextField,
   Button,
@@ -10,14 +10,53 @@ import {
   DialogTitle,
   Menu,
   MenuItem,
-  Box,
+  Popover,
 } from "@mui/material";
 import { Auth, DataStore } from "aws-amplify";
-import { UserCredentials, TimeEntry } from "../../../../models";
+import { UserCredentials, TimeEntry, Break } from "../../../../models";
 import WorkspaceSelect from "../../../../components/WorkSpaceSelect/index.jsx";
 import { timeMaker } from "../../../../services/time.jsx";
 
-const BreakPopover = ({ id = "", open = false, handleClose, anchorEl = null }) => {
+const addBreak = async ({ time, timeEntryId }) => {};
+
+const Row = ({ time, close, timeId }) => {
+  const [anchorEl, setAnchorEl] = useState(null);
+  const open = Boolean(anchorEl);
+  const id = open ? "simple-popover" : undefined;
+
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+    close();
+  };
+
+  const reasone = ["Lunch", "Own going", "Short break"];
+
+  return (
+    <Fragment>
+      <MenuItem onClick={handleClick}>{time.title}</MenuItem>
+      <Menu id={id} open={open} anchorEl={anchorEl} onClose={handleClose}>
+        {reasone.map((reasone, k) => (
+          <MenuItem key={k} onClick={handleClose}>
+            {reasone}
+          </MenuItem>
+        ))}
+      </Menu>
+    </Fragment>
+  );
+};
+
+const BreakPopover = ({ id = "", open = false, handleClose, anchorEl = null, timeId }) => {
+  const times = [
+    { title: "15 min", value: Break.MIN15 },
+    { title: "30 min", value: Break.MIN30 },
+    { title: "45 min", value: Break.MIN45 },
+    { title: "1 hour", value: Break.H1 },
+  ];
+  console.log();
   return (
     <Menu
       id={id}
@@ -25,15 +64,17 @@ const BreakPopover = ({ id = "", open = false, handleClose, anchorEl = null }) =
       anchorEl={anchorEl}
       onClose={handleClose}
       anchorOrigin={{
-        vertical: 'bottom',
-        horizontal: 'center',
+        vertical: "bottom",
+        horizontal: "center",
       }}
       transformOrigin={{
-        vertical: 'top',
-        horizontal: 'center',
+        vertical: "top",
+        horizontal: "center",
       }}
     >
-      <MenuItem onClick={handleClose}>Start break</MenuItem>
+      {times.map((time, k) => (
+        <Row key={k} time={time} close={handleClose} />
+      ))}
     </Menu>
   );
 };
@@ -57,28 +98,13 @@ const editDataStoreStartTime = async ({ newTime }) => {
     .catch((e) => console.warn(e));
 };
 
-const updateTime = ({ startTime, setTime }) => {
-  const timeDiff = new Date(Date.parse(new Date()) - Date.parse(new Date(startTime)));
-
-  console.log(timeDiff);
-
-  setTime({
-    seconds: timeDiff.getUTCSeconds(),
-    minutes: timeDiff.getUTCMinutes(),
-    hours: timeDiff.getUTCHours(),
-  });
-};
-
-const EditStartTime = ({ open = false, setOpen, setTime, timerTime, startTime }) => {
+const EditStartTime = ({ open = false, setOpen, timerTime }) => {
+  const [tempTime, setTempTime] = useState(new Date(timerTime.timeInterval.start));
   const handleClose = async () => {
-    updateTime({
-      startTime: startTime,
-      setTime: setTime,
-    });
     setOpen(false);
   };
 
-  const d = new Date(startTime);
+  const d = new Date(timerTime.timeInterval.start);
   const [value, setValue] = useState(
     `${String("0" + d.getHours()).slice(-2)}:${String("0" + d.getMinutes()).slice(-2)}`
   );
@@ -92,22 +118,29 @@ const EditStartTime = ({ open = false, setOpen, setTime, timerTime, startTime })
     >
       <DialogTitle id="alert-dialog-title">Edit start time</DialogTitle>
       <DialogContent>
-        {startTime !== null && (
+        {timerTime !== null && (
           <TextField
             label="Start time"
             value={value}
             onChange={(e) => setValue(e.target.value)}
             onBlur={(e) => {
-              let val = timeMaker(e, startTime);
+              let val = timeMaker(e, timerTime.timeInterval.start);
               setValue(`${String("0" + val.h).slice(-2)}:${String("0" + val.m).slice(-2)}`);
-              editDataStoreStartTime({ newTime: new Date(startTime).setHours(val.h, val.m, 0, 0) });
+              setTempTime(new Date(timerTime.timeInterval.start).setHours(val.h, val.m, 0, 0));
             }}
           />
         )}
       </DialogContent>
       <DialogActions>
         <Button onClick={handleClose}>Cancel</Button>
-        <Button onClick={handleClose}>Save</Button>
+        <Button
+          onClick={() => {
+            editDataStoreStartTime({ newTime: tempTime });
+            handleClose();
+          }}
+        >
+          Save
+        </Button>
       </DialogActions>
     </Dialog>
   );
@@ -123,7 +156,7 @@ export const Timer = ({ reload }) => {
   const [selectedOption, setSelectedOption] = useState("");
   const [description, setDescription] = useState("");
   const [open, setOpen] = useState(false);
-  const [startTime, setStartTime] = useState(null);
+  const [timerTime, setTimerTime] = useState(null);
 
   useEffect(() => {
     let isActive = false;
@@ -135,7 +168,7 @@ export const Timer = ({ reload }) => {
         if (user.attributes["custom:RuningTimeEntry"] !== "null") {
           await DataStore.query(TimeEntry, user.attributes["custom:RuningTimeEntry"]).then((ongoingTime) => {
             const timeDiff = new Date(Date.parse(new Date()) - Date.parse(ongoingTime.timeInterval.start));
-            setStartTime(new Date(ongoingTime.timeInterval.start));
+            setTimerTime(ongoingTime);
 
             setTime({
               seconds: timeDiff.getUTCSeconds(),
@@ -282,7 +315,7 @@ export const Timer = ({ reload }) => {
   //description, workselect, start stop
   return (
     <Grid container spacing={2} direction="row" justifyContent="center" alignItems="center">
-      <Grid item xs={12} md={6}>
+      <Grid item xs={12} md={!started ? 6 : 5}>
         <TextField
           label="Description"
           value={description}
@@ -301,15 +334,17 @@ export const Timer = ({ reload }) => {
           {String("0" + time.hours).slice(-2)}:{String("0" + time.minutes).slice(-2)}:
           {String("0" + time.seconds).slice(-2)}
         </Typography>
-        {startTime && <EditStartTime open={open} setOpen={setOpen} setTime={setTime} startTime={startTime} />}
+        {timerTime && <EditStartTime open={open} setOpen={setOpen} setTime={setTime} timerTime={timerTime} />}
       </Grid>
 
-      <Grid item xs={4} md={1} sx={{ display: "flex", justifyContent: "center" }}>
-        <Button variant="contained" color="primary" onClick={handleClick}>
-          Add break
-        </Button>
-        <BreakPopover id={id} open={openBreak} handleClose={handleClose} anchorEl={anchorEl} />
-      </Grid>
+      {started && (
+        <Grid item xs={4} md={1} sx={{ display: "flex", justifyContent: "center" }}>
+          <Button variant="contained" color="primary" onClick={handleClick}>
+            Break
+          </Button>
+          <BreakPopover id={id} open={openBreak} handleClose={handleClose} anchorEl={anchorEl} />
+        </Grid>
+      )}
 
       <Grid item xs={4} md={1} sx={{ display: "flex", justifyContent: "center" }}>
         <Button onClick={addItem} variant="contained">
