@@ -6,7 +6,7 @@ import reportWebVitals from "./reportWebVitals";
 //Custom imports
 import { BrowserRouter } from "react-router-dom";
 import { StyledEngineProvider } from "@mui/material/styles";
-import { Amplify, Hub, DataStore, Analytics } from "aws-amplify";
+import { Amplify, Hub, DataStore } from "aws-amplify";
 import awsconfig from "./aws-exports";
 import { createUser } from "./services/createUser.jsx";
 
@@ -14,10 +14,8 @@ const rootElement = document.getElementById("root");
 const root = createRoot(rootElement);
 
 Amplify.configure(awsconfig);
-Analytics.autoTrack("pageView", {
-  enable: true,
-  type: "SPA",
-});
+
+
 
 Hub.listen("auth", async (data) => {
   const { payload: event } = data;

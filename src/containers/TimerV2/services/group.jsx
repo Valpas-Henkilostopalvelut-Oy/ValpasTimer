@@ -26,6 +26,7 @@ export function groupBy(array) {
 
       return res;
     }, []);
+
   function getWeekNumber(d) {
     d = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
     d.setUTCDate(d.getUTCDate() + 4 - (d.getUTCDay() || 7));

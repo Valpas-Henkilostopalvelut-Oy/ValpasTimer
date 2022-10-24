@@ -1,9 +1,10 @@
 import React from "react";
-import { Box, Toolbar, Typography, IconButton } from "@mui/material";
+import { Toolbar, Typography, IconButton, Container, SvgIcon, Grid } from "@mui/material";
 import MuiAppBar from "@mui/material/AppBar";
 import { styled } from "@mui/material/styles";
 import MenuIcon from "@mui/icons-material/Menu";
 import Profile from "../Profile/index.jsx";
+import SvgComponent from "../../assets/logo2.jsx";
 
 const Navbar = ({ position, open, setOpenDrawer, isAuthenticated }) => {
   const drawerWidth = 310;
@@ -26,6 +27,8 @@ const Navbar = ({ position, open, setOpenDrawer, isAuthenticated }) => {
     }),
   }));
 
+  //get svg logo from assets
+
   return (
     <AppBar position="fixed" open={open} color="navbar">
       <Toolbar>
@@ -36,7 +39,6 @@ const Navbar = ({ position, open, setOpenDrawer, isAuthenticated }) => {
             onClick={() => setOpenDrawer(true)}
             edge="start"
             sx={{
-              marginRight: 5,
               ...(open && { display: "none" }),
             }}
           >
@@ -44,11 +46,30 @@ const Navbar = ({ position, open, setOpenDrawer, isAuthenticated }) => {
           </IconButton>
         )}
 
-        <Typography variant="h6" noWrap component="div">
-          Valpas timer
-        </Typography>
-        <Box sx={{ flexGrow: 1 }} />
-        <Box sx={{ display: { xs: "flex" } }}>{isAuthenticated && <Profile />}</Box>
+        <Container>
+          <Grid
+            container
+            spacing={2}
+            sx={{
+              paddingLeft: 2,
+              paddingRight: 2,
+            }}
+          >
+            <Grid item xs={4} display="flex" justifyContent="start" alignItems="center">
+              <SvgIcon>
+                <SvgComponent />
+              </SvgIcon>
+            </Grid>
+            <Grid item xs={4} display="flex" justifyContent="center" alignItems="center">
+              <Typography variant="p" color="white">
+                Valpas Timer
+              </Typography>
+            </Grid>
+            <Grid item xs={4} display="flex" justifyContent="end" alignItems="center">
+              <Profile />
+            </Grid>
+          </Grid>
+        </Container>
       </Toolbar>
     </AppBar>
   );

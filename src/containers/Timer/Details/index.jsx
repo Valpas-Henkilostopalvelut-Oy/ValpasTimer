@@ -64,7 +64,7 @@ export const Details = ({ data, loadTimeList, index }) => {
             {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
           </IconButton>
         </TableCell>
-        <TableCell align="right">{data.date}</TableCell>
+        <TableCell>{data.date}</TableCell>
         <TableCell align="right">{startVal}</TableCell>
         <TableCell align="right">{endVal}</TableCell>
         <TableCell align="right">{totalVal}</TableCell>

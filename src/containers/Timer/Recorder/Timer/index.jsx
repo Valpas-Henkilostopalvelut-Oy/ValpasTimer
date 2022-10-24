@@ -13,7 +13,7 @@ import {
   Popover,
 } from "@mui/material";
 import { Auth, DataStore } from "aws-amplify";
-import { UserCredentials, TimeEntry, Break } from "../../../../models";
+import { UserCredentials, TimeEntry, Break, AllWorkSpaces } from "../../../../models";
 import WorkspaceSelect from "../../../../components/WorkSpaceSelect/index.jsx";
 import { timeMaker } from "../../../../services/time.jsx";
 
@@ -233,7 +233,7 @@ export const Timer = ({ reload }) => {
       const user = await Auth.currentAuthenticatedUser();
 
       const startTimeEntry = async () => {
-        const newStartTime = await DataStore.save(
+        await DataStore.save(
           new TimeEntry({
             description: description,
             userId: user.username,
@@ -249,42 +249,64 @@ export const Timer = ({ reload }) => {
             isConfirmed: false,
             billable: true,
           })
-        );
+        )
+          .then(async (time) => {
+            await DataStore.query(UserCredentials, user.attributes["custom:UserCreditails"])
+              .then(async (userCred) => {
+                await DataStore.save(
+                  UserCredentials.copyOf(userCred, (updated) => {
+                    updated.activeTimeEntry = time.id;
+                  })
+                )
+                  .then(async () => {
+                    await Auth.updateUserAttributes(user, {
+                      "custom:RuningTimeEntry": time.id,
+                    }).catch((err) => console.warn(err));
+                  })
+                  .catch((err) => console.warn(err));
 
-        const original = await DataStore.query(UserCredentials, user.attributes["custom:UserCreditails"]);
-
-        await DataStore.save(
-          UserCredentials.copyOf(original, (updated) => {
-            updated.activeTimeEntry = newStartTime.id;
+                await DataStore.query(AllWorkSpaces, time.workspaceId).then((workspace) => {
+                  /*startTimer({
+                    user: `${user.attributes.name} ${user.attributes.family_name}`,
+                    email: user.attributes.email,
+                    timeStart: time.timeInterval.start,
+                    workname: workspace.name,
+                  });*/
+                });
+              })
+              .catch((err) => console.warn(err));
           })
-        );
-
-        await Auth.updateUserAttributes(user, {
-          "custom:RuningTimeEntry": newStartTime.id,
-        });
+          .catch((err) => console.warn(err));
       };
 
       const endTimeEntry = async () => {
-        const oldActiveTime = await DataStore.query(TimeEntry, user.attributes["custom:RuningTimeEntry"]);
+        await DataStore.query(TimeEntry, user.attributes["custom:RuningTimeEntry"])
+          .then(async (time) => {
+            await DataStore.save(
+              TimeEntry.copyOf(time, (updated) => {
+                updated.isActive = false;
+                updated.timeInterval.end = new Date().toISOString();
+              })
+            ).catch((err) => console.warn(err));
 
-        await DataStore.save(
-          TimeEntry.copyOf(oldActiveTime, (updated) => {
-            updated.isActive = false;
-            updated.timeInterval.end = new Date().toISOString();
+            await DataStore.query(UserCredentials, user.attributes["custom:UserCreditails"])
+              .then(async (aTime) => {
+                await DataStore.save(
+                  UserCredentials.copyOf(aTime, (updated) => {
+                    updated.activeTimeEntry = null;
+                  })
+                )
+                  .then(async () => {
+                    //stopTimer();
+                    await Auth.updateUserAttributes(user, {
+                      "custom:RuningTimeEntry": "null",
+                    }).catch((err) => console.warn(err));
+                  })
+                  .catch((err) => console.warn(err));
+              })
+              .catch((err) => console.warn(err));
           })
-        );
-
-        const original = await DataStore.query(UserCredentials, user.attributes["custom:UserCreditails"]);
-
-        await DataStore.save(
-          UserCredentials.copyOf(original, (updated) => {
-            updated.activeTimeEntry = "null";
-          })
-        );
-
-        await Auth.updateUserAttributes(user, {
-          "custom:RuningTimeEntry": "null",
-        });
+          .catch((err) => console.warn(err));
 
         reload();
       };

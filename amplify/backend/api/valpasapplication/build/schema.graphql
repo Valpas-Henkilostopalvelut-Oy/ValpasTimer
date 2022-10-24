@@ -462,22 +462,33 @@ type Mutation {
   deleteUserCredentials(input: DeleteUserCredentialsInput!, condition: ModelUserCredentialsConditionInput): UserCredentials @aws_iam @aws_cognito_user_pools
 }
 
+input ModelSubscriptionAgreementFilterInput {
+  id: ModelSubscriptionIDInput
+  name: ModelSubscriptionStringInput
+  workers: ModelSubscriptionIDInput
+  client: ModelSubscriptionIDInput
+  createdAt: ModelSubscriptionStringInput
+  workspaceId: ModelSubscriptionIDInput
+  and: [ModelSubscriptionAgreementFilterInput]
+  or: [ModelSubscriptionAgreementFilterInput]
+}
+
 type Subscription {
-  onCreateAgreement(userId: String): Agreement @aws_subscribe(mutations: ["createAgreement"]) @aws_iam @aws_cognito_user_pools
-  onUpdateAgreement(userId: String): Agreement @aws_subscribe(mutations: ["updateAgreement"]) @aws_iam @aws_cognito_user_pools
-  onDeleteAgreement(userId: String): Agreement @aws_subscribe(mutations: ["deleteAgreement"]) @aws_iam @aws_cognito_user_pools
-  onCreateTasks(username: String): Tasks @aws_subscribe(mutations: ["createTasks"]) @aws_iam @aws_cognito_user_pools
-  onUpdateTasks(username: String): Tasks @aws_subscribe(mutations: ["updateTasks"]) @aws_iam @aws_cognito_user_pools
-  onDeleteTasks(username: String): Tasks @aws_subscribe(mutations: ["deleteTasks"]) @aws_iam @aws_cognito_user_pools
-  onCreateTimeEntry(userId: String): TimeEntry @aws_subscribe(mutations: ["createTimeEntry"]) @aws_iam @aws_cognito_user_pools
-  onUpdateTimeEntry(userId: String): TimeEntry @aws_subscribe(mutations: ["updateTimeEntry"]) @aws_iam @aws_cognito_user_pools
-  onDeleteTimeEntry(userId: String): TimeEntry @aws_subscribe(mutations: ["deleteTimeEntry"]) @aws_iam @aws_cognito_user_pools
-  onCreateAllWorkSpaces: AllWorkSpaces @aws_subscribe(mutations: ["createAllWorkSpaces"]) @aws_iam @aws_cognito_user_pools
-  onUpdateAllWorkSpaces: AllWorkSpaces @aws_subscribe(mutations: ["updateAllWorkSpaces"]) @aws_iam @aws_cognito_user_pools
-  onDeleteAllWorkSpaces: AllWorkSpaces @aws_subscribe(mutations: ["deleteAllWorkSpaces"]) @aws_iam @aws_cognito_user_pools
-  onCreateUserCredentials(userId: String): UserCredentials @aws_subscribe(mutations: ["createUserCredentials"]) @aws_iam @aws_cognito_user_pools
-  onUpdateUserCredentials(userId: String): UserCredentials @aws_subscribe(mutations: ["updateUserCredentials"]) @aws_iam @aws_cognito_user_pools
-  onDeleteUserCredentials(userId: String): UserCredentials @aws_subscribe(mutations: ["deleteUserCredentials"]) @aws_iam @aws_cognito_user_pools
+  onCreateAgreement(filter: ModelSubscriptionAgreementFilterInput, userId: String): Agreement @aws_subscribe(mutations: ["createAgreement"]) @aws_iam @aws_cognito_user_pools
+  onUpdateAgreement(filter: ModelSubscriptionAgreementFilterInput, userId: String): Agreement @aws_subscribe(mutations: ["updateAgreement"]) @aws_iam @aws_cognito_user_pools
+  onDeleteAgreement(filter: ModelSubscriptionAgreementFilterInput, userId: String): Agreement @aws_subscribe(mutations: ["deleteAgreement"]) @aws_iam @aws_cognito_user_pools
+  onCreateTasks(filter: ModelSubscriptionTasksFilterInput, username: String): Tasks @aws_subscribe(mutations: ["createTasks"]) @aws_iam @aws_cognito_user_pools
+  onUpdateTasks(filter: ModelSubscriptionTasksFilterInput, username: String): Tasks @aws_subscribe(mutations: ["updateTasks"]) @aws_iam @aws_cognito_user_pools
+  onDeleteTasks(filter: ModelSubscriptionTasksFilterInput, username: String): Tasks @aws_subscribe(mutations: ["deleteTasks"]) @aws_iam @aws_cognito_user_pools
+  onCreateTimeEntry(filter: ModelSubscriptionTimeEntryFilterInput, userId: String): TimeEntry @aws_subscribe(mutations: ["createTimeEntry"]) @aws_iam @aws_cognito_user_pools
+  onUpdateTimeEntry(filter: ModelSubscriptionTimeEntryFilterInput, userId: String): TimeEntry @aws_subscribe(mutations: ["updateTimeEntry"]) @aws_iam @aws_cognito_user_pools
+  onDeleteTimeEntry(filter: ModelSubscriptionTimeEntryFilterInput, userId: String): TimeEntry @aws_subscribe(mutations: ["deleteTimeEntry"]) @aws_iam @aws_cognito_user_pools
+  onCreateAllWorkSpaces(filter: ModelSubscriptionAllWorkSpacesFilterInput): AllWorkSpaces @aws_subscribe(mutations: ["createAllWorkSpaces"]) @aws_iam @aws_cognito_user_pools
+  onUpdateAllWorkSpaces(filter: ModelSubscriptionAllWorkSpacesFilterInput): AllWorkSpaces @aws_subscribe(mutations: ["updateAllWorkSpaces"]) @aws_iam @aws_cognito_user_pools
+  onDeleteAllWorkSpaces(filter: ModelSubscriptionAllWorkSpacesFilterInput): AllWorkSpaces @aws_subscribe(mutations: ["deleteAllWorkSpaces"]) @aws_iam @aws_cognito_user_pools
+  onCreateUserCredentials(filter: ModelSubscriptionUserCredentialsFilterInput, userId: String): UserCredentials @aws_subscribe(mutations: ["createUserCredentials"]) @aws_iam @aws_cognito_user_pools
+  onUpdateUserCredentials(filter: ModelSubscriptionUserCredentialsFilterInput, userId: String): UserCredentials @aws_subscribe(mutations: ["updateUserCredentials"]) @aws_iam @aws_cognito_user_pools
+  onDeleteUserCredentials(filter: ModelSubscriptionUserCredentialsFilterInput, userId: String): UserCredentials @aws_subscribe(mutations: ["deleteUserCredentials"]) @aws_iam @aws_cognito_user_pools
 }
 
 input WorkplaceInput {
@@ -564,6 +575,16 @@ input DeleteTasksInput {
   _version: Int
 }
 
+input ModelSubscriptionTasksFilterInput {
+  id: ModelSubscriptionIDInput
+  title: ModelSubscriptionStringInput
+  description: ModelSubscriptionStringInput
+  time: ModelSubscriptionStringInput
+  status: ModelSubscriptionStringInput
+  and: [ModelSubscriptionTasksFilterInput]
+  or: [ModelSubscriptionTasksFilterInput]
+}
+
 type ModelTimeEntryConnection @aws_iam @aws_cognito_user_pools {
   items: [TimeEntry]!
   nextToken: String
@@ -643,6 +664,20 @@ input DeleteTimeEntryInput {
   _version: Int
 }
 
+input ModelSubscriptionTimeEntryFilterInput {
+  id: ModelSubscriptionIDInput
+  description: ModelSubscriptionStringInput
+  workspaceId: ModelSubscriptionIDInput
+  isActive: ModelSubscriptionBooleanInput
+  isLocked: ModelSubscriptionBooleanInput
+  isSent: ModelSubscriptionBooleanInput
+  isConfirmed: ModelSubscriptionBooleanInput
+  billable: ModelSubscriptionBooleanInput
+  breaks: ModelSubscriptionStringInput
+  and: [ModelSubscriptionTimeEntryFilterInput]
+  or: [ModelSubscriptionTimeEntryFilterInput]
+}
+
 input HourlyRateInput {
   amount: Int
   currency: String
@@ -715,6 +750,14 @@ input UpdateAllWorkSpacesInput {
 input DeleteAllWorkSpacesInput {
   id: ID!
   _version: Int
+}
+
+input ModelSubscriptionAllWorkSpacesFilterInput {
+  id: ModelSubscriptionIDInput
+  imageUrl: ModelSubscriptionStringInput
+  name: ModelSubscriptionStringInput
+  and: [ModelSubscriptionAllWorkSpacesFilterInput]
+  or: [ModelSubscriptionAllWorkSpacesFilterInput]
 }
 
 input UserMembershipsInput {
@@ -804,5 +847,15 @@ input UpdateUserCredentialsInput {
 input DeleteUserCredentialsInput {
   id: ID!
   _version: Int
+}
+
+input ModelSubscriptionUserCredentialsFilterInput {
+  id: ModelSubscriptionIDInput
+  activeTimeEntry: ModelSubscriptionIDInput
+  status: ModelSubscriptionStringInput
+  defaultWorkspace: ModelSubscriptionIDInput
+  formChecked: ModelSubscriptionStringInput
+  and: [ModelSubscriptionUserCredentialsFilterInput]
+  or: [ModelSubscriptionUserCredentialsFilterInput]
 }
 

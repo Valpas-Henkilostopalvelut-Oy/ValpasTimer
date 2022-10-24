@@ -1,5 +1,14 @@
-export const timeMaker = (event, time) => {
-  const arr = event.target.value.split("").filter((t) => t !== ":");
+import React, { useState } from "react";
+import { TextField, Typography } from "@mui/material";
+
+export const timeMaker = (event, time, fix = null) => {
+  if (event !== null) {
+    var val = event.target.value;
+  } else {
+    var val = fix;
+  }
+
+  const arr = val.split("").filter((t) => t !== ":");
 
   if (arr.length === 1) {
     let h = String(arr[0]);
@@ -36,4 +45,31 @@ export const timeMaker = (event, time) => {
 
     return { h: Number(d.getHours()), m: Number(d.getMinutes()) };
   }
+};
+
+export const TextToTime = ({ date = new Date(), onChange }) => {
+  const [time, setTime] = useState(
+    `${String("0" + new Date(date).getHours()).slice(-2)}:${String("0" + new Date(date).getMinutes()).slice(-2)}`
+  );
+  const [click, setClick] = useState(true);
+
+  return click ? (
+    <TextField
+      sx={{ width: "40.797px" }}
+      autoFocus
+      variant="standard"
+      value={time}
+      onChange={(e) => setTime(e.target.value)}
+      onBlur={(e) => {
+        if (e.target.value !== "") {
+          let val = timeMaker(e, time);
+          setTime(`${String("0" + val.h).slice(-2)}:${String("0" + val.m).slice(-2)}`);
+          onChange({ h: val.h, min: val.m });
+        }
+        setClick(false);
+      }}
+    />
+  ) : (
+    <Typography onClick={() => setClick(!click)}>{time}</Typography>
+  );
 };

@@ -15,7 +15,7 @@ import {
   CircularProgress,
 } from "@mui/material";
 import Recorder from "./Recorder/index.jsx";
-import { groupBy } from "../../services/group.jsx";
+import { groupBy } from "../TimerV2/services/group.jsx";
 import WorkspaceSelect from "../../components/WorkSpaceSelect/index.jsx";
 import { Row } from "./Row";
 
@@ -40,6 +40,8 @@ const Timer = () => {
         .filter((w) => w.workspaceId === selected);
 
       setGrouped(groupBy(filtered));
+      
+      console.log(groupBy(filtered));
     } catch (error) {
       console.warn(error);
     }
@@ -62,7 +64,7 @@ const Timer = () => {
           <Recorder loadTimeList={loadTimeList} />
           <WorkspaceSelect selectedOption={selected} setSelectedOption={setSelected} />
           <TableContainer component={Paper} sx={{ mt: 2 }}>
-            <Table sx={{ minWidth: 750 }} aria-label="workTable" size={"medium"}>
+            <Table sx={{ width: 400 }} aria-label="workTable" size="small">
               <TableHead>
                 <TableRow>
                   <TableCell />

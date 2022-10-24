@@ -51,6 +51,7 @@ export const customPalette = {
     background: {
       default: "#fafafa",
       paper: "#fff",
+      custom: "#e4eaee"
     },
     divider: "#bdbdbd",
   },

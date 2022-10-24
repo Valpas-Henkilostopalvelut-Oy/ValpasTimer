@@ -1,6 +1,6 @@
 import React from "react";
 import { Route, Routes, Navigate } from "react-router-dom";
-import Timer from "./containers/Timer/index.jsx";
+import Timer from "./containers/TimerV2/index.jsx";
 import NotFound from "./containers/NotFound/index.jsx";
 import Login from "./containers/Login/index.jsx";
 import Signup from "./containers/Singup/index.jsx";
