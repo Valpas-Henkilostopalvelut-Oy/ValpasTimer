@@ -47,29 +47,33 @@ export const timeMaker = (event, time, fix = null) => {
   }
 };
 
-export const TextToTime = ({ date = new Date(), onChange }) => {
+export const TextToTime = ({ date = new Date(), onChange, disabled = false }) => {
   const [time, setTime] = useState(
     `${String("0" + new Date(date).getHours()).slice(-2)}:${String("0" + new Date(date).getMinutes()).slice(-2)}`
   );
-  const [click, setClick] = useState(true);
+  const [click, setClick] = useState(false);
 
-  return click ? (
-    <TextField
-      sx={{ width: "40.797px" }}
-      autoFocus
-      variant="standard"
-      value={time}
-      onChange={(e) => setTime(e.target.value)}
-      onBlur={(e) => {
-        if (e.target.value !== "") {
-          let val = timeMaker(e, time);
-          setTime(`${String("0" + val.h).slice(-2)}:${String("0" + val.m).slice(-2)}`);
-          onChange({ h: val.h, min: val.m });
-        }
-        setClick(false);
-      }}
-    />
+  return !disabled ? (
+    click ? (
+      <TextField
+        sx={{ width: "40.797px" }}
+        autoFocus
+        variant="standard"
+        value={time}
+        onChange={(e) => setTime(e.target.value)}
+        onBlur={(e) => {
+          if (e.target.value !== "") {
+            let val = timeMaker(e, time);
+            setTime(`${String("0" + val.h).slice(-2)}:${String("0" + val.m).slice(-2)}`);
+            onChange({ h: val.h, min: val.m });
+          }
+          setClick(false);
+        }}
+      />
+    ) : (
+      <Typography onClick={() => setClick(!click)}>{time}</Typography>
+    )
   ) : (
-    <Typography onClick={() => setClick(!click)}>{time}</Typography>
+    <Typography>{time}</Typography>
   );
 };

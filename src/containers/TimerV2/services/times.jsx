@@ -1,12 +1,12 @@
 import React from "react";
-import { Typography } from "@mui/material";
+import { Typography, Menu, MenuItem, IconButton } from "@mui/material";
 import { TextToTime } from "../../../services/time.jsx";
 import { DataStore } from "aws-amplify";
 import { TimeEntry } from "../../../models/index.js";
-import { timeMaker } from "../../../services/time.jsx";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
 
 export const STime = ({ date }) => {
-  let sTime = new Date(date.arr[0].timeInterval.start);
+  let sTime = new Date(date.arr[date.arr.length - 1].timeInterval.start);
   return (
     <Typography variant="p">
       {sTime.getHours()}:{sTime.getMinutes()}
@@ -15,7 +15,7 @@ export const STime = ({ date }) => {
 };
 
 export const ETime = ({ date }) => {
-  let eTime = new Date(date.arr[date.arr.length - 1].timeInterval.end);
+  let eTime = new Date(date.arr[0].timeInterval.end);
   return (
     <Typography variant="p">
       {eTime.getHours()}:{eTime.getMinutes()}
@@ -33,7 +33,7 @@ const updateSTime = async (data, time) => {
 };
 
 export const EditSTime = ({ date }) => {
-  return <TextToTime date={date.timeInterval.start} onChange={(t) => updateSTime(date, t)} />;
+  return <TextToTime date={date.timeInterval.start} onChange={(t) => updateSTime(date, t)} disabled={date.isSent} />;
 };
 
 const updateETime = async (data, time) => {
@@ -46,14 +46,78 @@ const updateETime = async (data, time) => {
 };
 
 export const EditETime = ({ date }) => {
-  return <TextToTime date={date.timeInterval.end} onChange={(t) => updateETime(date, t)} />;
+  return <TextToTime date={date.timeInterval.end} onChange={(t) => updateETime(date, t)} disabled={date.isSent} />;
 };
 
 export const TotalTime = ({ date }) => {
   let start = new Date(date.timeInterval.start);
   let end = new Date(date.timeInterval.end);
   let total = new Date(Date.parse(end) - Date.parse(start));
-  let isSent = date.isSent;
 
-  return isSent ? (<Typography>err</Typography>) : (<TextToTime date={total} onChange={(e) => console.log(e)} />);
+  return <TextToTime date={total} onChange={(e) => console.log(e)} disabled={date.isSent} />;
+};
+
+const deleteTime = async (data, close) => {
+  await DataStore.delete(data)
+    .then(() => close())
+    .catch((e) => console.warn(e));
+};
+
+const dublicateTime = async (data, close) => {
+  let newTimeData = {
+    timeInterval: {
+      start: data.timeInterval.start,
+      end: data.timeInterval.end,
+    },
+    description: data.description,
+    workplaceId: data.workspaceId,
+    userId: data.userId,
+  };
+
+  await DataStore.save(
+    new TimeEntry({
+      description: newTimeData.description,
+      userId: newTimeData.userId,
+      workspaceId: newTimeData.workplaceId,
+      timeInterval: {
+        start: data.timeInterval.start,
+        end: data.timeInterval.end,
+        duration: "",
+      },
+      isActive: false,
+      isLocked: false,
+      isSent: false,
+      isConfirmed: false,
+      billable: false,
+      breaks: [],
+    })
+  )
+    .then((l) => {
+      //close();
+      console.log(l);
+    })
+    .catch((e) => console.warn(e));
+};
+
+export const MoreButton = ({ date }) => {
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+  const open = Boolean(anchorEl);
+  const isSent = !date.isSent;
+  return (
+    <>
+      <IconButton aria-label="more" aria-controls="long-menu" aria-haspopup="true">
+        <MoreVertIcon onClick={handleClick} />
+      </IconButton>
+      <Menu id="long-menu" anchorEl={anchorEl} keepMounted open={open} onClose={handleClose}>
+        <MenuItem onClick={() => dublicateTime(date)}>Dublicate</MenuItem>
+        {isSent && <MenuItem onClick={() => deleteTime(date, handleClose())}>Delete</MenuItem>}
+      </Menu>
+    </>
+  );
 };

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { TextField, Typography } from "@mui/material";
+import { TextField, Typography, useTheme, TableRow, TableCell } from "@mui/material";
 import { DataStore } from "aws-amplify";
 import { TimeEntry } from "../../../models";
 
@@ -11,7 +11,7 @@ const updateDescription = async (date, newDescription) => {
   ).catch((e) => console.warn(e));
 };
 
-export const EditDescription = ({ date }) => {
+const EditDescription = ({ date }) => {
   const [desc, setDesc] = useState(date.description);
   const [click, setClick] = useState(false);
 
@@ -35,5 +35,43 @@ export const EditDescription = ({ date }) => {
       fullWidth
       placeholder="Add description"
     />
+  );
+};
+
+export const EditDescriptionSM = ({ date }) => {
+  const theme = useTheme();
+
+  return (
+    <TableRow
+      sx={{
+        paddingLeft: 1,
+        paddingRight: 1,
+        [theme.breakpoints.up("sm")]: {
+          display: "none",
+        },
+      }}
+    >
+      <TableCell colSpan={3}>
+        <EditDescription date={date} />
+      </TableCell>
+    </TableRow>
+  );
+};
+
+export const EditDescriptionMD = ({ date }) => {
+  const theme = useTheme();
+
+  return (
+    <TableCell
+      sx={{
+        paddingLeft: 1,
+        paddingRight: 1,
+        [theme.breakpoints.down("sm")]: {
+          display: "none",
+        },
+      }}
+    >
+      <EditDescription date={date} />
+    </TableCell>
   );
 };

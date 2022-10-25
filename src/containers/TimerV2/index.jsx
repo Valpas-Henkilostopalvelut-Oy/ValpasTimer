@@ -1,25 +1,19 @@
 import React, { Fragment, useEffect, useState } from "react";
-import { DataStore, Auth } from "aws-amplify";
+import { DataStore, Auth, Hub } from "aws-amplify";
 import { TimeEntry } from "../../models";
 import { useAppContext } from "../../services/contextLib.jsx";
-import {
-  Container,
-  Box,
-  CircularProgress,
-  Grid,
-  Typography,
-} from "@mui/material";
+import { Container, Box, CircularProgress, Grid, Typography, useTheme } from "@mui/material";
 import Recorder from "./Recorder/index.jsx";
 import { groupBy } from "./services/group.jsx";
 import WorkspaceSelect from "../../components/WorkSpaceSelect/index.jsx";
-import { totaldaytime } from "./services/totaldaytime";
-import { totalweektime } from "./services/totalweektime";
+import { totaldaytime, totalweektime } from "./services/totaltime";
 import { Details } from "./Table/index.jsx";
 
 const Timer = () => {
   const { isAuthenticated } = useAppContext();
   const [grouped, setGrouped] = useState([]);
   const [selected, setSelected] = useState("");
+  const theme = useTheme();
 
   const loadTimeList = async () => {
     try {
@@ -37,7 +31,6 @@ const Timer = () => {
         .filter((w) => w.workspaceId === selected);
 
       setGrouped(groupBy(filtered));
-      console.log(groupBy(filtered));
     } catch (error) {
       console.warn(error);
     }
@@ -49,12 +42,19 @@ const Timer = () => {
     !isActive && isAuthenticated && loadTimeList();
 
     return () => (isActive = true);
-  }, [isAuthenticated, selected]);
+  }, []);
 
   //loading if grouped, timelist and selected option are null
 
   return (
-    <Container>
+    <Container
+      sx={{
+        [theme.breakpoints.down("sm")]: {
+          paddingRight: "0px",
+          paddingLeft: "0px",
+        },
+      }}
+    >
       {grouped != null ? (
         <Fragment>
           <Recorder loadTimeList={loadTimeList} />
@@ -71,7 +71,7 @@ const Timer = () => {
                   </Typography>
                 </Grid>
                 {week.arr.map((date) => (
-                  <Grid container item xs={12}>
+                  <Grid container item xs={12} key={date.date}>
                     <Grid
                       container
                       item
