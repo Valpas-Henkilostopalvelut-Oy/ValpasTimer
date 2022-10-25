@@ -16,14 +16,6 @@ const Timer = () => {
   const theme = useTheme();
 
   const loadTimeList = async () => {
-    Hub.listen("datastore", async (hubData) => {
-      const { event, data } = hubData.payload;
-      //outboxStatus
-      if (event === "outboxMutationEnqueued") {
-        console.log("outboxMutationEnqueued", data);
-      }
-    });
-    
     try {
       const databaseTimeList = await DataStore.query(TimeEntry);
       const currentUser = await Auth.currentAuthenticatedUser();
