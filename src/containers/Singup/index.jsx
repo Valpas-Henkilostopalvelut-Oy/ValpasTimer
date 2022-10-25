@@ -183,13 +183,11 @@ const Signup = () => {
 
   const enable = (values) => {
     return (
-      values.email &&
-      values.password &&
-      values.firstName &&
-      values.lastName &&
-      citizenship !== "" &&
+      values.email !== "" &&
+      values.password !== "" &&
+      values.firstName !== "" &&
+      values.lastName !== "" &&
       values.phoneNumber &&
-      dateOfBirth !== null &&
       terms &&
       values.password === values.confirmPassword
     );
