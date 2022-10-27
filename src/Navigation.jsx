@@ -14,7 +14,7 @@ import NoAccessPage from "./containers/NoAccessPage/index.jsx";
 import ForgotPassword from "./containers/ForgotPassword/index.jsx";
 import TasksPage from "./containers/Work/index.jsx";
 import Works from "./containers/Works/index.jsx";
-import {ConfirmPage} from "./containers/ConfirmPage/index.jsx";
+import { ConfirmPage } from "./containers/ConfirmPage/index.jsx";
 import { AgreementAdminPanel } from "./containers/Agreement/AdminPanel/index.jsx";
 import { AgreementPage } from "./containers/Agreement/index.jsx";
 import { LandingPage } from "./containers/Landing/index.jsx";
