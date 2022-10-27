@@ -6,7 +6,10 @@ import { TimeEntry } from "../../../models";
 const deleteAll = async (date) => {
   let arr = date.arr;
   for (let i = 0; i < arr.length; i++) {
-    await DataStore.delete(arr[i]).catch((e) => console.warn(e));
+    let isSent = arr[i].isSent;
+    if (!isSent) {
+      await DataStore.delete(arr[i]).catch((e) => console.warn(e));
+    }
   }
 };
 

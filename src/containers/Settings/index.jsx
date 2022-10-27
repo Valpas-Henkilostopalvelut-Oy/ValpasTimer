@@ -75,11 +75,13 @@ const ModalDelete = ({ open, setOpen }) => {
 };
 
 const phone = (phone) => {
-  if (phone.length === 13) {
-    return `${phone}`;
-  } else if (phone.length === 10) {
-    return `+358${phone.slice(1)}`;
-  } else if (phone.length === 9) return `+358${phone}`;
+  if (phone !== undefined && phone !== null) {
+    if (phone.length === 13) {
+      return `${phone}`;
+    } else if (phone.length === 10) {
+      return `+358${phone.slice(1)}`;
+    } else if (phone.length === 9) return `+358${phone}`;
+  }
 };
 
 const iban = (iban) => {

@@ -1,23 +1,13 @@
 import React, { Fragment } from "react";
 
-import {
-  Table,
-  TableContainer,
-  TableBody,
-  TableCell,
-  TableRow,
-  Paper,
-  IconButton,
-  Collapse,
-  Box,
-  useTheme,
-} from "@mui/material";
+import { Table, TableContainer, TableBody, TableCell, TableRow, Paper, IconButton, Collapse, Box } from "@mui/material";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import { STime, ETime, EditSTime, EditETime, TotalTime, MoreButton } from "../services/times.jsx";
 import { IsSentMD, IsSentSM } from "../services/isSent";
 import { EditDescriptionSM, EditDescriptionMD } from "../services/editdescription.jsx";
 import { ChangeWorkplaceSM, ChangeWorkplaceMD } from "../services/workplaceselect.jsx";
+import { EditDate } from "../services/editdate.jsx";
 
 export const Details = ({ date }) => {
   const [open, setOpen] = React.useState(false);
@@ -63,6 +53,10 @@ export const Details = ({ date }) => {
                               <EditDescriptionMD date={row} />
 
                               <ChangeWorkplaceMD date={row} />
+
+                              <TableCell align="right">
+                                <EditDate date={row} />
+                              </TableCell>
 
                               <TableCell align="right" sx={{ paddingLeft: 1, paddingRight: 1 }}>
                                 <Box sx={{ display: "flex", justifyContent: "space-around" }}>

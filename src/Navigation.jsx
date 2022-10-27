@@ -1,6 +1,6 @@
 import React from "react";
 import { Route, Routes, Navigate } from "react-router-dom";
-import Timer from "./containers/TimerV2/index.jsx";
+import Timer from "./containers/Timer/index.jsx";
 import NotFound from "./containers/NotFound/index.jsx";
 import Login from "./containers/Login/index.jsx";
 import Signup from "./containers/Singup/index.jsx";
@@ -14,6 +14,7 @@ import NoAccessPage from "./containers/NoAccessPage/index.jsx";
 import ForgotPassword from "./containers/ForgotPassword/index.jsx";
 import TasksPage from "./containers/Work/index.jsx";
 import Works from "./containers/Works/index.jsx";
+import {ConfirmPage} from "./containers/ConfirmPage/index.jsx";
 import { AgreementAdminPanel } from "./containers/Agreement/AdminPanel/index.jsx";
 import { AgreementPage } from "./containers/Agreement/index.jsx";
 import { LandingPage } from "./containers/Landing/index.jsx";
@@ -25,6 +26,7 @@ const Navigation = ({ isAuthenticated, groups }) => {
       <Route path="*" element={<NotFound />} />
       <Route exact path="login" element={!isAuthenticated ? <Login /> : <Navigate replace to="/home" />} />
       <Route exact path="signup" element={!isAuthenticated ? <Signup /> : <Navigate replace to="/home" />} />
+      <Route exact path="confirm" element={!isAuthenticated ? <ConfirmPage /> : <Navigate replace to="/home" />} />
       <Route
         exact
         path="forgot-password"

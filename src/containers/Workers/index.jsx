@@ -295,12 +295,6 @@ const Workers = () => {
                     </TableCell>
 
                     <TableCell align="right">
-                      <Typography variant="body2" color="textSecondary">
-                        {row.Attributes.find((a) => a.Name === "phone_number").Value}
-                      </Typography>
-                    </TableCell>
-
-                    <TableCell align="right">
                       {row.Enabled ? (
                         <Typography variant="body2" color="primary">
                           Yes

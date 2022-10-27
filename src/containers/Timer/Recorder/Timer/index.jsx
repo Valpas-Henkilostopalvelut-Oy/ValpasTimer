@@ -235,6 +235,7 @@ export const Timer = ({ reload }) => {
       const startTimeEntry = async () => {
         await DataStore.save(
           new TimeEntry({
+            breaks: [],
             description: description,
             userId: user.username,
             workspaceId: selectedOption,

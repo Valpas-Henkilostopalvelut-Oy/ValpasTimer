@@ -1,28 +1,18 @@
-import React, { Fragment, useEffect, useState } from "react";
-import { DataStore, Auth } from "aws-amplify";
+import React, { useEffect, useState } from "react";
+import { DataStore, Auth, Hub } from "aws-amplify";
 import { TimeEntry } from "../../models";
-import { useAppContext } from "../../services/contextLib.jsx";
-import {
-  Container,
-  Table,
-  TableContainer,
-  TableBody,
-  TableCell,
-  TableRow,
-  Paper,
-  TableHead,
-  Box,
-  CircularProgress,
-} from "@mui/material";
+import { Container, Box, CircularProgress, Grid, Typography, useTheme } from "@mui/material";
 import Recorder from "./Recorder/index.jsx";
-import { groupBy } from "../TimerV2/services/group.jsx";
-import WorkspaceSelect from "../../components/WorkSpaceSelect/index.jsx";
-import { Row } from "./Row";
+import { groupBy } from "./services/group.jsx";
+import { totaldaytime, totalweektime } from "./services/totaltime";
+import { Details } from "./Table/index.jsx";
+import { WorklistSelect } from "./services/workplaceselect.jsx";
 
 const Timer = () => {
-  const { isAuthenticated } = useAppContext();
   const [grouped, setGrouped] = useState([]);
-  const [selected, setSelected] = useState("");
+  const [selected, setSelected] = useState(null);
+  const theme = useTheme();
+  const [isEmpty, setIsEmpty] = useState(true);
 
   const loadTimeList = async () => {
     try {
@@ -40,8 +30,6 @@ const Timer = () => {
         .filter((w) => w.workspaceId === selected);
 
       setGrouped(groupBy(filtered));
-      
-      console.log(groupBy(filtered));
     } catch (error) {
       console.warn(error);
     }
@@ -50,40 +38,77 @@ const Timer = () => {
   useEffect(() => {
     let isActive = false;
 
-    !isActive && isAuthenticated && loadTimeList();
+    !isActive && isEmpty && loadTimeList();
 
     return () => (isActive = true);
-  }, [isAuthenticated, selected]);
+  }, [isEmpty, selected]);
+
+  useEffect(() => {
+    Hub.listen("datastore", async (hubData) => {
+      const { event, data } = hubData.payload;
+      if (event === "outboxStatus") {
+        console.log(data);
+        setIsEmpty(data.isEmpty);
+      }
+    });
+  }, []);
 
   //loading if grouped, timelist and selected option are null
 
   return (
-    <Container>
+    <Container
+      sx={{
+        [theme.breakpoints.down("sm")]: {
+          paddingRight: "0px",
+          paddingLeft: "0px",
+        },
+      }}
+    >
       {grouped != null ? (
-        <Fragment>
-          <Recorder loadTimeList={loadTimeList} />
-          <WorkspaceSelect selectedOption={selected} setSelectedOption={setSelected} />
-          <TableContainer component={Paper} sx={{ mt: 2 }}>
-            <Table sx={{ width: 400 }} aria-label="workTable" size="small">
-              <TableHead>
-                <TableRow>
-                  <TableCell />
-                  <TableCell>Date</TableCell>
-                  <TableCell align="right">Start</TableCell>
-                  <TableCell align="right">End</TableCell>
-                  <TableCell align="right">Total</TableCell>
-                  <TableCell align="right">Is Sent</TableCell>
-                  <TableCell align="right">Confirmed</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {grouped.map((data, key) => (
-                  <Row data={data} key={key} loadTimeList={loadTimeList} />
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
-        </Fragment>
+        <Grid container spacing={2}>
+          <Grid item xs={12}>
+            <Recorder loadTimeList={loadTimeList} />
+          </Grid>
+          <Grid item xs={12}>
+            <WorklistSelect sel={selected} setSel={setSelected} />
+          </Grid>
+          {grouped.map((week) => (
+            <Grid container item spacing={2} key={week.week}>
+              <Grid item xs={12}>
+                <Typography variant="h6" color="text.secondary">
+                  Week {week.week}
+                </Typography>
+                <Typography variant="p" color="text.secondary">
+                  Total time: {totalweektime(week).h}:{totalweektime(week).min}
+                </Typography>
+              </Grid>
+              {week.arr.map((date) => (
+                <Grid container item xs={12} key={date.date}>
+                  <Grid
+                    container
+                    item
+                    sx={{ backgroundColor: "background.custom", marginBottom: "15px", marginTop: "15px", padding: 1 }}
+                  >
+                    <Grid item xs={6} display="flex" alignItems="start">
+                      {date.date}
+                    </Grid>
+                    <Grid item xs={6} display="flex" justifyContent="end">
+                      <Typography variant="p">
+                        {`${String("0" + totaldaytime(date).h).slice(-2)}:${String("0" + totaldaytime(date).min).slice(
+                          -2
+                        )}`}
+                      </Typography>
+                    </Grid>
+                  </Grid>
+
+                  <Grid item xs={12}>
+                    <Details date={date} />
+                  </Grid>
+                </Grid>
+              ))}
+            </Grid>
+          ))}
+        </Grid>
       ) : (
         <Box
           sx={{

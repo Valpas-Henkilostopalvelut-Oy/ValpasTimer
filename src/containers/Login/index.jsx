@@ -21,9 +21,6 @@ const Login = () => {
   });
 
   //enable button
-  const enable = (values) => {
-    return !(values.email.length === 0 || values.password.length === 0);
-  };
 
   const theme = useTheme();
 
@@ -37,20 +34,23 @@ const Login = () => {
       onSubmit={async (val, { setSubmitting }) => {
         setSubmitting(true);
 
-        try {
-          await Auth.signIn(val.email, val.password);
-          userHasAuthenticated(true);
-          setTimeout(() => {
-            navigate("/home", { replace: true });
-            setSubmitting(false);
-          }, 1000);
-        } catch (e) {
-          setSubmitting(false);
-          setMessage(e.message);
-        }
+        await Auth.signIn(val.email, val.password)
+          .then((e) => {
+            if (e.challengeName !== "NEW_PASSWORD_REQUIRED") {
+              userHasAuthenticated(true);
+              setTimeout(() => {
+                navigate("/home", { replace: true });
+                setSubmitting(false);
+              }, 1000);
+            } else {
+              setMessage("Please change your password");
+              setSubmitting(false);
+            }
+          })
+          .catch((e) => setMessage(e.message));
       }}
     >
-      {({ values, handleChange, handleSubmit, handleBlur, isSubmitting, errors, touched }) => (
+      {({ values, handleChange, handleSubmit, handleBlur, isSubmitting, errors, touched, isValid, dirty }) => (
         //login form
         <Container component="main" maxWidth="xs">
           <CssBaseline />
@@ -122,7 +122,7 @@ const Login = () => {
                 isLoading={isSubmitting}
                 text="Sign In"
                 loadingText="Logging in…"
-                disabled={!enable(values)}
+                disabled={!isValid || !dirty || isSubmitting}
               />
               <Grid container spacing={2}>
                 <Grid

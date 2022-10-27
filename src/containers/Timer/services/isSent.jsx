@@ -14,7 +14,7 @@ const confirmed = (date) => {
   let isConfirmed = date.arr.filter((e) => e.isConfirmed).length;
   let isNotConfirmed = date.arr.length;
 
-  return isConfirmed !== isNotConfirmed;
+  return isConfirmed === isNotConfirmed;
 };
 
 export const IsSentSM = ({ date }) => {
@@ -46,7 +46,7 @@ export const IsSentSM = ({ date }) => {
       </TableCell>
       <TableCell align="center" colSpan={2}>
         Confirmed: <CheckCircleIcon color="success" />
-        </TableCell>
+      </TableCell>
     </TableRow>
   );
 };

@@ -43,6 +43,7 @@ export const Manual = ({ reload }) => {
       try {
         await DataStore.save(
           new TimeEntry({
+            breaks: [],
             description: description,
             userId: currentUser.username,
             workspaceId: selectedOption,

@@ -36,9 +36,6 @@ const ConfirmForm = ({ password, email }) => {
   const navigate = useNavigate();
   const [warnText, setWarnText] = useState("");
 
-  const enableButton = (values) => {
-    return values.confirmationCode.length > 0 && values.confirmationCode.length === 6;
-  };
   //validate form
   const validationSchema = yup.object().shape({
     confirmationCode: yup.string().required("Confirmation code is required"),
@@ -64,7 +61,7 @@ const ConfirmForm = ({ password, email }) => {
         }
       }}
     >
-      {({ values, handleChange, handleSubmit, handleBlur, isSubmitting, errors }) => (
+      {({ values, handleChange, handleSubmit, handleBlur, isSubmitting, errors, isValid, dirty }) => (
         <Container component="main" maxWidth="xs">
           <CssBaseline />
           <Box
@@ -93,7 +90,7 @@ const ConfirmForm = ({ password, email }) => {
                 }}
                 onBlur={handleBlur}
                 value={values.confirmationCode}
-                error={errors.confirmationCode}
+                error={errors.confirmationCode }
               />
               {errors.confirmationCode && (
                 <Typography variant="caption" color="error">
@@ -112,7 +109,7 @@ const ConfirmForm = ({ password, email }) => {
                 isLoading={isSubmitting}
                 text="Confirm"
                 loadingText="Confirming…"
-                disabled={!enableButton(values)}
+                disabled={!isValid || !dirty}
                 fullWidth
               />
             </Box>
@@ -181,18 +178,6 @@ const Signup = () => {
       .required("Confirm password is required"),
   });
 
-  const enable = (values) => {
-    return (
-      values.email !== "" &&
-      values.password !== "" &&
-      values.firstName !== "" &&
-      values.lastName !== "" &&
-      values.phoneNumber &&
-      terms &&
-      values.password === values.confirmPassword
-    );
-  };
-
   const [confiming, setConfirming] = useState(false);
   //singup form
   return !confiming ? (
@@ -237,7 +222,7 @@ const Signup = () => {
         }
       }}
     >
-      {({ values, handleChange, handleSubmit, handleBlur, isSubmitting, errors, touched }) => (
+      {({ values, handleChange, handleSubmit, handleBlur, isSubmitting, errors, touched, isValid, dirty }) => (
         <Container component="main" maxWidth="xs">
           <CssBaseline />
           <Box
@@ -436,7 +421,7 @@ const Signup = () => {
                 isLoading={isSubmitting}
                 text="Sign Up"
                 loadingText="Creating…"
-                disabled={!enable(values)}
+                disabled={!terms || !dateOfBirth || !citizenship || !isValid || isSubmitting || !dirty}
                 fullWidth
               />
             </Box>

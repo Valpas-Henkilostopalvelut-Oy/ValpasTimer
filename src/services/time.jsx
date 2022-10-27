@@ -43,7 +43,7 @@ export const timeMaker = (event, time, fix = null) => {
   } else {
     let d = new Date(time);
 
-    return { h: Number(d.getHours()), m: Number(d.getMinutes()) };
+    return { h: Number(d.getUTCHours()), m: Number(d.getUTCMinutes()) };
   }
 };
 
