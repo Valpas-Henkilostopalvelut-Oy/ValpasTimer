@@ -322,34 +322,6 @@
         }
       }
     },
-    "analyticsvalpasapplicationNotif": {
-      "Type": "AWS::CloudFormation::Stack",
-      "Properties": {
-        "TemplateURL": "https://s3.amazonaws.com/amplify-valpasapplication-staging-64726-deployment/amplify-cfn-templates/analytics/pinpoint-cloudformation-template.json",
-        "Parameters": {
-          "appName": "valpasapplicationNotif",
-          "roleName": "pinpointLambdaRolea027e9ac",
-          "cloudformationPolicyName": "cloudformationPolicya027e9ac",
-          "cloudWatchPolicyName": "cloudWatchPolicya027e9ac",
-          "pinpointPolicyName": "pinpointPolicya027e9ac",
-          "authPolicyName": "pinpoint_amplify_a027e9ac",
-          "unauthPolicyName": "pinpoint_amplify_a027e9ac",
-          "authRoleName": {
-            "Ref": "AuthRoleName"
-          },
-          "unauthRoleName": {
-            "Ref": "UnauthRoleName"
-          },
-          "authRoleArn": {
-            "Fn::GetAtt": [
-              "AuthRole",
-              "Arn"
-            ]
-          },
-          "env": "staging"
-        }
-      }
-    },
     "UpdateRolesWithIDPFunction": {
       "DependsOn": [
         "AuthRole",
