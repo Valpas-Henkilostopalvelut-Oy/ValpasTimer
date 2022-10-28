@@ -1,4 +1,6 @@
 import { ModelInit, MutableModel } from "@aws-amplify/datastore";
+// @ts-ignore
+import { LazyLoading, LazyLoadingDisabled } from "@aws-amplify/datastore";
 
 export enum Break {
   MIN15 = "MIN15",
@@ -13,114 +15,253 @@ export enum Status {
   INWAITTING = "INWAITTING"
 }
 
-export declare class Breaks {
+type EagerBreaks = {
   readonly start?: string | null;
   readonly duration?: Break | keyof typeof Break | null;
   readonly reasone?: string | null;
-  constructor(init: ModelInit<Breaks>);
 }
 
-export declare class UserAgreement {
+type LazyBreaks = {
+  readonly start?: string | null;
+  readonly duration?: Break | keyof typeof Break | null;
+  readonly reasone?: string | null;
+}
+
+export declare type Breaks = LazyLoading extends LazyLoadingDisabled ? EagerBreaks : LazyBreaks
+
+export declare const Breaks: (new (init: ModelInit<Breaks>) => Breaks)
+
+type EagerUserAgreement = {
   readonly id?: string | null;
   readonly status?: Status | keyof typeof Status | null;
   readonly user?: User | null;
-  constructor(init: ModelInit<UserAgreement>);
 }
 
-export declare class User {
+type LazyUserAgreement = {
+  readonly id?: string | null;
+  readonly status?: Status | keyof typeof Status | null;
+  readonly user?: User | null;
+}
+
+export declare type UserAgreement = LazyLoading extends LazyLoadingDisabled ? EagerUserAgreement : LazyUserAgreement
+
+export declare const UserAgreement: (new (init: ModelInit<UserAgreement>) => UserAgreement)
+
+type EagerUser = {
   readonly userId?: string | null;
   readonly name?: string | null;
   readonly family_name?: string | null;
   readonly icon?: string | null;
-  constructor(init: ModelInit<User>);
 }
 
-export declare class AditionalInfo {
+type LazyUser = {
+  readonly userId?: string | null;
+  readonly name?: string | null;
+  readonly family_name?: string | null;
+  readonly icon?: string | null;
+}
+
+export declare type User = LazyLoading extends LazyLoadingDisabled ? EagerUser : LazyUser
+
+export declare const User: (new (init: ModelInit<User>) => User)
+
+type EagerAditionalInfo = {
   readonly name?: string | null;
   readonly description?: string | null;
   readonly id?: string | null;
-  constructor(init: ModelInit<AditionalInfo>);
 }
 
-export declare class Comment {
+type LazyAditionalInfo = {
+  readonly name?: string | null;
+  readonly description?: string | null;
+  readonly id?: string | null;
+}
+
+export declare type AditionalInfo = LazyLoading extends LazyLoadingDisabled ? EagerAditionalInfo : LazyAditionalInfo
+
+export declare const AditionalInfo: (new (init: ModelInit<AditionalInfo>) => AditionalInfo)
+
+type EagerComment = {
   readonly user?: UserAgreement | null;
   readonly title?: string | null;
   readonly comment?: string | null;
-  constructor(init: ModelInit<Comment>);
 }
 
-export declare class Workplace {
+type LazyComment = {
+  readonly user?: UserAgreement | null;
+  readonly title?: string | null;
+  readonly comment?: string | null;
+}
+
+export declare type Comment = LazyLoading extends LazyLoadingDisabled ? EagerComment : LazyComment
+
+export declare const Comment: (new (init: ModelInit<Comment>) => Comment)
+
+type EagerWorkplace = {
   readonly workId?: string | null;
   readonly name?: string | null;
-  constructor(init: ModelInit<Workplace>);
 }
 
-export declare class TimeInterval {
+type LazyWorkplace = {
+  readonly workId?: string | null;
+  readonly name?: string | null;
+}
+
+export declare type Workplace = LazyLoading extends LazyLoadingDisabled ? EagerWorkplace : LazyWorkplace
+
+export declare const Workplace: (new (init: ModelInit<Workplace>) => Workplace)
+
+type EagerTimeInterval = {
   readonly duration?: string | null;
   readonly end?: string | null;
   readonly start?: string | null;
-  constructor(init: ModelInit<TimeInterval>);
 }
 
-export declare class Profile {
+type LazyTimeInterval = {
+  readonly duration?: string | null;
+  readonly end?: string | null;
+  readonly start?: string | null;
+}
+
+export declare type TimeInterval = LazyLoading extends LazyLoadingDisabled ? EagerTimeInterval : LazyTimeInterval
+
+export declare const TimeInterval: (new (init: ModelInit<TimeInterval>) => TimeInterval)
+
+type EagerProfile = {
   readonly profile_picture?: string | null;
   readonly first_name?: string | null;
   readonly last_name?: string | null;
   readonly email?: string | null;
-  constructor(init: ModelInit<Profile>);
 }
 
-export declare class UserSettings {
+type LazyProfile = {
+  readonly profile_picture?: string | null;
+  readonly first_name?: string | null;
+  readonly last_name?: string | null;
+  readonly email?: string | null;
+}
+
+export declare type Profile = LazyLoading extends LazyLoadingDisabled ? EagerProfile : LazyProfile
+
+export declare const Profile: (new (init: ModelInit<Profile>) => Profile)
+
+type EagerUserSettings = {
   readonly timeFormat?: string | null;
   readonly timeZone?: string | null;
   readonly dateFormat?: string | null;
   readonly modalSendConfirm?: boolean | null;
   readonly modalConfirmConfirm?: boolean | null;
-  constructor(init: ModelInit<UserSettings>);
 }
 
-export declare class CostRate {
+type LazyUserSettings = {
+  readonly timeFormat?: string | null;
+  readonly timeZone?: string | null;
+  readonly dateFormat?: string | null;
+  readonly modalSendConfirm?: boolean | null;
+  readonly modalConfirmConfirm?: boolean | null;
+}
+
+export declare type UserSettings = LazyLoading extends LazyLoadingDisabled ? EagerUserSettings : LazyUserSettings
+
+export declare const UserSettings: (new (init: ModelInit<UserSettings>) => UserSettings)
+
+type EagerCostRate = {
   readonly amount?: number | null;
   readonly currency?: string | null;
-  constructor(init: ModelInit<CostRate>);
 }
 
-export declare class UserMemberships {
+type LazyCostRate = {
+  readonly amount?: number | null;
+  readonly currency?: string | null;
+}
+
+export declare type CostRate = LazyLoading extends LazyLoadingDisabled ? EagerCostRate : LazyCostRate
+
+export declare const CostRate: (new (init: ModelInit<CostRate>) => CostRate)
+
+type EagerUserMemberships = {
   readonly hourlyRate?: HourlyRate | null;
   readonly costRate?: CostRate | null;
   readonly membershipStatus?: string | null;
   readonly membershipType?: string | null;
   readonly userId?: string | null;
   readonly targetId?: string | null;
-  constructor(init: ModelInit<UserMemberships>);
 }
 
-export declare class HourlyRate {
+type LazyUserMemberships = {
+  readonly hourlyRate?: HourlyRate | null;
+  readonly costRate?: CostRate | null;
+  readonly membershipStatus?: string | null;
+  readonly membershipType?: string | null;
+  readonly userId?: string | null;
+  readonly targetId?: string | null;
+}
+
+export declare type UserMemberships = LazyLoading extends LazyLoadingDisabled ? EagerUserMemberships : LazyUserMemberships
+
+export declare const UserMemberships: (new (init: ModelInit<UserMemberships>) => UserMemberships)
+
+type EagerHourlyRate = {
   readonly amount?: number | null;
   readonly currency?: string | null;
-  constructor(init: ModelInit<HourlyRate>);
 }
 
-export declare class WorkspaceSettings {
+type LazyHourlyRate = {
+  readonly amount?: number | null;
+  readonly currency?: string | null;
+}
+
+export declare type HourlyRate = LazyLoading extends LazyLoadingDisabled ? EagerHourlyRate : LazyHourlyRate
+
+export declare const HourlyRate: (new (init: ModelInit<HourlyRate>) => HourlyRate)
+
+type EagerWorkspaceSettings = {
   readonly shortBreak?: number | null;
   readonly dinnerBreak?: number | null;
-  constructor(init: ModelInit<WorkspaceSettings>);
 }
 
-export declare class Membership {
+type LazyWorkspaceSettings = {
+  readonly shortBreak?: number | null;
+  readonly dinnerBreak?: number | null;
+}
+
+export declare type WorkspaceSettings = LazyLoading extends LazyLoadingDisabled ? EagerWorkspaceSettings : LazyWorkspaceSettings
+
+export declare const WorkspaceSettings: (new (init: ModelInit<WorkspaceSettings>) => WorkspaceSettings)
+
+type EagerMembership = {
   readonly hourlyRate?: HourlyRate | null;
   readonly membershipType?: string | null;
   readonly membershipStatus?: string | null;
   readonly userId?: string | null;
   readonly targetId?: string | null;
-  constructor(init: ModelInit<Membership>);
 }
 
-export declare class FormItem {
+type LazyMembership = {
+  readonly hourlyRate?: HourlyRate | null;
+  readonly membershipType?: string | null;
+  readonly membershipStatus?: string | null;
+  readonly userId?: string | null;
+  readonly targetId?: string | null;
+}
+
+export declare type Membership = LazyLoading extends LazyLoadingDisabled ? EagerMembership : LazyMembership
+
+export declare const Membership: (new (init: ModelInit<Membership>) => Membership)
+
+type EagerFormItem = {
   readonly name?: string | null;
   readonly text?: string | null;
-  constructor(init: ModelInit<FormItem>);
 }
+
+type LazyFormItem = {
+  readonly name?: string | null;
+  readonly text?: string | null;
+}
+
+export declare type FormItem = LazyLoading extends LazyLoadingDisabled ? EagerFormItem : LazyFormItem
+
+export declare const FormItem: (new (init: ModelInit<FormItem>) => FormItem)
 
 type AgreementMetaData = {
   readOnlyFields: 'updatedAt';
@@ -142,7 +283,7 @@ type UserCredentialsMetaData = {
   readOnlyFields: 'createdAt' | 'updatedAt';
 }
 
-export declare class Agreement {
+type EagerAgreement = {
   readonly id: string;
   readonly name?: string | null;
   readonly workers?: (string | null)[] | null;
@@ -154,11 +295,29 @@ export declare class Agreement {
   readonly userAgreement?: (UserAgreement | null)[] | null;
   readonly workspaceId?: (string | null)[] | null;
   readonly updatedAt?: string | null;
-  constructor(init: ModelInit<Agreement, AgreementMetaData>);
-  static copyOf(source: Agreement, mutator: (draft: MutableModel<Agreement, AgreementMetaData>) => MutableModel<Agreement, AgreementMetaData> | void): Agreement;
 }
 
-export declare class Tasks {
+type LazyAgreement = {
+  readonly id: string;
+  readonly name?: string | null;
+  readonly workers?: (string | null)[] | null;
+  readonly client?: (string | null)[] | null;
+  readonly createdAt?: string | null;
+  readonly userId?: string | null;
+  readonly user?: User | null;
+  readonly aditionalInfo?: (AditionalInfo | null)[] | null;
+  readonly userAgreement?: (UserAgreement | null)[] | null;
+  readonly workspaceId?: (string | null)[] | null;
+  readonly updatedAt?: string | null;
+}
+
+export declare type Agreement = LazyLoading extends LazyLoadingDisabled ? EagerAgreement : LazyAgreement
+
+export declare const Agreement: (new (init: ModelInit<Agreement, AgreementMetaData>) => Agreement) & {
+  copyOf(source: Agreement, mutator: (draft: MutableModel<Agreement, AgreementMetaData>) => MutableModel<Agreement, AgreementMetaData> | void): Agreement;
+}
+
+type EagerTasks = {
   readonly id: string;
   readonly title?: string | null;
   readonly description?: string | null;
@@ -171,11 +330,30 @@ export declare class Tasks {
   readonly comments?: (Comment | null)[] | null;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
-  constructor(init: ModelInit<Tasks, TasksMetaData>);
-  static copyOf(source: Tasks, mutator: (draft: MutableModel<Tasks, TasksMetaData>) => MutableModel<Tasks, TasksMetaData> | void): Tasks;
 }
 
-export declare class TimeEntry {
+type LazyTasks = {
+  readonly id: string;
+  readonly title?: string | null;
+  readonly description?: string | null;
+  readonly username?: string | null;
+  readonly user?: User | null;
+  readonly time?: string | null;
+  readonly status?: Status | keyof typeof Status | null;
+  readonly workplace?: Workplace | null;
+  readonly interval?: TimeInterval | null;
+  readonly comments?: (Comment | null)[] | null;
+  readonly createdAt?: string | null;
+  readonly updatedAt?: string | null;
+}
+
+export declare type Tasks = LazyLoading extends LazyLoadingDisabled ? EagerTasks : LazyTasks
+
+export declare const Tasks: (new (init: ModelInit<Tasks, TasksMetaData>) => Tasks) & {
+  copyOf(source: Tasks, mutator: (draft: MutableModel<Tasks, TasksMetaData>) => MutableModel<Tasks, TasksMetaData> | void): Tasks;
+}
+
+type EagerTimeEntry = {
   readonly id: string;
   readonly description?: string | null;
   readonly userId?: string | null;
@@ -189,11 +367,31 @@ export declare class TimeEntry {
   readonly breaks?: (Break | null)[] | keyof typeof Break | null;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
-  constructor(init: ModelInit<TimeEntry, TimeEntryMetaData>);
-  static copyOf(source: TimeEntry, mutator: (draft: MutableModel<TimeEntry, TimeEntryMetaData>) => MutableModel<TimeEntry, TimeEntryMetaData> | void): TimeEntry;
 }
 
-export declare class AllWorkSpaces {
+type LazyTimeEntry = {
+  readonly id: string;
+  readonly description?: string | null;
+  readonly userId?: string | null;
+  readonly workspaceId?: string | null;
+  readonly timeInterval?: TimeInterval | null;
+  readonly isActive?: boolean | null;
+  readonly isLocked?: boolean | null;
+  readonly isSent?: boolean | null;
+  readonly isConfirmed?: boolean | null;
+  readonly billable?: boolean | null;
+  readonly breaks?: (Break | null)[] | keyof typeof Break | null;
+  readonly createdAt?: string | null;
+  readonly updatedAt?: string | null;
+}
+
+export declare type TimeEntry = LazyLoading extends LazyLoadingDisabled ? EagerTimeEntry : LazyTimeEntry
+
+export declare const TimeEntry: (new (init: ModelInit<TimeEntry, TimeEntryMetaData>) => TimeEntry) & {
+  copyOf(source: TimeEntry, mutator: (draft: MutableModel<TimeEntry, TimeEntryMetaData>) => MutableModel<TimeEntry, TimeEntryMetaData> | void): TimeEntry;
+}
+
+type EagerAllWorkSpaces = {
   readonly id: string;
   readonly hourlyRate?: HourlyRate | null;
   readonly imageUrl?: string | null;
@@ -204,11 +402,28 @@ export declare class AllWorkSpaces {
   readonly adminId?: (string | null)[] | null;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
-  constructor(init: ModelInit<AllWorkSpaces, AllWorkSpacesMetaData>);
-  static copyOf(source: AllWorkSpaces, mutator: (draft: MutableModel<AllWorkSpaces, AllWorkSpacesMetaData>) => MutableModel<AllWorkSpaces, AllWorkSpacesMetaData> | void): AllWorkSpaces;
 }
 
-export declare class UserCredentials {
+type LazyAllWorkSpaces = {
+  readonly id: string;
+  readonly hourlyRate?: HourlyRate | null;
+  readonly imageUrl?: string | null;
+  readonly memberships?: (Membership | null)[] | null;
+  readonly name?: string | null;
+  readonly workspaceSettings?: WorkspaceSettings | null;
+  readonly workers?: (string | null)[] | null;
+  readonly adminId?: (string | null)[] | null;
+  readonly createdAt?: string | null;
+  readonly updatedAt?: string | null;
+}
+
+export declare type AllWorkSpaces = LazyLoading extends LazyLoadingDisabled ? EagerAllWorkSpaces : LazyAllWorkSpaces
+
+export declare const AllWorkSpaces: (new (init: ModelInit<AllWorkSpaces, AllWorkSpacesMetaData>) => AllWorkSpaces) & {
+  copyOf(source: AllWorkSpaces, mutator: (draft: MutableModel<AllWorkSpaces, AllWorkSpacesMetaData>) => MutableModel<AllWorkSpaces, AllWorkSpacesMetaData> | void): AllWorkSpaces;
+}
+
+type EagerUserCredentials = {
   readonly id: string;
   readonly userId?: string | null;
   readonly activeTimeEntry?: string | null;
@@ -220,6 +435,24 @@ export declare class UserCredentials {
   readonly settings?: UserSettings | null;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
-  constructor(init: ModelInit<UserCredentials, UserCredentialsMetaData>);
-  static copyOf(source: UserCredentials, mutator: (draft: MutableModel<UserCredentials, UserCredentialsMetaData>) => MutableModel<UserCredentials, UserCredentialsMetaData> | void): UserCredentials;
+}
+
+type LazyUserCredentials = {
+  readonly id: string;
+  readonly userId?: string | null;
+  readonly activeTimeEntry?: string | null;
+  readonly status?: string | null;
+  readonly defaultWorkspace?: string | null;
+  readonly memberships?: (UserMemberships | null)[] | null;
+  readonly profile?: Profile | null;
+  readonly formChecked?: (string | null)[] | null;
+  readonly settings?: UserSettings | null;
+  readonly createdAt?: string | null;
+  readonly updatedAt?: string | null;
+}
+
+export declare type UserCredentials = LazyLoading extends LazyLoadingDisabled ? EagerUserCredentials : LazyUserCredentials
+
+export declare const UserCredentials: (new (init: ModelInit<UserCredentials, UserCredentialsMetaData>) => UserCredentials) & {
+  copyOf(source: UserCredentials, mutator: (draft: MutableModel<UserCredentials, UserCredentialsMetaData>) => MutableModel<UserCredentials, UserCredentialsMetaData> | void): UserCredentials;
 }

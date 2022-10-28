@@ -90,7 +90,7 @@ const ConfirmForm = ({ password, email }) => {
                 }}
                 onBlur={handleBlur}
                 value={values.confirmationCode}
-                error={errors.confirmationCode }
+                error={errors.confirmationCode}
               />
               {errors.confirmationCode && (
                 <Typography variant="caption" color="error">
@@ -421,7 +421,7 @@ const Signup = () => {
                 isLoading={isSubmitting}
                 text="Sign Up"
                 loadingText="Creating…"
-                disabled={!terms || !dateOfBirth || !citizenship || !isValid || isSubmitting || !dirty}
+                disabled={!isValid || !dirty || isSubmitting || !terms}
                 fullWidth
               />
             </Box>

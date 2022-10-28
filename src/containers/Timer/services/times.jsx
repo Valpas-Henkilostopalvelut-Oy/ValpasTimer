@@ -52,9 +52,19 @@ export const EditETime = ({ date }) => {
 export const TotalTime = ({ date }) => {
   let start = new Date(date.timeInterval.start);
   let end = new Date(date.timeInterval.end);
-  let total = new Date(Date.parse(end) - Date.parse(start));
+  let total = Date.parse(end) - Date.parse(start);
 
-  return <TextToTime date={total} onChange={(e) => console.log(e)} disabled={date.isSent} />;
+  let hours = Math.floor((total / (1000 * 60 * 60)) % 24);
+  let minutes = Math.floor((total / (1000 * 60)) % 60);
+  let seconds = Math.floor((total / 1000) % 60);
+
+  return (
+    <Typography variant="p">
+      {hours > 0 ? hours + "h " : ""}
+      {minutes > 0 ? minutes + "m " : ""}
+      {seconds > 0 ? seconds + "s " : ""}
+    </Typography>
+  );
 };
 
 const deleteTime = async (data, close) => {

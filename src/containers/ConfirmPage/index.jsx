@@ -3,12 +3,14 @@ import { Formik } from "formik";
 import { Box, Container, CssBaseline, TextField, Typography } from "@mui/material";
 import * as yup from "yup";
 import { Auth } from "aws-amplify";
+import { useNavigate } from "react-router-dom";
 import LoaderButton from "../../components/LoaderButton/index.jsx";
+import { useAppContext } from "../../services/contextLib.jsx";
 
-const loginAfterConfirm = async ({ val, warnMessage, setWarnmessage }) => {
+const loginAfterConfirm = async ({ val, setWarnmessage }) => {
   await Auth.confirmSignUp(val.email, val.code)
-    .then(() => {
-      Auth.signIn(val.email, val.password);
+    .then(async () => {
+      await Auth.signIn(val.email, val.password).then(() => {});
     })
     .catch((e) => {
       console.warn(e);
@@ -24,6 +26,8 @@ export const ConfirmPage = () => {
   });
 
   const [warnMessage, setWarnmessage] = React.useState(null);
+  const navigate = useNavigate();
+  const { userHasAuthenticated } = useAppContext();
 
   return (
     <Formik
@@ -35,7 +39,13 @@ export const ConfirmPage = () => {
       }}
       onSubmit={async (val, { setSubmitting }) => {
         setSubmitting(true);
-        loginAfterConfirm({ val, warnMessage, setWarnmessage });
+        loginAfterConfirm({ val, warnMessage, setWarnmessage }).then(() => {
+          userHasAuthenticated(true);
+          setTimeout(() => {
+            navigate("/home", { replace: true });
+            setSubmitting(false);
+          }, 1000);
+        });
         setSubmitting(false);
       }}
     >

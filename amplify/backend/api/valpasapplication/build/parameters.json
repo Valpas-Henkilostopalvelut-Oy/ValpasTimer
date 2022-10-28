@@ -10,5 +10,5 @@
     },
     "AuthModeLastUpdated": "2022-06-23T07:45:04.204Z",
     "S3DeploymentBucket": "amplify-valpasapplication-staging-64726-deployment",
-    "S3DeploymentRootKey": "amplify-appsync-files/5d5c15dba8eab0fde13ee66407ca92273b563aa4"
+    "S3DeploymentRootKey": "amplify-appsync-files/35661f1bc970874eb9ff80b3331624db68065a06"
 }

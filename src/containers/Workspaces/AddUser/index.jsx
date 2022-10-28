@@ -60,19 +60,13 @@ export const AddUser = ({ open, setOpen, id, reload }) => {
                       if (groups.includes("Admins") && credentials !== undefined && original !== undefined) {
                         if (
                           original.memberships.filter((m) => m.userId === credentials.userId).length === 0 &&
-                          credentials.memberships.filter((m) => m.workspaceId === original.id).length === 0
+                          credentials.memberships.filter((m) => m.workspaceId === original.id).length === 0 &&
+                          original.workers.filter((w) => w.userId === credentials.userId).length === 0
                         ) {
                           //add user to workspace
                           await DataStore.save(
                             AllWorkSpaces.copyOf(original, (updated) => {
                               updated.workers.push(credentials.userId);
-                              updated.memberships.push({
-                                hourlyRate: original.hourlyRate,
-                                membershipStatus: "",
-                                membershipType: "USER",
-                                userId: credentials.userId,
-                                targetId: original.id,
-                              });
                             })
                           );
                           await DataStore.save(
