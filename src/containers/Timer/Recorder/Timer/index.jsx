@@ -14,7 +14,7 @@ import {
 } from "@mui/material";
 import { Auth, DataStore } from "aws-amplify";
 import { UserCredentials, TimeEntry, Break, AllWorkSpaces } from "../../../../models";
-import WorkspaceSelect from "../../../../components/WorkSpaceSelect/index.jsx";
+import { WorklistSelect } from "../../../../components/WorkSpaceSelect/index.jsx";
 import { timeMaker } from "../../../../services/time.jsx";
 
 const addBreak = async ({ time, timeEntryId }) => {};
@@ -153,7 +153,7 @@ export const Timer = ({ reload }) => {
     hours: 0,
   });
   const [started, setStarted] = useState(false);
-  const [selectedOption, setSelectedOption] = useState("");
+  const [sel, setSel] = useState(null);
   const [description, setDescription] = useState("");
   const [open, setOpen] = useState(false);
   const [timerTime, setTimerTime] = useState(null);
@@ -238,7 +238,7 @@ export const Timer = ({ reload }) => {
             breaks: [],
             description: description,
             userId: user.username,
-            workspaceId: selectedOption,
+            workspaceId: sel,
             timeInterval: {
               duration: "",
               end: new Date(new Date().setMilliseconds(0)).toISOString(),
@@ -349,7 +349,7 @@ export const Timer = ({ reload }) => {
       </Grid>
 
       <Grid item xs={12} md={4}>
-        <WorkspaceSelect selectedOption={selectedOption} setSelectedOption={setSelectedOption} />
+        <WorklistSelect sel={sel} setSel={setSel} />
       </Grid>
 
       <Grid item xs={4} md={1} sx={{ display: "flex", justifyContent: "center" }}>

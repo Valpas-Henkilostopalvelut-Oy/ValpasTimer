@@ -6,7 +6,7 @@ import Recorder from "./Recorder/index.jsx";
 import { groupBy } from "./services/group.jsx";
 import { totaldaytime, totalweektime } from "./services/totaltime";
 import { Details } from "./Table/index.jsx";
-import { WorklistSelect } from "./services/workplaceselect.jsx";
+import { WorklistSelect } from "../../components/WorkSpaceSelect/index.jsx";
 
 const Timer = () => {
   const [grouped, setGrouped] = useState([]);

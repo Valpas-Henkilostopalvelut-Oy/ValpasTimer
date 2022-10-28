@@ -3,98 +3,86 @@ import { Auth, DataStore } from "aws-amplify";
 import { AllWorkSpaces, UserCredentials } from "../../models";
 import { InputLabel, MenuItem, FormControl, Select } from "@mui/material";
 
-const WorkspaceSelect = ({ selectedOption, setSelectedOption }) => {
-  const [list, setList] = useState([]);
+const changeCurrentWorkspace = async ({ item }) => {
+  await Auth.currentAuthenticatedUser()
+    .then(async (u) => {
+      let creditails = u.attributes["custom:UserCreditails"];
+      await DataStore.save(
+        UserCredentials.copyOf(creditails, (update) => {
+          update.defaultWorkspace = item;
+        })
+      ).catch((e) => console.warn(e));
+    })
+    .catch((e) => console.warn(e));
+};
+
+const loadLastId = async ({ arr, setSel }) => {
+  await Auth.currentAuthenticatedUser()
+    .then(async (u) => {
+      let creditails = u.attributes["custom:UserCreditails"];
+      await DataStore.query(UserCredentials, creditails).then((res) => {
+        let c = arr.filter((item) => item.id === res.defaultWorkspace).length !== 0;
+        console.log(res.defaultWorkspace);
+        if (c) {
+          setSel(res.defaultWorkspace);
+        } else {
+          setSel("");
+          changeCurrentWorkspace({ item: "" });
+        }
+      });
+    })
+    .catch((e) => console.warn(e));
+};
+
+export const WorklistSelect = ({ sel, setSel }) => {
+  const [workplaces, setWorkplaces] = useState([]);
+
+  const handleChange = (event) => {
+    setSel(event.target.value);
+    changeCurrentWorkspace({ item: event.target.value });
+  };
 
   useEffect(() => {
-    let isActive = false;
+    let isActive = true;
 
-    const makeList = async () => {
-      try {
-        //check if user is in wokers or client group and if Admin show all workspaces
-
-        const user = await Auth.currentAuthenticatedUser();
-        const creditails = await DataStore.query(UserCredentials, user.attributes["custom:UserCreditails"]);
-
-        let q = [];
-
-        if (creditails.memberships.length > 0) {
-          for (let i = 0; i < creditails.memberships.length; i++) {
-            const workspaceList = await DataStore.query(AllWorkSpaces, creditails.memberships[i].targetId);
-            q.push({
-              value: workspaceList.id,
-              label: workspaceList.name,
+    const fetchWorkplaces = async () => {
+      await DataStore.query(AllWorkSpaces)
+        .then(async (res) => {
+          let arr = [{ id: "", name: "None" }];
+          if (res.length !== 0) {
+            res.forEach((item) => {
+              arr.push({ id: item.id, name: item.name });
             });
           }
 
-          setList(q);
-        }
-      } catch (error) {
-        console.warn(error);
-      }
+          if (isActive) {
+            setWorkplaces(arr);
+            loadLastId({ arr, setSel: setSel() });
+          }
+        })
+
+        .catch((e) => console.warn(e));
     };
 
-    !isActive && makeList();
+    isActive && fetchWorkplaces();
 
-    return () => (isActive = true);
+    return () => (isActive = false);
   }, []);
 
-  useEffect(() => {
-    let isActive = false;
-
-    const lastWorkspaceLoad = async () => {
-      const loggedUser = await Auth.currentAuthenticatedUser();
-      const creditails = await DataStore.query(UserCredentials, loggedUser.attributes["custom:UserCreditails"]);
-
-      if (creditails.defaultWorkspace !== null) {
-        setSelectedOption(creditails.defaultWorkspace);
-      } else if (creditails.memberships.length !== 0) {
-        setSelectedOption("none");
-      }
-    };
-
-    !isActive && list.length !== 0 && lastWorkspaceLoad();
-
-    return () => (isActive = true);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [list.length]);
-
-  const changeLastValue = async (val) => {
-    try {
-      const userAtributes = await Auth.currentAuthenticatedUser();
-      const original = await DataStore.query(UserCredentials, userAtributes.attributes["custom:UserCreditails"]);
-      await DataStore.save(
-        UserCredentials.copyOf(original, (newValue) => {
-          if (val !== "none") {
-            newValue.defaultWorkspace = val;
-          } else newValue.defaultWorkspace = null;
-        })
-      );
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
   return (
-    list.length > 0 && (
+    sel !== null && (
       <FormControl fullWidth>
-        <InputLabel>Workspaces</InputLabel>
+        <InputLabel id="workplace-list-select">Working hours</InputLabel>
         <Select
-          labelId="demo-simple-select-standard-label"
-          id="demo-simple-select-standard"
-          value={selectedOption}
-          label="Workspaces"
-          onChange={(event) => {
-            setSelectedOption(event.target.value);
-            changeLastValue(event.target.value);
-          }}
+          labelId="workplace-list-select"
+          id="workplace-list-select"
+          value={sel}
+          label="Workplace select"
+          onChange={handleChange}
         >
-          <MenuItem value="none">
-            <em>None</em>
-          </MenuItem>
-          {list.map((option) => (
-            <MenuItem value={option.value} key={option.value}>
-              {option.label}
+          {workplaces.map((item, i) => (
+            <MenuItem key={i} value={item.id}>
+              {item.name}
             </MenuItem>
           ))}
         </Select>
@@ -102,5 +90,3 @@ const WorkspaceSelect = ({ selectedOption, setSelectedOption }) => {
     )
   );
 };
-
-export default WorkspaceSelect;

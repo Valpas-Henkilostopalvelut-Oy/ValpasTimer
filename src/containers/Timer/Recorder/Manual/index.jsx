@@ -6,7 +6,7 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { de } from "date-fns/locale";
-import WorkspaceSelect from "../../../../components/WorkSpaceSelect/index.jsx";
+import { WorklistSelect } from "../../../../components/WorkSpaceSelect/index.jsx";
 import { timeMaker } from "../../../../services/time.jsx";
 
 const ManualEditing = ({ time, setTime, label = "Time" }) => {
@@ -31,13 +31,13 @@ const ManualEditing = ({ time, setTime, label = "Time" }) => {
 export const Manual = ({ reload }) => {
   const [start, setStart] = useState(new Date());
   const [end, setEnd] = useState(new Date());
-  const [selectedOption, setSelectedOption] = useState("");
+  const [sel, setSel] = useState(null);
   const [description, setDescription] = useState("");
 
   const total = new Date(Math.abs(end - start));
 
   const addNewTime = async () => {
-    if (Date.parse(start) !== Date.parse(end)) {
+    if (Date.parse(start) !== Date.parse(end) && sel !== null) {
       const currentUser = await Auth.currentAuthenticatedUser();
 
       try {
@@ -46,7 +46,7 @@ export const Manual = ({ reload }) => {
             breaks: [],
             description: description,
             userId: currentUser.username,
-            workspaceId: selectedOption,
+            workspaceId: sel,
             timeInterval: {
               duration: "",
               start: new Date(start).toISOString(),
@@ -80,7 +80,7 @@ export const Manual = ({ reload }) => {
       </Grid>
 
       <Grid item xs={12} md={4} lg={2}>
-        <WorkspaceSelect selectedOption={selectedOption} setSelectedOption={setSelectedOption} />
+        <WorklistSelect sel={sel} setSel={setSel} />
       </Grid>
 
       <Grid item xs={4} md={2} lg={2} sx={{ display: "flex", justifyContent: "center" }}>
