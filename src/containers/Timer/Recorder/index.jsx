@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Tab } from "@mui/material";
+import { Box, Tab, useTheme } from "@mui/material";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
 
 import { Timer } from "./Timer/index.jsx";
@@ -10,10 +10,19 @@ const Recorder = ({ loadTimeList }) => {
   const handleChangeTab = (event, newValue) => {
     setValue(newValue);
   };
+  const theme = useTheme();
 
   return (
-    <Box sx={{ width: "100%", typography: "body1" }}>
-      <TabContext value={value} sx={{}}>
+    <Box
+      sx={{
+        width: "100%",
+        typography: "body1",
+        [theme.breakpoints.down("sm")]: {
+          padding: "0px 10px",
+        },
+      }}
+    >
+      <TabContext value={value}>
         <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
           <TabList onChange={handleChangeTab} aria-label="Manual and Timer Tabs">
             <Tab label="Timer" value="1" />

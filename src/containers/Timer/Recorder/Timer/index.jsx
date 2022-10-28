@@ -14,7 +14,7 @@ import {
 } from "@mui/material";
 import { Auth, DataStore } from "aws-amplify";
 import { UserCredentials, TimeEntry, Break, AllWorkSpaces } from "../../../../models";
-import { WorklistSelect } from "../../../../components/WorkSpaceSelect/index.jsx";
+import { EditWorkplace } from "../services/workselect.jsx";
 import { timeMaker } from "../../../../services/time.jsx";
 
 const addBreak = async ({ time, timeEntryId }) => {};
@@ -169,6 +169,7 @@ export const Timer = ({ reload }) => {
           await DataStore.query(TimeEntry, user.attributes["custom:RuningTimeEntry"]).then((ongoingTime) => {
             const timeDiff = new Date(Date.parse(new Date()) - Date.parse(ongoingTime.timeInterval.start));
             setTimerTime(ongoingTime);
+            setSel(ongoingTime.workspaceId);
 
             setTime({
               seconds: timeDiff.getUTCSeconds(),
@@ -221,6 +222,7 @@ export const Timer = ({ reload }) => {
   }, [time, started]);
 
   const addItem = async () => {
+    console.log(sel);
     setStarted(!started);
     setTimeout(() => {
       setTime({
@@ -349,7 +351,7 @@ export const Timer = ({ reload }) => {
       </Grid>
 
       <Grid item xs={12} md={4}>
-        <WorklistSelect sel={sel} setSel={setSel} />
+        <EditWorkplace sel={sel} setSel={setSel} />
       </Grid>
 
       <Grid item xs={4} md={1} sx={{ display: "flex", justifyContent: "center" }}>

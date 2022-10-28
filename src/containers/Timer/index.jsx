@@ -70,7 +70,9 @@ const Timer = () => {
             <Recorder loadTimeList={loadTimeList} />
           </Grid>
           <Grid item xs={12}>
-            <WorklistSelect sel={selected} setSel={setSelected} />
+            <Box sx={{}}>
+              <WorklistSelect sel={selected} setSel={setSelected} />
+            </Box>
           </Grid>
           {grouped.map((week) => (
             <Grid container item spacing={2} key={week.week}>
