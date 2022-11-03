@@ -8,7 +8,7 @@ import Settings from "./containers/Settings/index.jsx";
 import Team from "./containers/Team/index.jsx";
 import Workspaces from "./containers/Workspaces/index.jsx";
 import Home from "./containers/Home/index.jsx";
-import Dashboard from "./containers/Reports/index.jsx";
+import Reports from "./containers/ReportsV2/index.jsx";
 import Workers from "./containers/Workers/index.jsx";
 import NoAccessPage from "./containers/NoAccessPage/index.jsx";
 import ForgotPassword from "./containers/ForgotPassword/index.jsx";
@@ -89,7 +89,7 @@ const Navigation = ({ isAuthenticated, groups }) => {
         element={
           isAuthenticated ? (
             groups.includes("Admins") || groups.includes("Clients") ? (
-              <Dashboard />
+              <Reports />
             ) : (
               <NoAccessPage />
             )

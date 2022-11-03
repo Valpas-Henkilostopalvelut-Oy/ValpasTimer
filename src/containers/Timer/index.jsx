@@ -89,16 +89,21 @@ const Timer = () => {
                   <Grid
                     container
                     item
-                    sx={{ backgroundColor: "background.custom", marginBottom: "15px", marginTop: "15px", padding: 1 }}
+                    sx={{
+                      border: "1px solid #e0e0e0",
+                      borderRadius: "1px",
+                      backgroundColor: "background.custom",
+                      marginBottom: "15px",
+                      marginTop: "15px",
+                      padding: 1,
+                    }}
                   >
-                    <Grid item xs={6} display="flex" alignItems="start">
-                      {date.date}
-                    </Grid>
-                    <Grid item xs={6} display="flex" justifyContent="end">
-                      <Typography variant="p">
-                        {`${String("0" + totaldaytime(date).h).slice(-2)}:${String("0" + totaldaytime(date).min).slice(
-                          -2
-                        )}`}
+                    <Grid item xs={12}>
+                      <Typography variant="h6" color="text.secondary">
+                        {date.day}
+                      </Typography>
+                      <Typography variant="p" color="text.secondary">
+                        Total time: {totaldaytime(date).h}:{totaldaytime(date).min}
                       </Typography>
                     </Grid>
                   </Grid>
