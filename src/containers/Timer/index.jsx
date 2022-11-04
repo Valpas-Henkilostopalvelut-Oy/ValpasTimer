@@ -1,18 +1,19 @@
 import React, { useEffect, useState } from "react";
 import { DataStore, Auth, Hub } from "aws-amplify";
-import { TimeEntry } from "../../models";
+import { AllWorkSpaces, TimeEntry } from "../../models";
 import { Container, Box, CircularProgress, Grid, Typography, useTheme } from "@mui/material";
 import Recorder from "./Recorder/index.jsx";
 import { groupBy } from "./services/group.jsx";
 import { totaldaytime, totalweektime } from "./services/totaltime";
-import { Details } from "./Table/index.jsx";
-import { WorklistSelect } from "../../components/WorkSpaceSelect/index.jsx";
+import { Details } from "./services/table.jsx";
+import { Selectwork } from "./services/workplaceselect";
 
 const Timer = () => {
   const [grouped, setGrouped] = useState([]);
-  const [selected, setSelected] = useState(null);
+  const [selected, setSelected] = useState("");
   const theme = useTheme();
   const [isEmpty, setIsEmpty] = useState(true);
+  const [works, setWorks] = useState(null);
 
   const loadTimeList = async () => {
     try {
@@ -53,6 +54,28 @@ const Timer = () => {
     });
   }, []);
 
+  useEffect(() => {
+    let isActive = false;
+
+    const loadWorks = async () => {
+      await DataStore.query(AllWorkSpaces)
+        .then((data) => {
+          let w = [];
+          for (let i = 0; i < data.length; i++) {
+            let work = data[i];
+            w.push({
+              id: work.id,
+              name: work.name,
+            });
+          }
+          setWorks(w);
+        })
+        .catch((error) => console.warn(error));
+    };
+
+    !isActive && loadWorks();
+  }, []);
+
   //loading if grouped, timelist and selected option are null
 
   return (
@@ -69,9 +92,10 @@ const Timer = () => {
           <Grid item xs={12}>
             <Recorder loadTimeList={loadTimeList} />
           </Grid>
+
           <Grid item xs={12}>
             <Box sx={{}}>
-              <WorklistSelect sel={selected} setSel={setSelected} />
+              <Selectwork works={works} sel={selected} setSel={setSelected} />
             </Box>
           </Grid>
           {grouped.map((week) => (
@@ -100,7 +124,7 @@ const Timer = () => {
                   >
                     <Grid item xs={12}>
                       <Typography variant="h6" color="text.secondary">
-                        {date.day}
+                        {date.date}
                       </Typography>
                       <Typography variant="p" color="text.secondary">
                         Total time: {totaldaytime(date).h}:{totaldaytime(date).min}

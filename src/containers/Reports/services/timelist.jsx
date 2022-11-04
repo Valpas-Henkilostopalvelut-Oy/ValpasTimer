@@ -6,7 +6,7 @@ import { groupBy } from "./group.jsx";
 import { totaldaytime, totalweektime } from "./totaltime.jsx";
 import { Details } from "./details.jsx";
 
-export const Timelist = ({ selWork = "", selUser = "" }) => {
+export const Timelist = ({ selWork = "", selUser = "", isEmpty = true }) => {
   const [timeList, setTimeList] = useState(null);
 
   useEffect(() => {
@@ -29,10 +29,10 @@ export const Timelist = ({ selWork = "", selUser = "" }) => {
         .catch((error) => console.warn(error));
     };
 
-    !isActive && selWork !== "" && selUser !== "" && loadTimeList();
+    !isActive && selWork !== "" && selUser !== "" && isEmpty && loadTimeList();
 
     return () => (isActive = true);
-  }, [selWork, selUser]);
+  }, [selWork, selUser, isEmpty]);
 
   return (
     timeList && (
@@ -48,7 +48,7 @@ export const Timelist = ({ selWork = "", selUser = "" }) => {
               </Typography>
             </Grid>
             {item.arr.map((day) => (
-              <Grid item container xs={12} key={day.day}>
+              <Grid item container xs={12} key={day.date}>
                 <Grid
                   item
                   container
@@ -64,7 +64,7 @@ export const Timelist = ({ selWork = "", selUser = "" }) => {
                 >
                   <Grid item xs={12}>
                     <Typography variant="h6" color="text.secondary">
-                      {day.day}
+                      {day.date}
                     </Typography>
                     <Typography variant="p" color="text.secondary">
                       Total time: {totaldaytime(day).h}:{totaldaytime(day).min}
@@ -73,7 +73,7 @@ export const Timelist = ({ selWork = "", selUser = "" }) => {
                 </Grid>
 
                 <Grid item xs={12}>
-                  <Details date={day} />
+                  <Details date={day} isEmpty={isEmpty} />
                 </Grid>
               </Grid>
             ))}

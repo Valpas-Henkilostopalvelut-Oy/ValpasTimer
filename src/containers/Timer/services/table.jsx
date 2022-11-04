@@ -3,11 +3,11 @@ import React, { Fragment } from "react";
 import { Table, TableContainer, TableBody, TableCell, TableRow, Paper, IconButton, Collapse, Box } from "@mui/material";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
-import { STime, ETime, EditSTime, EditETime, TotalTime, MoreButton } from "../services/times.jsx";
-import { IsSentMD, IsSentSM } from "../services/isSent";
-import { EditDescriptionSM, EditDescriptionMD } from "../services/editdescription.jsx";
-import { ChangeWorkplaceSM, ChangeWorkplaceMD } from "../services/workplaceselect.jsx";
-import { EditDate } from "../services/editdate.jsx";
+import { STime, ETime, EditSTime, EditETime, TotalTime, MoreButton } from "./times.jsx";
+import { IsSentMD, IsSentSM } from "./isSent.jsx";
+import { EditDescriptionSM, EditDescriptionMD } from "./editdescription.jsx";
+import { ChangeWorkplaceSM, ChangeWorkplaceMD } from "./workplacechange.jsx";
+import { EditDate } from "./editdate.jsx";
 
 export const Details = ({ date }) => {
   const [open, setOpen] = React.useState(false);

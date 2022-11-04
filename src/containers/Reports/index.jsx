@@ -1,104 +1,107 @@
 import React, { useEffect, useState } from "react";
-import { useAppContext } from "../../services/contextLib.jsx";
-import TotalLatest from "./TotalTracked/index.jsx";
-import { Container, Table, TableContainer, TableBody, Paper, Box, CircularProgress } from "@mui/material";
+import { Container, Grid, CircularProgress } from "@mui/material";
 
-import { DataStore, Auth } from "aws-amplify";
+import { DataStore, Hub } from "aws-amplify";
 import { UserCredentials, AllWorkSpaces } from "../../models";
-import { Header } from "./Tools/index.jsx";
+import { Selectwork } from "./services/selectwork.jsx";
+import { Selectuser } from "./services/selectuser.jsx";
+import { Timelist } from "./services/timelist.jsx";
 
-const Dashboard = () => {
-  const [usersList, setUsers] = useState(null);
-  const { groups } = useAppContext();
-  const [selectedOption, setSelectedOption] = useState("");
-  const [isClient, setIsClient] = useState(false);
-  const loadTeamActivities = async () => {
-    const usersCredentials = await DataStore.query(UserCredentials);
-
-    let q = [];
-
-    for (let i = 0; i < usersCredentials.length; i++) {
-      if (usersCredentials[i].memberships.filter((m) => m.targetId === selectedOption).length > 0) {
-        q.push(usersCredentials[i]);
-      }
-    }
-
-    setUsers(q);
-  };
+const Reports = () => {
+  const [selWork, setSelWork] = useState("");
+  const [selUser, setSelUser] = useState("");
+  const [works, setWorks] = useState(null);
+  const [workuser, setWorkers] = useState(null);
+  const [isEmpty, setIsEmpty] = useState(true);
 
   useEffect(() => {
-    const loadIsClient = async () => {
-      try {
-        const user = await Auth.currentAuthenticatedUser();
-        const data = (await DataStore.query(AllWorkSpaces, selectedOption)).clientId.includes(user.username);
-        setIsClient(data);
-      } catch (error) {
-        console.warn(error);
+    Hub.listen("datastore", async (hubData) => {
+      const { event, data } = hubData.payload;
+      if (event === "outboxStatus") {
+        console.log(data);
+        setIsEmpty(data.isEmpty);
       }
+    });
+  }, []);
+
+  useEffect(() => {
+    let isActive = false;
+
+    const loadWorks = async () => {
+      await DataStore.query(AllWorkSpaces)
+        .then((data) => {
+          let w = [];
+          for (let i = 0; i < data.length; i++) {
+            let work = data[i];
+            w.push({
+              id: work.id,
+              name: work.name,
+              workers: work.workers,
+            });
+          }
+          setWorks(w);
+        })
+        .catch((error) => console.warn(error));
     };
 
-    let isActive = false;
-
-    !isActive && selectedOption !== "" && loadIsClient();
+    !isActive && loadWorks();
 
     return () => (isActive = true);
-  }, [selectedOption]);
+  }, [selWork]);
 
   useEffect(() => {
     let isActive = false;
 
-    !isActive && selectedOption !== "" && loadTeamActivities();
+    const loadUsers = async () => {
+      console.log(selWork);
+      setSelUser("");
+      setWorkers(null);
 
-    return () => (isActive = true);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedOption]);
+      await DataStore.query(UserCredentials)
+        .then((users) => {
+          let u = [];
+          let workersIds = works.find((w) => w.id === selWork).workers;
+
+          for (let i = 0; i < workersIds.length; i++) {
+            let workerId = workersIds[i];
+            let worker = users.find((u) => u.userId === workerId);
+            u.push({
+              id: worker.userId,
+              name: `${worker.profile.first_name} ${worker.profile.last_name}`,
+              email: worker.profile.email,
+            });
+          }
+          setWorkers(u);
+        })
+        .catch((error) => console.warn(error));
+    };
+
+    !isActive && selWork !== "" && loadUsers();
+  }, [selWork, works]);
 
   return (
     <Container>
-      <Box sx={{ borderBottom: 1, borderColor: "divider" }} component={Paper}>
-        <Header
-          selectedOption={selectedOption}
-          setSelectedOption={setSelectedOption}
-          isAdmin={groups.includes("Admins")}
-          isClient={isClient}
-        />
-        {usersList !== null ? (
-          <TableContainer>
-            <Table aria-label="collapsible table" sx={{ minWidth: 750 }} size={"medium"}>
-              <TableBody>
-                {usersList.map((users, key) => (
-                  <TotalLatest
-                    users={users}
-                    key={key}
-                    selOption={selectedOption}
-                    isAdmin={groups.includes("Admins")}
-                    isClient={isClient}
-                    reload={loadTeamActivities}
-                  />
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
-        ) : (
-          <Box
-            sx={{
-              pt: 6,
-              pb: 6,
-              borderBottom: 1,
-              borderColor: "divider",
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              height: "100%",
-            }}
-            component={Paper}
-          >
-            <CircularProgress />
-          </Box>
-        )}
-      </Box>
+      {works ? (
+        <Grid container spacing={2}>
+          <Grid item xs={12}>
+            <Selectwork works={works} selectedOption={selWork} setSelectedOption={setSelWork} />
+          </Grid>
+          <Grid item xs={12}>
+            <Selectuser
+              users={workuser}
+              selectedOption={selUser}
+              setSelectedOption={setSelUser}
+              disabled={workuser === null && selWork === ""}
+            />
+          </Grid>
+
+          <Timelist selWork={selWork} selUser={selUser} isEmpty={isEmpty} />
+        </Grid>
+      ) : (
+        <CircularProgress />
+      )}
     </Container>
   );
 };
 
-export default Dashboard;
+export default Reports;
