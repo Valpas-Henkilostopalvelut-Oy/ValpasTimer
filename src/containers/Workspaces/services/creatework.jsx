@@ -1,22 +1,7 @@
-import React, { useEffect, useState, Fragment } from "react";
+import React, { useState, Fragment } from "react";
 import { DataStore } from "aws-amplify";
-import { AllWorkSpaces, UserCredentials } from "../../../models";
-import {
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  TableContainer,
-  TableRow,
-  Paper,
-  useTheme,
-  Box,
-  Collapse,
-  TextField,
-  IconButton,
-  Typography,
-} from "@mui/material";
+import { AllWorkSpaces } from "../../../models";
+import { Button, Dialog, DialogContent, DialogTitle, Box, TextField, Typography } from "@mui/material";
 import { Formik } from "formik";
 import * as Yup from "yup";
 
@@ -92,7 +77,7 @@ const creatework = async ({ name, setWarnText, handleClose }) => {
         .then(() => handleClose())
         .catch((err) => console.warn(err));
     } else {
-        setWarnText("Name already exists");
+      setWarnText("Name already exists");
     }
   });
 };

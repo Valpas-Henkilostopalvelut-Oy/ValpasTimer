@@ -1,5 +1,5 @@
 import React from "react";
-import { Table, Typography, TableBody, TableCell, TableRow, Paper, IconButton, Collapse, Box } from "@mui/material";
+import { Table, Typography, TableBody, TableCell, TableRow, Box } from "@mui/material";
 import { DSTime, DETime } from "./times.jsx";
 
 const TotalTime = ({ date }) => {

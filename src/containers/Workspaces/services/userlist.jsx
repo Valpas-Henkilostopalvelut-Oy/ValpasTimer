@@ -35,7 +35,6 @@ export const Worklist = ({ data }) => {
 const Userlist = ({ data, open = false }) => {
   const [includedUsers, setIncludedUsers] = useState([]);
   var workers = data.workers;
-  var admins = data.adminId;
 
   useEffect(() => {
     let isActive = false;
@@ -67,7 +66,7 @@ const Userlist = ({ data, open = false }) => {
     !isActive && loadUsers();
 
     return () => (isActive = true);
-  }, [data]);
+  }, [workers]);
 
   return (
     <Collapse in={open} timeout="auto" unmountOnExit>

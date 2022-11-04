@@ -5,7 +5,7 @@ import { TabContext, TabList, TabPanel } from "@mui/lab";
 import { Timer } from "./Timer/index.jsx";
 import { Manual } from "./Manual/index.jsx";
 
-const Recorder = ({ loadTimeList }) => {
+const Recorder = ({ loadTimeList, works, isEmpty }) => {
   const [value, setValue] = React.useState("1");
   const handleChangeTab = (event, newValue) => {
     setValue(newValue);

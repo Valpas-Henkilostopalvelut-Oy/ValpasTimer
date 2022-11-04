@@ -1,16 +1,5 @@
-import React, { useEffect, useState } from "react";
-import {
-  Button,
-  TableRow,
-  TableCell,
-  useTheme,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
-  Box,
-  Typography,
-} from "@mui/material";
+import React from "react";
+import { FormControl, InputLabel, Select, MenuItem } from "@mui/material";
 
 export const Selectwork = ({ works, setSel, sel }) => {
   return (

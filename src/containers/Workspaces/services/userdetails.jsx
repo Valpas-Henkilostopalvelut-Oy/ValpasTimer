@@ -1,22 +1,5 @@
-import React, { useEffect, useState, Fragment } from "react";
-import { DataStore } from "aws-amplify";
-import { UserCredentials } from "../../../models";
-import {
-  Container,
-  Table,
-  TableBody,
-  TableHead,
-  TableCell,
-  TableContainer,
-  TableRow,
-  Paper,
-  useTheme,
-  Grid,
-  Collapse,
-  Box,
-  IconButton,
-  Typography,
-} from "@mui/material";
+import React, { useState, Fragment } from "react";
+import { TableRow, TableCell, Grid, Collapse, Box, IconButton, Typography } from "@mui/material";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import { Deleteuser } from "./deleteuser.jsx";

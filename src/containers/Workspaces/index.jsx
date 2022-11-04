@@ -1,24 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { DataStore, Hub } from "aws-amplify";
 import { AllWorkSpaces } from "../../models";
-import {
-  Container,
-  Table,
-  TableBody,
-  TableHead,
-  TableCell,
-  TableContainer,
-  TableRow,
-  Paper,
-  Button,
-  Box,
-  Collapse,
-  TextField,
-  useTheme,
-  Grid,
-  Typography,
-} from "@mui/material";
-import { Formik } from "formik";
+import { Container, Box, useTheme, Grid, Typography } from "@mui/material";
 import { Worklist } from "./services/userlist.jsx";
 import { Creatework } from "./services/creatework";
 
@@ -53,36 +36,6 @@ const Workspaces = () => {
       }
     });
   }, []);
-
-  const createNewWork = async (val, { setSubmitting }) => {
-    try {
-      const list = await DataStore.query(AllWorkSpaces);
-
-      if (list.filter((l) => l.name === val.name).length === 0) {
-        setSubmitting(true);
-
-        await DataStore.save(
-          new AllWorkSpaces({
-            hourlyRate: { amount: 1500, currency: "EURO" },
-            imageUrl: "http://aliquaauteproidentnonparia.net",
-            memberships: [],
-            name: val.name,
-            workspaceSettings: { shortBreak: 15, dinnerBreak: 15 },
-            workers: [],
-            clientId: [],
-            adminId: [],
-            managerId: [],
-          })
-        );
-
-        setSubmitting(false);
-      } else console.warn("Already on");
-    } catch (error) {
-      console.warn(error);
-
-      setSubmitting(false);
-    }
-  };
 
   return (
     <Container

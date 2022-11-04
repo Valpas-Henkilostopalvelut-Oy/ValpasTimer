@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { DataStore, Auth, Hub } from "aws-amplify";
 import { AllWorkSpaces, TimeEntry } from "../../models";
 import { Container, Box, CircularProgress, Grid, Typography, useTheme } from "@mui/material";
-import Recorder from "./Recorder/index.jsx";
+import { Recorder } from "./RecorderV2/index.jsx";
 import { groupBy } from "./services/group.jsx";
 import { totaldaytime, totalweektime } from "./services/totaltime";
 import { Details } from "./services/table.jsx";
@@ -15,29 +15,29 @@ const Timer = () => {
   const [isEmpty, setIsEmpty] = useState(true);
   const [works, setWorks] = useState(null);
 
-  const loadTimeList = async () => {
-    try {
-      const databaseTimeList = await DataStore.query(TimeEntry);
-      const currentUser = await Auth.currentAuthenticatedUser();
-
-      const filtered = databaseTimeList
-        .sort((date1, date2) => {
-          let d1 = new Date(date2.timeInterval.start);
-          let d2 = new Date(date1.timeInterval.start);
-          return d1 - d2;
-        })
-        .filter((a) => !a.isActive)
-        .filter((u) => u.userId === currentUser.username)
-        .filter((w) => w.workspaceId === selected);
-
-      setGrouped(groupBy(filtered));
-    } catch (error) {
-      console.warn(error);
-    }
-  };
-
   useEffect(() => {
     let isActive = false;
+
+    const loadTimeList = async () => {
+      try {
+        const databaseTimeList = await DataStore.query(TimeEntry);
+        const currentUser = await Auth.currentAuthenticatedUser();
+
+        const filtered = databaseTimeList
+          .sort((date1, date2) => {
+            let d1 = new Date(date2.timeInterval.start);
+            let d2 = new Date(date1.timeInterval.start);
+            return d1 - d2;
+          })
+          .filter((a) => !a.isActive)
+          .filter((u) => u.userId === currentUser.username)
+          .filter((w) => w.workspaceId === selected);
+
+        setGrouped(groupBy(filtered));
+      } catch (error) {
+        console.warn(error);
+      }
+    };
 
     !isActive && isEmpty && loadTimeList();
 
@@ -90,7 +90,7 @@ const Timer = () => {
       {grouped != null ? (
         <Grid container spacing={2}>
           <Grid item xs={12}>
-            <Recorder loadTimeList={loadTimeList} />
+            <Recorder works={works} isEmpty={isEmpty} />
           </Grid>
 
           <Grid item xs={12}>

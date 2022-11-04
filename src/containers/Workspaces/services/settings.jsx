@@ -1,25 +1,5 @@
-import React, { useEffect, useState, Fragment } from "react";
-import { DataStore, Hub } from "aws-amplify";
-import {
-  IconButton,
-  Dialog,
-  DialogActions,
-  DialogTitle,
-  TableCell,
-  DialogContent,
-  TableRow,
-  Paper,
-  Button,
-  Box,
-  Collapse,
-  TextField,
-  useTheme,
-  Grid,
-  Typography,
-} from "@mui/material";
-import { Formik } from "formik";
-import AddIcon from "@mui/icons-material/Add";
-import * as yup from "yup";
+import React, { useState, Fragment } from "react";
+import { Dialog, DialogActions, DialogTitle, DialogContent, Button } from "@mui/material";
 
 export const Settings = ({ data }) => {
   const [open, setOpen] = useState(false);

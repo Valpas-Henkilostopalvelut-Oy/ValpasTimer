@@ -1,7 +1,7 @@
 import React from "react";
 import { Route, Routes, Navigate } from "react-router-dom";
 import Timer from "./containers/Timer/index.jsx";
-import NotFound from "./containers/NotFound/index.jsx";
+import NotFound from "./components/NotFound/index.jsx";
 import Login from "./containers/Login/index.jsx";
 import Signup from "./containers/Singup/index.jsx";
 import Settings from "./containers/Settings/index.jsx";
@@ -10,7 +10,7 @@ import Workspaces from "./containers/Workspaces/index.jsx";
 import Home from "./containers/Home/index.jsx";
 import Reports from "./containers/Reports/index.jsx";
 import Workers from "./containers/Workers/index.jsx";
-import NoAccessPage from "./containers/NoAccessPage/index.jsx";
+import NoAccessPage from "./components/NoAccessPage/index.jsx";
 import ForgotPassword from "./containers/ForgotPassword/index.jsx";
 import TasksPage from "./containers/Work/index.jsx";
 import Works from "./containers/Works/index.jsx";

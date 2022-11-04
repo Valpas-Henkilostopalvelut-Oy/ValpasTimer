@@ -1,26 +1,8 @@
-import React, { useEffect, useState, Fragment } from "react";
+import React, { useState, Fragment } from "react";
 import { DataStore } from "aws-amplify";
-import { AllWorkSpaces, UserCredentials } from "../../../models";
-import {
-  Dialog,
-  DialogActions,
-  DialogTitle,
-  Button,
-  DialogContent,
-  TableContainer,
-  TableRow,
-  Paper,
-  useTheme,
-  Box,
-  Collapse,
-  TextField,
-  IconButton,
-  Typography,
-} from "@mui/material";
-import { Formik } from "formik";
+import { AllWorkSpaces } from "../../../models";
+import { Dialog, DialogActions, DialogTitle, Button, DialogContent, IconButton } from "@mui/material";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
-import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
-import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 
 export const Deleteuser = ({ user, data }) => {
   const [open, setOpen] = useState(false);

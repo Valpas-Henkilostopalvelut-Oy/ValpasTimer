@@ -11,8 +11,8 @@ import {
   Box,
   Typography,
 } from "@mui/material";
-import { DataStore, Auth } from "aws-amplify";
-import { TimeEntry, AllWorkSpaces, UserCredentials } from "../../../models";
+import { DataStore } from "aws-amplify";
+import { TimeEntry, AllWorkSpaces } from "../../../models";
 
 const updateWorkplace = async ({ date, item }) => {
   await DataStore.save(
