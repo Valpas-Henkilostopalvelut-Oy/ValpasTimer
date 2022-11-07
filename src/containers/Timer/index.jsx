@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { DataStore, Auth, Hub } from "aws-amplify";
 import { AllWorkSpaces, TimeEntry } from "../../models";
 import { Container, Box, CircularProgress, Grid, Typography, useTheme } from "@mui/material";
-import { Recorder } from "./RecorderV2/index.jsx";
+import { Recorder } from "./Recorder/index.jsx";
 import { groupBy } from "./services/group.jsx";
 import { totaldaytime, totalweektime } from "./services/totaltime";
 import { Details } from "./services/table.jsx";
@@ -127,7 +127,8 @@ const Timer = () => {
                         {date.date}
                       </Typography>
                       <Typography variant="p" color="text.secondary">
-                        Total time: {totaldaytime(date).h}:{totaldaytime(date).min}
+                        Total time: {totaldaytime(date).h > 9 ? totaldaytime(date).h : "0" + totaldaytime(date).h}:
+                        {totaldaytime(date).min > 9 ? totaldaytime(date).min : "0" + totaldaytime(date).min}
                       </Typography>
                     </Grid>
                   </Grid>

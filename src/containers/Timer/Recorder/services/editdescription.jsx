@@ -6,9 +6,9 @@ import { TimeEntry } from "../../../../models";
 export const EditDescription = ({ description, setDescription }) => {
   return (
     <TextField
+      variant="outlined"
       id="description"
       label="Description"
-      variant="outlined"
       value={description}
       onChange={(e) => setDescription(e.target.value)}
       fullWidth
@@ -19,11 +19,12 @@ export const EditDescription = ({ description, setDescription }) => {
 export const EditDescriptionTimer = ({ description, setDescription, data, isStarted }) => {
   const handleEdit = async (e) => {
     console.log(isStarted);
-    isStarted &&  await DataStore.save(
-      TimeEntry.copyOf(data, (updated) => {
-        updated.description = e.target.value;
-      })
-    ).catch((e) => console.warn(e));
+    isStarted &&
+      (await DataStore.save(
+        TimeEntry.copyOf(data, (updated) => {
+          updated.description = e.target.value;
+        })
+      ).catch((e) => console.warn(e)));
   };
   return (
     <TextField

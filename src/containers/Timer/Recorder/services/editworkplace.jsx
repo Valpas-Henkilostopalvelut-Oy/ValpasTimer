@@ -41,3 +41,31 @@ export const EditWorkplaceTimer = ({ setSel, sel, works = null, isStarted = fals
     )
   );
 };
+
+export const EditWorkplaceManual = ({ setSel, sel, works = null }) => {
+  const handleChange = (event) => {
+    setSel(event.target.value);
+  };
+
+  return (
+    works && (
+      <FormControl fullWidth variant="outlined">
+        <InputLabel id="workplace-select-label">Workplace</InputLabel>
+        <Select
+          labelId="workplace-select-label"
+          id="workplace-select"
+          value={sel}
+          label="Workplace"
+          onChange={handleChange}
+        >
+          {works &&
+            works.map((item, i) => (
+              <MenuItem key={i} value={item.id}>
+                {item.name}
+              </MenuItem>
+            ))}
+        </Select>
+      </FormControl>
+    )
+  );
+};

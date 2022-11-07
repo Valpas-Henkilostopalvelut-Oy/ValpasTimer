@@ -1,8 +1,7 @@
-import React, { useEffect, useState, Fragment } from "react";
+import React, { useEffect, useState } from "react";
 import { Auth, DataStore } from "aws-amplify";
-import { UserCredentials, TimeEntry, Break, AllWorkSpaces } from "../../../../models";
+import { TimeEntry } from "../../../../models";
 
-import { TextToTime } from "../../../../services/time.jsx";
 import { Typography, Grid } from "@mui/material";
 import { EditStartTime } from "./editstartedtime";
 import { EditDescriptionTimer } from "./editdescription";
@@ -65,6 +64,7 @@ export const Timer = ({ description, sel, setDescription, setSel, works, isStart
     }
 
     return () => (isActive = false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -122,7 +122,7 @@ export const Timer = ({ description, sel, setDescription, setSel, works, isStart
         />
       </Grid>
       <Grid item xs={4}>
-        <EditWorkplaceTimer sel={sel} setSel={setSel} works={works} data={timerTime} isStarted={isStarted}/>
+        <EditWorkplaceTimer sel={sel} setSel={setSel} works={works} data={timerTime} isStarted={isStarted} />
       </Grid>
       <Grid item xs={2}>
         <Typography

@@ -1,43 +1,48 @@
-import React from "react";
+import React, { useState } from "react";
 import { Box, Tab, useTheme } from "@mui/material";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
+import { Timer } from "./services/timer.jsx";
+import { Manual } from "./services/manual.jsx";
 
-import { Timer } from "./Timer/index.jsx";
-import { Manual } from "./Manual/index.jsx";
+export const Recorder = ({ works = null, isEmpty = true }) => {
+  const theme = useTheme();
+  const [description, setDescription] = useState("");
+  const [value, setValue] = useState("1");
+  const [sel, setSel] = useState("");
+  const [isStarted, setStarted] = useState(false);
 
-const Recorder = ({ loadTimeList, works, isEmpty }) => {
-  const [value, setValue] = React.useState("1");
   const handleChangeTab = (event, newValue) => {
     setValue(newValue);
   };
-  const theme = useTheme();
 
   return (
     <Box
       sx={{
-        width: "100%",
-        typography: "body1",
         [theme.breakpoints.down("sm")]: {
           padding: "0px 10px",
         },
       }}
     >
       <TabContext value={value}>
-        <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-          <TabList onChange={handleChangeTab} aria-label="Manual and Timer Tabs">
-            <Tab label="Timer" value="1" />
-            <Tab label="Manual" value="2" />
-          </TabList>
-        </Box>
+        <TabList onChange={handleChangeTab} aria-label="Manual and Timer Tabs">
+          <Tab label="Timer" value="1" />
+          <Tab label="Manual" value="2" />
+        </TabList>
         <TabPanel value="1" sx={{ paddingLeft: 0, paddingRight: 0 }}>
-          <Timer reload={loadTimeList} />
+          <Timer
+            description={description}
+            setDescription={setDescription}
+            sel={sel}
+            setSel={setSel}
+            works={works}
+            isStarted={isStarted}
+            setStarted={setStarted}
+          />
         </TabPanel>
         <TabPanel value="2" sx={{ paddingLeft: 0, paddingRight: 0 }}>
-          <Manual reload={loadTimeList} />
+          <Manual description={description} setDescription={setDescription} sel={sel} setSel={setSel} works={works} />
         </TabPanel>
       </TabContext>
     </Box>
   );
 };
-
-export default Recorder;

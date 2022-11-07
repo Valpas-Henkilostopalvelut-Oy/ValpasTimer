@@ -81,6 +81,7 @@ const IsSent = ({ date }) => {
 
     isActive && fetchWorkplaces();
     return () => (isActive = false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return <Typography>Workplace: {work}</Typography>;
