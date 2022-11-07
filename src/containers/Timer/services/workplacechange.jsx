@@ -22,9 +22,10 @@ const updateWorkplace = async ({ date, item }) => {
   ).catch((e) => console.warn(e));
 };
 
-const SelectWork = ({ date, workplaces = null }) => {
-  const [workplace, setWorkplace] = useState("");
+const SelectWork = ({ date, workplaces = null, work }) => {
+  const [workplace, setWorkplace] = useState(work);
   const [edited, setEdited] = useState(false);
+  const theme = useTheme();
   const handleChange = (event) => {
     setWorkplace(event.target.value);
     setEdited(true);
@@ -38,7 +39,14 @@ const SelectWork = ({ date, workplaces = null }) => {
   return (
     workplaces !== null && (
       <Box sx={{ display: "flex", justifyContent: "flex-start" }}>
-        <FormControl fullWidth sx={{ maxWidth: "280px" }}>
+        <FormControl
+          fullWidth
+          sx={{
+            [theme.breakpoints.up("sm")]: {
+              maxWidth: "280px",
+            },
+          }}
+        >
           <InputLabel id="workplace-select">Workplace select</InputLabel>
           <Select
             labelId="workplace-select"
@@ -87,7 +95,7 @@ const IsSent = ({ date }) => {
   return <Typography>Workplace: {work}</Typography>;
 };
 
-export const ChangeWorkplaceSM = ({ date }) => {
+export const ChangeWorkplaceSM = ({ date, workplaces = null, work }) => {
   const theme = useTheme();
   const isSent = date.isSent;
 
@@ -99,12 +107,14 @@ export const ChangeWorkplaceSM = ({ date }) => {
         },
       }}
     >
-      <TableCell colSpan={4}>{!isSent ? <SelectWork date={date} /> : <IsSent date={date} />}</TableCell>
+      <TableCell colSpan={4}>
+        {!isSent ? <SelectWork date={date} workplaces={workplaces} work={work} /> : <IsSent date={date} />}
+      </TableCell>
     </TableRow>
   );
 };
 
-export const ChangeWorkplaceMD = ({ date }) => {
+export const ChangeWorkplaceMD = ({ date, workplaces = null, work }) => {
   const theme = useTheme();
   const isSent = date.isSent;
 
@@ -116,7 +126,7 @@ export const ChangeWorkplaceMD = ({ date }) => {
         },
       }}
     >
-      {!isSent ? <SelectWork date={date} /> : <IsSent date={date} />}
+      {!isSent ? <SelectWork date={date} workplaces={workplaces} work={work} /> : <IsSent date={date} />}
     </TableCell>
   );
 };

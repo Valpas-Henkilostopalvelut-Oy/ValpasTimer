@@ -3,13 +3,15 @@ import React, { Fragment } from "react";
 import { Table, TableContainer, TableBody, TableCell, TableRow, Paper, IconButton, Collapse, Box } from "@mui/material";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
-import { STime, ETime, EditSTime, EditETime, TotalTime, MoreButton } from "./times.jsx";
+import { STime, ETime, EditSTime, EditETime, MoreButton } from "./times.jsx";
+import { TotalTime } from "./edittotaltime.jsx";
 import { IsSentMD, IsSentSM } from "./isSent.jsx";
 import { EditDescriptionSM, EditDescriptionMD } from "./editdescription.jsx";
 import { ChangeWorkplaceSM, ChangeWorkplaceMD } from "./workplacechange.jsx";
 import { EditDate } from "./editdate.jsx";
+import { Tabledescription } from "./editdescription.jsx";
 
-export const Details = ({ date }) => {
+export const Details = ({ date, workplaces = null }) => {
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => {
     setOpen(!open);
@@ -25,7 +27,9 @@ export const Details = ({ date }) => {
                 {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
               </IconButton>
             </TableCell>
-            <TableCell>Description "Later"</TableCell>
+            <TableCell>
+              <Tabledescription date={date} />
+            </TableCell>
             <TableCell align="right">
               <STime date={date} />
             </TableCell>
@@ -47,12 +51,12 @@ export const Details = ({ date }) => {
                         return (
                           <Fragment key={row.id}>
                             <EditDescriptionSM date={row} />
-                            <ChangeWorkplaceSM date={row} />
+                            <ChangeWorkplaceSM date={row} workplaces={workplaces} work={row.workspaceId} />
 
                             <TableRow>
                               <EditDescriptionMD date={row} />
 
-                              <ChangeWorkplaceMD date={row} />
+                              <ChangeWorkplaceMD date={row} workplaces={workplaces} work={row.workspaceId} />
 
                               <TableCell align="right">
                                 <EditDate date={row} />

@@ -9,6 +9,7 @@ export const timeMaker = (event, time, fix = null) => {
   }
 
   const arr = val.split("").filter((t) => t !== ":");
+  console.log(arr);
 
   if (arr.length === 1) {
     let h = String(arr[0]);

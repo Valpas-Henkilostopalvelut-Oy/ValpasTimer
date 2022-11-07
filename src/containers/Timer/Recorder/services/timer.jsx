@@ -113,7 +113,7 @@ export const Timer = ({ description, sel, setDescription, setSel, works, isStart
 
   return (
     <Grid container spacing={2} alignItems="center">
-      <Grid item xs={4}>
+      <Grid item xs={6} md={4}>
         <EditDescriptionTimer
           description={description}
           setDescription={setDescription}
@@ -121,10 +121,10 @@ export const Timer = ({ description, sel, setDescription, setSel, works, isStart
           isStarted={isStarted}
         />
       </Grid>
-      <Grid item xs={4}>
+      <Grid item xs={6} md={4}>
         <EditWorkplaceTimer sel={sel} setSel={setSel} works={works} data={timerTime} isStarted={isStarted} />
       </Grid>
-      <Grid item xs={2}>
+      <Grid item xs={6} md={2}>
         <Typography
           variant="h5"
           align="center"
@@ -137,7 +137,7 @@ export const Timer = ({ description, sel, setDescription, setSel, works, isStart
         </Typography>
         {timerTime && isStarted && <EditStartTime open={open} setOpen={setOpen} timerTime={timerTime} />}
       </Grid>
-      <Grid item xs={2}>
+      <Grid item xs={6} md={2}>
         <StartTimer
           description={description}
           workplace={sel}

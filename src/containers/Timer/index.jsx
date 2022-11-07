@@ -134,7 +134,7 @@ const Timer = () => {
                   </Grid>
 
                   <Grid item xs={12}>
-                    <Details date={date} />
+                    <Details date={date} workplaces={works} />
                   </Grid>
                 </Grid>
               ))}

@@ -49,24 +49,6 @@ export const EditETime = ({ date }) => {
   return <TextToTime date={date.timeInterval.end} onChange={(t) => updateETime(date, t)} disabled={date.isSent} />;
 };
 
-export const TotalTime = ({ date }) => {
-  let start = new Date(date.timeInterval.start);
-  let end = new Date(date.timeInterval.end);
-  let total = Date.parse(end) - Date.parse(start);
-
-  let hours = Math.floor((total / (1000 * 60 * 60)));
-  let minutes = Math.floor((total / (1000 * 60)) % 60);
-  let seconds = Math.floor((total / 1000) % 60);
-
-  return (
-    <Typography variant="p">
-      {hours > 0 ? hours + "h " : ""}
-      {minutes > 0 ? minutes + "m " : ""}
-      {seconds > 0 ? seconds + "s " : ""}
-    </Typography>
-  );
-};
-
 const deleteTime = async (data, close) => {
   await DataStore.delete(data)
     .then(() => close())
