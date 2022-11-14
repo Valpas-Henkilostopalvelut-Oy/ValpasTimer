@@ -104,7 +104,7 @@ export const Timer = ({ description, sel, setDescription, setSel, works, isStart
     };
 
     if (isStarted) {
-      isCanceled && advanceTime();
+      !isCanceled && advanceTime();
     } else {
       advanceTimeStop();
     }
