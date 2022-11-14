@@ -30,6 +30,24 @@ export const Timer = ({ description = "", sel = "", setDescription, setSel, work
                 setTimer(res);
                 setSel(res.workspaceId);
                 setDescription(res.description);
+
+                var nTime = new Date();
+                var sTime = new Date(res.timeInterval.start);
+
+                var diff = nTime.getTime() - sTime.getTime();
+
+                var seconds = Math.floor((diff / 1000) % 60);
+                var minutes = Math.floor((diff / (1000 * 60)) % 60);
+                var hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+
+                setStarted(true);
+                setTime({
+                  seconds: seconds,
+                  minutes: minutes,
+                  hours: hours,
+                });
+
+                console.log(hours + ":" + minutes + ":" + seconds);
               } else {
                 await Auth.updateUserAttributes(user, {
                   "custom:RuningTimeEntry": "null",
@@ -52,36 +70,6 @@ export const Timer = ({ description = "", sel = "", setDescription, setSel, work
 
     return () => (isActive = false);
   }, []);
-
-  useEffect(() => {
-    let isActive = false;
-
-    const interval = () => {
-      var nTime = new Date();
-      var sTime = new Date(timerTime.timeInterval.start);
-
-      var diff = nTime.getTime() - sTime.getTime();
-
-      var seconds = Math.floor((diff / 1000) % 60);
-      var minutes = Math.floor((diff / (1000 * 60)) % 60);
-      var hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
-
-      setTime({
-        seconds: seconds,
-        minutes: minutes,
-        hours: hours,
-      });
-      setStarted(true);
-
-      console.log(hours + ":" + minutes + ":" + seconds);
-    };
-
-    if (timerTime !== null && timerTime.isActive && !isActive) {
-      interval();
-    }
-
-    return () => (isActive = true);
-  }, [timerTime]);
 
   useEffect(() => {
     let isCanceled = false;
@@ -154,6 +142,7 @@ export const Timer = ({ description = "", sel = "", setDescription, setSel, work
           isStarted={isStarted}
           setStarted={setStarted}
           setTimer={setTimer}
+          setTime={setTime}
         />
       </Grid>
     </Grid>

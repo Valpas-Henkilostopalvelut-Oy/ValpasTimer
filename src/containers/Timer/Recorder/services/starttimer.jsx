@@ -70,7 +70,7 @@ const stopTimer = async () => {
     .catch((err) => console.warn(err));
 };
 
-export const StartTimer = ({ description = "", workplace = "", isStarted = false, setStarted, setTimer }) => {
+export const StartTimer = ({ description = "", workplace = "", isStarted = false, setStarted, setTimer, setTime }) => {
   const handleStart = () => {
     if (!isStarted) {
       startTimer({ description, workplace, setTimer: (e) => setTimer(e) });
@@ -83,6 +83,13 @@ export const StartTimer = ({ description = "", workplace = "", isStarted = false
       stopTimer();
       setTimer(null);
       setStarted(false);
+      setTimeout(() => {
+        setTime({
+          seconds: 0,
+          minutes: 0,
+          hours: 0,
+        });
+      }, 1000);
     }
   };
 
