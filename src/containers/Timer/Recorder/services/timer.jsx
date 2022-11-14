@@ -28,23 +28,26 @@ export const Timer = ({ description, sel, setDescription, setSel, works, isStart
             .then(async (res) => {
               if (res.isActive) {
                 //math time
-                let timeDiff = Math.abs(new Date() - new Date(res.timeInterval.start));
-                const hours = Math.floor(timeDiff / 1000 / 60 / 60);
-                const minutes = Math.floor((timeDiff / 1000 / 60) % 60);
-                const seconds = Math.floor((timeDiff / 1000) % 60);
+                var nTime = new Date();
+                var sTime = new Date(res.timeInterval.start);
+
+                var diff = nTime.getTime() - sTime.getTime();
+
+                var seconds = Math.floor((diff / 1000) % 60);
+                var minutes = Math.floor((diff / (1000 * 60)) % 60);
+                var hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
 
                 setTimer(res);
                 setSel(res.workspaceId);
                 setDescription(res.description);
 
-                setTimeout(() => {
-                  setTime({
-                    seconds: seconds,
-                    minutes: minutes,
-                    hours: hours,
-                  });
-                  setStarted(res.isActive);
-                }, 500);
+                setTime({
+                  seconds: seconds,
+                  minutes: minutes,
+                  hours: hours,
+                });
+                setStarted(true);
+
               } else {
                 await Auth.updateUserAttributes(user, {
                   "custom:RuningTimeEntry": "null",

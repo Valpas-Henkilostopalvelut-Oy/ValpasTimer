@@ -15,8 +15,6 @@ const root = createRoot(rootElement);
 
 Amplify.configure(awsconfig);
 
-
-
 Hub.listen("auth", async (data) => {
   const { payload: event } = data;
   switch (event.event) {
