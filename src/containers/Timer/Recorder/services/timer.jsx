@@ -8,7 +8,7 @@ import { EditDescriptionTimer } from "./editdescription";
 import { EditWorkplaceTimer } from "./editworkplace";
 import { StartTimer } from "./starttimer";
 
-export const Timer = ({ description, sel, setDescription, setSel, works, isStarted, setStarted }) => {
+export const Timer = ({ description = "", sel = "", setDescription, setSel, works, isStarted, setStarted }) => {
   const [time, setTime] = useState({
     seconds: 0,
     minutes: 0,
@@ -27,8 +27,6 @@ export const Timer = ({ description, sel, setDescription, setSel, works, isStart
           await DataStore.query(TimeEntry, user.attributes["custom:RuningTimeEntry"])
             .then(async (res) => {
               if (res.isActive) {
-                //math time
-
                 setTimer(res);
                 setSel(res.workspaceId);
                 setDescription(res.description);
@@ -53,7 +51,6 @@ export const Timer = ({ description, sel, setDescription, setSel, works, isStart
     }
 
     return () => (isActive = false);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -113,19 +110,7 @@ export const Timer = ({ description, sel, setDescription, setSel, works, isStart
       }, 1000);
     };
 
-    const advanceTimeStop = () => {
-      setTime({
-        seconds: 0,
-        minutes: 0,
-        hours: 0,
-      });
-    };
-
-    if (isStarted) {
-      !isCanceled && advanceTime();
-    } else {
-      advanceTimeStop();
-    }
+    isStarted && !isCanceled && advanceTime();
 
     return () => (isCanceled = true);
   }, [isStarted, time]);
