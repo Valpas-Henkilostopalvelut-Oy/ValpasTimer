@@ -26,7 +26,6 @@ export const Timer = ({ description, sel, setDescription, setSel, works, isStart
         if (user.attributes["custom:RuningTimeEntry"] !== "null") {
           await DataStore.query(TimeEntry, user.attributes["custom:RuningTimeEntry"])
             .then(async (res) => {
-              setStarted(true);
               if (res.isActive) {
                 //math time
                 let timeDiff = Math.abs(new Date() - new Date(res.timeInterval.start));
@@ -43,7 +42,7 @@ export const Timer = ({ description, sel, setDescription, setSel, works, isStart
                   minutes: minutes,
                   hours: hours,
                 });
-                setStarted(true);
+                setStarted(res.isActive);
               } else {
                 await Auth.updateUserAttributes(user, {
                   "custom:RuningTimeEntry": "null",
