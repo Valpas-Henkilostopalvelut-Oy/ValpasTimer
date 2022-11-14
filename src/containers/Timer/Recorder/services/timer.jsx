@@ -28,27 +28,10 @@ export const Timer = ({ description, sel, setDescription, setSel, works, isStart
             .then(async (res) => {
               if (res.isActive) {
                 //math time
-                var nTime = new Date();
-                var sTime = new Date(res.timeInterval.start);
-
-                var diff = nTime.getTime() - sTime.getTime();
-
-                var seconds = Math.floor((diff / 1000) % 60);
-                var minutes = Math.floor((diff / (1000 * 60)) % 60);
-                var hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
 
                 setTimer(res);
                 setSel(res.workspaceId);
                 setDescription(res.description);
-
-                setTime({
-                  seconds: seconds,
-                  minutes: minutes,
-                  hours: hours,
-                });
-                setStarted(true);
-
-                console.log(hours + ":" + minutes + ":" + seconds);
               } else {
                 await Auth.updateUserAttributes(user, {
                   "custom:RuningTimeEntry": "null",
@@ -72,6 +55,36 @@ export const Timer = ({ description, sel, setDescription, setSel, works, isStart
     return () => (isActive = false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    let isActive = false;
+
+    const interval = () => {
+      var nTime = new Date();
+      var sTime = new Date(timerTime.timeInterval.start);
+
+      var diff = nTime.getTime() - sTime.getTime();
+
+      var seconds = Math.floor((diff / 1000) % 60);
+      var minutes = Math.floor((diff / (1000 * 60)) % 60);
+      var hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+
+      setTime({
+        seconds: seconds,
+        minutes: minutes,
+        hours: hours,
+      });
+      setStarted(true);
+
+      console.log(hours + ":" + minutes + ":" + seconds);
+    };
+
+    if (timerTime !== null && timerTime.isActive && !isActive) {
+      interval();
+    }
+
+    return () => (isActive = true);
+  }, [timerTime]);
 
   useEffect(() => {
     let isCanceled = false;
