@@ -48,6 +48,7 @@ export const Timer = ({ description, sel, setDescription, setSel, works, isStart
                 });
                 setStarted(true);
 
+                console.log(hours + ":" + minutes + ":" + seconds);
               } else {
                 await Auth.updateUserAttributes(user, {
                   "custom:RuningTimeEntry": "null",
