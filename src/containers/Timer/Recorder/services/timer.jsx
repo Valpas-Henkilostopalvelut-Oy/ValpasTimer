@@ -37,12 +37,14 @@ export const Timer = ({ description, sel, setDescription, setSel, works, isStart
                 setSel(res.workspaceId);
                 setDescription(res.description);
 
-                setTime({
-                  seconds: seconds,
-                  minutes: minutes,
-                  hours: hours,
-                });
-                setStarted(res.isActive);
+                setTimeout(() => {
+                  setTime({
+                    seconds: seconds,
+                    minutes: minutes,
+                    hours: hours,
+                  });
+                  setStarted(res.isActive);
+                }, 500);
               } else {
                 await Auth.updateUserAttributes(user, {
                   "custom:RuningTimeEntry": "null",

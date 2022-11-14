@@ -34,7 +34,7 @@ Hub.listen("auth", async (data) => {
   }
 });
 
-Hub.listen("datastore", (data) => {
+Hub.listen("datastore", async (data) => {
   const { payload: event } = data;
   switch (event.event) {
     case "ready":
