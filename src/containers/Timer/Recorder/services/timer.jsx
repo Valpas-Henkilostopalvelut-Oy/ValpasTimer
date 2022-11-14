@@ -34,15 +34,16 @@ export const Timer = ({ description, sel, setDescription, setSel, works, isStart
                 const minutes = Math.floor((timeDiff / 1000 / 60) % 60);
                 const seconds = Math.floor((timeDiff / 1000) % 60);
 
+                setTimer(res);
+                setSel(res.workspaceId);
+                setDescription(res.description);
+
                 setTime({
                   seconds: seconds,
                   minutes: minutes,
                   hours: hours,
                 });
                 setStarted(true);
-                setTimer(res);
-                setSel(res.workspaceId);
-                setDescription(res.description);
               } else {
                 await Auth.updateUserAttributes(user, {
                   "custom:RuningTimeEntry": "null",
@@ -90,7 +91,7 @@ export const Timer = ({ description, sel, setDescription, setSel, works, isStart
           nHours = 0;
         }
 
-        !isCanceled && setTime({ seconds: nSeconds, minutes: nMinutes, hours: nHours });
+        setTime({ seconds: nSeconds, minutes: nMinutes, hours: nHours });
       }, 1000);
     };
 
@@ -103,7 +104,7 @@ export const Timer = ({ description, sel, setDescription, setSel, works, isStart
     };
 
     if (isStarted) {
-      advanceTime();
+      isCanceled && advanceTime();
     } else {
       advanceTimeStop();
     }
@@ -131,6 +132,12 @@ export const Timer = ({ description, sel, setDescription, setSel, works, isStart
           onClick={() => {
             isStarted && setOpen(true);
           }}
+          sx={{
+            [isStarted ? "&:hover" : ""]: {
+              cursor: "pointer",
+              textDecoration: "underline",
+            },
+          }}
         >
           {time.hours < 10 ? "0" + time.hours : time.hours}:{time.minutes < 10 ? "0" + time.minutes : time.minutes}:
           {time.seconds < 10 ? "0" + time.seconds : time.seconds}
@@ -144,7 +151,6 @@ export const Timer = ({ description, sel, setDescription, setSel, works, isStart
           isStarted={isStarted}
           setStarted={setStarted}
           setTimer={setTimer}
-          timer={timerTime}
         />
       </Grid>
     </Grid>

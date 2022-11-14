@@ -45,33 +45,32 @@ const startTimer = async ({ description, workplace, setTimer }) => {
   });
 };
 
-const stopTimer = async ({ data = null }) => {
-  if (data) {
-    await DataStore.save(
-      TimeEntry.copyOf(data, (updated) => {
-        updated.isActive = false;
-        updated.timeInterval.end = new Date(new Date().setMilliseconds(0)).toISOString();
-      })
-    )
-      .then(async () => {
-        await Auth.currentAuthenticatedUser().then(async (user) => {
-          await Auth.updateUserAttributes(user, {
-            "custom:RuningTimeEntry": "null",
-          }).catch((err) => console.warn(err));
-        });
-      })
-      .catch((err) => console.warn(err));
-  }
+const stopTimer = async () => {
+  await Auth.currentAuthenticatedUser()
+    .then(async (user) => {
+      let timeId = user.attributes["custom:RuningTimeEntry"];
+
+      await DataStore.query(TimeEntry, timeId)
+        .then(async (time) => {
+          await DataStore.save(
+            TimeEntry.copyOf(time, (updated) => {
+              updated.isActive = false;
+              updated.timeInterval.end = new Date(new Date().setMilliseconds(0)).toISOString();
+            })
+          )
+            .then(async () => {
+              await Auth.updateUserAttributes(user, {
+                "custom:RuningTimeEntry": "null",
+              }).catch((err) => console.warn(err));
+            })
+            .catch((err) => console.warn(err));
+        })
+        .catch((err) => console.warn(err));
+    })
+    .catch((err) => console.warn(err));
 };
 
-export const StartTimer = ({
-  description = "",
-  workplace = "",
-  isStarted = false,
-  setStarted,
-  setTimer,
-  timer = null,
-}) => {
+export const StartTimer = ({ description = "", workplace = "", isStarted = false, setStarted, setTimer }) => {
   const handleStart = () => {
     if (!isStarted) {
       startTimer({ description, workplace, setTimer: (e) => setTimer(e) });
@@ -81,7 +80,7 @@ export const StartTimer = ({
 
   const handleStop = () => {
     if (isStarted) {
-      stopTimer({ data: timer });
+      stopTimer();
       setTimer(null);
       setStarted(false);
     }

@@ -31,7 +31,7 @@ const Timer = () => {
           })
           .filter((a) => !a.isActive)
           .filter((u) => u.userId === currentUser.username)
-          .filter((w) => w.workspaceId === selected);
+          .filter((w) => w.workspaceId === selected || selected === "0");
 
         setGrouped(groupBy(filtered));
       } catch (error) {

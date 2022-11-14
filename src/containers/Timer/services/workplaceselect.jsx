@@ -12,9 +12,11 @@ export const Selectwork = ({ works, setSel, sel }) => {
           value={sel}
           label="Workplace select"
           onChange={(e) => setSel(e.target.value)}
+          defaultValue="0"
         >
-          {works.map((item, i) => (
-            <MenuItem key={i} value={item.id}>
+          <MenuItem value="0">All</MenuItem>
+          {works.map((item) => (
+            <MenuItem key={item.id} value={item.id}>
               {item.name}
             </MenuItem>
           ))}
