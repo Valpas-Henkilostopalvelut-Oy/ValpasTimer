@@ -1,50 +1,17 @@
 import React from "react";
-import { Toolbar, Typography, IconButton, Container, SvgIcon, Grid } from "@mui/material";
-import MuiAppBar from "@mui/material/AppBar";
+import { Toolbar, Typography, IconButton, Container, SvgIcon, Grid, AppBar } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import MenuIcon from "@mui/icons-material/Menu";
 import Profile from "../Profile/index.jsx";
 import SvgComponent from "../../assets/logo2.jsx";
 
-const Navbar = ({ position, open, setOpenDrawer, isAuthenticated }) => {
-  const drawerWidth = 310;
-
-  const AppBar = styled(MuiAppBar, {
-    shouldForwardProp: (prop) => prop !== "open",
-  })(({ theme, open }) => ({
-    zIndex: theme.zIndex.drawer + 1,
-    transition: theme.transitions.create(["width", "margin"], {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen,
-    }),
-    ...(open && {
-      marginLeft: drawerWidth,
-      width: `calc(100% - ${drawerWidth}px)`,
-      transition: theme.transitions.create(["width", "margin"], {
-        easing: theme.transitions.easing.sharp,
-        duration: theme.transitions.duration.enteringScreen,
-      }),
-    }),
-  }));
-
-  //get svg logo from assets
-
+const Navbar = ({ open, setOpenDrawer, isAuth = false, language, setLanguage }) => {
   return (
-    <AppBar position="fixed" open={open} color="navbar">
+    <AppBar position="static" color="navbar">
       <Toolbar>
-        {isAuthenticated && (
-          <IconButton
-            color="inherit"
-            aria-label="open drawer"
-            onClick={() => setOpenDrawer(true)}
-            edge="start"
-            sx={{
-              ...(open && { display: "none" }),
-            }}
-          >
-            <MenuIcon />
-          </IconButton>
-        )}
+        <IconButton color="inherit" aria-label="open drawer" onClick={() => setOpenDrawer(true)} edge="start">
+          <MenuIcon />
+        </IconButton>
 
         <Container>
           <Grid

@@ -10,14 +10,14 @@ import { LinkContainer } from "react-router-bootstrap";
 import { useTheme } from "@mui/material/styles";
 
 const Login = () => {
-  const { userHasAuthenticated } = useAppContext();
+  const { userHasAuthenticated, langValue } = useAppContext();
   const [message, setMessage] = useState(null);
   const navigate = useNavigate();
 
   //validate
   const validationSchema = yup.object().shape({
-    email: yup.string().email("Email is invalid").required("Email is required"),
-    password: yup.string().required("Password is required"),
+    email: yup.string().email(langValue.login.errors.invalid_email).required(langValue.login.errors.email_is_required),
+    password: yup.string().required(langValue.login.errors.password_is_required),
   });
 
   //enable button
@@ -67,7 +67,7 @@ const Login = () => {
             }}
           >
             <Typography component="h1" variant="h5">
-              Sign in
+              {langValue.login.title}
             </Typography>
             <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
               <TextField
@@ -75,26 +75,22 @@ const Login = () => {
                 required
                 fullWidth
                 id="email"
-                label="Email Address"
+                label={langValue.login.email}
                 name="email"
                 autoComplete="email"
                 onChange={handleChange}
                 onBlur={handleBlur}
                 onClick={() => setMessage(null)}
                 value={values.email}
-                error={errors.email && touched.email}
+                error={touched.email && Boolean(errors.email)}
+                helperText={touched.email && errors.email}
               />
-              {errors.email && touched.email && (
-                <Typography variant="caption" color="error">
-                  {errors.email}
-                </Typography>
-              )}
               <TextField
                 margin="normal"
                 required
                 fullWidth
                 name="password"
-                label="Password"
+                label={langValue.login.password}
                 type="password"
                 id="password"
                 autoComplete="current-password"
@@ -102,26 +98,23 @@ const Login = () => {
                 onBlur={handleBlur}
                 onClick={() => setMessage(null)}
                 value={values.password}
-                error={errors.password && touched.password}
+                error={touched.password && Boolean(errors.password)}
+                helperText={touched.password && errors.password}
               />
               {message !== null && (
                 <Typography variant="caption" color="error">
                   {message}
                 </Typography>
               )}
-              {errors.password && touched.password && (
-                <Typography variant="caption" color="error">
-                  {errors.password}
-                </Typography>
-              )}
+
               <LoaderButton
                 type="submit"
                 fullWidth
                 variant="contained"
                 sx={{ mt: 2, mb: 2 }}
                 isLoading={isSubmitting}
-                text="Sign In"
-                loadingText="Logging in…"
+                text={langValue.login.login}
+                loadingText={langValue.login.logging_in}
                 disabled={!isValid || !dirty || isSubmitting}
               />
               <Grid container spacing={2}>
@@ -132,7 +125,7 @@ const Login = () => {
                   sx={{ [theme.breakpoints.up("md")]: { display: "flex", justifyContent: "flex-start" } }}
                 >
                   <LinkContainer to="/forgot-password">
-                    <Link variant="body2">Forgot password?</Link>
+                    <Link variant="body2">{langValue.login.forgot_password}</Link>
                   </LinkContainer>
                 </Grid>
 
@@ -143,7 +136,7 @@ const Login = () => {
                   sx={{ [theme.breakpoints.up("md")]: { display: "flex", justifyContent: "flex-end" } }}
                 >
                   <LinkContainer to="/signup">
-                    <Link variant="body2">Don't have an account? Sign Up</Link>
+                    <Link variant="body2">{langValue.login.register}</Link>
                   </LinkContainer>
                 </Grid>
               </Grid>

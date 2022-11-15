@@ -24,21 +24,23 @@ import { de } from "date-fns/locale";
 import { country } from "./country.jsx";
 
 const phone = (phone) => {
-  if (phone.length === 13) {
-    return `${phone}`;
-  } else if (phone.length === 10) {
-    return `+358${phone.slice(1)}`;
-  } else if (phone.length === 9) return `+358${phone}`;
+  if (String(phone).length === 12) {
+    return `+${phone}`;
+  } else if (String(phone).length === 10) {
+    return `+358${String(phone).slice(1)}`;
+  } else if (String(phone).length === 9) {
+    return `+358${String(phone)}`;
+  } else return null;
 };
 
 const ConfirmForm = ({ password, email }) => {
-  const { userHasAuthenticated } = useAppContext();
+  const { userHasAuthenticated, langValue } = useAppContext();
   const navigate = useNavigate();
   const [warnText, setWarnText] = useState("");
 
   //validate form
   const validationSchema = yup.object().shape({
-    confirmationCode: yup.string().required("Confirmation code is required"),
+    confirmationCode: yup.string().required(langValue.confirm.is_required),
   });
 
   //Confirming form
@@ -61,7 +63,7 @@ const ConfirmForm = ({ password, email }) => {
         }
       }}
     >
-      {({ values, handleChange, handleSubmit, handleBlur, isSubmitting, errors, isValid, dirty }) => (
+      {({ values, handleChange, handleSubmit, handleBlur, isSubmitting, errors, touched, isValid, dirty }) => (
         <Container component="main" maxWidth="xs">
           <CssBaseline />
           <Box
@@ -73,7 +75,7 @@ const ConfirmForm = ({ password, email }) => {
             }}
           >
             <Typography component="h1" variant="h5">
-              Confirm Sign up
+              {langValue.confirm.title}
             </Typography>
             <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3, maxWidth: "300px" }}>
               <TextField
@@ -81,7 +83,7 @@ const ConfirmForm = ({ password, email }) => {
                 required
                 fullWidth
                 id="confirmationCode"
-                label="Confirmation Code"
+                label={langValue.confirm.code}
                 name="confirmationCode"
                 autoComplete="confirmationCode"
                 onChange={(event) => {
@@ -90,13 +92,9 @@ const ConfirmForm = ({ password, email }) => {
                 }}
                 onBlur={handleBlur}
                 value={values.confirmationCode}
-                error={errors.confirmationCode}
+                error={touched.confirmationCode && Boolean(errors.confirmationCode)}
+                helperText={touched.confirmationCode && errors.confirmationCode}
               />
-              {errors.confirmationCode && (
-                <Typography variant="caption" color="error">
-                  {errors.confirmationCode}
-                </Typography>
-              )}
               {warnText !== "" && (
                 <Typography variant="caption" color="error">
                   {warnText}
@@ -107,8 +105,8 @@ const ConfirmForm = ({ password, email }) => {
                 variant="contained"
                 sx={{ mt: 3, mb: 2 }}
                 isLoading={isSubmitting}
-                text="Confirm"
-                loadingText="Confirming…"
+                text={langValue.confirm.confirm}
+                loadingText={langValue.confirm.confirming}
                 disabled={!isValid || !dirty}
                 fullWidth
               />
@@ -122,7 +120,7 @@ const ConfirmForm = ({ password, email }) => {
 
 const Citizenship = ({ citizenship, setCitizenship }) => {
   const [value, setValue] = React.useState(country[0]);
-  const [inputValue, setInputValue] = React.useState("");
+  const { langValue } = useAppContext();
 
   return (
     <Autocomplete
@@ -130,14 +128,14 @@ const Citizenship = ({ citizenship, setCitizenship }) => {
       onChange={(event, newValue) => {
         setValue(newValue);
       }}
-      inputValue={inputValue}
+      inputValue={citizenship}
       onInputChange={(event, newInputValue) => {
-        setInputValue(newInputValue);
+        setCitizenship(newInputValue);
       }}
       id="combo-box"
       options={country}
       sx={{ width: "100%" }}
-      renderInput={(params) => <TextField {...params} label="Citizenship" variant="outlined" />}
+      renderInput={(params) => <TextField {...params} label={langValue.register.citizenship} variant="outlined" />}
     />
   );
 };
@@ -152,30 +150,42 @@ const Signup = () => {
   const theme = useTheme();
   const [message, setMessage] = useState("");
   const [citizenship, setCitizenship] = useState("");
+  const { langValue } = useAppContext();
+  const phoneRegExp =
+    /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
 
   const SignupSchema = yup.object().shape({
-    email: yup.string().email("Invalid email").required("Email is required"),
+    phoneNumber: yup
+      .string()
+      .min(9, langValue.register.errors.phone_number.is_too_short)
+      .max(12, langValue.register.errors.phone_number.is_too_long)
+      .matches(phoneRegExp, langValue.register.errors.phone_number.is_invalid)
+      .required(langValue.register.errors.phone_number.is_required),
+    email: yup
+      .string()
+      .email(langValue.register.errors.invalid_email)
+      .required(langValue.register.errors.email_is_required),
     lastName: yup
       .string()
-      .min(2, "Last name is short")
-      .max(50, "Last name is too long")
-      .required("Last name is required"),
+      .min(2, langValue.register.errors.last_name.is_too_short)
+      .max(50, langValue.register.errors.last_name.is_too_long)
+      .required(langValue.register.errors.last_name.is_required),
     firstName: yup
       .string()
-      .min(2, "First name is short")
-      .max(50, "First name too long")
-      .required("First name is required"),
+      .min(2, langValue.register.errors.first_name.is_too_short)
+      .max(50, langValue.register.errors.first_name.is_too_long)
+      .required(langValue.register.errors.first_name.is_required),
     password: yup
       .string()
-      .min(8, "Password is too short")
-      .max(50, "Password is too long")
-      .required("Password is required"),
+      .min(8, langValue.register.errors.password.is_too_short)
+      .max(50, langValue.register.errors.password.is_too_long)
+      .required(langValue.register.errors.password.is_required),
     confirmPassword: yup
       .string()
-      .min(8, "Password is too short")
-      .max(50, "Password is too long")
-      .oneOf([yup.ref("password"), null], "Passwords must match")
-      .required("Confirm password is required"),
+      .min(8, langValue.register.errors.password_confirmation.is_too_short)
+      .max(50, langValue.register.errors.password_confirmation.is_too_long)
+      .required(langValue.register.errors.password_confirmation.is_required)
+      .oneOf([yup.ref("password"), null], langValue.register.errors.password_confirmation.does_not_match),
   });
 
   const [confiming, setConfirming] = useState(false);
@@ -199,7 +209,7 @@ const Signup = () => {
             password: val.password,
             attributes: {
               //birthdate: new Date(dateOfBirth).toLocaleDateString(),
-              locale: val.country,
+              locale: citizenship,
               "custom:UserCreditails": "null",
               "custom:RuningTimeEntry": "null",
               name: val.firstName,
@@ -218,6 +228,9 @@ const Signup = () => {
           //An account with the given email already exists.
           setSubmitting(false);
           setMessage(e.message);
+          if (e.message === "An account with the given email already exists.") {
+            setMessage(langValue.register.errors.email_already_exists);
+          }
           console.warn(e);
         }
       }}
@@ -238,7 +251,7 @@ const Signup = () => {
             }}
           >
             <Typography component="p" sx={{ color: "#666666", fontSize: 16 }}>
-              Join Valpas NextApp
+              {langValue.register.title}
             </Typography>
             <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
               <Grid container spacing={2}>
@@ -250,17 +263,13 @@ const Signup = () => {
                     required
                     fullWidth
                     id="firstName"
-                    label="First Name"
+                    label={langValue.register.first_name}
                     onChange={handleChange}
                     onBlur={handleBlur}
                     value={values.firstName}
-                    error={errors.firstName && touched.firstName}
+                    error={touched.firstName && Boolean(errors.firstName)}
+                    helperText={touched.firstName && errors.firstName}
                   />
-                  {errors.firstName && touched.firstName && (
-                    <Typography variant="caption" color="error">
-                      {errors.firstName}
-                    </Typography>
-                  )}
                 </Grid>
                 <Grid item xs={12} sm={6}>
                   <TextField
@@ -268,24 +277,20 @@ const Signup = () => {
                     required
                     fullWidth
                     id="lastName"
-                    label="Last Name"
+                    label={langValue.register.last_name}
                     name="lastName"
                     autoComplete="lname"
                     onChange={handleChange}
                     onBlur={handleBlur}
                     value={values.lastName}
-                    error={errors.lastName && touched.lastName}
+                    error={touched.lastName && Boolean(errors.lastName)}
+                    helperText={touched.lastName && errors.lastName}
                   />
-                  {errors.lastName && touched.lastName && (
-                    <Typography variant="caption" color="error">
-                      {errors.lastName}
-                    </Typography>
-                  )}
                 </Grid>
                 <Grid item xs={12}>
                   <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={de}>
                     <DatePicker
-                      label="Date of Birth"
+                      label={langValue.register.date_of_birth}
                       mask="__.__.____"
                       name="dateOfBirth"
                       onChange={(date) => setDateOfBirth(date)}
@@ -297,7 +302,7 @@ const Signup = () => {
                           required
                           fullWidth
                           id="dateOfBirth"
-                          label="Date of Birth"
+                          label={langValue.register.date_of_birth}
                           name="dateOfBirth"
                           autoComplete="dateOfBirth"
                         />
@@ -314,19 +319,15 @@ const Signup = () => {
                     required
                     fullWidth
                     id="email"
-                    label="Email Address"
+                    label={langValue.register.email}
                     name="email"
                     autoComplete="email"
                     onChange={handleChange}
                     onBlur={handleBlur}
                     value={values.email}
-                    error={errors.email && touched.email}
+                    error={touched.email && Boolean(errors.email)}
+                    helperText={touched.email && errors.email}
                   />
-                  {errors.email && touched.email && (
-                    <Typography variant="caption" color="error">
-                      {errors.email}
-                    </Typography>
-                  )}
                 </Grid>
                 <Grid item xs={12}>
                   <TextField
@@ -334,19 +335,17 @@ const Signup = () => {
                     required
                     fullWidth
                     id="phoneNumber"
-                    label="Phone Number"
+                    label={langValue.register.phone_number}
+                    type="number"
+                    placeholder="+358123456789"
                     name="phoneNumber"
                     autoComplete="phoneNumber"
                     onChange={handleChange}
                     onBlur={handleBlur}
                     value={values.phoneNumber}
-                    error={errors.phoneNumber && touched.phoneNumber}
+                    error={touched.phoneNumber && Boolean(errors.phoneNumber)}
+                    helperText={touched.phoneNumber && errors.phoneNumber}
                   />
-                  {errors.phoneNumber && touched.phoneNumber && (
-                    <Typography variant="caption" color="error">
-                      {errors.phoneNumber}
-                    </Typography>
-                  )}
                 </Grid>
                 <Grid item xs={12}>
                   <TextField
@@ -354,20 +353,16 @@ const Signup = () => {
                     required
                     fullWidth
                     name="password"
-                    label="Password"
+                    label={langValue.register.password}
                     type="password"
                     id="password"
                     autoComplete="current-password"
                     onChange={handleChange}
                     onBlur={handleBlur}
                     value={values.password}
-                    error={errors.password && touched.password}
+                    error={touched.password && Boolean(errors.password)}
+                    helperText={touched.password && errors.password}
                   />
-                  {errors.password && touched.password && (
-                    <Typography variant="caption" color="error">
-                      {errors.password}
-                    </Typography>
-                  )}
                 </Grid>
                 <Grid item xs={12}>
                   <TextField
@@ -375,20 +370,16 @@ const Signup = () => {
                     required
                     fullWidth
                     name="confirmPassword"
-                    label="Confirm Password"
+                    label={langValue.register.password_confirmation}
                     type="password"
                     id="confirmPassword"
                     autoComplete="current-password"
                     onChange={handleChange}
                     onBlur={handleBlur}
                     value={values.confirmPassword}
-                    error={errors.confirmPassword && touched.confirmPassword}
+                    error={touched.confirmPassword && Boolean(errors.confirmPassword)}
+                    helperText={touched.confirmPassword && errors.confirmPassword}
                   />
-                  {errors.confirmPassword && touched.confirmPassword && (
-                    <Typography variant="caption" color="error">
-                      {errors.confirmPassword}
-                    </Typography>
-                  )}
                 </Grid>
                 <Grid item xs={12}>
                   <FormControlLabel
@@ -402,7 +393,7 @@ const Signup = () => {
                         color="primary"
                       />
                     }
-                    label="I agree to Valpas NextApp's Terms of Service"
+                    label={langValue.register.agree}
                   />
                   <Typography variant="caption" color="error">
                     {errors.terms && touched.terms && errors.terms}
@@ -419,7 +410,7 @@ const Signup = () => {
                 variant="contained"
                 sx={{ mt: 3, mb: 2 }}
                 isLoading={isSubmitting}
-                text="Sign Up"
+                text={langValue.register.register}
                 loadingText="Creating…"
                 disabled={!isValid || !dirty || isSubmitting || !terms}
                 fullWidth

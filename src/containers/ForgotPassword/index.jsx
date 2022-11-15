@@ -5,28 +5,32 @@ import { Formik } from "formik";
 import { Auth } from "aws-amplify";
 import LoaderButton from "../../components/LoaderButton/index.jsx";
 import { useNavigate } from "react-router-dom";
+import { useAppContext } from "../../services/contextLib.jsx";
 
 const NewPasswordForm = ({ email, haveCode }) => {
   const [message, setMessage] = React.useState(null);
+  const { langValue } = useAppContext();
   const validate = yup.object().shape({
-    email: yup.string().email("Email is invalid").required("Email is required"),
-    code: yup.string().max(6, "Code is too long").required("Code is required"),
-    password: yup.string().required("Password is required"),
-    confirmPassword: yup.string().oneOf([yup.ref("password"), null], "Passwords must match"),
+    email: yup
+      .string()
+      .email(langValue.forgot_password.errors.invalid_email)
+      .required(langValue.forgot_password.errors.email_is_required),
+    code: yup
+      .string()
+      .max(6, langValue.forgot_password.errors.code_is_too_long)
+      .required(langValue.forgot_password.errors.code_is_required),
+    password: yup
+      .string()
+      .min(8, langValue.forgot_password.errors.password_is_too_short)
+      .max(50, langValue.forgot_password.errors.password_is_too_long)
+      .required(langValue.forgot_password.errors.password_is_required),
+    confirmPassword: yup
+      .string()
+      .required(langValue.forgot_password.errors.confirmation_code_is_required)
+      .oneOf([yup.ref("password"), null], langValue.forgot_password.errors.confirmation_code_does_not_match),
   });
   //navigate
   const navigate = useNavigate();
-
-  //enable button if values is valid
-  const enable = (values) => {
-    return (
-      !(values.email.length === 0) &&
-      !(values.code.length === 0) &&
-      !(values.password.length === 0) &&
-      !(values.confirmPassword.length === 0) &&
-      values.password === values.confirmPassword
-    );
-  };
 
   return (
     <Formik
@@ -50,7 +54,7 @@ const NewPasswordForm = ({ email, haveCode }) => {
         }
       }}
     >
-      {({ values, handleChange, handleBlur, handleSubmit, errors, touched, isSubmitting }) => (
+      {({ values, handleChange, handleBlur, handleSubmit, errors, touched, isSubmitting, isValid, dirty }) => (
         <Container maxWidth="xs" component="main">
           <CssBaseline />
           <Box
@@ -63,7 +67,7 @@ const NewPasswordForm = ({ email, haveCode }) => {
             }}
           >
             <Typography variant="h5" component="h1">
-              New Password
+              {langValue.forgot_password.form_title}
             </Typography>
             <Box
               component="form"
@@ -74,53 +78,44 @@ const NewPasswordForm = ({ email, haveCode }) => {
               noValidate
             >
               {haveCode && (
-                <Fragment>
-                  <TextField
-                    margin="normal"
-                    required
-                    fullWidth
-                    id="email"
-                    label="Email Address"
-                    name="email"
-                    autoComplete="email"
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    onClick={() => setMessage(null)}
-                    value={values.email}
-                    error={errors.email && touched.email}
-                  />
-                  {errors.email && touched.email && (
-                    <Typography variant="body2" color="error">
-                      {errors.email}
-                    </Typography>
-                  )}
-                </Fragment>
+                <TextField
+                  margin="normal"
+                  required
+                  fullWidth
+                  id="email"
+                  label={langValue.forgot_password.email}
+                  name="email"
+                  autoComplete="email"
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  onClick={() => setMessage(null)}
+                  value={values.email}
+                  error={touched.email && Boolean(errors.email)}
+                  helperText={touched.email && errors.email}
+                />
               )}
               <TextField
                 margin="normal"
                 required
                 fullWidth
                 id="code"
-                label="Code"
+                label={langValue.forgot_password.code}
                 name="code"
                 autoComplete="code"
                 onChange={handleChange}
                 onBlur={handleBlur}
                 onClick={() => setMessage(null)}
                 value={values.code}
-                error={errors.code && touched.code}
+                error={touched.code && Boolean(errors.code)}
+                helperText={touched.code && errors.code}
               />
-              {errors.code && touched.code && (
-                <Typography variant="caption" color="error">
-                  {errors.code}
-                </Typography>
-              )}
+
               <TextField
                 margin="normal"
                 required
                 fullWidth
                 name="password"
-                label="Password"
+                label={langValue.forgot_password.password}
                 type="password"
                 id="password"
                 autoComplete="current-password"
@@ -128,19 +123,15 @@ const NewPasswordForm = ({ email, haveCode }) => {
                 onBlur={handleBlur}
                 onClick={() => setMessage(null)}
                 value={values.password}
-                error={errors.password && touched.password}
+                error={touched.password && Boolean(errors.password)}
+                helperText={touched.password && errors.password}
               />
-              {errors.password && touched.password && (
-                <Typography variant="caption" color="error">
-                  {errors.password}
-                </Typography>
-              )}
               <TextField
                 margin="normal"
                 required
                 fullWidth
                 name="confirmPassword"
-                label="Confirm Password"
+                label={langValue.forgot_password.password_confirmation}
                 type="password"
                 id="confirmPassword"
                 autoComplete="current-password"
@@ -148,13 +139,9 @@ const NewPasswordForm = ({ email, haveCode }) => {
                 onBlur={handleBlur}
                 onClick={() => setMessage(null)}
                 value={values.confirmPassword}
-                error={errors.confirmPassword && touched.confirmPassword}
+                error={touched.confirmPassword && Boolean(errors.confirmPassword)}
+                helperText={touched.confirmPassword && errors.confirmPassword}
               />
-              {errors.confirmPassword && touched.confirmPassword && (
-                <Typography variant="caption" color="error">
-                  {errors.confirmPassword}
-                </Typography>
-              )}
               {message && <Typography variant="caption">{message}</Typography>}
               <LoaderButton
                 type="submit"
@@ -162,9 +149,9 @@ const NewPasswordForm = ({ email, haveCode }) => {
                 variant="contained"
                 sx={{ mt: 2, mb: 2 }}
                 isLoading={isSubmitting}
-                text="Change Password"
-                loadingText="Changing password…"
-                disabled={!enable(values)}
+                text={langValue.forgot_password.change_password}
+                loadingText={langValue.forgot_password.changing_password}
+                disabled={!isValid || !dirty || isSubmitting}
               />
             </Box>
           </Box>
@@ -175,26 +162,23 @@ const NewPasswordForm = ({ email, haveCode }) => {
 };
 
 const ForgotPassword = () => {
+  const { langValue } = useAppContext();
   const [message, setMessage] = React.useState(null);
   const validate = yup.object().shape({
-    email: yup.string().email("Email is invalid").required("Email is required"),
+    email: yup
+      .string()
+      .email(langValue.forgot_password.errors.invalid_email)
+      .required(langValue.forgot_password.email_is_required),
   });
 
   const [email, setEmail] = React.useState("");
   const [confirmation, setConfirmation] = React.useState(false);
   const [haveCode, setHaveCode] = React.useState(false);
 
-  //enable button if email is valid
-  const enable = (values) => {
-    return !(values.email.length === 0);
-  };
-
   return !confirmation ? (
     <Formik
       initialValues={{ email: "" }}
       onSubmit={(values, { setSubmitting }) => {
-        
-
         Auth.forgotPassword(values.email)
           .then(() => {
             setMessage("An email has been sent to confirm your request.");
@@ -208,7 +192,7 @@ const ForgotPassword = () => {
       }}
       validationSchema={validate}
     >
-      {({ values, handleChange, handleBlur, handleSubmit, errors, touched, isSubmitting }) => (
+      {({ values, handleChange, handleBlur, handleSubmit, errors, touched, isSubmitting, dirty, isValid }) => (
         <Container maxWidth="xs" component="main">
           <CssBaseline />
           <Box
@@ -221,7 +205,7 @@ const ForgotPassword = () => {
             }}
           >
             <Typography variant="h5" component="h1">
-              Forgot Password
+              {langValue.forgot_password.title}
             </Typography>
 
             <Box
@@ -237,31 +221,27 @@ const ForgotPassword = () => {
                 required
                 fullWidth
                 id="email"
-                label="Email Address"
+                label={langValue.forgot_password.email}
                 name="email"
                 autoComplete="email"
                 onChange={handleChange}
                 onBlur={handleBlur}
                 onClick={() => setMessage(null)}
                 value={values.email}
-                error={errors.email && touched.email}
+                error={touched.email && Boolean(errors.email)}
+                helperText={touched.email && errors.email}
               />
               {message && <Typography variant="caption">{message}</Typography>}
-              {errors.email && touched.email && (
-                <Typography variant="caption" color="error">
-                  {errors.email}
-                </Typography>
-              )}
               <LoaderButton
                 type="submit"
                 fullWidth
                 variant="contained"
                 color="primary"
                 isLoading={isSubmitting}
-                disabled={!enable(values)}
+                disabled={!isValid || !dirty || isSubmitting}
                 sx={{ mt: 2, mb: 2 }}
-                text="Send Reset Code"
-                loadingText="Sending…"
+                text={langValue.forgot_password.send}
+                loadingText={langValue.forgot_password.sending}
               />
               <Link
                 variant="body2"
@@ -271,7 +251,7 @@ const ForgotPassword = () => {
                   setConfirmation(true);
                 }}
               >
-                I already have code
+                {langValue.forgot_password.have_code}
               </Link>
             </Box>
           </Box>

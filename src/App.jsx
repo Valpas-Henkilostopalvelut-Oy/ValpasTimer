@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 
 //Custom
 import Navigation from "./Navigation.jsx";
@@ -7,14 +7,18 @@ import { Auth, DataStore } from "aws-amplify";
 import { onError } from "./services/errorLib.jsx";
 import Sidebar from "./components/Sidebar/index.jsx";
 import Navbar from "./components/NavBar/index.jsx";
-import { Box, CssBaseline } from "@mui/material";
-import { styled, createTheme, ThemeProvider } from "@mui/material/styles";
+import { Box, CssBaseline, CircularProgress } from "@mui/material";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { customPalette } from "./services/appSettings.jsx";
+import { eng } from "./components/Language/langs/eng.js";
+import { fin } from "./components/Language/langs/fin.js";
 
 function App() {
   const [isAuthenticated, userHasAuthenticated] = useState(false);
   const [isAuthenticating, setIsAuthenticating] = useState(true);
   const [appLoading, setAppLoading] = useState(true);
+  const [language, setLanguage] = useState("");
+  const [langValue, setLangValue] = useState({});
 
   const [groups, setGroups] = useState([]);
   const [openDrawer, setOpenDrawer] = useState(false);
@@ -62,43 +66,64 @@ function App() {
     return () => (isActive = true);
   }, [isAuthenticated]);
 
-  const Header = styled("div")(({ theme }) => ({
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "flex-end",
-    padding: theme.spacing(0, 1),
-    ...theme.mixins.toolbar,
-  }));
+  useEffect(() => {
+    let isActive = false;
 
-  return (
-    !isAuthenticating && (
-      <AppContext.Provider
-        value={{
-          isAuthenticated,
-          userHasAuthenticated,
-          setGroups,
-          groups,
-          appLoading,
-          setAppLoading,
-        }}
-      >
-        <ThemeProvider theme={theme}>
-          <Box sx={{ display: "flex" }}>
-            <CssBaseline />
-            {isAuthenticated && (
-              <Fragment>
-                <Sidebar open={openDrawer} setOpen={setOpenDrawer} />
-                <Navbar open={openDrawer} setOpenDrawer={setOpenDrawer} isAuthenticated={isAuthenticated} />
-              </Fragment>
-            )}
-            <Box component="main" sx={{ flexGrow: 1, pt: 3, minWidth: isAuthenticated && 300 }}>
-              {isAuthenticated && <Header />}
-              <Navigation isAuthenticated={isAuthenticated} groups={groups} />
-            </Box>
-          </Box>
-        </ThemeProvider>
-      </AppContext.Provider>
-    )
+    const loadLang = async () => {
+      const lang = localStorage.getItem("lang");
+
+      if (lang !== null) {
+        if (lang === "English") {
+          setLangValue(eng.main);
+        } else if (lang === "Finnish") {
+          setLangValue(fin.main);
+        }
+      } else {
+        setLangValue(eng.main);
+      }
+    };
+
+    !isActive && loadLang();
+
+    return () => (isActive = true);
+  }, [language]);
+
+  return langValue !== {} && !isAuthenticating ? (
+    <AppContext.Provider
+      value={{
+        isAuthenticated,
+        userHasAuthenticated,
+        setGroups,
+        groups,
+        appLoading,
+        setAppLoading,
+        setLanguage,
+        language,
+        langValue,
+      }}
+    >
+      <ThemeProvider theme={theme}>
+        <Box>
+          <CssBaseline />
+          {isAuthenticated && (
+            <Navbar open={openDrawer} setOpenDrawer={setOpenDrawer} isAuthenticated={isAuthenticated} />
+          )}
+          <Sidebar open={openDrawer} setOpen={setOpenDrawer} />
+          <Navigation isAuthenticated={isAuthenticated} groups={groups} />
+        </Box>
+      </ThemeProvider>
+    </AppContext.Provider>
+  ) : (
+    <Box
+      sx={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        height: "100vh",
+      }}
+    >
+      <CircularProgress />
+    </Box>
   );
 }
 
