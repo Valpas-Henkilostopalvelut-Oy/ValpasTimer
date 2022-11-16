@@ -11,7 +11,13 @@ const updateDescription = async (date, newDescription) => {
   ).catch((e) => console.warn(e));
 };
 
-const EditDescription = ({ date }) => {
+const EditDescription = ({
+  date,
+  lang = {
+    none_description: "No description",
+    add_description: "Add description",
+  },
+}) => {
   const [desc, setDesc] = useState(date.description);
   const [click, setClick] = useState(false);
   const theme = useTheme();
@@ -29,7 +35,7 @@ const EditDescription = ({ date }) => {
       }}
     >
       {date.isSent ? (
-        <Typography variant="p">{desc !== "" ? desc : "None description"}</Typography>
+        <Typography variant="p">{desc !== "" ? desc : lang.none_description}</Typography>
       ) : !click ? (
         <Typography
           variant="p"
@@ -38,7 +44,7 @@ const EditDescription = ({ date }) => {
             width: "100%",
           }}
         >
-          {desc !== "" ? desc : "None description"}
+          {desc !== "" ? desc : lang.none_description}
         </Typography>
       ) : (
         <TextField
@@ -54,14 +60,14 @@ const EditDescription = ({ date }) => {
             updateDescription(date, e.target.value);
             setClick(!click);
           }}
-          placeholder="Add description"
+          placeholder={lang.add_description}
         />
       )}
     </Box>
   );
 };
 
-export const EditDescriptionSM = ({ date }) => {
+export const EditDescriptionSM = ({ date, lang }) => {
   const theme = useTheme();
 
   return (
@@ -75,13 +81,13 @@ export const EditDescriptionSM = ({ date }) => {
       }}
     >
       <TableCell colSpan={4}>
-        <EditDescription date={date} />
+        <EditDescription date={date} lang={lang} />
       </TableCell>
     </TableRow>
   );
 };
 
-export const EditDescriptionMD = ({ date }) => {
+export const EditDescriptionMD = ({ date, lang }) => {
   const theme = useTheme();
 
   return (
@@ -94,19 +100,21 @@ export const EditDescriptionMD = ({ date }) => {
         },
       }}
     >
-      <EditDescription date={date} />
+      <EditDescription date={date} lang={lang} />
     </TableCell>
   );
 };
 
-export const Tabledescription = ({ date }) => {
+export const Tabledescription = ({ date, lang = { none_description: "No description" } }) => {
   let arr = date.arr.filter((item) => item.description !== "");
   let description = arr.map((item) => item.description).join(", ");
   return (
-    <Box sx={{
-      maxWidth: "180px",
-    }}>
-      <Typography variant="p">{description !== "" ? description : "None description"}</Typography>
+    <Box
+      sx={{
+        maxWidth: "180px",
+      }}
+    >
+      <Typography variant="p">{description !== "" ? description : lang.none_description}</Typography>
     </Box>
   );
 };

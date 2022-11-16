@@ -5,9 +5,10 @@ import { useAppContext } from "../../services/contextLib.jsx";
 import { useNavigate } from "react-router-dom";
 import { LinkContainer } from "react-router-bootstrap";
 import AccountCircle from "@mui/icons-material/AccountCircle";
+import { Language } from "../Language/language.jsx";
 
 const Profile = () => {
-  const { userHasAuthenticated, setGroups } = useAppContext();
+  const { userHasAuthenticated, setGroups, setLanguage, language } = useAppContext();
   const navigate = useNavigate();
   const [loadedUser, setLoadedUser] = useState(null);
 
@@ -77,6 +78,9 @@ const Profile = () => {
         open={open}
         onClose={handleClose}
       >
+        <MenuItem>
+          <Language setLang={setLanguage} lang={language} />
+        </MenuItem>
         <MenuItem disabled>
           {loadedUser != null ? loadedUser.attributes.name + " " + loadedUser.attributes.family_name : "Loading"}
         </MenuItem>

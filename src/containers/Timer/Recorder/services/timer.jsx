@@ -8,13 +8,12 @@ import { EditDescriptionTimer } from "./editdescription";
 import { EditWorkplaceTimer } from "./editworkplace";
 import { StartTimer } from "./starttimer";
 
-export const Timer = ({ description = "", sel = "", setDescription, setSel, works, isStarted, setStarted }) => {
+export const Timer = ({ description = "", sel = "", setDescription, setSel, works, isStarted, setStarted, lang }) => {
   const [time, setTime] = useState({
     seconds: 0,
     minutes: 0,
     hours: 0,
   });
-
   const [timerTime, setTimer] = useState(null);
   const [open, setOpen] = useState(false);
 
@@ -69,6 +68,7 @@ export const Timer = ({ description = "", sel = "", setDescription, setSel, work
     }
 
     return () => (isActive = false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -111,10 +111,18 @@ export const Timer = ({ description = "", sel = "", setDescription, setSel, work
           setDescription={setDescription}
           data={timerTime}
           isStarted={isStarted}
+          lang={lang}
         />
       </Grid>
       <Grid item xs={6} md={4}>
-        <EditWorkplaceTimer sel={sel} setSel={setSel} works={works} data={timerTime} isStarted={isStarted} />
+        <EditWorkplaceTimer
+          sel={sel}
+          setSel={setSel}
+          works={works}
+          data={timerTime}
+          isStarted={isStarted}
+          lang={lang}
+        />
       </Grid>
       <Grid item xs={6} md={2}>
         <Typography
@@ -133,7 +141,7 @@ export const Timer = ({ description = "", sel = "", setDescription, setSel, work
           {time.hours < 10 ? "0" + time.hours : time.hours}:{time.minutes < 10 ? "0" + time.minutes : time.minutes}:
           {time.seconds < 10 ? "0" + time.seconds : time.seconds}
         </Typography>
-        {timerTime && isStarted && <EditStartTime open={open} setOpen={setOpen} timerTime={timerTime} />}
+        {timerTime && isStarted && <EditStartTime open={open} setOpen={setOpen} timerTime={timerTime} lang={lang}/>}
       </Grid>
       <Grid item xs={6} md={2}>
         <StartTimer
@@ -143,6 +151,7 @@ export const Timer = ({ description = "", sel = "", setDescription, setSel, work
           setStarted={setStarted}
           setTimer={setTimer}
           setTime={setTime}
+          lang={lang}
         />
       </Grid>
     </Grid>

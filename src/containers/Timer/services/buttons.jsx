@@ -13,10 +13,15 @@ const deleteAll = async (date) => {
   }
 };
 
-export const DeleteAll = ({ date }) => {
+export const DeleteAll = ({
+  date,
+  lang = {
+    buttons: { delete: "Delete" },
+  },
+}) => {
   return (
     <Button variant="text" color="error" onClick={() => deleteAll(date)}>
-      Delete
+      {lang.buttons.delete}
     </Button>
   );
 };
@@ -34,10 +39,15 @@ const reportAll = async (date) => {
   }
 };
 
-export const ReportAll = ({ date }) => {
+export const ReportAll = ({
+  date,
+  lang = {
+    buttons: { report: "Report" },
+  },
+}) => {
   return (
     <Button variant="text" color="primary" onClick={() => reportAll(date)}>
-      Report
+      {lang.buttons.report}
     </Button>
   );
 };

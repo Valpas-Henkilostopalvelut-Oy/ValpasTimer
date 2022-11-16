@@ -9,12 +9,12 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { TimePicker } from "@mui/x-date-pickers/TimePicker";
 import ruLocale from "date-fns/locale/ru";
 
-export const Editdate = ({ date = null, setDate, sTime, eTime, setSTime, setETime }) => {
+export const Editdate = ({ date = null, setDate, sTime, eTime, setSTime, setETime, lang = { date: "Date" } }) => {
   return (
     <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={ruLocale}>
       <DatePicker
         disableFuture
-        label="Date"
+        label={lang.date}
         value={date}
         onChange={(newValue) => {
           setDate(newValue);
@@ -46,11 +46,11 @@ export const Editdate = ({ date = null, setDate, sTime, eTime, setSTime, setETim
   );
 };
 
-export const Editstime = ({ sTime, setSTime }) => {
+export const Editstime = ({ sTime, setSTime, lang = { start_time: "Start time" } }) => {
   return (
     <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={ruLocale}>
       <TimePicker
-        label="Start Time"
+        label={lang.start_time}
         value={sTime}
         onChange={(newValue) => {
           setSTime(newValue);
@@ -61,11 +61,11 @@ export const Editstime = ({ sTime, setSTime }) => {
   );
 };
 
-export const Edetime = ({ eTime, setETime }) => {
+export const Edetime = ({ eTime, setETime, lang = { end_time: "End time" } }) => {
   return (
     <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={ruLocale}>
       <TimePicker
-        label="End Time"
+        label={lang.end_time}
         value={eTime}
         onChange={(newValue) => {
           setETime(newValue);

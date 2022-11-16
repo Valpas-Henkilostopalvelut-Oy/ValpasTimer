@@ -1,28 +1,31 @@
 import React from "react";
-import { Toolbar, Typography, IconButton, Container, SvgIcon, Grid, AppBar } from "@mui/material";
-import { styled } from "@mui/material/styles";
+import { Toolbar, Typography, IconButton, SvgIcon, Grid, AppBar, useTheme } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import Profile from "../Profile/index.jsx";
 import SvgComponent from "../../assets/logo2.jsx";
 
-const Navbar = ({ open, setOpenDrawer, isAuth = false, language, setLanguage }) => {
+const Navbar = ({ setOpenDrawer, isAuth = false }) => {
+  const theme = useTheme();
   return (
-    <AppBar position="static" color="navbar">
-      <Toolbar>
-        <IconButton color="inherit" aria-label="open drawer" onClick={() => setOpenDrawer(true)} edge="start">
-          <MenuIcon />
-        </IconButton>
-
-        <Container>
+    isAuth && (
+      <AppBar position="static" color="navbar">
+        <Toolbar>
           <Grid
             container
             spacing={2}
             sx={{
-              paddingLeft: 2,
-              paddingRight: 2,
+              [theme.breakpoints.up("sm")]: {
+                paddingLeft: 2,
+                paddingRight: 2,
+              },
             }}
           >
-            <Grid item xs={4} display="flex" justifyContent="start" alignItems="center">
+            <Grid item xs={1} display="flex" justifyContent="start" alignItems="center">
+              <IconButton color="inherit" aria-label="open drawer" onClick={() => setOpenDrawer(true)} edge="start">
+                <MenuIcon />
+              </IconButton>
+            </Grid>
+            <Grid item xs={3} display="flex" justifyContent="start" alignItems="center">
               <SvgIcon>
                 <SvgComponent />
               </SvgIcon>
@@ -36,9 +39,9 @@ const Navbar = ({ open, setOpenDrawer, isAuth = false, language, setLanguage }) 
               <Profile />
             </Grid>
           </Grid>
-        </Container>
-      </Toolbar>
-    </AppBar>
+        </Toolbar>
+      </AppBar>
+    )
   );
 };
 

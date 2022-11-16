@@ -17,7 +17,13 @@ const confirmed = (date) => {
   return isConfirmed === isNotConfirmed;
 };
 
-export const IsSentSM = ({ date }) => {
+export const IsSentSM = ({
+  date,
+  lang = {
+    sent: "Sent",
+    confirmed: "Confirmed",
+  },
+}) => {
   const theme = useTheme();
 
   return sent(date) ? (
@@ -29,8 +35,8 @@ export const IsSentSM = ({ date }) => {
       }}
     >
       <TableCell align="center" colSpan={4}>
-        <ReportAll date={date} />
-        <DeleteAll date={date} />
+        <ReportAll date={date} lang={lang} />
+        <DeleteAll date={date} lang={lang} />
       </TableCell>
     </TableRow>
   ) : (
@@ -42,16 +48,22 @@ export const IsSentSM = ({ date }) => {
       }}
     >
       <TableCell align="center" colSpan={2}>
-        Sent: <CheckCircleIcon color="success" />
+        {lang.sent}: <CheckCircleIcon color="success" />
       </TableCell>
       <TableCell align="center" colSpan={2}>
-        Confirmed: <CheckCircleIcon color="success" />
+        {lang.confirmed}: <CheckCircleIcon color="success" />
       </TableCell>
     </TableRow>
   );
 };
 
-export const IsSentMD = ({ date }) => {
+export const IsSentMD = ({
+  date,
+  lang = {
+    sent: "Sent",
+    confirmed: "Confirmed",
+  },
+}) => {
   const theme = useTheme();
 
   return sent(date) ? (
@@ -64,7 +76,7 @@ export const IsSentMD = ({ date }) => {
           },
         }}
       >
-        <ReportAll date={date} />
+        <ReportAll date={date} lang={lang} />
       </TableCell>
       <TableCell
         align="center"
@@ -74,7 +86,7 @@ export const IsSentMD = ({ date }) => {
           },
         }}
       >
-        <DeleteAll date={date} />
+        <DeleteAll date={date} lang={lang} />
       </TableCell>
     </Fragment>
   ) : (
@@ -87,7 +99,7 @@ export const IsSentMD = ({ date }) => {
           },
         }}
       >
-        Sent: <CheckCircleIcon color="success" />
+        {lang.sent}: <CheckCircleIcon color="success" />
       </TableCell>
       <TableCell
         align="right"
@@ -97,7 +109,7 @@ export const IsSentMD = ({ date }) => {
           },
         }}
       >
-        Confirmed: {confirmed(date) ? <CheckCircleIcon color="success" /> : "No"}
+        {lang.confirmed}: {confirmed(date) ? <CheckCircleIcon color="success" /> : "No"}
       </TableCell>
     </Fragment>
   );

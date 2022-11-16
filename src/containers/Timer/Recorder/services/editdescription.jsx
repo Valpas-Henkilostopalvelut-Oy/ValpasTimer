@@ -3,12 +3,12 @@ import { TextField } from "@mui/material";
 import { DataStore } from "aws-amplify";
 import { TimeEntry } from "../../../../models";
 
-export const EditDescription = ({ description, setDescription }) => {
+export const EditDescription = ({ description, setDescription, lang = { description: "Description" } }) => {
   return (
     <TextField
       variant="outlined"
       id="description"
-      label="Description"
+      label={lang.description}
       value={description}
       onChange={(e) => setDescription(e.target.value)}
       fullWidth
@@ -16,7 +16,13 @@ export const EditDescription = ({ description, setDescription }) => {
   );
 };
 
-export const EditDescriptionTimer = ({ description, setDescription, data, isStarted }) => {
+export const EditDescriptionTimer = ({
+  description,
+  setDescription,
+  data,
+  isStarted,
+  lang = { description: "Description" },
+}) => {
   const handleEdit = async (e) => {
     console.log(isStarted);
     isStarted &&
@@ -29,7 +35,7 @@ export const EditDescriptionTimer = ({ description, setDescription, data, isStar
   return (
     <TextField
       id="description"
-      label="Description"
+      label={lang.description}
       variant="outlined"
       value={description}
       onChange={(e) => {

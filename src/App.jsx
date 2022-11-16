@@ -105,11 +105,15 @@ function App() {
       <ThemeProvider theme={theme}>
         <Box>
           <CssBaseline />
-          {isAuthenticated && (
-            <Navbar open={openDrawer} setOpenDrawer={setOpenDrawer} isAuthenticated={isAuthenticated} />
-          )}
-          <Sidebar open={openDrawer} setOpen={setOpenDrawer} />
-          <Navigation isAuthenticated={isAuthenticated} groups={groups} />
+          <Navbar open={openDrawer} setOpenDrawer={setOpenDrawer} isAuth={isAuthenticated} />
+          <Sidebar open={openDrawer} setOpen={setOpenDrawer} isAuth={isAuthenticated} />
+          <Box
+            sx={{
+              pt: 3,
+            }}
+          >
+            <Navigation isAuthenticated={isAuthenticated} groups={groups} />
+          </Box>
         </Box>
       </ThemeProvider>
     </AppContext.Provider>

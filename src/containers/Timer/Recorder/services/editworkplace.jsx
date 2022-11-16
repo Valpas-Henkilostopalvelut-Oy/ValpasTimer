@@ -11,7 +11,14 @@ const updateWork = async (data, sel) => {
   ).catch((e) => console.warn(e));
 };
 
-export const EditWorkplaceTimer = ({ setSel, sel, works = null, isStarted = false, data }) => {
+export const EditWorkplaceTimer = ({
+  setSel,
+  sel,
+  works = null,
+  isStarted = false,
+  data,
+  lang = { workplace: "Workplace" },
+}) => {
   const handleChange = (event) => {
     if (data && isStarted) {
       updateWork(data, event.target.value);
@@ -22,12 +29,12 @@ export const EditWorkplaceTimer = ({ setSel, sel, works = null, isStarted = fals
   return (
     works && (
       <FormControl fullWidth>
-        <InputLabel id="workplace-select-label">Workplace</InputLabel>
+        <InputLabel id="workplace-select-label">{lang.workplace}</InputLabel>
         <Select
           labelId="workplace-select-label"
           id="workplace-select"
           value={sel}
-          label="Workplace"
+          label={lang.workplace}
           onChange={handleChange}
         >
           {works &&
@@ -42,7 +49,7 @@ export const EditWorkplaceTimer = ({ setSel, sel, works = null, isStarted = fals
   );
 };
 
-export const EditWorkplaceManual = ({ setSel, sel, works = null }) => {
+export const EditWorkplaceManual = ({ setSel, sel, works = null, lang = { workplace: "Workplace" } }) => {
   const handleChange = (event) => {
     setSel(event.target.value);
   };
@@ -50,12 +57,12 @@ export const EditWorkplaceManual = ({ setSel, sel, works = null }) => {
   return (
     works && (
       <FormControl fullWidth variant="outlined">
-        <InputLabel id="workplace-select-label">Workplace</InputLabel>
+        <InputLabel id="workplace-select-label">{lang.workplace}</InputLabel>
         <Select
           labelId="workplace-select-label"
           id="workplace-select"
           value={sel}
-          label="Workplace"
+          label={lang.workplace}
           onChange={handleChange}
         >
           {works &&

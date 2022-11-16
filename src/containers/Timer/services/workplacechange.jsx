@@ -22,7 +22,17 @@ const updateWorkplace = async ({ date, item }) => {
   ).catch((e) => console.warn(e));
 };
 
-const SelectWork = ({ date, workplaces = null, work }) => {
+const SelectWork = ({
+  date,
+  workplaces = null,
+  work,
+  lang = {
+    workplace: "Workplace",
+    buttons: {
+      save: "Save",
+    },
+  },
+}) => {
   const [workplace, setWorkplace] = useState(work);
   const [edited, setEdited] = useState(false);
   const theme = useTheme();
@@ -47,12 +57,12 @@ const SelectWork = ({ date, workplaces = null, work }) => {
             },
           }}
         >
-          <InputLabel id="workplace-select">Workplace select</InputLabel>
+          <InputLabel id="workplace-select">{lang.workplace}</InputLabel>
           <Select
             labelId="workplace-select"
             id="workplace-select"
             value={workplace}
-            label="Workplace select"
+            label={lang.workplace}
             onChange={handleChange}
           >
             {workplaces.map((item, i) => (
@@ -64,7 +74,7 @@ const SelectWork = ({ date, workplaces = null, work }) => {
         </FormControl>
         {edited && (
           <Button variant="text" onClick={update}>
-            Save
+            {lang.buttons.save}
           </Button>
         )}
       </Box>
@@ -72,7 +82,7 @@ const SelectWork = ({ date, workplaces = null, work }) => {
   );
 };
 
-const IsSent = ({ date }) => {
+const IsSent = ({ date, lang = { workplace: "Workplace" } }) => {
   const [work, setWork] = useState("");
 
   useEffect(() => {
@@ -92,10 +102,14 @@ const IsSent = ({ date }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  return <Typography>Workplace: {work}</Typography>;
+  return (
+    <Typography>
+      {lang.workplace}: {work}
+    </Typography>
+  );
 };
 
-export const ChangeWorkplaceSM = ({ date, workplaces = null, work }) => {
+export const ChangeWorkplaceSM = ({ date, workplaces = null, work, lang }) => {
   const theme = useTheme();
   const isSent = date.isSent;
 
@@ -108,13 +122,17 @@ export const ChangeWorkplaceSM = ({ date, workplaces = null, work }) => {
       }}
     >
       <TableCell colSpan={4}>
-        {!isSent ? <SelectWork date={date} workplaces={workplaces} work={work} /> : <IsSent date={date} />}
+        {!isSent ? (
+          <SelectWork date={date} workplaces={workplaces} work={work} lang={lang} />
+        ) : (
+          <IsSent date={date} lang={lang} />
+        )}
       </TableCell>
     </TableRow>
   );
 };
 
-export const ChangeWorkplaceMD = ({ date, workplaces = null, work }) => {
+export const ChangeWorkplaceMD = ({ date, workplaces = null, work, lang }) => {
   const theme = useTheme();
   const isSent = date.isSent;
 
@@ -126,7 +144,11 @@ export const ChangeWorkplaceMD = ({ date, workplaces = null, work }) => {
         },
       }}
     >
-      {!isSent ? <SelectWork date={date} workplaces={workplaces} work={work} /> : <IsSent date={date} />}
+      {!isSent ? (
+        <SelectWork date={date} workplaces={workplaces} work={work} lang={lang} />
+      ) : (
+        <IsSent date={date} lang={lang} />
+      )}
     </TableCell>
   );
 };

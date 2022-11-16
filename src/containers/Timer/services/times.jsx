@@ -91,7 +91,15 @@ const dublicateTime = async (data, close) => {
     .catch((e) => console.warn(e));
 };
 
-export const MoreButton = ({ date }) => {
+export const MoreButton = ({
+  date,
+  lang = {
+    buttons: {
+      delete: "Delete",
+      dublicate: "Dublicate",
+    },
+  },
+}) => {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -107,8 +115,14 @@ export const MoreButton = ({ date }) => {
         <MoreVertIcon onClick={handleClick} />
       </IconButton>
       <Menu id="long-menu" anchorEl={anchorEl} keepMounted open={open} onClose={handleClose}>
-        <MenuItem onClick={() => dublicateTime(date)}>Dublicate</MenuItem>
-        {isSent && <MenuItem onClick={() => deleteTime(date, handleClose())}>Delete</MenuItem>}
+        <MenuItem onClick={() => dublicateTime(date)}>
+          <Typography variant="p">{lang.buttons.dublicate}</Typography>
+        </MenuItem>
+        {isSent && (
+          <MenuItem onClick={() => deleteTime(date, handleClose())}>
+            <Typography variant="p">{lang.buttons.delete}</Typography>
+          </MenuItem>
+        )}
       </Menu>
     </>
   );

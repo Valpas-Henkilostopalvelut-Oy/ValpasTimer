@@ -7,6 +7,7 @@ import { groupBy } from "./services/group.jsx";
 import { totaldaytime, totalweektime } from "./services/totaltime";
 import { Details } from "./services/table.jsx";
 import { Selectwork } from "./services/workplaceselect";
+import { useAppContext } from "../../services/contextLib";
 
 const Timer = () => {
   const [grouped, setGrouped] = useState([]);
@@ -14,6 +15,8 @@ const Timer = () => {
   const theme = useTheme();
   const [isEmpty, setIsEmpty] = useState(true);
   const [works, setWorks] = useState(null);
+  const { langValue } = useAppContext();
+  const track = langValue.track;
 
   useEffect(() => {
     let isActive = false;
@@ -90,22 +93,22 @@ const Timer = () => {
       {grouped != null ? (
         <Grid container spacing={2}>
           <Grid item xs={12}>
-            <Recorder works={works} isEmpty={isEmpty} />
+            <Recorder works={works} isEmpty={isEmpty} lang={track.recorder} />
           </Grid>
 
           <Grid item xs={12}>
             <Box sx={{}}>
-              <Selectwork works={works} sel={selected} setSel={setSelected} />
+              <Selectwork works={works} sel={selected} setSel={setSelected} lang={track.history} />
             </Box>
           </Grid>
           {grouped.map((week) => (
             <Grid container item spacing={2} key={week.week}>
               <Grid item xs={12}>
                 <Typography variant="h6" color="text.secondary">
-                  Week {week.week}
+                  {track.history.week} {week.week}
                 </Typography>
                 <Typography variant="p" color="text.secondary">
-                  Total time: {totalweektime(week).h}:{totalweektime(week).min}
+                  {track.history.total_time} {totalweektime(week).h}:{totalweektime(week).min}
                 </Typography>
               </Grid>
               {week.arr.map((date) => (
@@ -127,14 +130,15 @@ const Timer = () => {
                         {date.date}
                       </Typography>
                       <Typography variant="p" color="text.secondary">
-                        Total time: {totaldaytime(date).h > 9 ? totaldaytime(date).h : "0" + totaldaytime(date).h}:
+                        {track.history.total_time}{" "}
+                        {totaldaytime(date).h > 9 ? totaldaytime(date).h : "0" + totaldaytime(date).h}:
                         {totaldaytime(date).min > 9 ? totaldaytime(date).min : "0" + totaldaytime(date).min}
                       </Typography>
                     </Grid>
                   </Grid>
 
                   <Grid item xs={12}>
-                    <Details date={date} workplaces={works} />
+                    <Details date={date} workplaces={works} lang={track.history} />
                   </Grid>
                 </Grid>
               ))}

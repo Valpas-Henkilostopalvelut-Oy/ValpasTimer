@@ -23,14 +23,14 @@ const updateDate = async ({ value, data }) => {
   ).catch((e) => console.warn(e));
 };
 
-export const EditDate = ({ date }) => {
+export const EditDate = ({ date, lang = { date: "Date" } }) => {
   const [value, setValue] = React.useState(new Date(date.timeInterval.start));
   const isSent = date.isSent;
 
   return !isSent ? (
     <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={ruLocale}>
       <DatePicker
-        label="Date"
+        label={lang.date}
         value={value}
         onChange={(newValue) => {
           setValue(newValue);
@@ -42,6 +42,9 @@ export const EditDate = ({ date }) => {
       />
     </LocalizationProvider>
   ) : (
-    <Typography variant="p">{new Date(date.timeInterval.start).getDate()}.{new Date(date.timeInterval.start).getMonth()}.{new Date(date.timeInterval.start).getFullYear()}</Typography>
+    <Typography variant="p">
+      {new Date(date.timeInterval.start).getDate()}.{new Date(date.timeInterval.start).getMonth()}.
+      {new Date(date.timeInterval.start).getFullYear()}
+    </Typography>
   );
 };

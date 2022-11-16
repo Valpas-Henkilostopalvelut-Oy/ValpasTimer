@@ -70,7 +70,18 @@ const stopTimer = async () => {
     .catch((err) => console.warn(err));
 };
 
-export const StartTimer = ({ description = "", workplace = "", isStarted = false, setStarted, setTimer, setTime }) => {
+export const StartTimer = ({
+  description = "",
+  workplace = "",
+  isStarted = false,
+  setStarted,
+  setTimer,
+  setTime,
+  lang = {
+    start: "Start",
+    stop: "Stop",
+  },
+}) => {
   const handleStart = () => {
     if (!isStarted) {
       startTimer({ description, workplace, setTimer: (e) => setTimer(e) });
@@ -95,11 +106,11 @@ export const StartTimer = ({ description = "", workplace = "", isStarted = false
 
   return !isStarted ? (
     <Button onClick={handleStart} disabled={workplace === ""}>
-      Start
+      {lang.start}
     </Button>
   ) : (
     <Button onClick={handleStop} disabled={workplace === ""}>
-      Stop
+      {lang.stop}
     </Button>
   );
 };

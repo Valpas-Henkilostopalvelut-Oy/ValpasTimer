@@ -11,7 +11,7 @@ import { ChangeWorkplaceSM, ChangeWorkplaceMD } from "./workplacechange.jsx";
 import { EditDate } from "./editdate.jsx";
 import { Tabledescription } from "./editdescription.jsx";
 
-export const Details = ({ date, workplaces = null }) => {
+export const Details = ({ date, workplaces = null, lang }) => {
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => {
     setOpen(!open);
@@ -28,7 +28,7 @@ export const Details = ({ date, workplaces = null }) => {
               </IconButton>
             </TableCell>
             <TableCell>
-              <Tabledescription date={date} />
+              <Tabledescription date={date} lang={lang} />
             </TableCell>
             <TableCell align="right">
               <STime date={date} />
@@ -36,10 +36,10 @@ export const Details = ({ date, workplaces = null }) => {
             <TableCell align="right">
               <ETime date={date} />
             </TableCell>
-            <IsSentMD date={date} />
+            <IsSentMD date={date} lang={lang} />
           </TableRow>
 
-          <IsSentSM date={date} />
+          <IsSentSM date={date} lang={lang} />
 
           <TableRow>
             <TableCell style={{ padding: 0 }} colSpan={6}>
@@ -50,16 +50,21 @@ export const Details = ({ date, workplaces = null }) => {
                       {date.arr.map((row, index) => {
                         return (
                           <Fragment key={row.id}>
-                            <EditDescriptionSM date={row} />
-                            <ChangeWorkplaceSM date={row} workplaces={workplaces} work={row.workspaceId} />
+                            <EditDescriptionSM date={row} lang={lang} />
+                            <ChangeWorkplaceSM date={row} workplaces={workplaces} work={row.workspaceId} lang={lang} />
 
                             <TableRow>
-                              <EditDescriptionMD date={row} />
+                              <EditDescriptionMD date={row} lang={lang} />
 
-                              <ChangeWorkplaceMD date={row} workplaces={workplaces} work={row.workspaceId} />
+                              <ChangeWorkplaceMD
+                                date={row}
+                                workplaces={workplaces}
+                                work={row.workspaceId}
+                                lang={lang}
+                              />
 
                               <TableCell align="right">
-                                <EditDate date={row} />
+                                <EditDate date={row} lang={lang} />
                               </TableCell>
 
                               <TableCell align="right" sx={{ paddingLeft: 1, paddingRight: 1 }}>
@@ -73,7 +78,7 @@ export const Details = ({ date, workplaces = null }) => {
                               </TableCell>
 
                               <TableCell align="right" sx={{ paddingLeft: 1, paddingRight: 1 }}>
-                                <MoreButton date={row} />
+                                <MoreButton date={row} lang={lang} />
                               </TableCell>
                             </TableRow>
                           </Fragment>

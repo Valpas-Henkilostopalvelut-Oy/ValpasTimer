@@ -23,7 +23,19 @@ const editDataStoreStartTime = async ({ newTime }) => {
     .catch((e) => console.warn(e));
 };
 
-export const EditStartTime = ({ open = false, setOpen, timerTime = null }) => {
+export const EditStartTime = ({
+  open = false,
+  setOpen,
+  timerTime = null,
+  lang = {
+    edit_start: {
+      title: "Edit start time",
+      start_time: "Start time",
+      save: "Save",
+      cancel: "Cancel",
+    },
+  },
+}) => {
   const [tempTime, setTempTime] = useState(new Date(timerTime.timeInterval.start));
   const handleClose = async () => {
     setOpen(false);
@@ -41,11 +53,12 @@ export const EditStartTime = ({ open = false, setOpen, timerTime = null }) => {
       aria-labelledby="alert-dialog-title"
       aria-describedby="alert-dialog-description"
     >
-      <DialogTitle id="alert-dialog-title">Edit start time</DialogTitle>
+      <DialogTitle id="alert-dialog-title">{lang.edit_start.title}</DialogTitle>
       <DialogContent>
         {timerTime !== null && (
           <TextField
-            label="Start time"
+            margin="dense"
+            label={lang.edit_start.start_time}
             value={value}
             onChange={(e) => setValue(e.target.value)}
             onBlur={(e) => {
@@ -57,14 +70,14 @@ export const EditStartTime = ({ open = false, setOpen, timerTime = null }) => {
         )}
       </DialogContent>
       <DialogActions>
-        <Button onClick={handleClose}>Cancel</Button>
+        <Button onClick={handleClose}>{lang.edit_start.cancel}</Button>
         <Button
           onClick={() => {
             editDataStoreStartTime({ newTime: tempTime });
             handleClose();
           }}
         >
-          Save
+          {lang.edit_start.save}
         </Button>
       </DialogActions>
     </Dialog>
