@@ -129,7 +129,15 @@ const createTimeentry = async ({ description = "", sel = "", sTime, eTime }) => 
       }));
 };
 
-export const Createtimeentry = ({ description = "", sel = "", sTime, eTime }) => {
+export const Createtimeentry = ({
+  description = "",
+  sel = "",
+  sTime,
+  eTime,
+  lang = {
+    create: "Create",
+  },
+}) => {
   const disabled = sel === "" || eTime.getTime() - sTime.getTime() <= 0;
 
   return (
@@ -142,7 +150,7 @@ export const Createtimeentry = ({ description = "", sel = "", sTime, eTime }) =>
         createTimeentry({ description, sel, sTime, eTime });
       }}
     >
-      Create
+      {lang.create}
     </Button>
   );
 };

@@ -1,15 +1,22 @@
 import React from "react";
 import { FormControl, InputLabel, Select, MenuItem } from "@mui/material";
 
-export const Selectwork = ({ works, selectedOption, setSelectedOption }) => {
+export const Selectwork = ({
+  works,
+  selectedOption,
+  setSelectedOption,
+  lang = {
+    workplace: "Workplace",
+  },
+}) => {
   return (
     <FormControl fullWidth>
-      <InputLabel id="demo-simple-select-label">Work</InputLabel>
+      <InputLabel id="demo-simple-select-label">{lang.workplace}</InputLabel>
       <Select
         labelId="demo-simple-select-label"
         id="demo-simple-select"
         value={selectedOption}
-        label="Work"
+        label={lang.workplace}
         onChange={(e) => setSelectedOption(e.target.value)}
       >
         {works.map((work) => (

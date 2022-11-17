@@ -1,12 +1,22 @@
 import React, { useEffect, useState } from "react";
 import { DataStore } from "aws-amplify";
 import { UserCredentials } from "../../../models";
-import { Table, TableBody, TableHead, TableCell, TableContainer, TableRow, Paper, Collapse } from "@mui/material";
+import {
+  Table,
+  TableBody,
+  TableHead,
+  TableCell,
+  TableContainer,
+  TableRow,
+  Paper,
+  Collapse,
+  Typography,
+} from "@mui/material";
 import { TopbarMD } from "./topbar.jsx";
 import { Userdetails } from "./userdetails.jsx";
 import { Adduser } from "./adduser.jsx";
 
-export const Worklist = ({ data }) => {
+export const Worklist = ({ data, lang }) => {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(!open);
 
@@ -14,7 +24,7 @@ export const Worklist = ({ data }) => {
     <TableContainer component={Paper}>
       <Table>
         <TableBody>
-          <TopbarMD data={data} open={open} handleOpen={handleOpen} />
+          <TopbarMD data={data} open={open} handleOpen={handleOpen} lang={lang} />
 
           <TableRow>
             <TableCell
@@ -23,7 +33,7 @@ export const Worklist = ({ data }) => {
                 padding: 0,
               }}
             >
-              <Userlist data={data} open={open} />
+              <Userlist data={data} open={open} lang={lang} />
             </TableCell>
           </TableRow>
         </TableBody>
@@ -32,7 +42,13 @@ export const Worklist = ({ data }) => {
   );
 };
 
-const Userlist = ({ data, open = false }) => {
+const Userlist = ({
+  data,
+  open = false,
+  lang = {
+    worker_name: "Worker name",
+  },
+}) => {
   const [includedUsers, setIncludedUsers] = useState([]);
   var workers = data.workers;
 
@@ -78,13 +94,15 @@ const Userlist = ({ data, open = false }) => {
             }}
           >
             <TableRow>
-              <TableCell align="left">Workers name</TableCell>
-              <Adduser data={data} />
+              <TableCell align="left">
+                <Typography variant="p">{lang.worker_name}</Typography>
+              </TableCell>
+              <Adduser data={data} lang={lang} />
             </TableRow>
           </TableHead>
           <TableBody>
             {includedUsers.length !== 0 &&
-              includedUsers.map((user) => <Userdetails user={user} data={data} key={user.id} />)}
+              includedUsers.map((user) => <Userdetails user={user} data={data} key={user.id} lang={lang} />)}
           </TableBody>
         </Table>
       </TableContainer>

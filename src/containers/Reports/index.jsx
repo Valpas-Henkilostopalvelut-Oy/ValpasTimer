@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { Container, Grid, CircularProgress } from "@mui/material";
+import { Container, Grid, CircularProgress, Typography } from "@mui/material";
 
 import { DataStore, Hub } from "aws-amplify";
 import { UserCredentials, AllWorkSpaces } from "../../models";
 import { Selectwork } from "./services/selectwork.jsx";
 import { Selectuser } from "./services/selectuser.jsx";
 import { Timelist } from "./services/timelist.jsx";
+import { useAppContext } from "../../services/contextLib";
 
 const Reports = () => {
   const [selWork, setSelWork] = useState("");
@@ -13,6 +14,8 @@ const Reports = () => {
   const [works, setWorks] = useState(null);
   const [workuser, setWorkers] = useState(null);
   const [isEmpty, setIsEmpty] = useState(true);
+  const { langValue } = useAppContext();
+  const lang = langValue.reports;
 
   useEffect(() => {
     Hub.listen("datastore", async (hubData) => {
@@ -84,18 +87,24 @@ const Reports = () => {
       {works ? (
         <Grid container spacing={2}>
           <Grid item xs={12}>
-            <Selectwork works={works} selectedOption={selWork} setSelectedOption={setSelWork} />
+            <Typography variant="h6" gutterBottom>
+              {lang.title}
+            </Typography>
           </Grid>
-          <Grid item xs={12}>
+          <Grid item xs={12} md={6}>
+            <Selectwork works={works} selectedOption={selWork} setSelectedOption={setSelWork} lang={lang} />
+          </Grid>
+          <Grid item xs={12} md={6}>
             <Selectuser
               users={workuser}
               selectedOption={selUser}
               setSelectedOption={setSelUser}
               disabled={workuser === null && selWork === ""}
+              lang={lang}
             />
           </Grid>
 
-          <Timelist selWork={selWork} selUser={selUser} isEmpty={isEmpty} />
+          <Timelist selWork={selWork} selUser={selUser} isEmpty={isEmpty} lang={lang} />
         </Grid>
       ) : (
         <CircularProgress />

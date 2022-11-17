@@ -1,5 +1,6 @@
 import React, { useState, Fragment } from "react";
-import { Dialog, DialogActions, DialogTitle, DialogContent, Button } from "@mui/material";
+import { Dialog, DialogActions, DialogTitle, DialogContent, Button, Grid } from "@mui/material";
+import { Deletework } from "./deletework.jsx";
 
 export const Settings = ({ data }) => {
   const [open, setOpen] = useState(false);
@@ -11,10 +12,23 @@ export const Settings = ({ data }) => {
       <Button onClick={handleOpen} variant="contained">
         Settings
       </Button>
-      <Dialog open={open} onClose={handleClose} aria-labelledby="dialog-title" aria-describedby="dialog-description">
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="dialog-title"
+        aria-describedby="dialog-description"
+        maxWidth={"xs"}
+        fullWidth={true}
+      >
         <DialogTitle id="dialog-title">Settings for {data.name}</DialogTitle>
-        <DialogContent>Comming soon</DialogContent>
-        <DialogActions>
+        <DialogContent>
+          <Grid container spacing={2}>
+            <Grid item xs={12}>
+              <Deletework data={data} />
+            </Grid>
+          </Grid>
+        </DialogContent>
+        <DialogActions disableSpacing={true}>
           <Button onClick={handleClose}>Close</Button>
         </DialogActions>
       </Dialog>

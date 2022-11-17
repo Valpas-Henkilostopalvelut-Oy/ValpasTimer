@@ -38,27 +38,46 @@ const confirmAll = async (date) => {
   }
 };
 
-const Confirmdialog = ({ date, open = false, setOpen }) => {
+const Confirmdialog = ({
+  date,
+  open = false,
+  setOpen,
+  lang = {
+    alert: {
+      title: "Confirm all entries",
+      message: "Are you sure you want to confirm all entries?",
+      confirm: "Confirm",
+      cancel: "Cancel",
+    },
+  },
+}) => {
   return (
     <Dialog open={open} onClose={() => setOpen(false)}>
-      <DialogTitle>Confirm all entries</DialogTitle>
-      <DialogContent>Are you sure you want to confirm all entries?</DialogContent>
+      <DialogTitle>{lang.alert.title}</DialogTitle>
+      <DialogContent>{lang.alert.message}</DialogContent>
       <DialogActions>
-        <Button onClick={() => setOpen(false)}>No</Button>
+        <Button onClick={() => setOpen(false)}>{lang.alert.cancel}</Button>
         <Button
           onClick={() => {
             confirmAll(date);
             setOpen(false);
           }}
         >
-          Yes
+          {lang.alert.confirm}
         </Button>
       </DialogActions>
     </Dialog>
   );
 };
 
-export const ConfirmreportSM = ({ date, isEmpty = true }) => {
+export const ConfirmreportSM = ({
+  date,
+  isEmpty = true,
+  lang = {
+    confirm: "Confirm",
+    unconfirm: "Unconfirm",
+  },
+}) => {
   const theme = useTheme();
   let isConfirmed = date.arr.filter((e) => e.isConfirmed).length === date.arr.length;
   const [open, setOpen] = React.useState(false);
@@ -75,13 +94,13 @@ export const ConfirmreportSM = ({ date, isEmpty = true }) => {
         {!isConfirmed ? (
           <>
             <Button variant="contained" color="success" onClick={() => setOpen(!open)} disabled={!isEmpty}>
-              Confirm
+              {lang.confirm}
             </Button>
-            <Confirmdialog date={date} open={open} setOpen={setOpen} />
+            <Confirmdialog date={date} open={open} setOpen={setOpen} lang={lang} />
           </>
         ) : (
           <Button variant="contained" color="error" onClick={() => unconfirmAll(date)} disabled={!isEmpty}>
-            Unconfirm
+            {lang.unconfirm}
           </Button>
         )}
       </TableCell>
@@ -89,7 +108,14 @@ export const ConfirmreportSM = ({ date, isEmpty = true }) => {
   );
 };
 
-export const ConfirmreportMD = ({ date, isEmpty = true }) => {
+export const ConfirmreportMD = ({
+  date,
+  isEmpty = true,
+  lang = {
+    confirm: "Confirm",
+    unconfirm: "Unconfirm",
+  },
+}) => {
   const theme = useTheme();
   let isConfirmed = date.arr.filter((e) => e.isConfirmed).length === date.arr.length;
   const [open, setOpen] = React.useState(false);
@@ -106,13 +132,13 @@ export const ConfirmreportMD = ({ date, isEmpty = true }) => {
       {!isConfirmed ? (
         <>
           <Button variant="contained" color="success" onClick={() => setOpen(!open)} disabled={!isEmpty}>
-            Confirm
+            {lang.confirm}
           </Button>
-          <Confirmdialog date={date} open={open} setOpen={setOpen} />
+          <Confirmdialog date={date} open={open} setOpen={setOpen} lang={lang} />
         </>
       ) : (
         <Button variant="contained" color="error" onClick={() => unconfirmAll(date)} disabled={!isEmpty}>
-          Unconfirm
+          {lang.unconfirm}
         </Button>
       )}
     </TableCell>

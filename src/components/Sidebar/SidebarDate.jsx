@@ -28,7 +28,6 @@ export const SidebarList = ({
   },
 }) => {
   const { groups } = useAppContext();
-  console.log(lang);
 
   const sidebarData = [
     {

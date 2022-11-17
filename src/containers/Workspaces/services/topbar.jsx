@@ -2,9 +2,9 @@ import React from "react";
 import { TableCell, TableRow, useTheme, IconButton, Typography } from "@mui/material";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
-import { Deletework } from "./buttons.jsx";
+import { Settings } from "./settings.jsx";
 
-export const TopbarMD = ({ data, open, handleOpen }) => {
+export const TopbarMD = ({ data, open, handleOpen, lang }) => {
   const theme = useTheme();
 
   return (
@@ -24,7 +24,7 @@ export const TopbarMD = ({ data, open, handleOpen }) => {
         <Typography onClick={handleOpen}>{data.name}</Typography>
       </TableCell>
       <TableCell align="right">
-        <Deletework data={data} />
+        <Settings data={data} lang={lang} />
       </TableCell>
     </TableRow>
   );

@@ -82,14 +82,7 @@ const Timer = () => {
   //loading if grouped, timelist and selected option are null
 
   return (
-    <Container
-      sx={{
-        [theme.breakpoints.down("sm")]: {
-          paddingRight: "0px",
-          paddingLeft: "0px",
-        },
-      }}
-    >
+    <Container>
       {grouped != null ? (
         <Grid container spacing={2}>
           <Grid item xs={12}>

@@ -5,8 +5,17 @@ import { TimeEntry } from "../../../models";
 import { groupBy } from "./group.jsx";
 import { totaldaytime, totalweektime } from "./totaltime.jsx";
 import { Details } from "./details.jsx";
+import { WeekReport } from "./buttons.jsx";
 
-export const Timelist = ({ selWork = "", selUser = "", isEmpty = true }) => {
+export const Timelist = ({
+  selWork = "",
+  selUser = "",
+  isEmpty = true,
+  lang = {
+    week: "Week",
+    total_hours: "Total hours",
+  },
+}) => {
   const [timeList, setTimeList] = useState(null);
 
   useEffect(() => {
@@ -39,13 +48,16 @@ export const Timelist = ({ selWork = "", selUser = "", isEmpty = true }) => {
       <Grid item container xs={12} spacing={2}>
         {timeList.map((item) => (
           <Grid item container xs={12} key={item.week}>
-            <Grid item xs={12}>
+            <Grid item xs={6}>
               <Typography variant="h6" color="text.secondary">
-                Week {item.week}
+                {lang.week}: {item.week}
               </Typography>
               <Typography variant="p" color="text.secondary">
-                Total time: {totalweektime(item).h}:{totalweektime(item).min}
+                {lang.total_hours}: {totalweektime(item).h}:{totalweektime(item).min}
               </Typography>
+            </Grid>
+            <Grid item xs={6} display="flex" justifyContent="flex-end">
+              <WeekReport data={item} isEmpty={isEmpty} />
             </Grid>
             {item.arr.map((day) => (
               <Grid item container xs={12} key={day.date}>
@@ -67,13 +79,13 @@ export const Timelist = ({ selWork = "", selUser = "", isEmpty = true }) => {
                       {day.date}
                     </Typography>
                     <Typography variant="p" color="text.secondary">
-                      Total time: {totaldaytime(day).h}:{totaldaytime(day).min}
+                      {lang.total_hours}: {totaldaytime(day).h}:{totaldaytime(day).min}
                     </Typography>
                   </Grid>
                 </Grid>
 
                 <Grid item xs={12}>
-                  <Details date={day} isEmpty={isEmpty} />
+                  <Details date={day} isEmpty={isEmpty} lang={lang} />
                 </Grid>
               </Grid>
             ))}

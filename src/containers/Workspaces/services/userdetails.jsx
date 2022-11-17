@@ -4,7 +4,7 @@ import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import { Deleteuser } from "./deleteuser.jsx";
 
-export const Userdetails = ({ user, data }) => {
+export const Userdetails = ({ user, data, lang = { email: "Email" } }) => {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(!open);
 
@@ -15,7 +15,7 @@ export const Userdetails = ({ user, data }) => {
           {user.name}
         </TableCell>
         <TableCell align="right">
-          <Deleteuser user={user} data={data} />
+          <Deleteuser user={user} data={data} lang={lang} />
           <IconButton aria-label="expand row" size="small" onClick={handleOpen}>
             {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
           </IconButton>
@@ -32,7 +32,7 @@ export const Userdetails = ({ user, data }) => {
               <Grid container spacing={2}>
                 <Grid item xs={12} sm={6}>
                   <Typography variant="p" gutterBottom component="div">
-                    Email
+                    {lang.email}
                   </Typography>
                 </Grid>
                 <Grid item xs={12} sm={6}>

@@ -39,7 +39,7 @@ export const Manual = ({ description, sel, setDescription, setSel, works, lang }
         <Totaltime sTime={sTime} eTime={eTime} />
       </Grid>
       <Grid item xs={6} md={2.4}>
-        <Createtimeentry description={description} sel={sel} sTime={sTime} eTime={eTime} />
+        <Createtimeentry description={description} sel={sel} sTime={sTime} eTime={eTime} lang={lang}/>
       </Grid>
     </Grid>
   );

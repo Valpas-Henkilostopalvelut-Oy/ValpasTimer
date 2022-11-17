@@ -27,7 +27,7 @@ export const Detailsrow = ({ date }) => {
         <TableBody>
           {date.arr.map((row) => (
             <TableRow key={row.id}>
-              <TableCell align="right">{row.description ? row.description : "No description"}</TableCell>
+              <TableCell>{row.description ? row.description : "No description"}</TableCell>
               <TableCell align="right">
                 <DSTime date={row} />
               </TableCell>

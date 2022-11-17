@@ -1,58 +1,79 @@
 import React, { useState, Fragment } from "react";
 import { DataStore } from "aws-amplify";
 import { AllWorkSpaces } from "../../../models";
-import { Button, Dialog, DialogContent, DialogTitle, Box, TextField, Typography } from "@mui/material";
+import { Button, Dialog, DialogContent, DialogTitle, Box, TextField, Typography, DialogActions } from "@mui/material";
 import { Formik } from "formik";
 import * as Yup from "yup";
 
-export const Creatework = () => {
+export const Creatework = ({
+  lang = {
+    create_work: {
+      title: "Create workplace",
+      name: "Name",
+      create: "Create",
+      cancel: "Cancel",
+      errors: {
+        is_too_short: "Too short name",
+        is_too_long: "Too long name",
+        is_required: "Name is required",
+      },
+    },
+  },
+}) => {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const validationSchema = Yup.object({
-    name: Yup.string().min(4, "Name too short").max(24, "Name too long").required("Required"),
+    name: Yup.string()
+      .min(4, lang.create_work.errors.is_too_short)
+      .max(24, lang.create_work.errors.is_too_long)
+      .required(lang.create_work.errors.is_required),
   });
   const [warnText, setWarnText] = useState("");
 
   return (
     <Fragment>
-      <Button onClick={handleOpen}>Create Workspace</Button>
-      <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
-        <DialogTitle id="form-dialog-title">Create Workspace</DialogTitle>
-        <DialogContent>
-          <Formik
-            initialValues={{
-              name: "",
-            }}
-            validationSchema={validationSchema}
-            onSubmit={(values) => creatework({ name: values.name, setWarnText, handleClose })}
-          >
-            {({ values, handleBlur, handleChange, handleSubmit, isValid, dirty, isSubmitting, errors, touched }) => (
-              <Box component="form" onSubmit={handleSubmit}>
-                <TextField
-                  name="name"
-                  label="Name"
-                  value={values.name}
-                  onChange={handleChange}
-                  onBlur={(e) => {
-                    handleBlur(e);
-                    setWarnText("");
-                  }}
-                  fullWidth
-                  error={touched.name && Boolean(errors.name)}
-                  helperText={touched.name && errors.name}
-                />
-                {warnText && <Typography color="error">{warnText}</Typography>}
+      <Button onClick={handleOpen}>{lang.create_work.title}</Button>
+      <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title" maxWidth={"xs"} fullWidth={true}>
+        <DialogTitle id="form-dialog-title">{lang.create_work.title}</DialogTitle>
+        <Formik
+          initialValues={{
+            name: "",
+          }}
+          validationSchema={validationSchema}
+          onSubmit={(values) => creatework({ name: values.name, setWarnText, handleClose })}
+        >
+          {({ values, handleBlur, handleChange, handleSubmit, isValid, dirty, isSubmitting, errors, touched }) => (
+            <Fragment>
+              <DialogContent>
+                <Box component="form" onSubmit={handleSubmit}>
+                  <TextField
+                    name="name"
+                    label={lang.create_work.name}
+                    value={values.name}
+                    onChange={handleChange}
+                    onBlur={(e) => {
+                      handleBlur(e);
+                      setWarnText("");
+                    }}
+                    fullWidth
+                    error={touched.name && Boolean(errors.name)}
+                    helperText={touched.name && errors.name}
+                  />
+                  {warnText && <Typography color="error">{warnText}</Typography>}
+                </Box>
+              </DialogContent>
+              <DialogActions>
                 <Button onClick={handleClose} color="primary">
-                  Cancel
+                  {lang.create_work.cancel}
                 </Button>
                 <Button type="submit" disabled={!isValid || !dirty || isSubmitting}>
-                  Create
+                  {lang.create_work.create}
                 </Button>
-              </Box>
-            )}
-          </Formik>
-        </DialogContent>
+              </DialogActions>
+            </Fragment>
+          )}
+        </Formik>
       </Dialog>
     </Fragment>
   );

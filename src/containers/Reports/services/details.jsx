@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Table, TableContainer, TableBody, TableCell, TableRow, Paper, IconButton, Collapse, Box } from "@mui/material";
+import { Table, TableContainer, TableBody, TableCell, TableRow, Paper, IconButton, Collapse } from "@mui/material";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import { ETime, STime } from "./times.jsx";
@@ -7,7 +7,7 @@ import { Detailsrow } from "./row.jsx";
 import { EDiscription } from "./editdescription.jsx";
 import { ConfirmreportMD, ConfirmreportSM } from "./confirmreport.jsx";
 
-export const Details = ({ date, isEmpty = true }) => {
+export const Details = ({ date, isEmpty = true, lang }) => {
   const [open, setOpen] = useState(false);
   const handleClick = () => setOpen(!open);
 
@@ -22,7 +22,7 @@ export const Details = ({ date, isEmpty = true }) => {
               </IconButton>
             </TableCell>
             <TableCell>
-              <EDiscription data={date} />
+              <EDiscription data={date} lang={lang} />
             </TableCell>
             <TableCell align="right">
               <STime date={date} />
@@ -31,10 +31,10 @@ export const Details = ({ date, isEmpty = true }) => {
               <ETime date={date} />
             </TableCell>
 
-            <ConfirmreportMD date={date} isEmpty={isEmpty} />
+            <ConfirmreportMD date={date} isEmpty={isEmpty} lang={lang} />
           </TableRow>
 
-          <ConfirmreportSM date={date} isEmpty={isEmpty} />
+          <ConfirmreportSM date={date} isEmpty={isEmpty} lang={lang} />
 
           <TableRow>
             <TableCell style={{ padding: 0 }} colSpan={5}>

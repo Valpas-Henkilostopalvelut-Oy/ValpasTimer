@@ -46,7 +46,7 @@ export const Language = ({ lang, setLang }) => {
           labelId="language-select-label"
           id="language-select"
           value={lang}
-          label="Language"
+          label={langValue.lang_select}
           onChange={handleChange}
         >
           {langs.map((language) => (

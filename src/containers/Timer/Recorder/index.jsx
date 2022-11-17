@@ -16,13 +16,7 @@ export const Recorder = ({ works = null, isEmpty = true, lang }) => {
   };
 
   return (
-    <Box
-      sx={{
-        [theme.breakpoints.down("sm")]: {
-          padding: "0px 10px",
-        },
-      }}
-    >
+    <Box>
       <TabContext value={value}>
         <TabList onChange={handleChangeTab} aria-label="Manual and Timer Tabs">
           <Tab label={lang.tabs.timer} value="1" />
