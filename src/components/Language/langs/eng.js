@@ -180,7 +180,6 @@ export const eng = {
     workplaces: {
       title: "Workplacess",
       create_workplace: "Create workplace",
-      settings: "Settings",
       worker_name: "Worker name",
       email: "Email",
       create_work: {
@@ -215,6 +214,18 @@ export const eng = {
         errors: {
           invalid_email: "Email is invalid",
           email_is_required: "Email is required",
+        },
+      },
+      setting: {
+        delete: {
+          title: "Delete workplace",
+          message: "Are you sure you want to delete",
+        },
+        buttons: {
+          delete: "Delete",
+          settings: "Settings",
+          cancel: "Cancel",
+          agree: "Agree",
         },
       },
     },

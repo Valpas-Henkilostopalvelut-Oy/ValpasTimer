@@ -178,7 +178,6 @@ export const fin = {
     workplaces: {
       title: "Työpaikat",
       create_workplace: "Luo työpaikka",
-      settings: "Asetukset",
       worker_name: "Työntekijän nimi",
       create_work: {
         title: "Luo työ",
@@ -212,6 +211,18 @@ export const fin = {
         errors: {
           invalid_email: "Sähköposti on virheellinen",
           email_is_required: "Sähköposti on pakollinen",
+        },
+      },
+      setting: {
+        delete: {
+          title: "Poista työpaikka",
+          message: "Haluatko varmasti poistaa työpaikan",
+        },
+        buttons: {
+          delete: "Poista",
+          settings: "Asetukset",
+          cancel: "Peruuta",
+          agree: "Hyväksy",
         },
       },
     },

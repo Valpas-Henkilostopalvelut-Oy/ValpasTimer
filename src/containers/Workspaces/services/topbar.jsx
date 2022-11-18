@@ -6,6 +6,7 @@ import { Settings } from "./settings.jsx";
 
 export const TopbarMD = ({ data, open, handleOpen, lang }) => {
   const theme = useTheme();
+  console.log();
 
   return (
     <TableRow>
@@ -24,7 +25,7 @@ export const TopbarMD = ({ data, open, handleOpen, lang }) => {
         <Typography onClick={handleOpen}>{data.name}</Typography>
       </TableCell>
       <TableCell align="right">
-        <Settings data={data} lang={lang} />
+        <Settings data={data} lang={lang.setting} />
       </TableCell>
     </TableRow>
   );

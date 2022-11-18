@@ -21,10 +21,17 @@ const deletework = async ({ data }) => {
 
 export const Deletework = ({
   data,
+  handleClose,
   lang = {
-    title: "Delete workspace",
+    delete: {
+      title: "Delete workplace",
+      message: "Are you sure you want to delete",
+    },
     buttons: {
       delete: "Delete",
+      settings: "Settings",
+      cancel: "Cancel",
+      agree: "Agree",
     },
   },
 }) => {
@@ -37,11 +44,42 @@ export const Deletework = ({
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
+          mb: 1,
         }}
       >
-        <Typography>{lang.title}</Typography>
-        <Button color="error" variant="contained">{lang.buttons.delete}</Button>
+        <Typography>{lang.delete.title}</Typography>
+        <Button color="error" variant="contained" onClick={handleOpen}>
+          {lang.buttons.delete}
+        </Button>
       </Box>
+      <Collapse in={open}>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
+          <Typography>
+            {lang.delete.message} {data.name}?
+          </Typography>
+          <Button color="primary" variant="contained" onClick={handleOpen}>
+            {lang.buttons.cancel}
+          </Button>
+          <Button
+            color="error"
+            variant="contained"
+            onClick={() => {
+              handleClose();
+              deletework({
+                data: data,
+              });
+            }}
+          >
+            {lang.buttons.agree}
+          </Button>
+        </Box>
+      </Collapse>
     </Box>
   );
 };
