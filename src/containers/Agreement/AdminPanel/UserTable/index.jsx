@@ -15,8 +15,7 @@ import {
 } from "@mui/material";
 import { visuallyHidden } from "@mui/utils";
 
-
-const UserTableToolbar = ({ numSelected, selected, setSelected }) => {
+const UserTableToolbar = ({ numSelected }) => {
   return (
     <Toolbar
       sx={{
@@ -60,8 +59,8 @@ const EnhancedTableHead = (props) => {
         {aditionalInfo.map((item) => (
           <TableCell
             key={item.id}
-            align={true ? "right" : "left"}
-            padding={true ? "default" : "none"}
+            align={"right"}
+            padding={"default"}
             sortDirection={orderBy === item.id ? order : false}
           >
             <TableSortLabel
@@ -83,7 +82,7 @@ const EnhancedTableHead = (props) => {
   );
 };
 
-export const UserTable = ({ id, data }) => {
+export const UserTable = ({ data }) => {
   const [selected, setSelected] = React.useState([]);
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("name");

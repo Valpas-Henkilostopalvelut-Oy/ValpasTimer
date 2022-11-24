@@ -1,15 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
-  Box,
-  Container,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Paper,
-} from "@mui/material";
+import { Box, Container, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from "@mui/material";
 import { DataStore, Auth } from "aws-amplify";
 import { Tasks } from "../../models";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
@@ -17,7 +7,6 @@ import { WorkStatus } from "../../services/workLib.jsx";
 
 const TasksPage = () => {
   const [tasks, setTasks] = useState(null);
-  const [dense, setDense] = useState(false);
 
   useEffect(() => {
     let isActive = false;
@@ -56,7 +45,7 @@ const TasksPage = () => {
       <Box sx={{ width: "100%" }}>
         <Paper sx={{ width: "100%", mb: 2 }}>
           <TableContainer>
-            <Table sx={{ minWidth: 750 }} aria-label="workTable" size={dense ? "small" : "medium"}>
+            <Table sx={{ minWidth: 750 }} aria-label="workTable" size={"small"}>
               <TableHead>
                 <TableRow>
                   <TableCell>Status</TableCell>

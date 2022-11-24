@@ -5,13 +5,13 @@ import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import { STime, ETime, EditSTime, EditETime, MoreButton } from "./times.jsx";
 import { TotalTime } from "./edittotaltime.jsx";
-import { IsSentMD, IsSentSM } from "./isSent.jsx";
+import { StatusMD, StatusSM } from "./isSent.jsx";
 import { EditDescriptionSM, EditDescriptionMD } from "./editdescription.jsx";
 import { ChangeWorkplaceSM, ChangeWorkplaceMD } from "./workplacechange.jsx";
 import { EditDate } from "./editdate.jsx";
 import { Tabledescription } from "./editdescription.jsx";
 
-export const Details = ({ date, workplaces = null, lang }) => {
+export const Details = ({ date, workplaces = null, lang, isEmpty }) => {
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => {
     setOpen(!open);
@@ -36,10 +36,11 @@ export const Details = ({ date, workplaces = null, lang }) => {
             <TableCell align="right">
               <ETime date={date} />
             </TableCell>
-            <IsSentMD date={date} lang={lang} />
+
+            <StatusMD date={date} lang={lang} isEmpty={isEmpty} />
           </TableRow>
 
-          <IsSentSM date={date} lang={lang} />
+          <StatusSM date={date} lang={lang} isEmpty={isEmpty} />
 
           <TableRow>
             <TableCell style={{ padding: 0 }} colSpan={6}>
@@ -47,7 +48,7 @@ export const Details = ({ date, workplaces = null, lang }) => {
                 <Box>
                   <Table size="small" aria-label="purchases">
                     <TableBody>
-                      {date.arr.map((row, index) => {
+                      {date.arr.map((row) => {
                         return (
                           <Fragment key={row.id}>
                             <EditDescriptionSM date={row} lang={lang} />
@@ -63,22 +64,22 @@ export const Details = ({ date, workplaces = null, lang }) => {
                                 lang={lang}
                               />
 
-                              <TableCell align="right">
+                              <TableCell>
                                 <EditDate date={row} lang={lang} />
                               </TableCell>
 
-                              <TableCell align="right" sx={{ paddingLeft: 1, paddingRight: 1 }}>
+                              <TableCell>
                                 <Box sx={{ display: "flex", justifyContent: "space-around" }}>
                                   <EditSTime date={row} /> {"-"} <EditETime date={row} />
                                 </Box>
                               </TableCell>
 
-                              <TableCell align="right" sx={{ paddingLeft: 1, paddingRight: 1 }}>
+                              <TableCell>
                                 <TotalTime date={row} />
                               </TableCell>
 
-                              <TableCell align="right" sx={{ paddingLeft: 1, paddingRight: 1 }}>
-                                <MoreButton date={row} lang={lang} />
+                              <TableCell align="right">
+                                <MoreButton date={row} lang={lang} isEmpty={isEmpty} />
                               </TableCell>
                             </TableRow>
                           </Fragment>

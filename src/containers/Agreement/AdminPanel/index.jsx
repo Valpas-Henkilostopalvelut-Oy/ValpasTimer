@@ -172,7 +172,7 @@ const renameAditionalInfo = async ({ id, val, item, setSubmitting, setName }) =>
   }, 1000);
 };
 
-const deelteAditionalInfo = async ({ id, item, setDeleting, isDeleting, reload }) => {
+const deelteAditionalInfo = async ({ id, item, setDeleting, reload }) => {
   setDeleting(true);
   await DataStore.query(Agreement, id)
     .then(async (agreement) => {
@@ -327,7 +327,7 @@ const AditionalInfo = ({ id, item, reload, handleOpen, expanded }) => {
   );
 };
 
-const renameAgreement = async ({ values, reload, id, setSubmitting }) => {
+const renameAgreement = async ({ values, reload, id }) => {
   await DataStore.query(Agreement, id)
     .then(async (agreement) => {
       await DataStore.save(
@@ -364,6 +364,7 @@ const addAditionalInfo = async ({ values, reload, id, setSubmitting }) => {
     .catch((error) => console.warn(error));
 };
 
+// eslint-disable-next-line no-unused-vars
 const SelectWorkspaces = ({ id, agreement }) => {
   const [selectedWorkspaces, setSelectedWorkspaces] = useState(agreement.workspaceId);
   const [avalibleWorkspaces, setAvalibleWorkspaces] = useState([]);

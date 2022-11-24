@@ -1,11 +1,9 @@
 import React, { useState } from "react";
-import { TextField, Typography } from "@mui/material";
+import { Box, TextField, Typography, Dialog, DialogActions, DialogContent, DialogTitle, Button } from "@mui/material";
 
-export const timeMaker = (event, time, fix = null) => {
+export const timeMaker = (event, time) => {
   if (event !== null) {
     var val = event.target.value;
-  } else {
-    var val = fix;
   }
 
   const arr = val.split("").filter((t) => t !== ":");
@@ -52,29 +50,42 @@ export const TextToTime = ({ date = new Date(), onChange, disabled = false }) =>
   const [time, setTime] = useState(
     `${String("0" + new Date(date).getHours()).slice(-2)}:${String("0" + new Date(date).getMinutes()).slice(-2)}`
   );
-  const [click, setClick] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [value, setValue] = useState({ h: 0, m: 0 });
+  const handleSave = () => {
+    onChange({ h: value.h, min: value.m });
+    setOpen(false);
+  };
 
   return !disabled ? (
-    click ? (
-      <TextField
-        sx={{ width: "40.797px" }}
-        autoFocus
-        variant="standard"
-        value={time}
-        onChange={(e) => setTime(e.target.value)}
-        onBlur={(e) => {
-          if (e.target.value !== "") {
-            let val = timeMaker(e, time);
-            setTime(`${String("0" + val.h).slice(-2)}:${String("0" + val.m).slice(-2)}`);
-            onChange({ h: val.h, min: val.m });
-          }
-          setClick(false);
-        }}
-      />
-    ) : (
-      <Typography onClick={() => setClick(!click)}>{time}</Typography>
-    )
+    <Box>
+      <Typography onClick={() => setOpen(true)} variant="p">
+        {time}
+      </Typography>
+      <Dialog open={open} onClose={() => setOpen(false)} maxWidth="xs" fullWidth={true}>
+        <DialogTitle>Time</DialogTitle>
+        <DialogContent>
+          <TextField
+            fullWidth
+            variant="standard"
+            value={time}
+            onChange={(e) => setTime(e.target.value)}
+            onBlur={(e) => {
+              if (e.target.value !== "") {
+                let val = timeMaker(e, time);
+                setTime(`${String("0" + val.h).slice(-2)}:${String("0" + val.m).slice(-2)}`);
+                setValue(val);
+              }
+            }}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setOpen(false)}>Cancel</Button>
+          <Button onClick={handleSave}>Ok</Button>
+        </DialogActions>
+      </Dialog>
+    </Box>
   ) : (
-    <Typography>{time}</Typography>
+    <Typography variant="p">{time}</Typography>
   );
 };

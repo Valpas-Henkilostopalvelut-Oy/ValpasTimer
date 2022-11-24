@@ -84,7 +84,6 @@ const More = ({ data = null, reload }) => {
 
 const Works = () => {
   const [addAnchorEl, setAddAnchorEl] = React.useState(null);
-  const [dense, setDense] = useState(false);
   const [works, setWorks] = useState(null);
 
   const loadWorks = async () => {
@@ -124,7 +123,7 @@ const Works = () => {
       <Paper sx={{ width: "100%", mb: 2 }}>
         <EnhancedWorks anchorEl={addAnchorEl} setAnchorEl={setAddAnchorEl} />
         <TableContainer>
-          <Table sx={{ minWidth: 750 }} aria-label="workTable" size={dense ? "small" : "medium"}>
+          <Table sx={{ minWidth: 750 }} aria-label="workTable" size={"small"}>
             <TableBody>
               {works !== null &&
                 works.map((u, k) => (

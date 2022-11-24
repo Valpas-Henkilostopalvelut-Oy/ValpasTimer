@@ -1,5 +1,17 @@
 import React, { useState } from "react";
-import { TextField, Typography, useTheme, TableRow, TableCell, Box } from "@mui/material";
+import {
+  TextField,
+  Typography,
+  useTheme,
+  TableRow,
+  TableCell,
+  Box,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Button,
+} from "@mui/material";
 import { DataStore } from "aws-amplify";
 import { TimeEntry } from "../../../models";
 
@@ -22,47 +34,53 @@ const EditDescription = ({
   const [click, setClick] = useState(false);
   const theme = useTheme();
 
-  return (
+  return date.isSent ? (
+    <Typography variant="p">{desc !== "" ? desc : lang.none_description}</Typography>
+  ) : (
     <Box
       sx={{
         cursor: "pointer",
-        "&:hover": {
-          textDecoration: "underline",
-        },
         [theme.breakpoints.up("sm")]: {
           maxWidth: "280px",
         },
       }}
     >
-      {date.isSent ? (
-        <Typography variant="p">{desc !== "" ? desc : lang.none_description}</Typography>
-      ) : !click ? (
-        <Typography
-          variant="p"
-          onClick={() => setClick(!click)}
-          sx={{
-            width: "100%",
-          }}
-        >
-          {desc !== "" ? desc : lang.none_description}
-        </Typography>
-      ) : (
-        <TextField
-          id="outlined-multiline-static"
-          variant="standard"
-          autoFocus
-          fullWidth
-          multiline
-          rows={2}
-          value={desc}
-          onChange={(e) => setDesc(e.target.value)}
-          onBlur={(e) => {
-            updateDescription(date, e.target.value);
-            setClick(!click);
-          }}
-          placeholder={lang.add_description}
-        />
-      )}
+      <Typography variant="p" onClick={() => setClick(!click)}>
+        {desc !== "" ? desc : lang.none_description}
+      </Typography>
+      <Dialog open={click} onClose={() => setClick(!click)} maxWidth={"xs"} fullWidth={true}>
+        <DialogTitle>{lang.add_description}</DialogTitle>
+        <DialogContent>
+          <TextField
+            id="outlined-multiline-static"
+            variant="standard"
+            fullWidth
+            multiline
+            rows={3}
+            value={desc}
+            onChange={(e) => setDesc(e.target.value)}
+            onBlur={(e) => {
+              updateDescription(date, e.target.value);
+              setClick(!click);
+            }}
+            placeholder={lang.add_description}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setClick(!click)} color="primary">
+            Cancel
+          </Button>
+          <Button
+            onClick={() => {
+              updateDescription(date, desc);
+              setClick(!click);
+            }}
+            color="primary"
+          >
+            Save
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 };

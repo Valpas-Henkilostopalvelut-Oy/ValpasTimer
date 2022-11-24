@@ -51,7 +51,7 @@ const CurrentGroup = ({ row }) => {
   useEffect(() => {
     let isActive = false;
 
-    const listGroup = async (Username) => {
+    const listGroup = async () => {
       let apiName = "AdminQueries";
       let path = "/ListGroupsForUser";
       let myInit = {

@@ -1,5 +1,9 @@
 import React, { useEffect, useState } from "react";
 import {
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
   Button,
   TableRow,
   TableCell,
@@ -34,49 +38,69 @@ const SelectWork = ({
   },
 }) => {
   const [workplace, setWorkplace] = useState(work);
-  const [edited, setEdited] = useState(false);
+  const [open, setOpen] = useState(false);
   const theme = useTheme();
+  const [nane, setName] = useState("");
   const handleChange = (event) => {
     setWorkplace(event.target.value);
-    setEdited(true);
+    updateWorkplace({ date, item: workplace });
   };
 
-  const update = () => {
-    updateWorkplace({ date, item: workplace });
-    setEdited(false);
-  };
+  useEffect(() => {
+    let isActive = true;
+
+    const fetchWorkplaces = async () => {
+      await DataStore.query(AllWorkSpaces)
+        .then((res) => {
+          let workName = res.find((item) => item.id === date.workspaceId);
+          setName(workName.name);
+        })
+        .catch((e) => console.warn(e));
+    };
+
+    isActive && fetchWorkplaces();
+    return () => (isActive = false);
+  }, []);
 
   return (
     workplaces !== null && (
-      <Box sx={{ display: "flex", justifyContent: "flex-start" }}>
-        <FormControl
-          fullWidth
-          sx={{
-            [theme.breakpoints.up("sm")]: {
-              maxWidth: "280px",
-            },
-          }}
-        >
-          <InputLabel id="workplace-select">{lang.workplace}</InputLabel>
-          <Select
-            labelId="workplace-select"
-            id="workplace-select"
-            value={workplace}
-            label={lang.workplace}
-            onChange={handleChange}
-          >
-            {workplaces.map((item, i) => (
-              <MenuItem key={i} value={item.id}>
-                {item.name}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-        {edited && (
-          <Button variant="text" onClick={update}>
-            {lang.buttons.save}
-          </Button>
-        )}
+      <Box>
+        <Typography variant="p" onClick={() => setOpen(!open)}>
+          {nane}
+        </Typography>
+        <Dialog open={open} onClose={() => setOpen(!open)} maxWidth={"xs"} fullWidth={true}>
+          <DialogTitle>{lang.workplace}</DialogTitle>
+          <DialogContent>
+            <FormControl
+              fullWidth
+              sx={{
+                [theme.breakpoints.up("sm")]: {
+                  maxWidth: "280px",
+                },
+              }}
+            >
+              <InputLabel id="workplace-select">{lang.workplace}</InputLabel>
+              <Select
+                labelId="workplace-select"
+                id="workplace-select"
+                value={workplace}
+                label={lang.workplace}
+                onChange={handleChange}
+              >
+                {workplaces.map((item, i) => (
+                  <MenuItem key={i} value={item.id}>
+                    {item.name}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={() => setOpen(!open)} color="primary">
+              {lang.buttons.save}
+            </Button>
+          </DialogActions>
+        </Dialog>
       </Box>
     )
   );
@@ -99,11 +123,10 @@ const IsSent = ({ date, lang = { workplace: "Workplace" } }) => {
 
     isActive && fetchWorkplaces();
     return () => (isActive = false);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
-    <Typography>
+    <Typography variant="p">
       {lang.workplace}: {work}
     </Typography>
   );

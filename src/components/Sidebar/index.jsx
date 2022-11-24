@@ -1,7 +1,6 @@
 import React from "react";
 import { SidebarList } from "./SidebarDate.jsx";
-import { LinkContainer } from "react-router-bootstrap";
-import { ListItemText, Box, List, ListItemButton, ListItemIcon, ListItem, SwipeableDrawer } from "@mui/material";
+import { Box, SwipeableDrawer } from "@mui/material";
 
 import { useAppContext } from "../../services/contextLib.jsx";
 

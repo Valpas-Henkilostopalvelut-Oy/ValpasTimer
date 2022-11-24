@@ -1,5 +1,5 @@
 import React from "react";
-import { Typography, Menu, MenuItem, IconButton } from "@mui/material";
+import { Typography, Menu, MenuItem, IconButton, Box } from "@mui/material";
 import { TextToTime } from "../../../services/time.jsx";
 import { DataStore } from "aws-amplify";
 import { TimeEntry } from "../../../models/index.js";
@@ -55,7 +55,7 @@ const deleteTime = async (data, close) => {
     .catch((e) => console.warn(e));
 };
 
-const dublicateTime = async (data, close) => {
+const dublicateTime = async (data) => {
   let newTimeData = {
     timeInterval: {
       start: data.timeInterval.start,
@@ -91,12 +91,35 @@ const dublicateTime = async (data, close) => {
     .catch((e) => console.warn(e));
 };
 
+const cancelsend = async (data, close) => {
+  await DataStore.save(
+    TimeEntry.copyOf(data, (update) => {
+      update.isSent = false;
+    })
+  )
+    .then(() => close())
+    .catch((e) => console.warn(e));
+};
+
+const send = async (data, close) => {
+  await DataStore.save(
+    TimeEntry.copyOf(data, (update) => {
+      update.isSent = true;
+    })
+  )
+    .then(() => close())
+    .catch((e) => console.warn(e));
+};
+
 export const MoreButton = ({
+  isEmpty = false,
   date,
   lang = {
     buttons: {
       delete: "Delete",
       dublicate: "Dublicate",
+      send: "Send",
+      cancelsend: "Cancel send",
     },
   },
 }) => {
@@ -109,19 +132,32 @@ export const MoreButton = ({
   };
   const open = Boolean(anchorEl);
   const isSent = !date.isSent;
+  const isConfirmed = !date.isConfirmed;
+
   return (
     <>
       <IconButton aria-label="more" aria-controls="long-menu" aria-haspopup="true">
         <MoreVertIcon onClick={handleClick} />
       </IconButton>
       <Menu id="long-menu" anchorEl={anchorEl} keepMounted open={open} onClose={handleClose}>
-        <MenuItem onClick={() => dublicateTime(date)}>
+        <MenuItem onClick={() => dublicateTime(date)} disabled={!isEmpty}>
           <Typography variant="p">{lang.buttons.dublicate}</Typography>
         </MenuItem>
-        {isSent && (
-          <MenuItem onClick={() => deleteTime(date, handleClose())}>
-            <Typography variant="p">{lang.buttons.delete}</Typography>
-          </MenuItem>
+        {isSent ? (
+          <Box>
+            <MenuItem onClick={() => send(date, handleClose())} disabled={!isEmpty}>
+              <Typography variant="p">{lang.buttons.send}</Typography>
+            </MenuItem>
+            <MenuItem onClick={() => deleteTime(date, handleClose())} disabled={!isEmpty}>
+              <Typography variant="p">{lang.buttons.delete}</Typography>
+            </MenuItem>
+          </Box>
+        ) : (
+          isConfirmed && (
+            <MenuItem onClick={() => cancelsend(date, handleClose())} disabled={!isEmpty}>
+              <Typography variant="p">{lang.buttons.cancelsend}</Typography>
+            </MenuItem>
+          )
         )}
       </Menu>
     </>

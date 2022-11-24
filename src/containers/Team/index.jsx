@@ -60,7 +60,7 @@ const Team = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {users.map((row, index) => {
+                {users.map((row) => {
                   return (
                     <TableRow key={row.userId} hover tabIndex={-1}>
                       <TableCell>

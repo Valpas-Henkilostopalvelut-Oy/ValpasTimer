@@ -4,9 +4,8 @@ import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import { Settings } from "./settings.jsx";
 
-export const TopbarMD = ({ data, open, handleOpen, lang }) => {
+export const TopbarMD = ({ data, open = false, handleOpen, lang }) => {
   const theme = useTheme();
-  console.log();
 
   return (
     <TableRow>

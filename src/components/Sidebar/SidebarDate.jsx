@@ -110,7 +110,7 @@ export const SidebarList = ({
 
   return (
     <List>
-      {sidebarData.map((component, index) =>
+      {sidebarData.map((component) =>
         component.type === "page"
           ? (component.access.includes(groups[0]) || component.default) && (
               <LinkContainer to={component.link} key={component.title}>

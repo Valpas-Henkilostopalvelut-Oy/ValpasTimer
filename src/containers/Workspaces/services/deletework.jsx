@@ -1,19 +1,7 @@
-import React, { useState, Fragment } from "react";
+import React, { useState } from "react";
 import { DataStore } from "aws-amplify";
 import { AllWorkSpaces } from "../../../models";
-import {
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  IconButton,
-  Typography,
-  Button,
-  Box,
-  Grid,
-  Collapse,
-} from "@mui/material";
-import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
+import { Typography, Button, Box, Collapse } from "@mui/material";
 
 const deletework = async ({ data }) => {
   await DataStore.delete(AllWorkSpaces, data);

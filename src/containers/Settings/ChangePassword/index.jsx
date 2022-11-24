@@ -5,7 +5,7 @@ import LoaderButton from "../../../components/LoaderButton/index.jsx";
 import { Container, Box, Typography, TextField, CssBaseline, Grid, Button } from "@mui/material";
 import { Auth } from "aws-amplify";
 
-const ChangePassword = ({ setChangePassword, changePassword }) => {
+const ChangePassword = ({ setChangePassword }) => {
   const [message, setMessage] = useState(null);
   //change password form
   const validationSchema = yup.object().shape({
@@ -47,7 +47,7 @@ const ChangePassword = ({ setChangePassword, changePassword }) => {
           .then((user) => {
             return Auth.changePassword(user, val.oldPassword, val.newPassword);
           })
-          .then((data) => {
+          .then(() => {
             setSubmitting(false);
             setMessage(null);
             setChangePassword(false);

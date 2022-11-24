@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Auth, DataStore } from "aws-amplify";
-import { TimeEntry } from "../../../../models";
+import { TimeEntry, UserCredentials } from "../../../../models";
 
 import { Typography, Grid } from "@mui/material";
 import { EditStartTime } from "./editstartedtime";
@@ -22,8 +22,10 @@ export const Timer = ({ description = "", sel = "", setDescription, setSel, work
 
     const checkActive = async () => {
       await Auth.currentAuthenticatedUser().then(async (user) => {
-        if (user.attributes["custom:RuningTimeEntry"] !== "null") {
-          await DataStore.query(TimeEntry, user.attributes["custom:RuningTimeEntry"])
+        let userId = user.attributes["custom:UserCreditails"];
+
+        await DataStore.query(UserCredentials, userId).then(async (userCred) => {
+          await DataStore.query(TimeEntry, userCred.activeTimeEntry)
             .then(async (res) => {
               if (res.isActive) {
                 setTimer(res);
@@ -48,18 +50,22 @@ export const Timer = ({ description = "", sel = "", setDescription, setSel, work
 
                 console.log(hours + ":" + minutes + ":" + seconds);
               } else {
-                await Auth.updateUserAttributes(user, {
-                  "custom:RuningTimeEntry": "null",
-                }).catch((err) => console.warn(err));
+                await DataStore.save(
+                  UserCredentials.copyOf(userCred, (updated) => {
+                    updated.activeTimeEntry = null;
+                  })
+                ).catch((err) => console.warn(err));
               }
             })
             .catch(async (e) => {
-              await Auth.updateUserAttributes(user, {
-                "custom:RuningTimeEntry": "null",
-              }).catch((err) => console.warn(err));
+              await DataStore.save(
+                UserCredentials.copyOf(userCred, (updated) => {
+                  updated.activeTimeEntry = null;
+                })
+              ).catch((err) => console.warn(err));
               console.warn(e);
             });
-        }
+        });
       });
     };
 
@@ -68,7 +74,6 @@ export const Timer = ({ description = "", sel = "", setDescription, setSel, work
     }
 
     return () => (isActive = false);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -141,7 +146,7 @@ export const Timer = ({ description = "", sel = "", setDescription, setSel, work
           {time.hours < 10 ? "0" + time.hours : time.hours}:{time.minutes < 10 ? "0" + time.minutes : time.minutes}:
           {time.seconds < 10 ? "0" + time.seconds : time.seconds}
         </Typography>
-        {timerTime && isStarted && <EditStartTime open={open} setOpen={setOpen} timerTime={timerTime} lang={lang}/>}
+        {timerTime && isStarted && <EditStartTime open={open} setOpen={setOpen} timerTime={timerTime} lang={lang} />}
       </Grid>
       <Grid item xs={6} md={2}>
         <StartTimer

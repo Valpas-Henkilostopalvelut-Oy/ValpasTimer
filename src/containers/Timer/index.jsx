@@ -1,22 +1,26 @@
 import React, { useEffect, useState } from "react";
 import { DataStore, Auth, Hub } from "aws-amplify";
 import { AllWorkSpaces, TimeEntry } from "../../models";
-import { Container, Box, CircularProgress, Grid, Typography, useTheme } from "@mui/material";
+import { Container, Box, Grid, Typography, useTheme } from "@mui/material";
 import { Recorder } from "./Recorder/index.jsx";
 import { groupBy } from "./services/group.jsx";
-import { totaldaytime, totalweektime } from "./services/totaltime";
-import { Details } from "./services/table.jsx";
 import { Selectwork } from "./services/workplaceselect";
 import { useAppContext } from "../../services/contextLib";
+import { getWeekNumber } from "./services/group";
+import { WeekRow } from "./services/row.jsx";
 
 const Timer = () => {
-  const [grouped, setGrouped] = useState([]);
+  const [grouped, setGrouped] = useState(null);
   const [selected, setSelected] = useState("");
-  const theme = useTheme();
   const [isEmpty, setIsEmpty] = useState(true);
   const [works, setWorks] = useState(null);
   const { langValue } = useAppContext();
   const track = langValue.track;
+  const thisweek = getWeekNumber(new Date());
+  // eslint-disable-next-line no-unused-vars
+  const [notConfirmedWeek, setNotConfirmedWeek] = useState(null);
+  const [confirmedWeeks, setConfirmedWeeks] = useState(null);
+  const theme = useTheme();
 
   useEffect(() => {
     let isActive = false;
@@ -27,25 +31,54 @@ const Timer = () => {
         const currentUser = await Auth.currentAuthenticatedUser();
 
         const filtered = databaseTimeList
-          .sort((date1, date2) => {
-            let d1 = new Date(date2.timeInterval.start);
-            let d2 = new Date(date1.timeInterval.start);
-            return d1 - d2;
-          })
           .filter((a) => !a.isActive)
           .filter((u) => u.userId === currentUser.username)
           .filter((w) => w.workspaceId === selected || selected === "0");
 
-        setGrouped(groupBy(filtered));
+        setGrouped(groupBy(filtered).filter((t) => t.week === thisweek));
       } catch (error) {
         console.warn(error);
       }
     };
 
-    !isActive && isEmpty && loadTimeList();
+    !isActive && isEmpty && selected !== "" && loadTimeList();
 
     return () => (isActive = true);
-  }, [isEmpty, selected]);
+  }, [isEmpty, selected, isEmpty]);
+
+  useEffect(() => {
+    let isActive = false;
+
+    const loadNotConfirmedTimes = async () => {
+      await Auth.currentAuthenticatedUser().then(async (user) => {
+        await DataStore.query(TimeEntry).then((data) => {
+          const filtered = data.filter((a) => !a.isActive && a.isSent && a.userId === user.username && !a.isConfirmed);
+
+          setNotConfirmedWeek(groupBy(filtered).filter((w) => w.week !== thisweek));
+        });
+      });
+    };
+
+    !isActive && isEmpty && selected !== "" && loadNotConfirmedTimes();
+
+    return () => (isActive = true);
+  }, [selected, isEmpty]);
+
+  useEffect(() => {
+    let isActive = false;
+
+    const loadHistory = async () => {
+      await Auth.currentAuthenticatedUser().then(async (user) => {
+        await DataStore.query(TimeEntry).then((data) => {
+          const filtered = data.filter((a) => !a.isActive && a.userId === user.username);
+
+          setConfirmedWeeks(groupBy(filtered).filter((w) => w.week !== thisweek));
+        });
+      });
+    };
+
+    !isActive && isEmpty && selected !== "" && loadHistory();
+  }, [selected, isEmpty]);
 
   useEffect(() => {
     Hub.listen("datastore", async (hubData) => {
@@ -82,74 +115,128 @@ const Timer = () => {
   //loading if grouped, timelist and selected option are null
 
   return (
-    <Container>
-      {grouped != null ? (
-        <Grid container spacing={2}>
-          <Grid item xs={12}>
-            <Recorder works={works} isEmpty={isEmpty} lang={track.recorder} />
-          </Grid>
-
-          <Grid item xs={12}>
-            <Box sx={{}}>
-              <Selectwork works={works} sel={selected} setSel={setSelected} lang={track.history} />
-            </Box>
-          </Grid>
-          {grouped.map((week) => (
-            <Grid container item spacing={2} key={week.week}>
-              <Grid item xs={12}>
-                <Typography variant="h6" color="text.secondary">
-                  {track.history.week} {week.week}
-                </Typography>
-                <Typography variant="p" color="text.secondary">
-                  {track.history.total_time} {totalweektime(week).h}:{totalweektime(week).min}
-                </Typography>
-              </Grid>
-              {week.arr.map((date) => (
-                <Grid container item xs={12} key={date.date}>
-                  <Grid
-                    container
-                    item
-                    sx={{
-                      border: "1px solid #e0e0e0",
-                      borderRadius: "1px",
-                      backgroundColor: "background.custom",
-                      marginBottom: "15px",
-                      marginTop: "15px",
-                      padding: 1,
-                    }}
-                  >
-                    <Grid item xs={12}>
-                      <Typography variant="h6" color="text.secondary">
-                        {date.date}
-                      </Typography>
-                      <Typography variant="p" color="text.secondary">
-                        {track.history.total_time}{" "}
-                        {totaldaytime(date).h > 9 ? totaldaytime(date).h : "0" + totaldaytime(date).h}:
-                        {totaldaytime(date).min > 9 ? totaldaytime(date).min : "0" + totaldaytime(date).min}
-                      </Typography>
-                    </Grid>
-                  </Grid>
-
-                  <Grid item xs={12}>
-                    <Details date={date} workplaces={works} lang={track.history} />
-                  </Grid>
-                </Grid>
-              ))}
-            </Grid>
-          ))}
+    <Container
+      sx={{
+        [theme.breakpoints.down("sm")]: {
+          padding: "0px",
+        },
+      }}
+    >
+      <Grid container spacing={2}>
+        <Grid item xs={12}>
+          <Recorder works={works} isEmpty={isEmpty} lang={track.recorder} />
         </Grid>
-      ) : (
-        <Box
-          sx={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            height: "100vh",
-          }}
-        >
-          <CircularProgress />
-        </Box>
-      )}
+
+        <Grid item xs={12}>
+          <Box>
+            <Selectwork works={works} sel={selected} setSel={setSelected} lang={track.history} />
+          </Box>
+        </Grid>
+
+        {selected !== "" ? (
+          <>
+            <Grid item xs={12}>
+              <Box
+                sx={{
+                  backgroundColor: "background.custom",
+
+                  [theme.breakpoints.up("sm")]: {
+                    padding: "10px",
+                  },
+                  [theme.breakpoints.down("sm")]: {
+                    padding: "10px 0px",
+                  },
+                }}
+              >
+                <Box
+                  sx={{
+                    backgroundColor: "background.paper",
+                    padding: "10px",
+                  }}
+                >
+                  <Typography variant="h6" color="text.secondary">
+                    This week
+                  </Typography>
+                </Box>
+
+                {grouped && grouped.length > 0 ? (
+                  <WeekRow grouped={grouped} lang={track} isEmpty={isEmpty} works={works} />
+                ) : (
+                  <Grid item xs={12}>
+                    <Typography variant="h6" color="text.secondary">
+                      This week you have not tracked any time.
+                    </Typography>
+                  </Grid>
+                )}
+              </Box>
+            </Grid>
+
+            <Grid item xs={12}>
+              <Box
+                sx={{
+                  backgroundColor: "background.custom",
+                  [theme.breakpoints.up("sm")]: {
+                    padding: "10px",
+                  },
+                  [theme.breakpoints.down("sm")]: {
+                    padding: "20px 0px",
+                  },
+                }}
+              >
+                <Box
+                  sx={{
+                    backgroundColor: "background.paper",
+                    padding: "10px",
+                  }}
+                >
+                  <Typography variant="h6" color="text.secondary">
+                    Not confirmed times
+                  </Typography>
+                </Box>
+
+                {notConfirmedWeek && notConfirmedWeek.length > 0 && (
+                  <WeekRow grouped={notConfirmedWeek} lang={track} isEmpty={isEmpty} works={works} />
+                )}
+              </Box>
+            </Grid>
+
+            <Grid item xs={12}>
+              <Box
+                sx={{
+                  backgroundColor: "background.custom",
+                  [theme.breakpoints.up("sm")]: {
+                    padding: "10px",
+                  },
+                  [theme.breakpoints.down("sm")]: {
+                    padding: "10px 0px",
+                  },
+                }}
+              >
+                <Box
+                  sx={{
+                    backgroundColor: "background.paper",
+                    padding: "10px",
+                  }}
+                >
+                  <Typography variant="h6" color="text.secondary">
+                    History
+                  </Typography>
+                </Box>
+
+                {confirmedWeeks && confirmedWeeks.length > 0 && (
+                  <WeekRow grouped={confirmedWeeks} lang={track} isEmpty={isEmpty} works={works} />
+                )}
+              </Box>
+            </Grid>
+          </>
+        ) : (
+          <Grid item xs={12}>
+            <Typography variant="h6" color="text.secondary">
+              Select workspace
+            </Typography>
+          </Grid>
+        )}
+      </Grid>
     </Container>
   );
 };

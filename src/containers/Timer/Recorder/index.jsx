@@ -1,11 +1,10 @@
 import React, { useState } from "react";
-import { Box, Tab, useTheme } from "@mui/material";
+import { Box, Tab } from "@mui/material";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
 import { Timer } from "./services/timer.jsx";
 import { Manual } from "./services/manual.jsx";
 
-export const Recorder = ({ works = null, isEmpty = true, lang }) => {
-  const theme = useTheme();
+export const Recorder = ({ works = null, lang }) => {
   const [description, setDescription] = useState("");
   const [value, setValue] = useState("1");
   const [sel, setSel] = useState("");

@@ -26,18 +26,12 @@ const startTimer = async ({ description, workplace, setTimer }) => {
       .then(async (time) => {
         await DataStore.query(UserCredentials, user.attributes["custom:UserCreditails"])
           .then(async (userCred) => {
+            setTimer(time);
             await DataStore.save(
               UserCredentials.copyOf(userCred, (updated) => {
                 updated.activeTimeEntry = time.id;
               })
-            )
-              .then(async () => {
-                setTimer(time);
-                await Auth.updateUserAttributes(user, {
-                  "custom:RuningTimeEntry": time.id,
-                }).catch((err) => console.warn(err));
-              })
-              .catch((err) => console.warn(err));
+            );
           })
           .catch((err) => console.warn(err));
       })
@@ -48,20 +42,26 @@ const startTimer = async ({ description, workplace, setTimer }) => {
 const stopTimer = async () => {
   await Auth.currentAuthenticatedUser()
     .then(async (user) => {
-      let timeId = user.attributes["custom:RuningTimeEntry"];
+      let userId = user.attributes["custom:UserCreditails"];
 
-      await DataStore.query(TimeEntry, timeId)
-        .then(async (time) => {
-          await DataStore.save(
-            TimeEntry.copyOf(time, (updated) => {
-              updated.isActive = false;
-              updated.timeInterval.end = new Date(new Date().setMilliseconds(0)).toISOString();
-            })
-          )
-            .then(async () => {
-              await Auth.updateUserAttributes(user, {
-                "custom:RuningTimeEntry": "null",
-              }).catch((err) => console.warn(err));
+      await DataStore.query(UserCredentials, userId)
+        .then(async (userCred) => {
+          await DataStore.query(TimeEntry, userCred.activeTimeEntry)
+            .then(async (time) => {
+              await DataStore.save(
+                TimeEntry.copyOf(time, (updated) => {
+                  updated.isActive = false;
+                  updated.timeInterval.end = new Date(new Date().setMilliseconds(0)).toISOString();
+                })
+              )
+                .then(async () => {
+                  await DataStore.save(
+                    UserCredentials.copyOf(userCred, (updated) => {
+                      updated.activeTimeEntry = null;
+                    })
+                  );
+                })
+                .catch((err) => console.warn(err));
             })
             .catch((err) => console.warn(err));
         })

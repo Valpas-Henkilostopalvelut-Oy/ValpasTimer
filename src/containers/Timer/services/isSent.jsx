@@ -1,7 +1,11 @@
-import React, { Fragment } from "react";
-import { ReportAll, DeleteAll } from "./buttons.jsx";
-import { TableRow, TableCell, useTheme } from "@mui/material";
+/* eslint-disable no-unused-vars */
+import React from "react";
+import { DeleteAll } from "./buttons.jsx";
+import { TableRow, TableCell, useTheme, Typography, Box } from "@mui/material";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import ThumbUpAltIcon from "@mui/icons-material/ThumbUpAlt";
+import TaskAltIcon from "@mui/icons-material/TaskAlt";
+import ClearIcon from "@mui/icons-material/Clear";
 
 const sent = (date) => {
   let isSent = date.arr.filter((e) => e.isSent).length;
@@ -17,12 +21,13 @@ const confirmed = (date) => {
   return isConfirmed === isNotConfirmed;
 };
 
-export const IsSentSM = ({
+export const StatusSM = ({
   date,
   lang = {
     sent: "Sent",
     confirmed: "Confirmed",
   },
+  isEmpty,
 }) => {
   const theme = useTheme();
 
@@ -35,8 +40,7 @@ export const IsSentSM = ({
       }}
     >
       <TableCell align="center" colSpan={4}>
-        <ReportAll date={date} lang={lang} />
-        <DeleteAll date={date} lang={lang} />
+        <DeleteAll date={date} lang={lang} isEmpty={isEmpty} />
       </TableCell>
     </TableRow>
   ) : (
@@ -47,70 +51,61 @@ export const IsSentSM = ({
         },
       }}
     >
-      <TableCell align="center" colSpan={2}>
-        {lang.sent}: <CheckCircleIcon color="success" />
-      </TableCell>
-      <TableCell align="center" colSpan={2}>
-        {lang.confirmed}: <CheckCircleIcon color="success" />
+      <TableCell align="center" colSpan={4}>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-evenly",
+            alignItems: "center",
+          }}
+        >
+          {lang.sent}: <TaskAltIcon color="success" />
+          {lang.confirmed}: {confirmed(date) ? <TaskAltIcon color="success" /> : <ClearIcon color="error" />}
+        </Box>
       </TableCell>
     </TableRow>
   );
 };
 
-export const IsSentMD = ({
+export const StatusMD = ({
   date,
   lang = {
     sent: "Sent",
     confirmed: "Confirmed",
   },
+  isEmpty,
 }) => {
   const theme = useTheme();
-
   return sent(date) ? (
-    <Fragment>
-      <TableCell
-        align="center"
-        sx={{
-          [theme.breakpoints.down("sm")]: {
-            display: "none",
-          },
-        }}
-      >
-        <ReportAll date={date} lang={lang} />
-      </TableCell>
-      <TableCell
-        align="center"
-        sx={{
-          [theme.breakpoints.down("sm")]: {
-            display: "none",
-          },
-        }}
-      >
-        <DeleteAll date={date} lang={lang} />
-      </TableCell>
-    </Fragment>
+    <TableCell
+      align="right"
+      sx={{
+        [theme.breakpoints.down("sm")]: {
+          display: "none",
+        },
+      }}
+    >
+      <DeleteAll date={date} lang={lang} isEmpty={isEmpty} />
+    </TableCell>
   ) : (
-    <Fragment>
-      <TableCell
-        align="right"
+    <TableCell
+      align="right"
+      sx={{
+        [theme.breakpoints.down("sm")]: {
+          display: "none",
+        },
+      }}
+    >
+      <Box
         sx={{
-          [theme.breakpoints.down("sm")]: {
-            display: "none",
-          },
+          display: "flex",
+          justifyContent: "space-evenly",
+          alignItems: "center",
         }}
       >
-        {lang.sent}: <CheckCircleIcon color="success" />
-      </TableCell>
-      <TableCell
-        align="right"
-        sx={{
-          [theme.breakpoints.down("sm")]: {
-            display: "none",
-          },
-        }}
-      >
-        {lang.confirmed}: {confirmed(date) ? <CheckCircleIcon color="success" /> : "No"}
-      </TableCell>
-    </Fragment>
+        {lang.sent}: <TaskAltIcon color="success" />
+        {lang.confirmed}: {confirmed(date) ? <TaskAltIcon color="success" /> : <ClearIcon color="error" />}
+      </Box>
+    </TableCell>
   );
 };

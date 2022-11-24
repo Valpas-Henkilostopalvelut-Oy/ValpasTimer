@@ -18,9 +18,10 @@ export const DeleteAll = ({
   lang = {
     buttons: { delete: "Delete" },
   },
+  isEmpty = false,
 }) => {
   return (
-    <Button variant="text" color="error" onClick={() => deleteAll(date)}>
+    <Button variant="text" color="error" onClick={() => deleteAll(date)} disabled={!isEmpty}>
       {lang.buttons.delete}
     </Button>
   );
@@ -49,5 +50,51 @@ export const ReportAll = ({
     <Button variant="text" color="primary" onClick={() => reportAll(date)}>
       {lang.buttons.report}
     </Button>
+  );
+};
+
+const weekreport = async (date) => {
+  let arr = date.arr;
+  arr.forEach((element) => {
+    let arr = element.arr;
+    arr.forEach(async (element) => {
+      if (!element.isSent) {
+        await DataStore.save(
+          TimeEntry.copyOf(element, (update) => {
+            update.isSent = true;
+          })
+        ).catch((e) => console.warn(e));
+      }
+    });
+  });
+};
+
+export const Reportallweek = ({
+  date,
+  lang = {
+    buttons: { reportweek: "Report all week" },
+  },
+  isEmpty = false,
+}) => {
+  let isSent = () => {
+    let arr = date.arr;
+    let isSent = true;
+    arr.forEach((element) => {
+      let arr = element.arr;
+      arr.forEach((element) => {
+        if (!element.isSent) {
+          isSent = false;
+        }
+      });
+    });
+    return isSent;
+  };
+
+  return (
+    !isSent() && (
+      <Button variant="text" color="primary" onClick={() => weekreport(date)} disabled={!isEmpty}>
+        {lang.buttons.reportweek}
+      </Button>
+    )
   );
 };
