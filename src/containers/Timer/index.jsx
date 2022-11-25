@@ -15,12 +15,66 @@ const Timer = () => {
   const [isEmpty, setIsEmpty] = useState(true);
   const [works, setWorks] = useState(null);
   const { langValue } = useAppContext();
-  const track = langValue.track;
   const thisweek = getWeekNumber(new Date());
-  // eslint-disable-next-line no-unused-vars
   const [notConfirmedWeek, setNotConfirmedWeek] = useState(null);
   const [confirmedWeeks, setConfirmedWeeks] = useState(null);
   const theme = useTheme();
+  const lang = langValue.track || {
+    recorder: {
+      tabs: {
+        timer: "Timer",
+        manual: "Manual",
+      },
+      timer: {
+        description: "Description",
+        workplace: "Workplace",
+        start: "Start",
+        stop: "Stop",
+        edit_start: {
+          title: "Edit start time",
+          start_time: "Start time",
+          save: "Save",
+          cancel: "Cancel",
+        },
+      },
+      manual: {
+        description: "Description",
+        workplace: "Workplace",
+        date: "Date",
+        start_time: "Start time",
+        end_time: "End time",
+        create: "Create",
+      },
+    },
+    history: {
+      week: "Week",
+      total_time: "Total time",
+      none_description: "No description",
+      date: "Date",
+      workplace: "Workplace",
+      sent: "Sent",
+      confirmed: "Confirmed",
+      add_description: "Add description",
+      title: {
+        this_week: "This week",
+        select_workplace: "Select workplace",
+        history: "History",
+        none_times: "This week you have not tracked any time",
+        not_confirmed: "Not confirmed times",
+      },
+
+      buttons: {
+        report: "Report",
+        delete: "Delete",
+        dublicate: "Dublicate",
+        save: "Save",
+        cancel: "Cancel",
+        send: "Send",
+        cancelsend: "Cancel send",
+        reportweek: "Report all week",
+      },
+    },
+  };
 
   useEffect(() => {
     let isActive = false;
@@ -124,12 +178,12 @@ const Timer = () => {
     >
       <Grid container spacing={2}>
         <Grid item xs={12}>
-          <Recorder works={works} isEmpty={isEmpty} lang={track.recorder} />
+          <Recorder works={works} isEmpty={isEmpty} lang={lang.recorder} />
         </Grid>
 
         <Grid item xs={12}>
           <Box>
-            <Selectwork works={works} sel={selected} setSel={setSelected} lang={track.history} />
+            <Selectwork works={works} sel={selected} setSel={setSelected} lang={lang.history} />
           </Box>
         </Grid>
 
@@ -155,16 +209,16 @@ const Timer = () => {
                   }}
                 >
                   <Typography variant="h6" color="text.secondary">
-                    This week
+                    {lang.history.title.this_week}
                   </Typography>
                 </Box>
 
                 {grouped && grouped.length > 0 ? (
-                  <WeekRow grouped={grouped} lang={track} isEmpty={isEmpty} works={works} />
+                  <WeekRow grouped={grouped} lang={lang} isEmpty={isEmpty} works={works} />
                 ) : (
                   <Grid item xs={12}>
                     <Typography variant="h6" color="text.secondary">
-                      This week you have not tracked any time.
+                      {lang.history.title.none_times}
                     </Typography>
                   </Grid>
                 )}
@@ -190,12 +244,12 @@ const Timer = () => {
                   }}
                 >
                   <Typography variant="h6" color="text.secondary">
-                    Not confirmed times
+                    {lang.history.title.not_confirmed}
                   </Typography>
                 </Box>
 
                 {notConfirmedWeek && notConfirmedWeek.length > 0 && (
-                  <WeekRow grouped={notConfirmedWeek} lang={track} isEmpty={isEmpty} works={works} />
+                  <WeekRow grouped={notConfirmedWeek} lang={lang} isEmpty={isEmpty} works={works} />
                 )}
               </Box>
             </Grid>
@@ -219,12 +273,12 @@ const Timer = () => {
                   }}
                 >
                   <Typography variant="h6" color="text.secondary">
-                    History
+                    {lang.history.title.history}
                   </Typography>
                 </Box>
 
                 {confirmedWeeks && confirmedWeeks.length > 0 && (
-                  <WeekRow grouped={confirmedWeeks} lang={track} isEmpty={isEmpty} works={works} />
+                  <WeekRow grouped={confirmedWeeks} lang={lang} isEmpty={isEmpty} works={works} />
                 )}
               </Box>
             </Grid>
@@ -232,7 +286,7 @@ const Timer = () => {
         ) : (
           <Grid item xs={12}>
             <Typography variant="h6" color="text.secondary">
-              Select workspace
+              {lang.history.title.select_workplace}
             </Typography>
           </Grid>
         )}

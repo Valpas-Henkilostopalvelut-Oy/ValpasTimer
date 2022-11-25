@@ -151,6 +151,13 @@ export const fin = {
         sent: "Lähetetty",
         confirmed: "Vahvistettu",
         add_description: "Lisää kuvaus",
+        title: {
+          this_week: "Tämä viikko",
+          select_workplace: "Valitse työpaikka",
+          history: "Historia",
+          none_times: "Ei aikoja",
+          not_confirmed: "Ei vahvistettu",
+        },
         buttons: {
           report: "Raportoi",
           delete: "Poista",

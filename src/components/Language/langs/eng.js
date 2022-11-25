@@ -151,6 +151,13 @@ export const eng = {
         sent: "Sent",
         confirmed: "Confirmed",
         add_description: "Add description",
+        title: {
+          this_week: "This week",
+          select_workplace: "Select workplace",
+          history: "History",
+          none_times: "This week you have not tracked any time",
+          not_confirmed: "Not confirmed times",
+        },
 
         buttons: {
           report: "Report",
