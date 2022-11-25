@@ -1,24 +1,29 @@
 import React, { useState } from "react";
 import { TextField, Button, Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
 import { Auth, DataStore } from "aws-amplify";
-import { TimeEntry } from "../../../../models";
+import { TimeEntry, UserCredentials } from "../../../../models";
 import { timeMaker } from "../../../../services/time.jsx";
 
 const editDataStoreStartTime = async ({ newTime }) => {
   await Auth.currentAuthenticatedUser()
     .then(async (user) => {
-      if (user.attributes["custom:RuningTimeEntry"] !== "null") {
-        await DataStore.query(TimeEntry, user.attributes["custom:RuningTimeEntry"])
-          .then(async (time) => {
-            console.log(time);
-            await DataStore.save(
-              TimeEntry.copyOf(time, (updated) => {
-                updated.timeInterval.start = new Date(newTime).toISOString();
-              })
-            );
-          })
-          .catch((err) => console.warn(err));
-      }
+      const creditailsId = user.attributes["custom:UserCreditails"];
+
+      await DataStore.query(UserCredentials, creditailsId)
+        .then(async (data) => {
+          const timeEntryId = data.activeTimeEntry;
+
+          await DataStore.query(TimeEntry, timeEntryId)
+            .then(async (data) => {
+              await DataStore.save(
+                TimeEntry.copyOf(data, (update) => {
+                  update.timeInterval.start = new Date(newTime).toISOString();
+                })
+              );
+            })
+            .catch((error) => console.warn(error));
+        })
+        .catch((error) => console.warn(error));
     })
     .catch((e) => console.warn(e));
 };
