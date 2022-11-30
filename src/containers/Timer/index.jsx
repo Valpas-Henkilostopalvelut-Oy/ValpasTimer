@@ -107,7 +107,9 @@ const Timer = () => {
     const loadNotConfirmedTimes = async () => {
       await Auth.currentAuthenticatedUser().then(async (user) => {
         await DataStore.query(TimeEntry).then((data) => {
-          const filtered = data.filter((a) => !a.isActive && a.isSent && a.userId === user.username && !a.isConfirmed);
+          const filtered = data.filter(
+            (a) => !a.isActive && a.isSent && a.userId === user.username && !a.isConfirmed && a.workspaceId === selected
+          );
 
           setNotConfirmedWeek(groupBy(filtered).filter((w) => w.week !== thisweek));
         });
@@ -125,7 +127,7 @@ const Timer = () => {
     const loadHistory = async () => {
       await Auth.currentAuthenticatedUser().then(async (user) => {
         await DataStore.query(TimeEntry).then((data) => {
-          const filtered = data.filter((a) => !a.isActive && a.userId === user.username);
+          const filtered = data.filter((a) => !a.isActive && a.userId === user.username && a.workspaceId === selected);
 
           setConfirmedWeeks(groupBy(filtered).filter((w) => w.week !== thisweek));
         });

@@ -67,7 +67,7 @@ export const Creatework = ({
                 <Button onClick={handleClose} color="primary">
                   {lang.create_work.cancel}
                 </Button>
-                <Button type="submit" disabled={!isValid || !dirty || isSubmitting}>
+                <Button type="submit" disabled={!isValid || !dirty || isSubmitting} onClick={handleSubmit}>
                   {lang.create_work.create}
                 </Button>
               </DialogActions>

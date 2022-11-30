@@ -123,9 +123,6 @@ export const Totaltime = ({ sTime = null, eTime = null }) => {
     let isActive = false;
 
     const totalTime = () => {
-      console.log("eTime", eTime);
-      console.log("sTime", sTime);
-
       const diff = eTime.getTime() - sTime.getTime();
       if (diff > 0) {
         const hours = Math.floor(diff / (1000 * 60 * 60));
