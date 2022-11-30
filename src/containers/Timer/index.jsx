@@ -8,6 +8,7 @@ import { Selectwork } from "./services/workplaceselect";
 import { useAppContext } from "../../services/contextLib";
 import { getWeekNumber } from "./services/group";
 import { WeekRow } from "./services/row.jsx";
+import { HistoryRow } from "./services/history.jsx";
 
 const Timer = () => {
   const [grouped, setGrouped] = useState(null);
@@ -192,7 +193,7 @@ const Timer = () => {
             <Grid item xs={12}>
               <Box
                 sx={{
-                  backgroundColor: "background.custom",
+                  backgroundColor: "track.yellow",
 
                   [theme.breakpoints.up("sm")]: {
                     padding: "10px",
@@ -228,7 +229,7 @@ const Timer = () => {
             <Grid item xs={12}>
               <Box
                 sx={{
-                  backgroundColor: "background.custom",
+                  backgroundColor: "track.red",
                   [theme.breakpoints.up("sm")]: {
                     padding: "10px",
                   },
@@ -257,7 +258,7 @@ const Timer = () => {
             <Grid item xs={12}>
               <Box
                 sx={{
-                  backgroundColor: "background.custom",
+                  backgroundColor: "track.green",
                   [theme.breakpoints.up("sm")]: {
                     padding: "10px",
                   },
@@ -278,7 +279,7 @@ const Timer = () => {
                 </Box>
 
                 {confirmedWeeks && confirmedWeeks.length > 0 && (
-                  <WeekRow grouped={confirmedWeeks} lang={lang} isEmpty={isEmpty} works={works} />
+                  <HistoryRow grouped={confirmedWeeks} lang={lang} isEmpty={isEmpty} works={works} />
                 )}
               </Box>
             </Grid>

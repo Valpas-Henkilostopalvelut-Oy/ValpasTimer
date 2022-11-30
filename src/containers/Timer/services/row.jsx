@@ -45,7 +45,7 @@ export const WeekRow = ({ grouped, lang, works, isEmpty }) => {
   ));
 };
 
-const Row = ({ week, lang, works, isEmpty }) => {
+export const Row = ({ week, lang, works, isEmpty }) => {
   return (
     week &&
     week.arr.map((date) => (

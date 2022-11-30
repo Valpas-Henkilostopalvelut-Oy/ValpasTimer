@@ -18,6 +18,11 @@ export const customPalette = {
       dark: "#c56000",
       contrastText: "#fff",
     },
+    track: {
+      yellow: "#fee135",
+      green: "#50c878",
+      red: "#fa8072",
+    },
     error: {
       main: "#f44336",
       light: "#e57373",
@@ -51,7 +56,7 @@ export const customPalette = {
     background: {
       default: "#fafafa",
       paper: "#fff",
-      custom: "#e4eaee"
+      custom: "#e4eaee",
     },
     divider: "#bdbdbd",
   },
