@@ -53,7 +53,7 @@ export const Editstime = ({ date, sTime, setSTime, lang = { start_time: "Start t
   const [value, setValue] = useState(new Date(sTime));
 
   useEffect(() => {
-    if (!isNaN(value)) {
+    if (!isNaN(value) && value) {
       setSTime(
         new Date(
           date.getFullYear(),
@@ -85,7 +85,7 @@ export const Edetime = ({ date, eTime, setETime, lang = { end_time: "End time" }
   const [value, setValue] = useState(new Date(eTime));
 
   useEffect(() => {
-    if (!isNaN(value)) {
+    if (!isNaN(value) && value) {
       setETime(
         new Date(
           date.getFullYear(),
