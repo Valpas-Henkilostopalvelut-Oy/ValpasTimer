@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from "react";
 import { Auth, DataStore } from "aws-amplify";
 import { TimeEntry } from "../../../../models";
@@ -7,18 +8,20 @@ import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { TimePicker } from "@mui/x-date-pickers/TimePicker";
-import ruLocale from "date-fns/locale/ru";
+import fi from "date-fns/locale/fi";
+//import enGB from "date-fns/esm/locale/en-GB";
+//import { useAppContext } from "../../../../services/contextLib";
 
 export const Editdate = ({ date = null, setDate, sTime, eTime, setSTime, setETime, lang = { date: "Date" } }) => {
   return (
-    <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={ruLocale}>
+    <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={fi}>
       <DatePicker
+        disableMaskedInput
         disableFuture
         label={lang.date}
         value={date}
         onChange={(newValue) => {
           setDate(newValue);
-          //set new dates to start and end time
           setSTime(
             new Date(
               newValue.getFullYear(),
@@ -47,13 +50,21 @@ export const Editdate = ({ date = null, setDate, sTime, eTime, setSTime, setETim
 };
 
 export const Editstime = ({ sTime, setSTime, lang = { start_time: "Start time" } }) => {
+  const [value, setValue] = useState(new Date(sTime));
+
+  useEffect(() => {
+    if (!isNaN(value)) {
+      setSTime(value);
+    }
+  }, [value]);
+
   return (
-    <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={ruLocale}>
+    <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={fi}>
       <TimePicker
         label={lang.start_time}
-        value={sTime}
+        value={value}
         onChange={(newValue) => {
-          setSTime(newValue);
+          setValue(newValue);
         }}
         renderInput={(params) => <TextField variant="outlined" {...params} />}
       />
@@ -62,13 +73,21 @@ export const Editstime = ({ sTime, setSTime, lang = { start_time: "Start time" }
 };
 
 export const Edetime = ({ eTime, setETime, lang = { end_time: "End time" } }) => {
+  const [value, setValue] = useState(new Date(eTime));
+
+  useEffect(() => {
+    if (!isNaN(value)) {
+      setETime(value);
+    }
+  }, [value]);
+
   return (
-    <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={ruLocale}>
+    <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={fi}>
       <TimePicker
         label={lang.end_time}
-        value={eTime}
+        value={value}
         onChange={(newValue) => {
-          setETime(newValue);
+          setValue(newValue);
         }}
         renderInput={(params) => <TextField variant="outlined" {...params} />}
       />
@@ -84,7 +103,7 @@ export const Totaltime = ({ sTime = null, eTime = null }) => {
   });
   useEffect(() => {
     let isActive = false;
-    
+
     const totalTime = () => {
       const diff = eTime.getTime() - sTime.getTime();
       if (diff > 0) {
