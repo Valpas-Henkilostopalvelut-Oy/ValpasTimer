@@ -29,7 +29,9 @@ export const WeekRow = ({ grouped, lang, works, isEmpty }) => {
             </Typography>
 
             <Typography variant="p" color="text.secondary">
-              {lang.history.total_time} {totalweektime(week).h}:{totalweektime(week).min}
+              {lang.history.total_time}{" "}
+              {totalweektime(week).h > 9 ? totalweektime(week).h : "0" + totalweektime(week).h}:
+              {totalweektime(week).min > 9 ? totalweektime(week).min : "0" + totalweektime(week).min}
             </Typography>
 
             <Typography variant="caption" color="text.secondary">

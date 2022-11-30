@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { TextField, Typography } from "@mui/material";
+import { TextField, Typography, Box, Dialog, DialogTitle, DialogContent, DialogActions, Button } from "@mui/material";
 import { DataStore } from "aws-amplify";
 import { TimeEntry } from "../../../models";
 
@@ -100,6 +100,7 @@ const calculateEndtime = async (start, total, data) => {
 };
 
 export const TotalTime = ({ date }) => {
+  let isSent = date.isSent;
   let start = new Date(date.timeInterval.start);
   let end = new Date(date.timeInterval.end);
   let total = Date.parse(end) - Date.parse(start);
@@ -114,30 +115,37 @@ export const TotalTime = ({ date }) => {
     }`
   );
 
-  const [click, setClick] = React.useState(false);
+  const [open, setOpen] = React.useState(false);
 
-  return !click ? (
-    <Typography variant="p" onClick={() => setClick(true)}>
-      {totalTime}
-    </Typography>
-  ) : (
-    <TextField
-      value={totalTime}
-      autoFocus
-      sx={{ width: "74.67px" }}
-      variant="standard"
-      onChange={(e) => {
-        setTotalTime(e.target.value);
-      }}
-      onBlur={(e) => {
-        let t = time(e);
-        setTotalTime(
-          `${t.h > 9 ? t.h : "0" + t.h}:${t.min > 9 ? t.min : "0" + t.min}:${t.sec > 9 ? t.sec : "0" + t.sec}`
-        );
+  return (
+    <Box>
+      <Typography variant="p" onClick={() => setOpen(!open)}>
+        {totalTime}
+      </Typography>
+      <Dialog open={open && !isSent} onClose={() => setOpen(false)} fullWidth maxWidth="xs">
+        <DialogTitle>Edit Total Time</DialogTitle>
+        <DialogContent>
+          <TextField
+            fullWidth
+            value={totalTime}
+            onChange={(e) => {
+              setTotalTime(e.target.value);
+            }}
+            onBlur={(e) => {
+              let t = time(e);
+              setTotalTime(
+                `${t.h > 9 ? t.h : "0" + t.h}:${t.min > 9 ? t.min : "0" + t.min}:${t.sec > 9 ? t.sec : "0" + t.sec}`
+              );
 
-        calculateEndtime(start, t, date);
-        setClick(false);
-      }}
-    />
+              calculateEndtime(start, t, date);
+              setOpen(false);
+            }}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setOpen(false)}>Cancel</Button>
+        </DialogActions>
+      </Dialog>
+    </Box>
   );
 };

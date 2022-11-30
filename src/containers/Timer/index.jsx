@@ -1,7 +1,8 @@
+/* eslint-disable no-constant-condition */
 import React, { useEffect, useState } from "react";
 import { DataStore, Auth, Hub } from "aws-amplify";
 import { AllWorkSpaces, TimeEntry } from "../../models";
-import { Container, Box, Grid, Typography, useTheme } from "@mui/material";
+import { Container, Box, Grid, Typography, useTheme, CircularProgress } from "@mui/material";
 import { Recorder } from "./Recorder/index.jsx";
 import { groupBy } from "./services/group.jsx";
 import { Selectwork } from "./services/workplaceselect";
@@ -85,10 +86,10 @@ const Timer = () => {
         const databaseTimeList = await DataStore.query(TimeEntry);
         const currentUser = await Auth.currentAuthenticatedUser();
 
-        const filtered = databaseTimeList
-          .filter((a) => !a.isActive)
-          .filter((u) => u.userId === currentUser.username)
-          .filter((w) => w.workspaceId === selected || selected === "0");
+        const filtered = databaseTimeList.filter(
+          (a) =>
+            !a.isActive && a.userId === currentUser.username && (selected !== "" ? a.workspaceId === selected : true)
+        );
 
         setGrouped(groupBy(filtered).filter((t) => t.week === thisweek));
       } catch (error) {
@@ -96,10 +97,10 @@ const Timer = () => {
       }
     };
 
-    !isActive && isEmpty && selected !== "" && loadTimeList();
+    !isActive && isEmpty && loadTimeList();
 
     return () => (isActive = true);
-  }, [isEmpty, selected, isEmpty]);
+  }, [isEmpty, selected]);
 
   useEffect(() => {
     let isActive = false;
@@ -108,15 +109,22 @@ const Timer = () => {
       await Auth.currentAuthenticatedUser().then(async (user) => {
         await DataStore.query(TimeEntry).then((data) => {
           const filtered = data.filter(
-            (a) => !a.isActive && a.isSent && a.userId === user.username && !a.isConfirmed && a.workspaceId === selected
+            (a) =>
+              !a.isActive &&
+              a.isSent &&
+              a.userId === user.username &&
+              !a.isConfirmed &&
+              (selected !== "" ? a.workspaceId === selected : true)
           );
+
+          console.log(groupBy(filtered).filter((w) => w.week !== thisweek));
 
           setNotConfirmedWeek(groupBy(filtered).filter((w) => w.week !== thisweek));
         });
       });
     };
 
-    !isActive && isEmpty && selected !== "" && loadNotConfirmedTimes();
+    !isActive && isEmpty && loadNotConfirmedTimes();
 
     return () => (isActive = true);
   }, [selected, isEmpty]);
@@ -131,7 +139,7 @@ const Timer = () => {
             (a) =>
               !a.isActive &&
               a.userId === user.username &&
-              a.workspaceId === selected &&
+              (selected !== "" ? a.workspaceId === selected : true) &&
               (!a.isSent || a.isConfirmed)
           );
 
@@ -140,7 +148,7 @@ const Timer = () => {
       });
     };
 
-    !isActive && isEmpty && selected !== "" && loadHistory();
+    !isActive && isEmpty && loadHistory();
   }, [selected, isEmpty]);
 
   useEffect(() => {
@@ -185,121 +193,124 @@ const Timer = () => {
         },
       }}
     >
-      <Grid container spacing={2}>
-        <Grid item xs={12}>
-          <Recorder works={works} isEmpty={isEmpty} lang={lang.recorder} />
-        </Grid>
-
-        <Grid item xs={12}>
-          <Box>
-            <Selectwork works={works} sel={selected} setSel={setSelected} lang={lang.history} />
-          </Box>
-        </Grid>
-
-        {selected !== "" ? (
-          <>
-            <Grid item xs={12}>
-              <Box
-                sx={{
-                  backgroundColor: "track.yellow",
-
-                  [theme.breakpoints.up("sm")]: {
-                    padding: "10px",
-                  },
-                  [theme.breakpoints.down("sm")]: {
-                    padding: "10px 0px",
-                  },
-                }}
-              >
-                <Box
-                  sx={{
-                    backgroundColor: "background.paper",
-                    padding: "10px",
-                  }}
-                >
-                  <Typography variant="h6" color="text.secondary">
-                    {lang.history.title.this_week}
-                  </Typography>
-                </Box>
-
-                {grouped && grouped.length > 0 ? (
-                  <WeekRow grouped={grouped} lang={lang} isEmpty={isEmpty} works={works} />
-                ) : (
-                  <Grid item xs={12}>
-                    <Typography variant="h6" color="text.secondary">
-                      {lang.history.title.none_times}
-                    </Typography>
-                  </Grid>
-                )}
-              </Box>
-            </Grid>
-
-            <Grid item xs={12}>
-              <Box
-                sx={{
-                  backgroundColor: "track.red",
-                  [theme.breakpoints.up("sm")]: {
-                    padding: "10px",
-                  },
-                  [theme.breakpoints.down("sm")]: {
-                    padding: "20px 0px",
-                  },
-                }}
-              >
-                <Box
-                  sx={{
-                    backgroundColor: "background.paper",
-                    padding: "10px",
-                  }}
-                >
-                  <Typography variant="h6" color="text.secondary">
-                    {lang.history.title.not_confirmed}
-                  </Typography>
-                </Box>
-
-                {notConfirmedWeek && notConfirmedWeek.length > 0 && (
-                  <WeekRow grouped={notConfirmedWeek} lang={lang} isEmpty={isEmpty} works={works} />
-                )}
-              </Box>
-            </Grid>
-
-            <Grid item xs={12}>
-              <Box
-                sx={{
-                  backgroundColor: "track.green",
-                  [theme.breakpoints.up("sm")]: {
-                    padding: "10px",
-                  },
-                  [theme.breakpoints.down("sm")]: {
-                    padding: "10px 0px",
-                  },
-                }}
-              >
-                <Box
-                  sx={{
-                    backgroundColor: "background.paper",
-                    padding: "10px",
-                  }}
-                >
-                  <Typography variant="h6" color="text.secondary">
-                    {lang.history.title.history}
-                  </Typography>
-                </Box>
-
-                {confirmedWeeks && confirmedWeeks.length > 0 && (
-                  <HistoryRow grouped={confirmedWeeks} lang={lang} isEmpty={isEmpty} works={works} />
-                )}
-              </Box>
-            </Grid>
-          </>
-        ) : (
+      {confirmedWeeks && notConfirmedWeek && grouped ? (
+        <Grid container spacing={2}>
           <Grid item xs={12}>
-            <Typography variant="h6" color="text.secondary">
-              {lang.history.title.select_workplace}
-            </Typography>
+            <Recorder works={works} isEmpty={isEmpty} lang={lang.recorder} />
           </Grid>
-        )}
-      </Grid>
+
+          <Grid item xs={12}>
+            <Box>
+              <Selectwork works={works} sel={selected} setSel={setSelected} lang={lang.history} />
+            </Box>
+          </Grid>
+
+          <Grid item xs={12}>
+            <Box
+              sx={{
+                backgroundColor: "track.yellow",
+
+                [theme.breakpoints.up("sm")]: {
+                  padding: "10px",
+                },
+                [theme.breakpoints.down("sm")]: {
+                  padding: "10px 0px",
+                },
+              }}
+            >
+              <Box
+                sx={{
+                  backgroundColor: "background.paper",
+                  padding: "10px",
+                }}
+              >
+                <Typography variant="h6" color="text.secondary">
+                  {lang.history.title.this_week}
+                </Typography>
+              </Box>
+
+              {grouped.length > 0 ? (
+                <WeekRow grouped={grouped} lang={lang} isEmpty={isEmpty} works={works} />
+              ) : (
+                <Grid item xs={12}>
+                  <Typography variant="h6" color="text.secondary">
+                    {lang.history.title.none_times}
+                  </Typography>
+                </Grid>
+              )}
+            </Box>
+          </Grid>
+
+          <Grid item xs={12}>
+            <Box
+              sx={{
+                backgroundColor: "track.red",
+                [theme.breakpoints.up("sm")]: {
+                  padding: "10px",
+                },
+                [theme.breakpoints.down("sm")]: {
+                  padding: "20px 0px",
+                },
+              }}
+            >
+              <Box
+                sx={{
+                  backgroundColor: "background.paper",
+                  padding: "10px",
+                }}
+              >
+                <Typography variant="h6" color="text.secondary">
+                  {lang.history.title.not_confirmed}
+                </Typography>
+              </Box>
+
+              {notConfirmedWeek.length > 0 && (
+                <WeekRow grouped={notConfirmedWeek} lang={lang} isEmpty={isEmpty} works={works} />
+              )}
+            </Box>
+          </Grid>
+
+          <Grid item xs={12}>
+            <Box
+              sx={{
+                backgroundColor: "track.green",
+                [theme.breakpoints.up("sm")]: {
+                  padding: "10px",
+                },
+                [theme.breakpoints.down("sm")]: {
+                  padding: "10px 0px",
+                },
+              }}
+            >
+              <Box
+                sx={{
+                  backgroundColor: "background.paper",
+                  padding: "10px",
+                }}
+              >
+                <Typography variant="h6" color="text.secondary">
+                  {lang.history.title.history}
+                </Typography>
+              </Box>
+
+              {confirmedWeeks.length > 0 && (
+                <HistoryRow grouped={confirmedWeeks} lang={lang} isEmpty={isEmpty} works={works} />
+              )}
+            </Box>
+          </Grid>
+        </Grid>
+      ) : (
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            height: "80vh",
+          }}
+        >
+          <CircularProgress />
+        </Box>
+      )}
     </Container>
   );
 };

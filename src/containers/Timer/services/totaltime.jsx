@@ -1,42 +1,69 @@
-export const totaldaytime = (day) => {
+export const totaldaytime = (array) => {
   //CALCULATE TOTAL TIME FOR EACH DAY
+  var h = 0;
+  var min = 0;
+  var sec = 0;
 
-  let date = { h: 0, min: 0, sec: 0 };
-  for (let i = 0; i < day.arr.length; i++) {
-    const timeL = day.arr[i];
-    let start = new Date(timeL.timeInterval.start);
-    let end = new Date(timeL.timeInterval.end);
+  array.arr.forEach((day) => {
+    let start = new Date(day.timeInterval.start);
+    let end = new Date(day.timeInterval.end);
 
     let total = Date.parse(end) - Date.parse(start);
 
-    date = {
-      h: date.h + Math.floor(total / (1000 * 60 * 60)),
-      min: date.min + Math.floor((total / (1000 * 60)) % 60),
-      sec: date.sec + Math.floor((total / 1000) % 60),
-    };
-  }
+    h = h + Math.floor(total / 1000 / 60 / 60);
+    min = min + Math.floor((total / 1000 / 60) % 60);
+    sec = sec + Math.floor((total / 1000) % 60);
 
-  return date;
+    if (min >= 60) {
+      h++;
+      min = 0;
+    }
+    if (sec >= 60) {
+      min++;
+      sec = 0;
+    }
+  });
+
+  return {
+    h: h,
+    min: min,
+    sec: sec,
+  };
 };
 
 export const totalweektime = (array) => {
   //CALCULATE TOTAL TIME FOR EACH WEEK
-  let date = { h: 0, min: 0, sec: 0 };
-  for (let i = 0; i < array.arr.length; i++) {
-    let arr = array.arr[i];
-    for (let ii = 0; ii < arr.arr.length; ii++) {
-      const timeL = arr.arr[ii];
-      let start = new Date(timeL.timeInterval.start);
-      let end = new Date(timeL.timeInterval.end);
+  var h = 0;
+  var min = 0;
+  var sec = 0;
+
+  array.arr.forEach((week) => {
+    let day = week.arr;
+
+    day.forEach((day) => {
+      let start = new Date(day.timeInterval.start);
+      let end = new Date(day.timeInterval.end);
 
       let total = Date.parse(end) - Date.parse(start);
 
-      date = {
-        h: date.h + Math.floor(total / (1000 * 60 * 60)),
-        min: date.min + Math.floor((total / (1000 * 60)) % 60),
-        sec: date.sec + Math.floor((total / 1000) % 60),
-      };
-    }
-  }
-  return date;
+      h = h + Math.floor(total / (1000 * 60 * 60));
+      min = min + Math.floor((total / (1000 * 60)) % 60);
+      sec = sec + Math.floor((total / 1000) % 60);
+
+      if (sec > 59) {
+        min++;
+        sec = 0;
+      }
+      if (min > 59) {
+        h++;
+        min = 0;
+      }
+    });
+  });
+
+  return {
+    h: h,
+    min: min,
+    sec: sec,
+  };
 };
