@@ -76,23 +76,34 @@ export const Edetime = ({ eTime, setETime, lang = { end_time: "End time" } }) =>
   );
 };
 
-export const Totaltime = ({ sTime, eTime }) => {
+export const Totaltime = ({ sTime = null, eTime = null }) => {
   const [total, setTotal] = useState({
     hours: 0,
     minutes: 0,
     seconds: 0,
   });
   useEffect(() => {
-    const diff = eTime.getTime() - sTime.getTime();
-    if (diff > 0) {
-      const hours = Math.floor(diff / (1000 * 60 * 60));
-      const minutes = Math.floor((diff / (1000 * 60)) % 60);
-      const seconds = Math.floor((diff / 1000) % 60);
-      setTotal({ hours, minutes, seconds });
-    } else {
-      setTotal({ hours: 0, minutes: 0, seconds: 0 });
+    let isActive = false;
+    
+    const totalTime = () => {
+      const diff = eTime.getTime() - sTime.getTime();
+      if (diff > 0) {
+        const hours = Math.floor(diff / (1000 * 60 * 60));
+        const minutes = Math.floor((diff / (1000 * 60)) % 60);
+        const seconds = Math.floor((diff / 1000) % 60);
+        setTotal({ hours, minutes, seconds });
+      } else {
+        setTotal({ hours: 0, minutes: 0, seconds: 0 });
+      }
+    };
+
+    if (!isActive && sTime && eTime) {
+      totalTime();
     }
+
+    return () => (isActive = true);
   }, [sTime, eTime]);
+
   return (
     <Typography variant="h6">
       {total.hours}h {total.minutes}m {total.seconds}s
