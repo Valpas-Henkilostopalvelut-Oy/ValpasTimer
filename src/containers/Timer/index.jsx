@@ -125,7 +125,7 @@ const Timer = () => {
     const loadHistory = async () => {
       await Auth.currentAuthenticatedUser().then(async (user) => {
         await DataStore.query(TimeEntry).then((data) => {
-          const filtered = data.filter((a) => !a.isActive && a.userId === user.username && a.isConfirmed);
+          const filtered = data.filter((a) => !a.isActive && a.userId === user.username);
 
           setConfirmedWeeks(groupBy(filtered).filter((w) => w.week !== thisweek));
         });

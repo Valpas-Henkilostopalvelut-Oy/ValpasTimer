@@ -9,9 +9,18 @@ import { StyledEngineProvider } from "@mui/material/styles";
 import { Amplify, Hub, DataStore } from "aws-amplify";
 import awsconfig from "./aws-exports";
 import { createUser } from "./services/createUser.jsx";
+import * as Sentry from "@sentry/react";
+import { BrowserTracing } from "@sentry/tracing";
+
 
 const rootElement = document.getElementById("root");
 const root = createRoot(rootElement);
+
+Sentry.init({
+  dsn: "https://8422253e91064b129d0733b50216f4ac@o612632.ingest.sentry.io/4504247267950592",
+  integrations: [new BrowserTracing()],
+  tracesSampleRate: 1.0,
+});
 
 Amplify.configure(awsconfig);
 
