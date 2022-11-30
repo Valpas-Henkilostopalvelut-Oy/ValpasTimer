@@ -49,12 +49,21 @@ export const Editdate = ({ date = null, setDate, sTime, eTime, setSTime, setETim
   );
 };
 
-export const Editstime = ({ sTime, setSTime, lang = { start_time: "Start time" } }) => {
+export const Editstime = ({ date, sTime, setSTime, lang = { start_time: "Start time" } }) => {
   const [value, setValue] = useState(new Date(sTime));
 
   useEffect(() => {
     if (!isNaN(value)) {
-      setSTime(value);
+      setSTime(
+        new Date(
+          date.getFullYear(),
+          date.getMonth(),
+          date.getDate(),
+          value.getHours(),
+          value.getMinutes(),
+          value.getSeconds()
+        )
+      );
     }
   }, [value]);
 
@@ -72,12 +81,21 @@ export const Editstime = ({ sTime, setSTime, lang = { start_time: "Start time" }
   );
 };
 
-export const Edetime = ({ eTime, setETime, lang = { end_time: "End time" } }) => {
+export const Edetime = ({ date, eTime, setETime, lang = { end_time: "End time" } }) => {
   const [value, setValue] = useState(new Date(eTime));
 
   useEffect(() => {
     if (!isNaN(value)) {
-      setETime(value);
+      setETime(
+        new Date(
+          date.getFullYear(),
+          date.getMonth(),
+          date.getDate(),
+          value.getHours(),
+          value.getMinutes(),
+          value.getSeconds()
+        )
+      );
     }
   }, [value]);
 
@@ -105,6 +123,9 @@ export const Totaltime = ({ sTime = null, eTime = null }) => {
     let isActive = false;
 
     const totalTime = () => {
+      console.log("eTime", eTime);
+      console.log("sTime", sTime);
+
       const diff = eTime.getTime() - sTime.getTime();
       if (diff > 0) {
         const hours = Math.floor(diff / (1000 * 60 * 60));
