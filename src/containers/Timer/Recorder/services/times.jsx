@@ -53,7 +53,9 @@ export const Editstime = ({ date, sTime, setSTime, lang = { start_time: "Start t
   const [value, setValue] = useState(new Date(sTime));
 
   useEffect(() => {
-    if (!isNaN(value) && value) {
+    let isActive = false;
+
+    const updateSTime = () => {
       setSTime(
         new Date(
           date.getFullYear(),
@@ -64,7 +66,13 @@ export const Editstime = ({ date, sTime, setSTime, lang = { start_time: "Start t
           value.getSeconds()
         )
       );
+    };
+
+    if (!isNaN(value) && value && !isActive) {
+      updateSTime();
     }
+
+    return () => (isActive = true);
   }, [value]);
 
   return (
@@ -85,7 +93,9 @@ export const Edetime = ({ date, eTime, setETime, lang = { end_time: "End time" }
   const [value, setValue] = useState(new Date(eTime));
 
   useEffect(() => {
-    if (!isNaN(value) && value) {
+    let isActive = false;
+
+    const updateETime = () => {
       setETime(
         new Date(
           date.getFullYear(),
@@ -96,7 +106,12 @@ export const Edetime = ({ date, eTime, setETime, lang = { end_time: "End time" }
           value.getSeconds()
         )
       );
+    };
+    if (!isNaN(value) && value && !isActive) {
+      updateETime();
     }
+
+    return () => (isActive = true);
   }, [value]);
 
   return (
