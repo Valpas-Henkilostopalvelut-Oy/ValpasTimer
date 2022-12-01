@@ -16,11 +16,11 @@ export const totaldaytime = (array) => {
 
     if (min >= 60) {
       h++;
-      min = 0;
+      min = min % 60;
     }
     if (sec >= 60) {
       min++;
-      sec = 0;
+      sec = sec % 60;
     }
   });
 
@@ -52,11 +52,11 @@ export const totalweektime = (array) => {
 
       if (sec > 59) {
         min++;
-        sec = 0;
+        sec = sec % 60;
       }
       if (min > 59) {
         h++;
-        min = 0;
+        min = min % 60;
       }
     });
   });

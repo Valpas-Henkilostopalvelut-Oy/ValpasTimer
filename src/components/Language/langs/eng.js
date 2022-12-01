@@ -157,6 +157,8 @@ export const eng = {
           history: "History",
           none_times: "This week you have not tracked any time",
           not_confirmed: "Not confirmed times",
+          deleteTitle: "Are you sure you want to delete this entry?",
+          deleteAlert: "This entry will be deleted permanently",
         },
 
         buttons: {

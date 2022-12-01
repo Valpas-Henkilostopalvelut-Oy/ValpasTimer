@@ -13,7 +13,7 @@ export const AgreementPage = () => {
       .then((agreements) => {
         setAgreements(agreements.sort((a, b) => a.name.localeCompare(b.title)));
       })
-      .catch((error) => console.log(error));
+      .catch((error) => console.warn(error));
   };
 
   useEffect(() => {

@@ -25,8 +25,7 @@ const ModalDelete = ({ open, setOpen }) => {
 
   const handleDelete = async () => {
     await Auth.deleteUser()
-      .then(async (data) => {
-        console.log(data);
+      .then(async () => {
         setOpen(false);
         await DataStore.stop();
         await Auth.signOut();
@@ -90,11 +89,9 @@ const iban = (iban) => {
     .split("")
     .filter((i) => i !== " ");
   if (ibanNumber.length === 18) {
-    console.log(
-      `${ibanNumber.slice(0, 4).join("")} ${ibanNumber.slice(4, 8).join("")} ${ibanNumber
-        .slice(8, 12)
-        .join("")} ${ibanNumber.slice(12, 16).join("")} ${ibanNumber.slice(16, 18).join("")}`
-    );
+    return `${ibanNumber.slice(0, 4).join("")} ${ibanNumber.slice(4, 8).join("")} ${ibanNumber
+      .slice(8, 12)
+      .join("")} ${ibanNumber.slice(12, 16).join("")} ${ibanNumber.slice(16, 18).join("")}`;
   }
 };
 
@@ -131,7 +128,6 @@ const Settings = () => {
 
     const loadSettings = async () => {
       let loggedUser = await Auth.currentAuthenticatedUser();
-      console.log();
       setIniValues({
         lastName: loggedUser.attributes.family_name,
         firstName: loggedUser.attributes.name,

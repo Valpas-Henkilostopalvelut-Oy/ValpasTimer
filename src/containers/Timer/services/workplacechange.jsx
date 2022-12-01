@@ -39,12 +39,12 @@ const SelectWork = ({
 }) => {
   const [workplace, setWorkplace] = useState(work);
   const [open, setOpen] = useState(false);
-  const theme = useTheme();
   const [nane, setName] = useState("");
   const handleChange = (event) => {
     setWorkplace(event.target.value);
     updateWorkplace({ date, item: workplace });
   };
+  var isSent = date.isSent;
 
   useEffect(() => {
     let isActive = true;
@@ -64,21 +64,18 @@ const SelectWork = ({
 
   return (
     workplaces !== null && (
-      <Box>
-        <Typography variant="p" onClick={() => setOpen(!open)}>
+      <Box
+        sx={{
+          cursor: !isSent && "pointer",
+        }}
+      >
+        <Typography variant="p" onClick={() => setOpen(true && !isSent)}>
           {nane}
         </Typography>
-        <Dialog open={open} onClose={() => setOpen(!open)} maxWidth={"xs"} fullWidth={true}>
+        <Dialog open={open} onClose={() => setOpen(false)} maxWidth={"xs"} fullWidth>
           <DialogTitle>{lang.workplace}</DialogTitle>
           <DialogContent>
-            <FormControl
-              fullWidth
-              sx={{
-                [theme.breakpoints.up("sm")]: {
-                  maxWidth: "280px",
-                },
-              }}
-            >
+            <FormControl fullWidth margin="normal">
               <InputLabel id="workplace-select">{lang.workplace}</InputLabel>
               <Select
                 labelId="workplace-select"
@@ -86,6 +83,7 @@ const SelectWork = ({
                 value={workplace}
                 label={lang.workplace}
                 onChange={handleChange}
+                margin="normal"
               >
                 {workplaces.map((item, i) => (
                   <MenuItem key={i} value={item.id}>

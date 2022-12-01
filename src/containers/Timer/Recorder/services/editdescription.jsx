@@ -24,7 +24,6 @@ export const EditDescriptionTimer = ({
   lang = { description: "Description" },
 }) => {
   const handleEdit = async (e) => {
-    console.log(isStarted);
     isStarted &&
       (await DataStore.save(
         TimeEntry.copyOf(data, (updated) => {

@@ -31,24 +31,23 @@ const EditDescription = ({
   },
 }) => {
   const [desc, setDesc] = useState(date.description);
-  const [click, setClick] = useState(false);
+  const [open, setOpen] = useState(false);
   const theme = useTheme();
+  const isSent = date.isSent;
 
-  return date.isSent ? (
-    <Typography variant="p">{desc !== "" ? desc : lang.none_description}</Typography>
-  ) : (
+  return (
     <Box
       sx={{
-        cursor: "pointer",
+        cursor: !isSent && "pointer",
         [theme.breakpoints.up("sm")]: {
           maxWidth: "280px",
         },
       }}
     >
-      <Typography variant="p" onClick={() => setClick(!click)}>
+      <Typography variant="p" onClick={() => setOpen(true && !isSent)}>
         {desc !== "" ? desc : lang.none_description}
       </Typography>
-      <Dialog open={click} onClose={() => setClick(!click)} maxWidth={"xs"} fullWidth={true}>
+      <Dialog open={open && !isSent} onClose={() => setOpen(false)} maxWidth={"xs"} fullWidth={true}>
         <DialogTitle>{lang.add_description}</DialogTitle>
         <DialogContent>
           <TextField
@@ -59,21 +58,17 @@ const EditDescription = ({
             rows={3}
             value={desc}
             onChange={(e) => setDesc(e.target.value)}
-            onBlur={(e) => {
-              updateDescription(date, e.target.value);
-              setClick(!click);
-            }}
             placeholder={lang.add_description}
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setClick(!click)} color="primary">
+          <Button onClick={() => setOpen(false)} color="primary">
             Cancel
           </Button>
           <Button
             onClick={() => {
               updateDescription(date, desc);
-              setClick(!click);
+              setOpen(false);
             }}
             color="primary"
           >

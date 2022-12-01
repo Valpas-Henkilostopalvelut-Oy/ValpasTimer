@@ -117,8 +117,6 @@ const Timer = () => {
               (selected !== "" ? a.workspaceId === selected : true)
           );
 
-          console.log(groupBy(filtered).filter((w) => w.week !== thisweek));
-
           setNotConfirmedWeek(groupBy(filtered).filter((w) => w.week !== thisweek));
         });
       });

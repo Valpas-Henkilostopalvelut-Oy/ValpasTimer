@@ -30,16 +30,16 @@ export const Manual = ({ description, sel, setDescription, setSel, works, lang }
         />
       </Grid>
       <Grid item xs={4} md={2.4}>
-        <Editstime sTime={sTime} setSTime={setSTime} lang={lang} date={date}/>
+        <Editstime sTime={sTime} setSTime={setSTime} lang={lang} date={date} />
       </Grid>
       <Grid item xs={4} md={2.4}>
-        <Edetime eTime={eTime} setETime={setETime} lang={lang} date={date}/>
+        <Edetime eTime={eTime} setETime={setETime} lang={lang} date={date} />
       </Grid>
       <Grid item xs={6} md={2.4}>
         <Totaltime sTime={sTime} eTime={eTime} />
       </Grid>
       <Grid item xs={6} md={2.4}>
-        <Createtimeentry description={description} sel={sel} sTime={sTime} eTime={eTime} lang={lang}/>
+        <Createtimeentry description={description} sel={sel} sTime={sTime} eTime={eTime} lang={lang} />
       </Grid>
     </Grid>
   );

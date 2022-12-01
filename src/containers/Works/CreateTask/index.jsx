@@ -313,8 +313,6 @@ const CreateTask = (props) => {
         onSubmit={async (values, { setSubmitting }) => {
           setSubmitting(true);
           try {
-            console.log(user);
-
             await DataStore.save(
               new Tasks({
                 title: values.title,
@@ -336,7 +334,7 @@ const CreateTask = (props) => {
             handleClose();
           } catch (e) {
             setSubmitting(false);
-            console.log(e);
+            console.warn(e);
           }
         }}
       >

@@ -118,7 +118,11 @@ export const TotalTime = ({ date }) => {
   const [open, setOpen] = React.useState(false);
 
   return (
-    <Box>
+    <Box
+      sx={{
+        cursor: !isSent ? "pointer" : "default",
+      }}
+    >
       <Typography variant="p" onClick={() => setOpen(!open)}>
         {totalTime}
       </Typography>
@@ -126,7 +130,9 @@ export const TotalTime = ({ date }) => {
         <DialogTitle>Edit Total Time</DialogTitle>
         <DialogContent>
           <TextField
+            margin="normal"
             fullWidth
+            label="Total Time"
             value={totalTime}
             onChange={(e) => {
               setTotalTime(e.target.value);

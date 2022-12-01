@@ -21,7 +21,6 @@ const Reports = () => {
     Hub.listen("datastore", async (hubData) => {
       const { event, data } = hubData.payload;
       if (event === "outboxStatus") {
-        console.log(data);
         setIsEmpty(data.isEmpty);
       }
     });
@@ -56,7 +55,6 @@ const Reports = () => {
     let isActive = false;
 
     const loadUsers = async () => {
-      console.log(selWork);
       setSelUser("");
       setWorkers(null);
 

@@ -1,5 +1,5 @@
-import React from "react";
-import { Button } from "@mui/material";
+import React, { useState } from "react";
+import { Button, Box, Dialog, DialogActions, DialogContent, DialogTitle, Typography } from "@mui/material";
 import { DataStore } from "aws-amplify";
 import { TimeEntry } from "../../../models";
 
@@ -16,14 +16,44 @@ const deleteAll = async (date) => {
 export const DeleteAll = ({
   date,
   lang = {
-    buttons: { delete: "Delete" },
+    title: {
+      deleteTitle: "Are you sure you want to delete this entry?",
+      deleteAlert: "This entry will be deleted permanently",
+    },
+    buttons: { delete: "Delete", cancel: "Cancel" },
   },
   isEmpty = false,
 }) => {
+  const [open, setOpen] = useState(false);
+  var isSent = date.isSent;
   return (
-    <Button variant="text" color="error" onClick={() => deleteAll(date)} disabled={!isEmpty}>
-      {lang.buttons.delete}
-    </Button>
+    <Box>
+      <Button variant="text" color="error" onClick={() => setOpen(true)} disabled={!isEmpty}>
+        {lang.buttons.delete}
+      </Button>
+      <Dialog open={open && !isSent} onClose={() => setOpen(false)}>
+        <DialogTitle>
+          <Typography variant="h6">{lang.title.deleteTitle}</Typography>
+        </DialogTitle>
+        <DialogContent>
+          <Typography variant="body2" color="textSecondary">
+            {lang.title.deleteAlert}
+          </Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setOpen(false)}>{lang.buttons.cancel}</Button>
+          <Button
+            onClick={() => {
+              deleteAll(date);
+              setOpen(false);
+            }}
+            color="error"
+          >
+            {lang.buttons.delete}
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </Box>
   );
 };
 

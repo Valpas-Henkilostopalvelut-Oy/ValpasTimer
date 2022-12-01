@@ -35,7 +35,7 @@ const updateSTime = async (data, time) => {
 };
 
 export const EditSTime = ({ date }) => {
-  return <TextToTime date={date.timeInterval.start} onChange={(t) => updateSTime(date, t)} disabled={date.isSent} />;
+  return <TextToTime date={date.timeInterval.start} onChange={(t) => updateSTime(date, t)} isSent={date.isSent} />;
 };
 
 const updateETime = async (data, time) => {
@@ -48,7 +48,7 @@ const updateETime = async (data, time) => {
 };
 
 export const EditETime = ({ date }) => {
-  return <TextToTime date={date.timeInterval.end} onChange={(t) => updateETime(date, t)} disabled={date.isSent} />;
+  return <TextToTime date={date.timeInterval.end} onChange={(t) => updateETime(date, t)} isSent={date.isSent} />;
 };
 
 const deleteTime = async (data, close) => {
@@ -85,12 +85,7 @@ const dublicateTime = async (data) => {
       billable: false,
       breaks: [],
     })
-  )
-    .then((l) => {
-      //close();
-      console.log(l);
-    })
-    .catch((e) => console.warn(e));
+  ).catch((e) => console.warn(e));
 };
 
 const cancelsend = async (data, close) => {

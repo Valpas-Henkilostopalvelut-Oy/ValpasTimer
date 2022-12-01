@@ -13,17 +13,19 @@ import { Tabledescription } from "./editdescription.jsx";
 
 export const Details = ({ date, workplaces = null, lang, isEmpty }) => {
   const [open, setOpen] = React.useState(false);
-  const handleOpen = () => {
-    setOpen(!open);
-  };
 
   return (
     <TableContainer component={Paper}>
-      <Table>
+      <Table aria-label="collapsible table">
         <TableBody>
-          <TableRow>
+          <TableRow
+            sx={{
+              cursor: "pointer",
+            }}
+            onClick={() => setOpen(!open)}
+          >
             <TableCell>
-              <IconButton aria-label="expand now" size="small" onClick={handleOpen}>
+              <IconButton aria-label="expand row" size="small">
                 {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
               </IconButton>
             </TableCell>

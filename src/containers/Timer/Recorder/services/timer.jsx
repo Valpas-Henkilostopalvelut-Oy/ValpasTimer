@@ -47,8 +47,6 @@ export const Timer = ({ description = "", sel = "", setDescription, setSel, work
                   minutes: minutes,
                   hours: hours,
                 });
-
-                console.log(hours + ":" + minutes + ":" + seconds);
               } else {
                 await DataStore.save(
                   UserCredentials.copyOf(userCred, (updated) => {

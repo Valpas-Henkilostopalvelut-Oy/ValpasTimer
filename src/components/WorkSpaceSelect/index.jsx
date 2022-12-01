@@ -22,7 +22,6 @@ const loadLastId = async ({ arr, setSel }) => {
       let creditails = u.attributes["custom:UserCreditails"];
       await DataStore.query(UserCredentials, creditails).then((res) => {
         let c = arr.filter((item) => item.id === res.defaultWorkspace).length !== 0;
-        console.log(res.defaultWorkspace);
         if (c) {
           setSel(res.defaultWorkspace);
         } else {

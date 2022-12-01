@@ -193,7 +193,6 @@ const Workers = () => {
       };
 
       const list = await API.get(apiName, path, myInit);
-      console.log(list);
       setUsers(list.Users);
     } catch (error) {
       console.warn(error);

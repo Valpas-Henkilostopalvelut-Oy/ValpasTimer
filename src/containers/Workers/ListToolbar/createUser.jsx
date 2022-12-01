@@ -21,7 +21,6 @@ const config = {
 };
 
 const createUser = async (values) => {
-  console.log(config);
   var cognitoidentityserviceprovider = new AWS.CognitoIdentityServiceProvider(config);
   var data = {
     UserPoolId: "eu-west-1_tYXLeogj0",

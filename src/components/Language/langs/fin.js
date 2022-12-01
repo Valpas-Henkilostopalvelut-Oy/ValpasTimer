@@ -157,6 +157,8 @@ export const fin = {
           history: "Historia",
           none_times: "Ei aikoja",
           not_confirmed: "Ei vahvistettu",
+          deleteTitle: "Oletko varma että haluat poistaa tämän ajan?",
+          deleteAlert: "Tätä toimintoa ei voi perua",
         },
         buttons: {
           report: "Raportoi",
@@ -166,6 +168,7 @@ export const fin = {
           send: "Lähetä",
           cancelsend: "Peruuta lähetys",
           reportweek: "Raportoi viikko",
+          cancel: "Peruuta",
         },
       },
     },

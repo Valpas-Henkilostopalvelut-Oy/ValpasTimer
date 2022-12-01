@@ -29,8 +29,6 @@ const ListToolbar = ({ numSelected, selected, setSelected, reload }) => {
           },
         };
 
-        console.log(selected[i].Username);
-
         await API.del(apiName, path, myInit).catch((error) => {
           console.warn(error);
         });

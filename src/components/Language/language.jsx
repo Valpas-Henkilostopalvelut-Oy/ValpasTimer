@@ -20,8 +20,6 @@ export const Language = ({ lang, setLang }) => {
       l.push(eng);
       l.push(fin);
 
-      console.log(langValue);
-
       const lang = localStorage.getItem("lang");
 
       if (lang !== null) {

@@ -7,7 +7,6 @@ export const timeMaker = (event, time) => {
   }
 
   const arr = val.split("").filter((t) => t !== ":");
-  console.log(arr);
 
   if (arr.length === 1) {
     let h = String(arr[0]);
@@ -46,7 +45,7 @@ export const timeMaker = (event, time) => {
   }
 };
 
-export const TextToTime = ({ date = new Date(), onChange, disabled = false }) => {
+export const TextToTime = ({ date = new Date(), onChange, isSent = true }) => {
   const [time, setTime] = useState(
     `${String("0" + new Date(date).getHours()).slice(-2)}:${String("0" + new Date(date).getMinutes()).slice(-2)}`
   );
@@ -57,17 +56,22 @@ export const TextToTime = ({ date = new Date(), onChange, disabled = false }) =>
     setOpen(false);
   };
 
-  return !disabled ? (
-    <Box>
+  return (
+    <Box
+      sx={{
+        cursor: !isSent ? "pointer" : "default",
+      }}
+    >
       <Typography onClick={() => setOpen(true)} variant="p">
         {time}
       </Typography>
-      <Dialog open={open} onClose={() => setOpen(false)} maxWidth="xs" fullWidth={true}>
+      <Dialog open={open && !isSent} onClose={() => setOpen(false)} maxWidth="xs" fullWidth={true}>
         <DialogTitle>Time</DialogTitle>
         <DialogContent>
           <TextField
             fullWidth
-            variant="standard"
+            label="Time"
+            margin="normal"
             value={time}
             onChange={(e) => setTime(e.target.value)}
             onBlur={(e) => {
@@ -85,7 +89,5 @@ export const TextToTime = ({ date = new Date(), onChange, disabled = false }) =>
         </DialogActions>
       </Dialog>
     </Box>
-  ) : (
-    <Typography variant="p">{time}</Typography>
   );
 };

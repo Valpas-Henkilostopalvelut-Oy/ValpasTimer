@@ -132,7 +132,7 @@ const adduser = async ({
             .then(() => {
               handleClose();
             })
-            .catch((err) => console.log(err));
+            .catch((err) => console.warn(err));
         } else {
           setWarnText(lang.user_already_exists);
         }
@@ -140,5 +140,5 @@ const adduser = async ({
         setWarnText(lang.user_not_found);
       }
     })
-    .catch((err) => console.log(err));
+    .catch((err) => console.warn(err));
 };

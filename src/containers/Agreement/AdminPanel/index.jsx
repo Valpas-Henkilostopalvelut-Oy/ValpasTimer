@@ -369,7 +369,6 @@ const SelectWorkspaces = ({ id, agreement }) => {
   const [selectedWorkspaces, setSelectedWorkspaces] = useState(agreement.workspaceId);
   const [avalibleWorkspaces, setAvalibleWorkspaces] = useState([]);
 
-  console.log();
 
   useEffect(() => {
     let isActive = false;
