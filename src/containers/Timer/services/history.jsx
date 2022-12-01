@@ -69,7 +69,7 @@ const CollapseRow = ({ week, lang, works, isEmpty }) => {
 
       <Grid item xs={12}>
         <Collapse in={open} timeout="auto" unmountOnExit>
-          <Box mb="20px" mr="5px" ml="5px">
+          <Box mb="20px">
             <Row week={week} lang={lang} isEmpty={isEmpty} works={works} />
           </Box>
         </Collapse>

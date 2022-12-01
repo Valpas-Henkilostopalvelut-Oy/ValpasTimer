@@ -118,16 +118,18 @@ export const EditDescriptionMD = ({ date, lang }) => {
   );
 };
 
+// eslint-disable-next-line no-unused-vars
 export const Tabledescription = ({ date, lang = { none_description: "No description" } }) => {
-  let arr = date.arr.filter((item) => item.description !== "");
-  let description = arr.map((item) => item.description).join(", ");
+  let workId = date.arr.map((item) => item.workspaceId);
+  console.log(workId);
+
   return (
     <Box
       sx={{
         maxWidth: "180px",
       }}
     >
-      <Typography variant="p">{description !== "" ? description : lang.none_description}</Typography>
+      <Typography variant="p">desc</Typography>
     </Box>
   );
 };

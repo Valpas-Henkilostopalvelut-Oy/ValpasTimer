@@ -1,11 +1,58 @@
 import React from "react";
 import { DataStore } from "aws-amplify";
 import { TimeEntry } from "../../../models";
-import { TextField, Typography, Dialog, DialogActions, DialogContent, DialogTitle, Button, Box } from "@mui/material";
+import {
+  TableCell,
+  TableRow,
+  TextField,
+  Typography,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Button,
+  Box,
+  useTheme,
+} from "@mui/material";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import ruLocale from "date-fns/locale/ru";
+
+export const EditDateMD = ({ data, lang }) => {
+  const theme = useTheme();
+  return (
+    <Box
+      align="right"
+      component={TableCell}
+      sx={{
+        [theme.breakpoints.down("sm")]: {
+          display: "none",
+        },
+      }}
+    >
+      <EditDate data={data} lang={lang} />
+    </Box>
+  );
+};
+
+export const EditDateSM = ({ data, lang }) => {
+  const theme = useTheme();
+  return (
+    <Box
+      component={TableRow}
+      sx={{
+        [theme.breakpoints.up("sm")]: {
+          display: "none",
+        },
+      }}
+    >
+      <TableCell colSpan={4}>
+        <EditDate data={data} lang={lang} />
+      </TableCell>
+    </Box>
+  );
+};
 
 const updateDate = async ({ value, data }) => {
   let year = new Date(value).getFullYear();
@@ -23,12 +70,12 @@ const updateDate = async ({ value, data }) => {
   ).catch((e) => console.warn(e));
 };
 
-export const EditDate = ({ date, lang = { date: "Date" } }) => {
-  const [value, setValue] = React.useState(new Date(date.timeInterval.start));
+const EditDate = ({ data, lang = { date: "Date" } }) => {
+  const [value, setValue] = React.useState(new Date(data.timeInterval.start));
   const [open, setOpen] = React.useState(false);
-  const isSent = date.isSent;
+  const isSent = data.isSent;
   const handleClose = () => {
-    updateDate({ value: value, data: date });
+    updateDate({ value: value, data: data });
     setOpen(false);
   };
 
@@ -39,8 +86,8 @@ export const EditDate = ({ date, lang = { date: "Date" } }) => {
       }}
     >
       <Typography variant="p" onClick={() => setOpen(true)}>
-        {new Date(date.timeInterval.start).getDate()}.{new Date(date.timeInterval.start).getMonth() + 1}.
-        {new Date(date.timeInterval.start).getFullYear()}
+        {new Date(data.timeInterval.start).getDate()}.{new Date(data.timeInterval.start).getMonth() + 1}.
+        {new Date(data.timeInterval.start).getFullYear()}
       </Typography>
       <Dialog open={open && !isSent} onClose={() => setOpen(false)} maxWidth={"xs"} fullWidth={true}>
         <DialogTitle>{lang.date}</DialogTitle>

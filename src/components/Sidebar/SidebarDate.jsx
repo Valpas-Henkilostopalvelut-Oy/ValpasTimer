@@ -135,7 +135,8 @@ export const SidebarList = ({
                 </ListItemButton>
               </LinkContainer>
             )
-          : component.type === "text" && (
+          : component.type === "text" &&
+            (component.access.includes(groups[0]) || component.default) && (
               <ListItem key={component.title}>
                 <ListItemText primary={component.title} />
               </ListItem>

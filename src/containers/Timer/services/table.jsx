@@ -1,6 +1,6 @@
 import React, { Fragment } from "react";
 
-import { Table, TableContainer, TableBody, TableCell, TableRow, Paper, IconButton, Collapse, Box } from "@mui/material";
+import { Table, TableContainer, TableBody, TableCell, TableRow, IconButton, Collapse, Box } from "@mui/material";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import { STime, ETime, EditSTime, EditETime, MoreButton } from "./times.jsx";
@@ -8,15 +8,15 @@ import { TotalTime } from "./edittotaltime.jsx";
 import { StatusMD, StatusSM } from "./isSent.jsx";
 import { EditDescriptionSM, EditDescriptionMD } from "./editdescription.jsx";
 import { ChangeWorkplaceSM, ChangeWorkplaceMD } from "./workplacechange.jsx";
-import { EditDate } from "./editdate.jsx";
+import { EditDateSM, EditDateMD } from "./editdate.jsx";
 import { Tabledescription } from "./editdescription.jsx";
 
 export const Details = ({ date, workplaces = null, lang, isEmpty }) => {
   const [open, setOpen] = React.useState(false);
 
   return (
-    <TableContainer component={Paper}>
-      <Table aria-label="collapsible table">
+    <TableContainer>
+      <Table aria-label="collapsible table" size="small">
         <TableBody>
           <TableRow
             sx={{
@@ -55,6 +55,7 @@ export const Details = ({ date, workplaces = null, lang, isEmpty }) => {
                           <Fragment key={row.id}>
                             <EditDescriptionSM date={row} lang={lang} />
                             <ChangeWorkplaceSM date={row} workplaces={workplaces} work={row.workspaceId} lang={lang} />
+                            <EditDateSM data={row} lang={lang} />
 
                             <TableRow>
                               <EditDescriptionMD date={row} lang={lang} />
@@ -66,17 +67,15 @@ export const Details = ({ date, workplaces = null, lang, isEmpty }) => {
                                 lang={lang}
                               />
 
-                              <TableCell>
-                                <EditDate date={row} lang={lang} />
-                              </TableCell>
+                              <EditDateMD data={row} lang={lang} />
 
-                              <TableCell>
+                              <TableCell align="left">
                                 <Box sx={{ display: "flex", justifyContent: "space-around" }}>
                                   <EditSTime date={row} /> {"-"} <EditETime date={row} />
                                 </Box>
                               </TableCell>
 
-                              <TableCell>
+                              <TableCell align="center">
                                 <TotalTime date={row} />
                               </TableCell>
 

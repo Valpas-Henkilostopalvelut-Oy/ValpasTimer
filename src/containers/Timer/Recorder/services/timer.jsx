@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Auth, DataStore } from "aws-amplify";
 import { TimeEntry, UserCredentials } from "../../../../models";
-
 import { Typography, Grid } from "@mui/material";
 import { EditStartTime } from "./editstartedtime";
 import { EditDescriptionTimer } from "./editdescription";
@@ -108,7 +107,7 @@ export const Timer = ({ description = "", sel = "", setDescription, setSel, work
 
   return (
     <Grid container spacing={2} alignItems="center">
-      <Grid item xs={6} md={4}>
+      <Grid item xs={12} md={4}>
         <EditDescriptionTimer
           description={description}
           setDescription={setDescription}
@@ -117,7 +116,7 @@ export const Timer = ({ description = "", sel = "", setDescription, setSel, work
           lang={lang}
         />
       </Grid>
-      <Grid item xs={6} md={4}>
+      <Grid item xs={12} md={4}>
         <EditWorkplaceTimer
           sel={sel}
           setSel={setSel}

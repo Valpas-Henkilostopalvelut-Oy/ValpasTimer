@@ -4,7 +4,7 @@ import { TabContext, TabList, TabPanel } from "@mui/lab";
 import { Timer } from "./services/timer.jsx";
 import { Manual } from "./services/manual.jsx";
 
-export const Recorder = ({ works = null, lang }) => {
+export const Recorder = ({ works = null, lang, isEmpty = false }) => {
   const [description, setDescription] = useState("");
   const [value, setValue] = useState("1");
   const [sel, setSel] = useState("");
@@ -23,6 +23,7 @@ export const Recorder = ({ works = null, lang }) => {
         </TabList>
         <TabPanel value="1" sx={{ paddingLeft: 0, paddingRight: 0 }}>
           <Timer
+            isEmpty={isEmpty}
             description={description}
             setDescription={setDescription}
             sel={sel}
@@ -35,6 +36,7 @@ export const Recorder = ({ works = null, lang }) => {
         </TabPanel>
         <TabPanel value="2" sx={{ paddingLeft: 0, paddingRight: 0 }}>
           <Manual
+          isEmpty={isEmpty}
             description={description}
             setDescription={setDescription}
             sel={sel}

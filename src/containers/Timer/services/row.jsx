@@ -58,23 +58,28 @@ export const Row = ({ week, lang, works, isEmpty }) => {
               border: "1px solid #e0e0e0",
               borderRadius: "1px",
               backgroundColor: "background.paper",
-              marginBottom: "15px",
               marginTop: "15px",
               padding: 1,
             }}
           >
-            <Typography variant="h6" color="text.secondary">
-              {date.date}
-            </Typography>
-            <Typography variant="p" color="text.secondary">
-              {lang.history.total_time} {totaldaytime(date).h > 9 ? totaldaytime(date).h : "0" + totaldaytime(date).h}:
-              {totaldaytime(date).min > 9 ? totaldaytime(date).min : "0" + totaldaytime(date).min}
-            </Typography>
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                m: 1.5,
+              }}
+            >
+              <Typography variant="h6" color="text.secondary">
+                {date.date}
+              </Typography>
+              <Typography variant="p" color="text.secondary">
+                {lang.history.total_time} {totaldaytime(date).h > 9 ? totaldaytime(date).h : "0" + totaldaytime(date).h}
+                :{totaldaytime(date).min > 9 ? totaldaytime(date).min : "0" + totaldaytime(date).min}
+              </Typography>
+            </Box>
+            <Details date={date} workplaces={works} lang={lang.history} isEmpty={isEmpty} />
           </Box>
-        </Grid>
-
-        <Grid item xs={12}>
-          <Details date={date} workplaces={works} lang={lang.history} isEmpty={isEmpty} />
         </Grid>
       </Grid>
     ))
