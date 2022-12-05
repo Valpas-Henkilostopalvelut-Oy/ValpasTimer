@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Box, TextField, Typography, Dialog, DialogActions, DialogContent, DialogTitle, Button } from "@mui/material";
+import { PropTypes } from "prop-types";
 
 export const timeMaker = (event, time) => {
   if (event !== null) {
@@ -46,9 +47,7 @@ export const timeMaker = (event, time) => {
 };
 
 export const TextToTime = ({ date = new Date(), onChange, isSent = true }) => {
-  const [time, setTime] = useState(
-    `${String("0" + new Date(date).getHours()).slice(-2)}:${String("0" + new Date(date).getMinutes()).slice(-2)}`
-  );
+  const [time, setTime] = useState(`${String("0" + new Date(date).getHours()).slice(-2)}:${String("0" + new Date(date).getMinutes()).slice(-2)}`);
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState({ h: 0, m: 0 });
   const handleSave = () => {
@@ -90,4 +89,10 @@ export const TextToTime = ({ date = new Date(), onChange, isSent = true }) => {
       </Dialog>
     </Box>
   );
+};
+
+TextToTime.propTypes = {
+  date: PropTypes.instanceOf(Date),
+  onChange: PropTypes.func.isRequired,
+  isSent: PropTypes.bool,
 };

@@ -3,6 +3,7 @@ import { TableCell, TableRow, useTheme, IconButton, Typography } from "@mui/mate
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import { Settings } from "./settings.jsx";
+import { PropTypes } from "prop-types";
 
 export const TopbarMD = ({ data, open = false, handleOpen, lang }) => {
   const theme = useTheme();
@@ -28,4 +29,11 @@ export const TopbarMD = ({ data, open = false, handleOpen, lang }) => {
       </TableCell>
     </TableRow>
   );
+};
+
+TopbarMD.propTypes = {
+  data: PropTypes.object,
+  open: PropTypes.bool,
+  handleOpen: PropTypes.func,
+  lang: PropTypes.object,
 };

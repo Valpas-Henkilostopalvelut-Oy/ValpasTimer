@@ -1,15 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
-  Container,
-  CssBaseline,
-  Typography,
-  Box,
-  TextField,
-  Grid,
-  CircularProgress,
-  Button,
-  Modal,
-} from "@mui/material";
+import { Container, CssBaseline, Typography, Box, TextField, Grid, CircularProgress, Button, Modal } from "@mui/material";
 import { Auth, DataStore } from "aws-amplify";
 import { useAppContext } from "../../services/contextLib.jsx";
 import { Formik } from "formik";
@@ -18,6 +8,7 @@ import LoaderButton from "../../components/LoaderButton/index.jsx";
 import { UserCredentials } from "../../models";
 import ChangePassword from "./ChangePassword/index.jsx";
 import { useNavigate } from "react-router-dom";
+import { PropTypes } from "prop-types";
 
 const ModalDelete = ({ open, setOpen }) => {
   const { userHasAuthenticated, setGroups } = useAppContext();
@@ -89,9 +80,7 @@ const iban = (iban) => {
     .split("")
     .filter((i) => i !== " ");
   if (ibanNumber.length === 18) {
-    return `${ibanNumber.slice(0, 4).join("")} ${ibanNumber.slice(4, 8).join("")} ${ibanNumber
-      .slice(8, 12)
-      .join("")} ${ibanNumber.slice(12, 16).join("")} ${ibanNumber.slice(16, 18).join("")}`;
+    return `${ibanNumber.slice(0, 4).join("")} ${ibanNumber.slice(4, 8).join("")} ${ibanNumber.slice(8, 12).join("")} ${ibanNumber.slice(12, 16).join("")} ${ibanNumber.slice(16, 18).join("")}`;
   }
 };
 
@@ -100,23 +89,11 @@ const Settings = () => {
   const phoneRegExp = /^(\+?\d{0,4})?\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{4}\)?)?$/;
 
   const valSchema = yup.object().shape({
-    lastName: yup
-      .string()
-      .min(3, "*Last name must have at least 2 characters")
-      .max(100, "*Last names can't be longer than 100 characters")
-      .required("*Last name is required"),
+    lastName: yup.string().min(3, "*Last name must have at least 2 characters").max(100, "*Last names can't be longer than 100 characters").required("*Last name is required"),
 
-    firstName: yup
-      .string()
-      .min(3, "*First name must have at least 2 characters")
-      .max(100, "*Frist names can't be longer than 100 characters")
-      .required("*First names is required"),
+    firstName: yup.string().min(3, "*First name must have at least 2 characters").max(100, "*Frist names can't be longer than 100 characters").required("*First names is required"),
 
-    email: yup
-      .string()
-      .email("*Must be a valid email address")
-      .max(100, "*Email must be less than 100 characters")
-      .required("*Email is required"),
+    email: yup.string().email("*Must be a valid email address").max(100, "*Email must be less than 100 characters").required("*Email is required"),
 
     phoneNumber: yup.string().matches(phoneRegExp, "*Phone number is not valid").required("*Phone number required"),
   });
@@ -480,6 +457,15 @@ const Settings = () => {
       </Box>
     </Container>
   );
+};
+
+Settings.propTypes = {
+  user: PropTypes.object,
+};
+
+ModalDelete.propTypes = {
+  open: PropTypes.bool,
+  setOpen: PropTypes.func,
 };
 
 export default Settings;

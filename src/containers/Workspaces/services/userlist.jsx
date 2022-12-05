@@ -1,20 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { DataStore } from "aws-amplify";
 import { UserCredentials } from "../../../models";
-import {
-  Table,
-  TableBody,
-  TableHead,
-  TableCell,
-  TableContainer,
-  TableRow,
-  Paper,
-  Collapse,
-  Typography,
-} from "@mui/material";
+import { Table, TableBody, TableHead, TableCell, TableContainer, TableRow, Paper, Collapse, Typography } from "@mui/material";
 import { TopbarMD } from "./topbar.jsx";
 import { Userdetails } from "./userdetails.jsx";
 import { Adduser } from "./adduser.jsx";
+import { PropTypes } from "prop-types";
 
 export const Worklist = ({ data, lang }) => {
   const [open, setOpen] = useState(false);
@@ -100,12 +91,20 @@ const Userlist = ({
               <Adduser data={data} lang={lang} />
             </TableRow>
           </TableHead>
-          <TableBody>
-            {includedUsers.length !== 0 &&
-              includedUsers.map((user) => <Userdetails user={user} data={data} key={user.id} lang={lang} />)}
-          </TableBody>
+          <TableBody>{includedUsers.length !== 0 && includedUsers.map((user) => <Userdetails user={user} data={data} key={user.id} lang={lang} />)}</TableBody>
         </Table>
       </TableContainer>
     </Collapse>
   );
+};
+
+Worklist.propTypes = {
+  data: PropTypes.object,
+  lang: PropTypes.object,
+};
+
+Userlist.propTypes = {
+  data: PropTypes.object,
+  open: PropTypes.bool,
+  lang: PropTypes.object,
 };

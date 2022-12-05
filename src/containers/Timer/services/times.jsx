@@ -34,7 +34,7 @@ const updateSTime = async (data, time) => {
 };
 
 export const EditSTime = ({ date }) => {
-  return <TextToTime date={date.timeInterval.start} onChange={(t) => updateSTime(date, t)} isSent={date.isSent} />;
+  return <TextToTime date={new Date(date.timeInterval.start)} onChange={(t) => updateSTime(date, t)} isSent={date.isSent} />;
 };
 
 const updateETime = async (data, time) => {
@@ -47,7 +47,7 @@ const updateETime = async (data, time) => {
 };
 
 export const EditETime = ({ date }) => {
-  return <TextToTime date={date.timeInterval.end} onChange={(t) => updateETime(date, t)} isSent={date.isSent} />;
+  return <TextToTime date={new Date(date.timeInterval.end)} onChange={(t) => updateETime(date, t)} isSent={date.isSent} />;
 };
 
 const deleteTime = async (data, close) => {
@@ -131,9 +131,13 @@ export const MoreButton = ({
   const isConfirmed = !date.isConfirmed;
 
   return (
-    <>
-      <IconButton aria-label="more" aria-controls="long-menu" aria-haspopup="true">
-        <MoreVertIcon onClick={handleClick} />
+    <Box
+      sx={{
+        width: "40px",
+      }}
+    >
+      <IconButton aria-label="more" aria-controls="long-menu" aria-haspopup="true" onClick={handleClick}>
+        <MoreVertIcon />
       </IconButton>
       <Menu id="long-menu" anchorEl={anchorEl} keepMounted open={open} onClose={handleClose}>
         <MenuItem onClick={() => dublicateTime(date)} disabled={!isEmpty}>
@@ -156,7 +160,7 @@ export const MoreButton = ({
           )
         )}
       </Menu>
-    </>
+    </Box>
   );
 };
 

@@ -1,20 +1,5 @@
 import React, { Fragment, useState, useEffect } from "react";
-import {
-  Typography,
-  Toolbar,
-  IconButton,
-  Tooltip,
-  Box,
-  TextField,
-  Container,
-  Popover,
-  CssBaseline,
-  MenuItem,
-  InputLabel,
-  Select,
-  FormControl,
-  Grid,
-} from "@mui/material";
+import { Typography, Toolbar, IconButton, Tooltip, Box, TextField, Container, Popover, CssBaseline, MenuItem, InputLabel, Select, FormControl, Grid } from "@mui/material";
 import { alpha } from "@mui/material/styles";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from "@mui/icons-material/Add";
@@ -27,6 +12,7 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { DesktopTimePicker } from "@mui/x-date-pickers/DesktopTimePicker";
 import { de } from "date-fns/locale";
+import { PropTypes } from "prop-types";
 
 export const EnhancedWorks = (props) => {
   const { numOfWorks = 0, anchorEl = null, setAnchorEl } = props;
@@ -433,4 +419,11 @@ const CreateTask = (props) => {
       </Formik>
     </Popover>
   );
+};
+
+CreateTask.propTypes = {
+  id: PropTypes.string.isRequired,
+  open: PropTypes.bool.isRequired,
+  anchorEl: PropTypes.object,
+  handleClose: PropTypes.func.isRequired,
 };

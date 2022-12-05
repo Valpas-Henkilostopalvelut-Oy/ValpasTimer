@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { DataStore } from "aws-amplify";
 import { AllWorkSpaces } from "../../../models";
 import { Typography, Button, Box, Collapse } from "@mui/material";
+import { PropTypes } from "prop-types";
 
 const deletework = async ({ data }) => {
   await DataStore.delete(AllWorkSpaces, data);
@@ -70,4 +71,10 @@ export const Deletework = ({
       </Collapse>
     </Box>
   );
+};
+
+Deletework.propTypes = {
+  data: PropTypes.object,
+  handleClose: PropTypes.func,
+  lang: PropTypes.object,
 };

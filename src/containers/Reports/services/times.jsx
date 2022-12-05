@@ -1,5 +1,6 @@
 import React from "react";
 import { Typography } from "@mui/material";
+import { PropTypes } from "prop-types";
 
 export const STime = ({ date }) => {
   let sTime = new Date(date.arr[date.arr.length - 1].timeInterval.start);
@@ -35,4 +36,20 @@ export const DETime = ({ date }) => {
       {eTime.getHours()}:{eTime.getMinutes()}
     </Typography>
   );
+};
+
+STime.propTypes = {
+  date: PropTypes.object,
+};
+
+ETime.propTypes = {
+  date: PropTypes.object,
+};
+
+DSTime.propTypes = {
+  date: PropTypes.object,
+};
+
+DETime.propTypes = {
+  date: PropTypes.object,
 };

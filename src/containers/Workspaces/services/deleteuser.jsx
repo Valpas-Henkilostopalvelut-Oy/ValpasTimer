@@ -3,6 +3,7 @@ import { DataStore } from "aws-amplify";
 import { AllWorkSpaces } from "../../../models";
 import { Dialog, DialogActions, DialogTitle, Button, DialogContent, IconButton } from "@mui/material";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
+import { PropTypes } from "prop-types";
 
 export const Deleteuser = ({
   user,
@@ -25,14 +26,7 @@ export const Deleteuser = ({
       <IconButton onClick={handleOpen}>
         <DeleteForeverIcon />
       </IconButton>
-      <Dialog
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="dialog-title"
-        aria-describedby="dialog-description"
-        maxWidth={"xs"}
-        fullWidth={true}
-      >
+      <Dialog open={open} onClose={handleClose} aria-labelledby="dialog-title" aria-describedby="dialog-description" maxWidth={"xs"} fullWidth={true}>
         <DialogTitle id="dialog-title">{lang.allert_worker.title}</DialogTitle>
         <DialogContent>
           {lang.allert_worker.message} {user.name} {lang.allert_worker.message2} {data.name}?
@@ -68,4 +62,10 @@ const deleteuser = async ({ user, data, handleClose }) => {
     .catch((err) => {
       console.warn(err);
     });
+};
+
+Deleteuser.propTypes = {
+  user: PropTypes.object,
+  data: PropTypes.object,
+  lang: PropTypes.object,
 };

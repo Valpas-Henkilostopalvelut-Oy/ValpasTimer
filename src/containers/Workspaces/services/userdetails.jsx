@@ -3,6 +3,7 @@ import { TableRow, TableCell, Grid, Collapse, Box, IconButton, Typography } from
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import { Deleteuser } from "./deleteuser.jsx";
+import { PropTypes } from "prop-types";
 
 export const Userdetails = ({ user, data, lang = { email: "Email" } }) => {
   const [open, setOpen] = useState(false);
@@ -47,4 +48,10 @@ export const Userdetails = ({ user, data, lang = { email: "Email" } }) => {
       </TableRow>
     </Fragment>
   );
+};
+
+Userdetails.propTypes = {
+  user: PropTypes.object,
+  data: PropTypes.object,
+  lang: PropTypes.object,
 };

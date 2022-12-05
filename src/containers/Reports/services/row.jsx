@@ -1,6 +1,7 @@
 import React from "react";
 import { Table, Typography, TableBody, TableCell, TableRow, Box } from "@mui/material";
 import { DSTime, DETime } from "./times.jsx";
+import { PropTypes } from "prop-types";
 
 const TotalTime = ({ date }) => {
   let start = new Date(date.timeInterval.start);
@@ -43,4 +44,12 @@ export const Detailsrow = ({ date }) => {
       </Table>
     </Box>
   );
+};
+
+TotalTime.propTypes = {
+  date: PropTypes.object,
+};
+
+Detailsrow.propTypes = {
+  date: PropTypes.object,
 };

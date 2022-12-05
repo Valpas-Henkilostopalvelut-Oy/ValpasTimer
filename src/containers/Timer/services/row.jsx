@@ -77,15 +77,10 @@ export const Row = ({ week, lang, works, isEmpty }) => {
                 {totaldaytime(date).min > 9 ? totaldaytime(date).min : "0" + totaldaytime(date).min}
               </Typography>
             </Box>
-            <TableContainer>
-              <Table aria-label="collapsible table" size="small">
-                <TableBody>
-                  {date.arr.map((row, i) => (
-                    <Details key={i} row={row} workplaces={works} lang={lang.history} isEmpty={isEmpty} />
-                  ))}
-                </TableBody>
-              </Table>
-            </TableContainer>
+
+            {date.arr.map((row, i) => (
+              <Details key={i} row={row} workplaces={works} lang={lang.history} isEmpty={isEmpty} />
+            ))}
           </Box>
         </Grid>
       </Grid>

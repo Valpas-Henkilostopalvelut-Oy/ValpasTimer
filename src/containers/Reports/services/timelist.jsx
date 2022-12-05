@@ -6,6 +6,7 @@ import { groupBy } from "./group.jsx";
 import { totaldaytime, totalweektime } from "./totaltime.jsx";
 import { Details } from "./details.jsx";
 import { WeekReport } from "./buttons.jsx";
+import { PropTypes } from "prop-types";
 
 export const Timelist = ({
   selWork = "",
@@ -24,9 +25,7 @@ export const Timelist = ({
     const loadTimeList = async () => {
       await DataStore.query(TimeEntry)
         .then((data) => {
-          let fiteredData = data.filter(
-            (item) => item.workspaceId === selWork && item.userId === selUser && !item.isActive && item.isSent
-          );
+          let fiteredData = data.filter((item) => item.workspaceId === selWork && item.userId === selUser && !item.isActive && item.isSent);
           let grouped = groupBy(fiteredData);
 
           if (grouped.length > 0) {
@@ -94,4 +93,11 @@ export const Timelist = ({
       </Grid>
     )
   );
+};
+
+Timelist.propTypes = {
+  selWork: PropTypes.string,
+  selUser: PropTypes.string,
+  isEmpty: PropTypes.bool,
+  lang: PropTypes.object,
 };

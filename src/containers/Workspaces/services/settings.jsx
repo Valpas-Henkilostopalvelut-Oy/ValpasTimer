@@ -2,6 +2,7 @@ import React, { useState, Fragment } from "react";
 import { Dialog, DialogActions, DialogTitle, DialogContent, Button, Grid } from "@mui/material";
 import { Deletework } from "./deletework.jsx";
 import { ChangeworkName } from "./changename.jsx";
+import { PropTypes } from "prop-types";
 
 export const Settings = ({
   data,
@@ -27,14 +28,7 @@ export const Settings = ({
       <Button onClick={handleOpen} variant="contained">
         {lang.buttons.settings}
       </Button>
-      <Dialog
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="dialog-title"
-        aria-describedby="dialog-description"
-        maxWidth={"xs"}
-        fullWidth={true}
-      >
+      <Dialog open={open} onClose={handleClose} aria-labelledby="dialog-title" aria-describedby="dialog-description" maxWidth={"xs"} fullWidth={true}>
         <DialogTitle id="dialog-title">
           {lang.delete.message} {data.name}
         </DialogTitle>
@@ -54,4 +48,9 @@ export const Settings = ({
       </Dialog>
     </Fragment>
   );
+};
+
+Settings.propTypes = {
+  data: PropTypes.object,
+  lang: PropTypes.object,
 };

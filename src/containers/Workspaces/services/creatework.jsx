@@ -4,6 +4,7 @@ import { AllWorkSpaces } from "../../../models";
 import { Button, Dialog, DialogContent, DialogTitle, Box, TextField, Typography, DialogActions } from "@mui/material";
 import { Formik } from "formik";
 import * as Yup from "yup";
+import { PropTypes } from "prop-types";
 
 export const Creatework = ({
   lang = {
@@ -24,10 +25,7 @@ export const Creatework = ({
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const validationSchema = Yup.object({
-    name: Yup.string()
-      .min(4, lang.create_work.errors.is_too_short)
-      .max(24, lang.create_work.errors.is_too_long)
-      .required(lang.create_work.errors.is_required),
+    name: Yup.string().min(4, lang.create_work.errors.is_too_short).max(24, lang.create_work.errors.is_too_long).required(lang.create_work.errors.is_required),
   });
   const [warnText, setWarnText] = useState("");
 
@@ -101,4 +99,8 @@ const creatework = async ({ name, setWarnText, handleClose }) => {
       setWarnText("Name already exists");
     }
   });
+};
+
+Creatework.propTypes = {
+  lang: PropTypes.object,
 };

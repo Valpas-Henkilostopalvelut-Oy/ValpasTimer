@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { Button, Box, Dialog, DialogActions, DialogContent, DialogTitle, Typography } from "@mui/material";
+import { IconButton, Button, Box, Dialog, DialogActions, DialogContent, DialogTitle, Typography } from "@mui/material";
+import DeleteIcon from "@mui/icons-material/Delete";
 import { DataStore } from "aws-amplify";
 import { TimeEntry } from "../../../models";
 import { PropTypes } from "prop-types";
@@ -28,10 +29,14 @@ export const DeleteAll = ({
   const [open, setOpen] = useState(false);
   var isSent = date.isSent;
   return (
-    <Box>
-      <Button variant="text" color="error" onClick={() => setOpen(true)} disabled={!isEmpty}>
-        {lang.buttons.delete}
-      </Button>
+    <Box
+      sx={{
+        width: "50px",
+      }}
+    >
+      <IconButton onClick={() => setOpen(true)} disabled={!isEmpty}>
+        <DeleteIcon />
+      </IconButton>
       <Dialog open={open && !isSent} onClose={() => setOpen(false)}>
         <DialogTitle>
           <Typography variant="h6">{lang.title.deleteTitle}</Typography>
@@ -113,9 +118,12 @@ export const Reportallweek = ({
     arr.forEach((element) => {
       let arr = element.arr;
       arr.forEach((element) => {
-        if (!element.isSent) {
-          isSent = false;
-        }
+        let arr = element.arr;
+        arr.forEach((element) => {
+          if (!element.isSent) {
+            isSent = false;
+          }
+        });
       });
     });
     return isSent;

@@ -6,6 +6,7 @@ import { alpha } from "@mui/material/styles";
 import { DataStore, Auth, API } from "aws-amplify";
 import { UserCredentials } from "../../../models";
 import { CreateNewUser } from "./createUser.jsx";
+import { PropTypes } from "prop-types";
 
 const ListToolbar = ({ numSelected, selected, setSelected, reload }) => {
   const deleteUser = async () => {
@@ -143,6 +144,13 @@ const ListToolbar = ({ numSelected, selected, setSelected, reload }) => {
       )}
     </Toolbar>
   );
+};
+
+ListToolbar.propTypes = {
+  numSelected: PropTypes.number.isRequired,
+  selected: PropTypes.array.isRequired,
+  setSelected: PropTypes.func.isRequired,
+  reload: PropTypes.func.isRequired,
 };
 
 export default ListToolbar;

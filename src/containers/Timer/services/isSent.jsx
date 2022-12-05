@@ -1,5 +1,4 @@
-/* eslint-disable no-unused-vars */
-import React from "react";
+import React, { Fragment } from "react";
 import { DeleteAll } from "./buttons.jsx";
 import { TableRow, TableCell, useTheme, Typography, Box } from "@mui/material";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
@@ -78,36 +77,38 @@ export const StatusMD = ({
 }) => {
   const theme = useTheme();
   return sent(date) ? (
-    <TableCell
-      align="right"
+    <Fragment
       sx={{
         [theme.breakpoints.down("sm")]: {
           display: "none",
         },
       }}
     >
-      <DeleteAll date={date} lang={lang} isEmpty={isEmpty} />
-    </TableCell>
+      <TableCell>
+        <Box width="60px" />
+      </TableCell>
+      <TableCell align="right">
+        <DeleteAll date={date} lang={lang} isEmpty={isEmpty} />
+      </TableCell>
+    </Fragment>
   ) : (
-    <TableCell
-      align="right"
-      sx={{
-        [theme.breakpoints.down("sm")]: {
-          display: "none",
-        },
-      }}
-    >
-      <Box
+    <Fragment>
+      <TableCell>
+        {lang.sent}: <TaskAltIcon color="success" />
+      </TableCell>
+      <TableCell
+        align="right"
         sx={{
-          display: "flex",
-          justifyContent: "space-evenly",
-          alignItems: "center",
+          [theme.breakpoints.down("sm")]: {
+            display: "none",
+          },
         }}
       >
-        {lang.sent}: <TaskAltIcon color="success" />
-        {lang.confirmed}: {confirmed(date) ? <TaskAltIcon color="success" /> : <ClearIcon color="error" />}
-      </Box>
-    </TableCell>
+        <Box>
+          {lang.confirmed}: {confirmed(date) ? <TaskAltIcon color="success" /> : <ClearIcon color="error" />}
+        </Box>
+      </TableCell>
+    </Fragment>
   );
 };
 

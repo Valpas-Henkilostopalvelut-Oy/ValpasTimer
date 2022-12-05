@@ -132,7 +132,9 @@ export const ChangeWorkplaceMD = ({ date, workplaces = null, work, lang, isEmpty
 
   return (
     <TableCell
+      align="right"
       sx={{
+        width: "260px",
         [theme.breakpoints.down("sm")]: {
           display: "none",
         },

@@ -1,21 +1,11 @@
 import React, { useState } from "react";
 import { DataStore } from "aws-amplify";
-import {
-  IconButton,
-  Dialog,
-  DialogTitle,
-  TableCell,
-  DialogContent,
-  Button,
-  DialogActions,
-  Box,
-  TextField,
-  Typography,
-} from "@mui/material";
+import { IconButton, Dialog, DialogTitle, TableCell, DialogContent, Button, DialogActions, Box, TextField, Typography } from "@mui/material";
 import { Formik } from "formik";
 import AddIcon from "@mui/icons-material/Add";
 import * as yup from "yup";
 import { UserCredentials, AllWorkSpaces } from "../../../models";
+import { PropTypes } from "prop-types";
 
 export const Adduser = ({ data, lang }) => {
   const [open, setOpen] = useState(false);
@@ -141,4 +131,16 @@ const adduser = async ({
       }
     })
     .catch((err) => console.warn(err));
+};
+
+Adduser.propTypes = {
+  data: PropTypes.object,
+  lang: PropTypes.object,
+};
+
+AdduserDialog.propTypes = {
+  data: PropTypes.object,
+  open: PropTypes.bool,
+  handleClose: PropTypes.func,
+  lang: PropTypes.object,
 };

@@ -4,21 +4,14 @@ import { Formik } from "formik";
 import LoaderButton from "../../../components/LoaderButton/index.jsx";
 import { Container, Box, Typography, TextField, CssBaseline, Grid, Button } from "@mui/material";
 import { Auth } from "aws-amplify";
+import { PropTypes } from "prop-types";
 
 const ChangePassword = ({ setChangePassword }) => {
   const [message, setMessage] = useState(null);
   //change password form
   const validationSchema = yup.object().shape({
-    oldPassword: yup
-      .string()
-      .min(8, "Password must be at least 8 characters")
-      .max(50, "Password must be less than 50 characters")
-      .required("Password is required"),
-    newPassword: yup
-      .string()
-      .min(8, "Password must be at least 8 characters")
-      .max(50, "Password must be less than 50 characters")
-      .required("New password is required"),
+    oldPassword: yup.string().min(8, "Password must be at least 8 characters").max(50, "Password must be less than 50 characters").required("Password is required"),
+    newPassword: yup.string().min(8, "Password must be at least 8 characters").max(50, "Password must be less than 50 characters").required("New password is required"),
     confirmPassword: yup
       .string()
       .oneOf([yup.ref("newPassword"), null], "Passwords must match")
@@ -26,12 +19,7 @@ const ChangePassword = ({ setChangePassword }) => {
   });
   //enable button
   const enable = (values) => {
-    return !(
-      values.oldPassword &&
-      values.newPassword &&
-      values.confirmPassword &&
-      values.newPassword === values.confirmPassword
-    );
+    return !(values.oldPassword && values.newPassword && values.confirmPassword && values.newPassword === values.confirmPassword);
   };
 
   return (
@@ -162,23 +150,10 @@ const ChangePassword = ({ setChangePassword }) => {
                   </Grid>
                 )}
                 <Grid item xs={12} sm={6}>
-                  <LoaderButton
-                    type="submit"
-                    fullWidth
-                    disabled={enable(values)}
-                    isLoading={isSubmitting}
-                    text="Change Password"
-                    loadingText="Changing Password..."
-                  />
+                  <LoaderButton type="submit" fullWidth disabled={enable(values)} isLoading={isSubmitting} text="Change Password" loadingText="Changing Password..." />
                 </Grid>
                 <Grid item xs={12} sm={6}>
-                  <Button
-                    color="secondary"
-                    type="button"
-                    fullWidth
-                    disabled={isSubmitting}
-                    onClick={() => setChangePassword(false)}
-                  >
+                  <Button color="secondary" type="button" fullWidth disabled={isSubmitting} onClick={() => setChangePassword(false)}>
                     Cancel
                   </Button>
                 </Grid>
@@ -189,6 +164,10 @@ const ChangePassword = ({ setChangePassword }) => {
       )}
     </Formik>
   );
+};
+
+ChangePassword.propTypes = {
+  setChangePassword: PropTypes.func.isRequired,
 };
 
 export default ChangePassword;
