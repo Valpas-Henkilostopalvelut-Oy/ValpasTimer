@@ -3,6 +3,7 @@ import { Toolbar, Typography, IconButton, SvgIcon, Grid, AppBar, useTheme } from
 import MenuIcon from "@mui/icons-material/Menu";
 import Profile from "../Profile/index.jsx";
 import SvgComponent from "../../assets/logo2.jsx";
+import { PropTypes } from "prop-types";
 
 const Navbar = ({ setOpenDrawer, isAuth = false }) => {
   const theme = useTheme();
@@ -43,6 +44,11 @@ const Navbar = ({ setOpenDrawer, isAuth = false }) => {
       </AppBar>
     )
   );
+};
+
+Navbar.propTypes = {
+  setOpenDrawer: PropTypes.func,
+  isAuth: PropTypes.bool,
 };
 
 export default Navbar;

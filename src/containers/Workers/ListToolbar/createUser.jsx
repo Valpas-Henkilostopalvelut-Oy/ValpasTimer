@@ -1,15 +1,5 @@
 /* eslint-disable no-undef */
-import {
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  Button,
-  DialogContentText,
-  TextField,
-  Box,
-  Grid,
-} from "@mui/material";
+import { Dialog, DialogActions, DialogContent, DialogTitle, Button, DialogContentText, TextField, Box, Grid } from "@mui/material";
 import React, { Fragment, useState } from "react";
 import { Formik } from "formik";
 import AWS from "aws-sdk";
@@ -59,9 +49,9 @@ const createUser = async (values) => {
 
   cognitoidentityserviceprovider.adminCreateUser(data, function (err, data) {
     if (err) {
-      console.log(err, err.stack);
+      console.warn(err, err.stack);
     } else {
-      console.log(data);
+      console.warn(data);
     }
   });
 };
@@ -121,30 +111,10 @@ export const CreateNewUser = () => {
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <TextField
-                      variant="outlined"
-                      required
-                      fullWidth
-                      id="last_name"
-                      label="Last Name"
-                      name="last_name"
-                      autoComplete="lname"
-                      value={values.last_name}
-                      onChange={handleChange}
-                    />
+                    <TextField variant="outlined" required fullWidth id="last_name" label="Last Name" name="last_name" autoComplete="lname" value={values.last_name} onChange={handleChange} />
                   </Grid>
                   <Grid item xs={12}>
-                    <TextField
-                      variant="outlined"
-                      required
-                      fullWidth
-                      id="email"
-                      label="Email Address"
-                      name="email"
-                      autoComplete="email"
-                      value={values.email}
-                      onChange={handleChange}
-                    />
+                    <TextField variant="outlined" required fullWidth id="email" label="Email Address" name="email" autoComplete="email" value={values.email} onChange={handleChange} />
                   </Grid>
                   <Grid item xs={12}>
                     <TextField

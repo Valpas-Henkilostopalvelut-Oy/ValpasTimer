@@ -28,6 +28,7 @@ import React, { useEffect, useState } from "react";
 import LoaderButton from "../../../components/LoaderButton/index.jsx";
 import { Agreement, AllWorkSpaces } from "../../../models";
 import { UserTable } from "./UserTable/index.jsx";
+import { PropTypes } from "prop-types";
 
 const AdminToolbar = ({ reload }) => {
   const [anchorEl, setAnchorEl] = useState(null);
@@ -120,27 +121,8 @@ const AdminToolbar = ({ reload }) => {
                   Add Agreement
                 </Typography>
                 <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 3, width: 350 }}>
-                  <TextField
-                    fullWidth
-                    id="agreement"
-                    name="agreement"
-                    label="Agreement"
-                    autoComplete="agreement"
-                    value={values.agreement}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                  />
-                  <LoaderButton
-                    sx={{ mt: 2 }}
-                    type="submit"
-                    fullWidth
-                    variant="contained"
-                    color="primary"
-                    disabled={!values.agreement}
-                    isLoading={isSubmitting}
-                    text="Add"
-                    loadingText="Adding…"
-                  />
+                  <TextField fullWidth id="agreement" name="agreement" label="Agreement" autoComplete="agreement" value={values.agreement} onChange={handleChange} onBlur={handleBlur} />
+                  <LoaderButton sx={{ mt: 2 }} type="submit" fullWidth variant="contained" color="primary" disabled={!values.agreement} isLoading={isSubmitting} text="Add" loadingText="Adding…" />
                 </Box>
               </Box>
             </Container>
@@ -236,28 +218,10 @@ const AditionalInfo = ({ id, item, reload, handleOpen, expanded }) => {
                 <Box component="form" onSubmit={handleSubmit}>
                   <Grid container spacing={2} alignItems="center">
                     <Grid item xs={9}>
-                      <TextField
-                        fullWidth
-                        id="name"
-                        name="name"
-                        label="New name"
-                        autoComplete="name"
-                        value={values.name}
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                      />
+                      <TextField fullWidth id="name" name="name" label="New name" autoComplete="name" value={values.name} onChange={handleChange} onBlur={handleBlur} />
                     </Grid>
                     <Grid item xs={3}>
-                      <LoaderButton
-                        type="submit"
-                        fullWidth
-                        variant="contained"
-                        color="primary"
-                        disabled={!values.name}
-                        isLoading={isSubmitting}
-                        text="Save"
-                        loadingText="Saving…"
-                      />
+                      <LoaderButton type="submit" fullWidth variant="contained" color="primary" disabled={!values.name} isLoading={isSubmitting} text="Save" loadingText="Saving…" />
                     </Grid>
                   </Grid>
                 </Box>
@@ -265,13 +229,7 @@ const AditionalInfo = ({ id, item, reload, handleOpen, expanded }) => {
             </Formik>
           </Grid>
           <Grid item xs={2}>
-            <LoaderButton
-              fullWidth
-              variant="contained"
-              color="primary"
-              text="Edit desc"
-              onClick={() => setEditing(!isEditing)}
-            />
+            <LoaderButton fullWidth variant="contained" color="primary" text="Edit desc" onClick={() => setEditing(!isEditing)} />
           </Grid>
           <Grid item xs={2}>
             <LoaderButton
@@ -296,26 +254,8 @@ const AditionalInfo = ({ id, item, reload, handleOpen, expanded }) => {
               >
                 {({ values, handleSubmit, handleChange, handleBlur, isSubmitting }) => (
                   <Box component="form" onSubmit={handleSubmit}>
-                    <TextField
-                      fullWidth
-                      id="description"
-                      name="description"
-                      label="Description"
-                      autoComplete="description"
-                      value={values.description}
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                    />
-                    <LoaderButton
-                      type="submit"
-                      fullWidth
-                      variant="contained"
-                      color="primary"
-                      disabled={!values.description}
-                      isLoading={isSubmitting}
-                      text="Save"
-                      loadingText="Saving…"
-                    />
+                    <TextField fullWidth id="description" name="description" label="Description" autoComplete="description" value={values.description} onChange={handleChange} onBlur={handleBlur} />
+                    <LoaderButton type="submit" fullWidth variant="contained" color="primary" disabled={!values.description} isLoading={isSubmitting} text="Save" loadingText="Saving…" />
                   </Box>
                 )}
               </Formik>
@@ -368,7 +308,6 @@ const addAditionalInfo = async ({ values, reload, id, setSubmitting }) => {
 const SelectWorkspaces = ({ id, agreement }) => {
   const [selectedWorkspaces, setSelectedWorkspaces] = useState(agreement.workspaceId);
   const [avalibleWorkspaces, setAvalibleWorkspaces] = useState([]);
-
 
   useEffect(() => {
     let isActive = false;
@@ -460,16 +399,7 @@ const DeleteAgreement = ({ id, reload }) => {
     });
   };
 
-  return (
-    <LoaderButton
-      variant="contained"
-      color="primary"
-      text="Delete"
-      loadingText={"Deleting..."}
-      isLoading={isDeleting}
-      onClick={deleteAgg}
-    />
-  );
+  return <LoaderButton variant="contained" color="primary" text="Delete" loadingText={"Deleting..."} isLoading={isDeleting} onClick={deleteAgg} />;
 };
 
 export const AgreementAdminPanel = () => {
@@ -507,11 +437,7 @@ export const AgreementAdminPanel = () => {
       {agreement.length > 0 &&
         agreement.map((agreement, k) => (
           <Accordion key={k} expanded={agreementExpanded === agreement.id} onChange={handleChange(agreement.id)}>
-            <AccordionSummary
-              expandIcon={<ExpandMoreIcon />}
-              aria-controls={`${agreement.name}-content`}
-              id={`${agreement.name}-header`}
-            >
+            <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls={`${agreement.name}-content`} id={`${agreement.name}-header`}>
               <Typography variant="h6">{agreement.name}</Typography>
             </AccordionSummary>
             <AccordionDetails>
@@ -534,36 +460,16 @@ export const AgreementAdminPanel = () => {
                     initialValues={{
                       name: agreement.name,
                     }}
-                    onSubmit={(val, { setSubmitting }) =>
-                      renameAgreement({ values: val, reload: loadData, id: agreement.id, setSubmitting: setSubmitting })
-                    }
+                    onSubmit={(val, { setSubmitting }) => renameAgreement({ values: val, reload: loadData, id: agreement.id, setSubmitting: setSubmitting })}
                   >
                     {({ values, handleSubmit, handleChange, handleBlur, isSubmitting }) => (
                       <Box component="form" onSubmit={handleSubmit}>
                         <Grid container spacing={2} alignItems="center">
                           <Grid item xs={9}>
-                            <TextField
-                              fullWidth
-                              id="name"
-                              name="name"
-                              label="Edit name"
-                              autoComplete="name"
-                              value={values.name}
-                              onChange={handleChange}
-                              onBlur={handleBlur}
-                            />
+                            <TextField fullWidth id="name" name="name" label="Edit name" autoComplete="name" value={values.name} onChange={handleChange} onBlur={handleBlur} />
                           </Grid>
                           <Grid item xs={3}>
-                            <LoaderButton
-                              type="submit"
-                              fullWidth
-                              variant="contained"
-                              color="primary"
-                              disabled={!values.name}
-                              isLoading={isSubmitting}
-                              text="Update"
-                              loadingText="Updating…"
-                            />
+                            <LoaderButton type="submit" fullWidth variant="contained" color="primary" disabled={!values.name} isLoading={isSubmitting} text="Update" loadingText="Updating…" />
                           </Grid>
                         </Grid>
                       </Box>
@@ -598,16 +504,7 @@ export const AgreementAdminPanel = () => {
                             />
                           </Grid>
                           <Grid item xs={3}>
-                            <LoaderButton
-                              type="submit"
-                              fullWidth
-                              variant="contained"
-                              color="primary"
-                              disabled={!values.newAditionalInfo}
-                              isLoading={isSubmitting}
-                              text="Add"
-                              loadingText="Adding…"
-                            />
+                            <LoaderButton type="submit" fullWidth variant="contained" color="primary" disabled={!values.newAditionalInfo} isLoading={isSubmitting} text="Add" loadingText="Adding…" />
                           </Grid>
                         </Grid>
                       </Box>
@@ -619,14 +516,7 @@ export const AgreementAdminPanel = () => {
                     Aditional info
                   </Typography>
                   {agreement.aditionalInfo.map((aditionalInfo, k) => (
-                    <AditionalInfo
-                      key={k}
-                      id={agreement.id}
-                      item={aditionalInfo}
-                      reload={loadData}
-                      expanded={aditionalInfoExpanded}
-                      handleOpen={handleChangeAditionalInfo}
-                    />
+                    <AditionalInfo key={k} id={agreement.id} item={aditionalInfo} reload={loadData} expanded={aditionalInfoExpanded} handleOpen={handleChangeAditionalInfo} />
                   ))}
                 </Grid>
               </Grid>
@@ -635,4 +525,21 @@ export const AgreementAdminPanel = () => {
         ))}
     </Container>
   );
+};
+
+AdminToolbar.propTypes = {
+  reload: PropTypes.func,
+};
+
+DeleteAgreement.propTypes = {
+  id: PropTypes.string,
+  reload: PropTypes.func,
+};
+
+AditionalInfo.propTypes = {
+  id: PropTypes.string,
+  item: PropTypes.object,
+  reload: PropTypes.func,
+  expanded: PropTypes.bool,
+  handleOpen: PropTypes.func,
 };

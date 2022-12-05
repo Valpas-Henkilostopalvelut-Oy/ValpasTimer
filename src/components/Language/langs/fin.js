@@ -1,6 +1,7 @@
 export const fin = {
   name: "Finnish",
   main: {
+    months: ["Tammikuu", "Helmikuu", "Maaliskuu", "Huhtikuu", "Toukokuu", "Kesäkuu", "Heinäkuu", "Elokuu", "Syyskuu", "Lokakuu", "Marraskuu", "Joulukuu"],
     lang_select: "Valitse kieli",
     landingpage: {
       register: "Luo tili",

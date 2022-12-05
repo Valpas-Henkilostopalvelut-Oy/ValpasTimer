@@ -11,5 +11,10 @@
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "[xml]": {
     "editor.defaultFormatter": "DotJoshJohnson.xml"
-  }
+  },
+  "cSpell.words": [
+    "editdescription",
+    "Selectwork",
+    "workplaceselect"
+  ]
 }

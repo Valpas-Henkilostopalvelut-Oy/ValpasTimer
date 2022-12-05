@@ -1,4 +1,4 @@
-export function groupBy(array) {
+export function groupBy(array, works = Array(), lang = Object()) {
   //group by work name in work array and push in array
   let sorted = array
     .sort((date1, date2) => {
@@ -12,28 +12,32 @@ export function groupBy(array) {
       const by = dat.toDateString();
       const week = getWeekNumber(dat);
 
-      var startOfWeek = getDateOfISOWeek(week, 2022);
+      var startOfWeek = getDateOfISOWeek(week, dat.getFullYear());
       var endOfWeek = getEndOfISOWeek(startOfWeek);
 
       if (res.filter((w) => w.week === week).length === 0) {
         res.push({
           week: week,
-          period:
-            getMonthName(startOfWeek.getMonth()) +
-            " " +
-            startOfWeek.getDate() +
-            " - " +
-            getMonthName(endOfWeek.getMonth()) +
-            " " +
-            endOfWeek.getDate(),
-          arr: [{ date: by, arr: [val] }],
+          period: getMonthName(startOfWeek.getMonth(), lang) + " " + startOfWeek.getDate() + " - " + getMonthName(endOfWeek.getMonth(), lang) + " " + endOfWeek.getDate(),
+          arr: [{ date: by, arr: [{ workId: val.workspaceId, arr: [val] }] }],
         });
       } else if (res.find((w) => w.week === week).arr.filter((f) => f.date === by).length === 0) {
-        res.find((w) => w.week === week).arr.push({ date: by, arr: [val] });
+        res.find((w) => w.week === week).arr.push({ date: by, arr: [{ workId: val.workspaceId, arr: [val] }] });
+      } else if (
+        res
+          .find((w) => w.week === week)
+          .arr.find((f) => f.date === by)
+          .arr.filter((f) => f.workId === val.workspaceId).length === 0
+      ) {
+        res
+          .find((w) => w.week === week)
+          .arr.find((f) => f.date === by)
+          .arr.push({ workId: val.workspaceId, arr: [val] });
       } else {
         res
           .find((w) => w.week === week)
-          .arr.find((d) => d.date === by)
+          .arr.find((f) => f.date === by)
+          .arr.find((f) => f.workId === val.workspaceId)
           .arr.push(val);
       }
 
@@ -79,20 +83,7 @@ function getEndOfISOWeek(d) {
   return endOfISOWeek;
 }
 
-function getMonthName(month) {
-  const months = [
-    "January",
-    "February",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-    "August",
-    "September",
-    "October",
-    "November",
-    "December",
-  ];
+function getMonthName(month, lang = Object()) {
+  const months = lang.months;
   return months[month];
 }

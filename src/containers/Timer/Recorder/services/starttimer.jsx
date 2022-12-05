@@ -2,6 +2,7 @@ import React from "react";
 import { Button } from "@mui/material";
 import { Auth, DataStore } from "aws-amplify";
 import { UserCredentials, TimeEntry } from "../../../../models";
+import { PropTypes } from "prop-types";
 
 const startTimer = async ({ description, workplace, setTimer }) => {
   await Auth.currentAuthenticatedUser().then(async (user) => {
@@ -113,4 +114,14 @@ export const StartTimer = ({
       {lang.stop}
     </Button>
   );
+};
+
+StartTimer.propTypes = {
+  description: PropTypes.string,
+  workplace: PropTypes.string,
+  isStarted: PropTypes.bool,
+  setStarted: PropTypes.func,
+  setTimer: PropTypes.func,
+  setTime: PropTypes.func,
+  lang: PropTypes.object,
 };

@@ -1,5 +1,6 @@
 import React from "react";
 import { Route, Routes, Navigate } from "react-router-dom";
+import { PropTypes } from "prop-types";
 import Timer from "./containers/Timer/index.jsx";
 import NotFound from "./components/NotFound/index.jsx";
 import Login from "./containers/Login/index.jsx";
@@ -14,7 +15,7 @@ import NoAccessPage from "./components/NoAccessPage/index.jsx";
 import ForgotPassword from "./containers/ForgotPassword/index.jsx";
 import TasksPage from "./containers/Work/index.jsx";
 import Works from "./containers/Works/index.jsx";
-import {ConfirmPage} from "./containers/ConfirmPage/index.jsx";
+import { ConfirmPage } from "./containers/ConfirmPage/index.jsx";
 import { AgreementAdminPanel } from "./containers/Agreement/AdminPanel/index.jsx";
 import { AgreementPage } from "./containers/Agreement/index.jsx";
 import { LandingPage } from "./containers/Landing/index.jsx";
@@ -115,6 +116,11 @@ const Navigation = ({ isAuthenticated, groups }) => {
       />
     </Routes>
   );
+};
+
+Navigation.propTypes = {
+  isAuthenticated: PropTypes.bool.isRequired,
+  groups: PropTypes.arrayOf(PropTypes.string).isRequired,
 };
 
 export default Navigation;

@@ -2,6 +2,7 @@ import React from "react";
 import { Button } from "@mui/material";
 import { DataStore } from "aws-amplify";
 import { TimeEntry } from "../../../models";
+import { PropTypes } from "prop-types";
 
 const handleWeekReport = (data) => {
   let arr = data.arr;
@@ -53,4 +54,10 @@ export const WeekReport = ({
       </Button>
     )
   );
+};
+
+WeekReport.propTypes = {
+  data: PropTypes.object,
+  lang: PropTypes.object,
+  isEmpty: PropTypes.bool,
 };

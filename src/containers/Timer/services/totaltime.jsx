@@ -4,24 +4,26 @@ export const totaldaytime = (array) => {
   var min = 0;
   var sec = 0;
 
-  array.arr.forEach((day) => {
-    let start = new Date(day.timeInterval.start);
-    let end = new Date(day.timeInterval.end);
+  array.arr.forEach((work) => {
+    work.arr.forEach((day) => {
+      let start = new Date(day.timeInterval.start);
+      let end = new Date(day.timeInterval.end);
 
-    let total = Date.parse(end) - Date.parse(start);
+      let total = Date.parse(end) - Date.parse(start);
 
-    h = h + Math.floor(total / 1000 / 60 / 60);
-    min = min + Math.floor((total / 1000 / 60) % 60);
-    sec = sec + Math.floor((total / 1000) % 60);
+      h = h + Math.floor(total / 1000 / 60 / 60);
+      min = min + Math.floor((total / 1000 / 60) % 60);
+      sec = sec + Math.floor((total / 1000) % 60);
 
-    if (min >= 60) {
-      h++;
-      min = min % 60;
-    }
-    if (sec >= 60) {
-      min++;
-      sec = sec % 60;
-    }
+      if (min >= 60) {
+        h++;
+        min = min % 60;
+      }
+      if (sec >= 60) {
+        min++;
+        sec = sec % 60;
+      }
+    });
   });
 
   return {
@@ -38,26 +40,28 @@ export const totalweektime = (array) => {
   var sec = 0;
 
   array.arr.forEach((week) => {
-    let day = week.arr;
+    let weekArr = week.arr;
 
-    day.forEach((day) => {
-      let start = new Date(day.timeInterval.start);
-      let end = new Date(day.timeInterval.end);
+    weekArr.forEach((work) => {
+      work.arr.forEach((day) => {
+        let start = new Date(day.timeInterval.start);
+        let end = new Date(day.timeInterval.end);
 
-      let total = Date.parse(end) - Date.parse(start);
+        let total = Date.parse(end) - Date.parse(start);
 
-      h = h + Math.floor(total / (1000 * 60 * 60));
-      min = min + Math.floor((total / (1000 * 60)) % 60);
-      sec = sec + Math.floor((total / 1000) % 60);
+        h = h + Math.floor(total / (1000 * 60 * 60));
+        min = min + Math.floor((total / (1000 * 60)) % 60);
+        sec = sec + Math.floor((total / 1000) % 60);
 
-      if (sec > 59) {
-        min++;
-        sec = sec % 60;
-      }
-      if (min > 59) {
-        h++;
-        min = min % 60;
-      }
+        if (sec > 59) {
+          min++;
+          sec = sec % 60;
+        }
+        if (min > 59) {
+          h++;
+          min = min % 60;
+        }
+      });
     });
   });
 

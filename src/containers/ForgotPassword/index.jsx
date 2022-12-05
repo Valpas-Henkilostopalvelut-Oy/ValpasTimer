@@ -6,19 +6,14 @@ import { Auth } from "aws-amplify";
 import LoaderButton from "../../components/LoaderButton/index.jsx";
 import { useNavigate } from "react-router-dom";
 import { useAppContext } from "../../services/contextLib.jsx";
+import { PropTypes } from "prop-types";
 
 const NewPasswordForm = ({ email, haveCode }) => {
   const [message, setMessage] = React.useState(null);
   const { langValue } = useAppContext();
   const validate = yup.object().shape({
-    email: yup
-      .string()
-      .email(langValue.forgot_password.errors.invalid_email)
-      .required(langValue.forgot_password.errors.email_is_required),
-    code: yup
-      .string()
-      .max(6, langValue.forgot_password.errors.code_is_too_long)
-      .required(langValue.forgot_password.errors.code_is_required),
+    email: yup.string().email(langValue.forgot_password.errors.invalid_email).required(langValue.forgot_password.errors.email_is_required),
+    code: yup.string().max(6, langValue.forgot_password.errors.code_is_too_long).required(langValue.forgot_password.errors.code_is_required),
     password: yup
       .string()
       .min(8, langValue.forgot_password.errors.password_is_too_short)
@@ -165,10 +160,7 @@ const ForgotPassword = () => {
   const { langValue } = useAppContext();
   const [message, setMessage] = React.useState(null);
   const validate = yup.object().shape({
-    email: yup
-      .string()
-      .email(langValue.forgot_password.errors.invalid_email)
-      .required(langValue.forgot_password.email_is_required),
+    email: yup.string().email(langValue.forgot_password.errors.invalid_email).required(langValue.forgot_password.email_is_required),
   });
 
   const [email, setEmail] = React.useState("");
@@ -264,3 +256,8 @@ const ForgotPassword = () => {
 };
 
 export default ForgotPassword;
+
+NewPasswordForm.propTypes = {
+  email: PropTypes.string.isRequired,
+  haveCode: PropTypes.bool.isRequired,
+};

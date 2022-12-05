@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Button, Box, Dialog, DialogActions, DialogContent, DialogTitle, Typography } from "@mui/material";
 import { DataStore } from "aws-amplify";
 import { TimeEntry } from "../../../models";
+import { PropTypes } from "prop-types";
 
 const deleteAll = async (date) => {
   let arr = date.arr;
@@ -127,4 +128,21 @@ export const Reportallweek = ({
       </Button>
     )
   );
+};
+
+DeleteAll.propTypes = {
+  date: PropTypes.object,
+  lang: PropTypes.object,
+  isEmpty: PropTypes.bool,
+};
+
+ReportAll.propTypes = {
+  date: PropTypes.object,
+  lang: PropTypes.object,
+};
+
+Reportallweek.propTypes = {
+  date: PropTypes.object,
+  lang: PropTypes.object,
+  isEmpty: PropTypes.bool,
 };

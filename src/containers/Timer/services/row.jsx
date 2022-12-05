@@ -1,5 +1,5 @@
 import React from "react";
-import { Grid, Typography, Box } from "@mui/material";
+import { Grid, Typography, Box, Table, TableContainer, TableBody, TableCell, TableRow } from "@mui/material";
 import { totaldaytime, totalweektime } from "./totaltime";
 import { Details } from "./table.jsx";
 import { Reportallweek } from "./buttons.jsx";
@@ -29,8 +29,7 @@ export const WeekRow = ({ grouped, lang, works, isEmpty }) => {
             </Typography>
 
             <Typography variant="p" color="text.secondary">
-              {lang.history.total_time}{" "}
-              {totalweektime(week).h > 9 ? totalweektime(week).h : "0" + totalweektime(week).h}:
+              {lang.history.total_time} {totalweektime(week).h > 9 ? totalweektime(week).h : "0" + totalweektime(week).h}:
               {totalweektime(week).min > 9 ? totalweektime(week).min : "0" + totalweektime(week).min}
             </Typography>
 
@@ -74,11 +73,19 @@ export const Row = ({ week, lang, works, isEmpty }) => {
                 {date.date}
               </Typography>
               <Typography variant="p" color="text.secondary">
-                {lang.history.total_time} {totaldaytime(date).h > 9 ? totaldaytime(date).h : "0" + totaldaytime(date).h}
-                :{totaldaytime(date).min > 9 ? totaldaytime(date).min : "0" + totaldaytime(date).min}
+                {lang.history.total_time} {totaldaytime(date).h > 9 ? totaldaytime(date).h : "0" + totaldaytime(date).h}:
+                {totaldaytime(date).min > 9 ? totaldaytime(date).min : "0" + totaldaytime(date).min}
               </Typography>
             </Box>
-            <Details date={date} workplaces={works} lang={lang.history} isEmpty={isEmpty} />
+            <TableContainer>
+              <Table aria-label="collapsible table" size="small">
+                <TableBody>
+                  {date.arr.map((row, i) => (
+                    <Details key={i} row={row} workplaces={works} lang={lang.history} isEmpty={isEmpty} />
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
           </Box>
         </Grid>
       </Grid>

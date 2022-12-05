@@ -1,19 +1,8 @@
 import React, { useState } from "react";
-import {
-  TextField,
-  Typography,
-  useTheme,
-  TableRow,
-  TableCell,
-  Box,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  Button,
-} from "@mui/material";
+import { TextField, Typography, useTheme, TableRow, TableCell, Box, Dialog, DialogActions, DialogContent, DialogTitle, Button } from "@mui/material";
 import { DataStore } from "aws-amplify";
 import { TimeEntry } from "../../../models";
+import { PropTypes } from "prop-types";
 
 const updateDescription = async (date, newDescription) => {
   await DataStore.save(
@@ -50,16 +39,7 @@ const EditDescription = ({
       <Dialog open={open && !isSent} onClose={() => setOpen(false)} maxWidth={"xs"} fullWidth={true}>
         <DialogTitle>{lang.add_description}</DialogTitle>
         <DialogContent>
-          <TextField
-            id="outlined-multiline-static"
-            variant="standard"
-            fullWidth
-            multiline
-            rows={3}
-            value={desc}
-            onChange={(e) => setDesc(e.target.value)}
-            placeholder={lang.add_description}
-          />
+          <TextField id="outlined-multiline-static" variant="standard" fullWidth multiline rows={3} value={desc} onChange={(e) => setDesc(e.target.value)} placeholder={lang.add_description} />
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setOpen(false)} color="primary">
@@ -118,18 +98,17 @@ export const EditDescriptionMD = ({ date, lang }) => {
   );
 };
 
-// eslint-disable-next-line no-unused-vars
-export const Tabledescription = ({ date, lang = { none_description: "No description" } }) => {
-  let workId = date.arr.map((item) => item.workspaceId);
-  console.log(workId);
+EditDescription.propTypes = {
+  date: PropTypes.object,
+  lang: PropTypes.object,
+};
 
-  return (
-    <Box
-      sx={{
-        maxWidth: "180px",
-      }}
-    >
-      <Typography variant="p">desc</Typography>
-    </Box>
-  );
+EditDescriptionSM.propTypes = {
+  date: PropTypes.object,
+  lang: PropTypes.object,
+};
+
+EditDescriptionMD.propTypes = {
+  date: PropTypes.object,
+  lang: PropTypes.object,
 };

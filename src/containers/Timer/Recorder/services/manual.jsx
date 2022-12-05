@@ -3,6 +3,7 @@ import { Grid } from "@mui/material";
 import { EditDescription } from "./editdescription";
 import { EditWorkplaceManual } from "./editworkplace";
 import { Editdate, Editstime, Edetime, Totaltime, Createtimeentry } from "./times";
+import { PropTypes } from "prop-types";
 
 export const Manual = ({ description, sel, setDescription, setSel, works, lang }) => {
   const [date, setDate] = useState(new Date());
@@ -42,4 +43,13 @@ export const Manual = ({ description, sel, setDescription, setSel, works, lang }
       </Grid>
     </Grid>
   );
+};
+
+Manual.propTypes = {
+  description: PropTypes.string,
+  sel: PropTypes.string,
+  setDescription: PropTypes.func,
+  setSel: PropTypes.func,
+  works: PropTypes.array,
+  lang: PropTypes.object,
 };

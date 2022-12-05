@@ -1,16 +1,8 @@
 import React from "react";
-import {
-  Button,
-  TableRow,
-  TableCell,
-  useTheme,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-} from "@mui/material";
+import { Button, TableRow, TableCell, useTheme, Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
 import { DataStore } from "aws-amplify";
 import { TimeEntry } from "../../../models";
+import { PropTypes } from "prop-types";
 
 const unconfirmAll = async (date) => {
   let arr = date.arr;
@@ -143,4 +135,23 @@ export const ConfirmreportMD = ({
       )}
     </TableCell>
   );
+};
+
+ConfirmreportSM.propTypes = {
+  date: PropTypes.object,
+  isEmpty: PropTypes.bool,
+  lang: PropTypes.object,
+};
+
+ConfirmreportMD.propTypes = {
+  date: PropTypes.object,
+  isEmpty: PropTypes.bool,
+  lang: PropTypes.object,
+};
+
+Confirmdialog.propTypes = {
+  date: PropTypes.object,
+  open: PropTypes.bool,
+  setOpen: PropTypes.func,
+  lang: PropTypes.object,
 };

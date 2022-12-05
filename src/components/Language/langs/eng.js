@@ -1,6 +1,7 @@
 export const eng = {
   name: "English",
   main: {
+    months: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
     lang_select: "Select language",
     landingpage: {
       register: "Register",

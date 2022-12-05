@@ -10,6 +10,7 @@ import WorkHistoryIcon from "@mui/icons-material/WorkHistory";
 import { useAppContext } from "../../services/contextLib";
 import { LinkContainer } from "react-router-bootstrap";
 import { ListItemText, List, ListItemButton, ListItemIcon, ListItem } from "@mui/material";
+import { PropTypes } from "prop-types";
 
 export const SidebarList = ({
   handleDrawerClose,
@@ -144,4 +145,10 @@ export const SidebarList = ({
       )}
     </List>
   );
+};
+
+SidebarList.propTypes = {
+  handleDrawerClose: PropTypes.func,
+  open: PropTypes.bool,
+  lang: PropTypes.object,
 };

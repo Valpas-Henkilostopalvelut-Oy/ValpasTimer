@@ -6,6 +6,7 @@ import { ETime, STime } from "./times.jsx";
 import { Detailsrow } from "./row.jsx";
 import { EDiscription } from "./editdescription.jsx";
 import { ConfirmreportMD, ConfirmreportSM } from "./confirmreport.jsx";
+import { PropTypes } from "prop-types";
 
 export const Details = ({ date, isEmpty = true, lang }) => {
   const [open, setOpen] = useState(false);
@@ -47,4 +48,10 @@ export const Details = ({ date, isEmpty = true, lang }) => {
       </Table>
     </TableContainer>
   );
+};
+
+Details.propTypes = {
+  date: PropTypes.object.isRequired,
+  isEmpty: PropTypes.bool,
+  lang: PropTypes.string.isRequired,
 };

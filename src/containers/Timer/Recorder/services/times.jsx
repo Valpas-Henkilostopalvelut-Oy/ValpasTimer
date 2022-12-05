@@ -11,6 +11,7 @@ import { TimePicker } from "@mui/x-date-pickers/TimePicker";
 import fi from "date-fns/locale/fi";
 //import enGB from "date-fns/esm/locale/en-GB";
 //import { useAppContext } from "../../../../services/contextLib";
+import { PropTypes } from "prop-types";
 
 export const Editdate = ({ date = null, setDate, sTime, eTime, setSTime, setETime, lang = { date: "Date" } }) => {
   return (
@@ -216,4 +217,40 @@ export const Createtimeentry = ({
       {lang.create}
     </Button>
   );
+};
+Editdate.propTypes = {
+  date: PropTypes.instanceOf(Date),
+  setDate: PropTypes.func,
+  sTime: PropTypes.instanceOf(Date),
+  setSTime: PropTypes.func,
+  eTime: PropTypes.instanceOf(Date),
+  setETime: PropTypes.func,
+  lang: PropTypes.object,
+};
+
+Editstime.propTypes = {
+  date: PropTypes.instanceOf(Date),
+  sTime: PropTypes.instanceOf(Date),
+  setSTime: PropTypes.func,
+  lang: PropTypes.object,
+};
+
+Edetime.propTypes = {
+  date: PropTypes.instanceOf(Date),
+  eTime: PropTypes.instanceOf(Date),
+  setETime: PropTypes.func,
+  lang: PropTypes.object,
+};
+
+Totaltime.propTypes = {
+  sTime: PropTypes.instanceOf(Date),
+  eTime: PropTypes.instanceOf(Date),
+};
+
+Createtimeentry.propTypes = {
+  description: PropTypes.string,
+  sel: PropTypes.string,
+  sTime: PropTypes.instanceOf(Date),
+  eTime: PropTypes.instanceOf(Date),
+  lang: PropTypes.object,
 };

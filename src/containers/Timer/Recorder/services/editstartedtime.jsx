@@ -3,6 +3,7 @@ import { TextField, Button, Dialog, DialogActions, DialogContent, DialogTitle } 
 import { Auth, DataStore } from "aws-amplify";
 import { TimeEntry, UserCredentials } from "../../../../models";
 import { timeMaker } from "../../../../services/time.jsx";
+import { PropTypes } from "prop-types";
 
 const editDataStoreStartTime = async ({ newTime }) => {
   await Auth.currentAuthenticatedUser()
@@ -88,3 +89,11 @@ export const EditStartTime = ({
     </Dialog>
   );
 };
+
+EditStartTime.propTypes = {
+  open: PropTypes.bool,
+  setOpen: PropTypes.func,
+  timerTime: PropTypes.object,
+  lang: PropTypes.object,
+};
+

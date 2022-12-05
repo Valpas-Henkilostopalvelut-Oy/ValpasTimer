@@ -6,8 +6,9 @@ import { EditStartTime } from "./editstartedtime";
 import { EditDescriptionTimer } from "./editdescription";
 import { EditWorkplaceTimer } from "./editworkplace";
 import { StartTimer } from "./starttimer";
+import { PropTypes } from "prop-types";
 
-export const Timer = ({ description = "", sel = "", setDescription, setSel, works, isStarted, setStarted, lang }) => {
+export const Timer = ({ description, sel, setDescription, setSel, works, isStarted, setStarted, lang }) => {
   const [time, setTime] = useState({
     seconds: 0,
     minutes: 0,
@@ -158,4 +159,15 @@ export const Timer = ({ description = "", sel = "", setDescription, setSel, work
       </Grid>
     </Grid>
   );
+};
+
+Timer.propTypes = {
+  description: PropTypes.string,
+  sel: PropTypes.string,
+  setDescription: PropTypes.func,
+  setSel: PropTypes.func,
+  works: PropTypes.array,
+  isStarted: PropTypes.bool,
+  setStarted: PropTypes.func,
+  lang: PropTypes.object,
 };

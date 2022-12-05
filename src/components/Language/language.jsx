@@ -3,6 +3,7 @@ import { Select, MenuItem, InputLabel, FormControl } from "@mui/material";
 import { eng } from "./langs/eng.js";
 import { fin } from "./langs/fin.js";
 import { useAppContext } from "../../services/contextLib.jsx";
+import { PropTypes } from "prop-types";
 
 export const Language = ({ lang, setLang }) => {
   const { langValue, setLanguage } = useAppContext();
@@ -56,4 +57,9 @@ export const Language = ({ lang, setLang }) => {
       </FormControl>
     )
   );
+};
+
+Language.propTypes = {
+  lang: PropTypes.string,
+  setLang: PropTypes.func,
 };

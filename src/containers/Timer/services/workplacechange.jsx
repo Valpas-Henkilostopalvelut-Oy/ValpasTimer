@@ -1,48 +1,35 @@
 import React, { useEffect, useState } from "react";
-import {
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  Button,
-  TableRow,
-  TableCell,
-  useTheme,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
-  Box,
-  Typography,
-} from "@mui/material";
+import { Dialog, DialogTitle, DialogContent, DialogActions, Button, TableRow, TableCell, useTheme, FormControl, InputLabel, Select, MenuItem, Box, Typography } from "@mui/material";
 import { DataStore } from "aws-amplify";
 import { TimeEntry, AllWorkSpaces } from "../../../models";
+import { PropTypes } from "prop-types";
 
-const updateWorkplace = async ({ date, item }) => {
-  await DataStore.save(
-    TimeEntry.copyOf(date, (update) => {
-      update.workspaceId = item;
-    })
-  ).catch((e) => console.warn(e));
+const updateWorkplace = async (date, newValue, oldValue) => {
+  if (newValue !== oldValue) {
+    await DataStore.save(
+      TimeEntry.copyOf(date, (update) => {
+        update.workspaceId = newValue;
+      })
+    ).catch((e) => console.warn(e));
+  }
 };
 
 const SelectWork = ({
   date,
-  workplaces = null,
-  work,
+  workplaces,
   lang = {
     workplace: "Workplace",
     buttons: {
       save: "Save",
+      cancel: "Cancel",
     },
   },
 }) => {
-  const [workplace, setWorkplace] = useState(work);
+  const [workplace, setWorkplace] = useState(date.workspaceId);
   const [open, setOpen] = useState(false);
-  const [nane, setName] = useState("");
+  const [name, setName] = useState("");
   const handleChange = (event) => {
     setWorkplace(event.target.value);
-    updateWorkplace({ date, item: workplace });
   };
   var isSent = date.isSent;
 
@@ -64,27 +51,16 @@ const SelectWork = ({
 
   return (
     workplaces !== null && (
-      <Box
-        sx={{
-          cursor: !isSent && "pointer",
-        }}
-      >
+      <Box sx={{ cursor: !isSent && "pointer" }}>
         <Typography variant="p" onClick={() => setOpen(true && !isSent)}>
-          {nane}
+          {name}
         </Typography>
-        <Dialog open={open} onClose={() => setOpen(false)} maxWidth={"xs"} fullWidth>
+        <Dialog open={open && !isSent} onClose={() => setOpen(false)} maxWidth={"xs"} fullWidth>
           <DialogTitle>{lang.workplace}</DialogTitle>
           <DialogContent>
             <FormControl fullWidth margin="normal">
               <InputLabel id="workplace-select">{lang.workplace}</InputLabel>
-              <Select
-                labelId="workplace-select"
-                id="workplace-select"
-                value={workplace}
-                label={lang.workplace}
-                onChange={handleChange}
-                margin="normal"
-              >
+              <Select labelId="workplace-select" id="workplace-select" value={workplace} label={lang.workplace} onChange={handleChange} margin="normal">
                 {workplaces.map((item, i) => (
                   <MenuItem key={i} value={item.id}>
                     {item.name}
@@ -94,7 +70,10 @@ const SelectWork = ({
             </FormControl>
           </DialogContent>
           <DialogActions>
-            <Button onClick={() => setOpen(!open)} color="primary">
+            <Button onClick={() => setOpen(false)} color="primary">
+              {lang.buttons.cancel}
+            </Button>
+            <Button onClick={() => updateWorkplace(date, workplace, date.workplaceId, setOpen(false))} color="primary">
               {lang.buttons.save}
             </Button>
           </DialogActions>
@@ -104,7 +83,7 @@ const SelectWork = ({
   );
 };
 
-const IsSent = ({ date, lang = { workplace: "Workplace" } }) => {
+const IsSent = ({ date, lang = { workplace: "Workplace" } }, isEmpty = false) => {
   const [work, setWork] = useState("");
 
   useEffect(() => {
@@ -119,9 +98,9 @@ const IsSent = ({ date, lang = { workplace: "Workplace" } }) => {
         .catch((e) => console.warn(e));
     };
 
-    isActive && fetchWorkplaces();
+    isActive && isEmpty && fetchWorkplaces();
     return () => (isActive = false);
-  }, []);
+  }, [isEmpty]);
 
   return (
     <Typography variant="p">
@@ -130,7 +109,7 @@ const IsSent = ({ date, lang = { workplace: "Workplace" } }) => {
   );
 };
 
-export const ChangeWorkplaceSM = ({ date, workplaces = null, work, lang }) => {
+export const ChangeWorkplaceSM = ({ date, workplaces = null, work, lang, isEmpty }) => {
   const theme = useTheme();
   const isSent = date.isSent;
 
@@ -142,18 +121,12 @@ export const ChangeWorkplaceSM = ({ date, workplaces = null, work, lang }) => {
         },
       }}
     >
-      <TableCell colSpan={4}>
-        {!isSent ? (
-          <SelectWork date={date} workplaces={workplaces} work={work} lang={lang} />
-        ) : (
-          <IsSent date={date} lang={lang} />
-        )}
-      </TableCell>
+      <TableCell colSpan={4}>{!isSent ? <SelectWork date={date} workplaces={workplaces} work={work} lang={lang} /> : <IsSent date={date} lang={lang} isEmpty={isEmpty} />}</TableCell>
     </TableRow>
   );
 };
 
-export const ChangeWorkplaceMD = ({ date, workplaces = null, work, lang }) => {
+export const ChangeWorkplaceMD = ({ date, workplaces = null, work, lang, isEmpty }) => {
   const theme = useTheme();
   const isSent = date.isSent;
 
@@ -165,11 +138,33 @@ export const ChangeWorkplaceMD = ({ date, workplaces = null, work, lang }) => {
         },
       }}
     >
-      {!isSent ? (
-        <SelectWork date={date} workplaces={workplaces} work={work} lang={lang} />
-      ) : (
-        <IsSent date={date} lang={lang} />
-      )}
+      {!isSent ? <SelectWork date={date} workplaces={workplaces} work={work} lang={lang} /> : <IsSent date={date} lang={lang} isEmpty={isEmpty} />}
     </TableCell>
   );
+};
+
+ChangeWorkplaceSM.propTypes = {
+  date: PropTypes.object,
+  workplaces: PropTypes.array,
+  work: PropTypes.string,
+  lang: PropTypes.object,
+};
+
+ChangeWorkplaceMD.propTypes = {
+  date: PropTypes.object,
+  workplaces: PropTypes.array,
+  work: PropTypes.string,
+  lang: PropTypes.object,
+};
+
+SelectWork.propTypes = {
+  date: PropTypes.object,
+  workplaces: PropTypes.array,
+  work: PropTypes.string,
+  lang: PropTypes.object,
+};
+
+IsSent.propTypes = {
+  date: PropTypes.object,
+  lang: PropTypes.object,
 };

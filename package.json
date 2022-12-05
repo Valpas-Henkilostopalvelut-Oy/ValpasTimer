@@ -12,27 +12,27 @@
   },
   "private": true,
   "dependencies": {
-    "@aws-sdk/client-cognito-identity": "^3.218.0",
-    "@aws-sdk/client-s3": "^3.218.0",
-    "@aws-sdk/credential-provider-cognito-identity": "^3.218.0",
+    "@aws-sdk/client-cognito-identity": "^3.223.0",
+    "@aws-sdk/client-s3": "^3.223.0",
+    "@aws-sdk/credential-provider-cognito-identity": "^3.223.0",
     "@date-io/date-fns": "^2.16.0",
     "@emotion/styled": "^11.10.5",
     "@mui/icons-material": "^5.10.16",
     "@mui/lab": "^5.0.0-alpha.110",
     "@mui/material": "^5.10.16",
     "@mui/x-date-pickers": "^5.0.9",
-    "@sentry/react": "^7.22.0",
-    "@sentry/tracing": "^7.22.0",
+    "@sentry/react": "^7.23.0",
+    "@sentry/tracing": "^7.23.0",
     "aws-amplify": "^5.0.4",
-    "aws-sdk": "^2.1264.0",
+    "aws-sdk": "^2.1267.0",
     "date-fns": "^2.29.3",
     "formik": "^2.2.9",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-bootstrap": "^0.26.2",
-    "react-router-dom": "^6.4.3",
+    "react-router-dom": "^6.4.4",
     "react-scripts": "5.0.1",
-    "react-select": "^5.6.1",
+    "react-select": "^5.7.0",
     "web-vitals": "^3.1.0",
     "yup": "^0.32.11"
   },
@@ -55,11 +55,13 @@
     ]
   },
   "prettier": {
-    "printWidth": 120,
+    "printWidth": 200,
     "proseWrap": "never"
   },
   "devDependencies": {
-    "eslint": "^8.28.0",
-    "eslint-plugin-react": "^7.31.11"
+    "eslint": "^8.29.0",
+    "eslint-plugin-react": "^7.31.11",
+    "webpack-cli": "^5.0.0",
+    "webpack-dev-server": "^4.11.1"
   }
 }

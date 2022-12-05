@@ -2,6 +2,7 @@ import React from "react";
 import { InputLabel, MenuItem, FormControl, Select } from "@mui/material";
 import { DataStore } from "aws-amplify";
 import { TimeEntry } from "../../../../models";
+import { PropTypes } from "prop-types";
 
 const updateWork = async (data, sel) => {
   await DataStore.save(
@@ -75,4 +76,20 @@ export const EditWorkplaceManual = ({ setSel, sel, works = null, lang = { workpl
       </FormControl>
     )
   );
+};
+
+EditWorkplaceTimer.propTypes = {
+  setSel: PropTypes.func,
+  sel: PropTypes.string,
+  works: PropTypes.array,
+  isStarted: PropTypes.bool,
+  data: PropTypes.object,
+  lang: PropTypes.object,
+};
+
+EditWorkplaceManual.propTypes = {
+  setSel: PropTypes.func,
+  sel: PropTypes.string,
+  works: PropTypes.array,
+  lang: PropTypes.object,
 };

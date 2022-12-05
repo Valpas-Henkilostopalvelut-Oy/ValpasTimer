@@ -1,5 +1,4 @@
 import React from "react";
-
 import {
   Table,
   TableCell,
@@ -14,6 +13,7 @@ import {
   Checkbox,
 } from "@mui/material";
 import { visuallyHidden } from "@mui/utils";
+import { PropTypes } from "prop-types";
 
 const UserTableToolbar = ({ numSelected }) => {
   return (
@@ -111,4 +111,22 @@ export const UserTable = ({ data }) => {
       </Paper>
     </Box>
   );
+};
+
+UserTable.propTypes = {
+  data: PropTypes.object,
+};
+
+UserTableToolbar.propTypes = {
+  numSelected: PropTypes.number,
+};
+
+EnhancedTableHead.propTypes = {
+  onSelectAllClick: PropTypes.func,
+  order: PropTypes.string,
+  orderBy: PropTypes.string,
+  numSelected: PropTypes.number,
+  rowCount: PropTypes.number,
+  onRequestSort: PropTypes.func,
+  aditionalInfo: PropTypes.array,
 };

@@ -3,6 +3,7 @@ import { Box, Tab } from "@mui/material";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
 import { Timer } from "./services/timer.jsx";
 import { Manual } from "./services/manual.jsx";
+import { PropTypes } from "prop-types";
 
 export const Recorder = ({ works = null, lang, isEmpty = false }) => {
   const [description, setDescription] = useState("");
@@ -36,7 +37,7 @@ export const Recorder = ({ works = null, lang, isEmpty = false }) => {
         </TabPanel>
         <TabPanel value="2" sx={{ paddingLeft: 0, paddingRight: 0 }}>
           <Manual
-          isEmpty={isEmpty}
+            isEmpty={isEmpty}
             description={description}
             setDescription={setDescription}
             sel={sel}
@@ -48,4 +49,10 @@ export const Recorder = ({ works = null, lang, isEmpty = false }) => {
       </TabContext>
     </Box>
   );
+};
+
+Recorder.propTypes = {
+  works: PropTypes.array,
+  lang: PropTypes.object,
+  isEmpty: PropTypes.bool,
 };

@@ -6,6 +6,7 @@ import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import ThumbUpAltIcon from "@mui/icons-material/ThumbUpAlt";
 import TaskAltIcon from "@mui/icons-material/TaskAlt";
 import ClearIcon from "@mui/icons-material/Clear";
+import { PropTypes } from "prop-types";
 
 const sent = (date) => {
   let isSent = date.arr.filter((e) => e.isSent).length;
@@ -108,4 +109,16 @@ export const StatusMD = ({
       </Box>
     </TableCell>
   );
+};
+
+StatusMD.propTypes = {
+  date: PropTypes.object,
+  lang: PropTypes.object,
+  isEmpty: PropTypes.bool,
+};
+
+StatusSM.propTypes = {
+  date: PropTypes.object,
+  lang: PropTypes.object,
+  isEmpty: PropTypes.bool,
 };

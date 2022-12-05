@@ -2,6 +2,7 @@ import React from "react";
 import { TextField } from "@mui/material";
 import { DataStore } from "aws-amplify";
 import { TimeEntry } from "../../../../models";
+import { PropTypes } from "prop-types";
 
 export const EditDescription = ({ description, setDescription, lang = { description: "Description" } }) => {
   return (
@@ -44,4 +45,18 @@ export const EditDescriptionTimer = ({
       fullWidth
     />
   );
+};
+
+EditDescription.propTypes = {
+  description: PropTypes.string,
+  setDescription: PropTypes.func,
+  lang: PropTypes.object,
+};
+
+EditDescriptionTimer.propTypes = {
+  description: PropTypes.string,
+  setDescription: PropTypes.func,
+  data: PropTypes.object,
+  isStarted: PropTypes.bool,
+  lang: PropTypes.object,
 };

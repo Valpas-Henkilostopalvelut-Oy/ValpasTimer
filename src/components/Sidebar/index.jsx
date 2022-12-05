@@ -1,8 +1,8 @@
 import React from "react";
 import { SidebarList } from "./SidebarDate.jsx";
 import { Box, SwipeableDrawer } from "@mui/material";
-
 import { useAppContext } from "../../services/contextLib.jsx";
+import { PropTypes } from "prop-types";
 
 const Sidebar = ({ open, setOpen, isAuth = false }) => {
   const { langValue } = useAppContext();
@@ -37,6 +37,12 @@ const Sidebar = ({ open, setOpen, isAuth = false }) => {
       </SwipeableDrawer>
     )
   );
+};
+
+Sidebar.propTypes = {
+  open: PropTypes.bool,
+  setOpen: PropTypes.func,
+  isAuth: PropTypes.bool,
 };
 
 export default Sidebar;

@@ -4,13 +4,13 @@ import { TextToTime } from "../../../services/time.jsx";
 import { DataStore } from "aws-amplify";
 import { TimeEntry } from "../../../models/index.js";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
+import { PropTypes } from "prop-types";
 
 export const STime = ({ date }) => {
   let sTime = new Date(date.arr[date.arr.length - 1].timeInterval.start);
   return (
     <Typography variant="p">
-      {sTime.getHours() > 9 ? sTime.getHours() : "0" + sTime.getHours()}:
-      {sTime.getMinutes() > 9 ? sTime.getMinutes() : "0" + sTime.getMinutes()}
+      {sTime.getHours() > 9 ? sTime.getHours() : "0" + sTime.getHours()}:{sTime.getMinutes() > 9 ? sTime.getMinutes() : "0" + sTime.getMinutes()}
     </Typography>
   );
 };
@@ -19,8 +19,7 @@ export const ETime = ({ date }) => {
   let eTime = new Date(date.arr[0].timeInterval.end);
   return (
     <Typography variant="p">
-      {eTime.getHours() > 9 ? eTime.getHours() : "0" + eTime.getHours()}:
-      {eTime.getMinutes() > 9 ? eTime.getMinutes() : "0" + eTime.getMinutes()}
+      {eTime.getHours() > 9 ? eTime.getHours() : "0" + eTime.getHours()}:{eTime.getMinutes() > 9 ? eTime.getMinutes() : "0" + eTime.getMinutes()}
     </Typography>
   );
 };
@@ -159,4 +158,26 @@ export const MoreButton = ({
       </Menu>
     </>
   );
+};
+
+STime.propTypes = {
+  date: PropTypes.object,
+};
+
+ETime.propTypes = {
+  date: PropTypes.object,
+};
+
+EditSTime.propTypes = {
+  date: PropTypes.object,
+};
+
+EditETime.propTypes = {
+  date: PropTypes.object,
+};
+
+MoreButton.propTypes = {
+  date: PropTypes.object,
+  isEmpty: PropTypes.bool,
+  lang: PropTypes.object,
 };
