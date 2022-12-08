@@ -7,7 +7,7 @@ const getWorkerName = async () => {
   var first_name = user.attributes.name;
   var last_name = user.attributes.family_name;
 
-  return first_name + " " + last_name;
+  return { first_name, last_name };
 };
 
 const getYear = (d) => {
@@ -135,7 +135,7 @@ export const fillWeek = async (data, workplace, works) => {
   form.getField("week").setText(String(data.week));
   form.getField("year").setText(String(getYear(new Date())));
   form.getField("client").setText(getWorkName(workplace, works));
-  form.getField("worker").setText(await getWorkerName());
+  form.getField("worker").setText((await getWorkerName()).last_name + " " + (await getWorkerName()).first_name);
   form.getField("total").setText(String(getTotalWeek(days, workplace)));
 
   days.forEach((day) => {
@@ -147,7 +147,15 @@ export const fillWeek = async (data, workplace, works) => {
       let start = new Date(arr[0].timeInterval.start);
       let end = new Date(arr[0].timeInterval.end);
       form.getField(values.dayName + "-start-time").setText(String(start.getHours()) + ":" + String(start.getMinutes()));
-      form.getField(values.dayName + "-end-time").setText(String(end.getHours()) + ":" + String(end.getMinutes()));
+      form
+        .getField(values.dayName + "-end-time")
+        .setText(
+          String(end.getHours()).length > 1
+            ? String(end.getHours())
+            : String("0" + end.getHours()) + ":" + String(end.getMinutes()).length > 1
+            ? String(end.getMinutes())
+            : String("0" + end.getMinutes())
+        );
       form.getField(values.dayName + "-total").setText(String(getTotal(arr[0].timeInterval.start, arr[0].timeInterval.end)));
     } else {
       var sTimes = arr.map((a) => Date.parse(a.timeInterval.start));
@@ -169,7 +177,7 @@ export const fillWeek = async (data, workplace, works) => {
     const blob = new Blob([pdfBytes], { type: "application/pdf" });
     const link = document.createElement("a");
     link.href = window.URL.createObjectURL(blob);
-    link.download = "test.pdf";
+    link.download = `${(await getWorkerName()).last_name}-${(await getWorkerName()).first_name}-week-${data.week}.pdf`;
     link.click();
   }
 };
