@@ -147,15 +147,7 @@ export const fillWeek = async (data, workplace, works) => {
       let start = new Date(arr[0].timeInterval.start);
       let end = new Date(arr[0].timeInterval.end);
       form.getField(values.dayName + "-start-time").setText(String(start.getHours()) + ":" + String(start.getMinutes()));
-      form
-        .getField(values.dayName + "-end-time")
-        .setText(
-          String(end.getHours()).length > 1
-            ? String(end.getHours())
-            : String("0" + end.getHours()) + ":" + String(end.getMinutes()).length > 1
-            ? String(end.getMinutes())
-            : String("0" + end.getMinutes())
-        );
+      form.getField(values.dayName + "-end-time").setText(String(end.getHours()) + ":" + String(end.getMinutes()));
       form.getField(values.dayName + "-total").setText(String(getTotal(arr[0].timeInterval.start, arr[0].timeInterval.end)));
     } else {
       var sTimes = arr.map((a) => Date.parse(a.timeInterval.start));

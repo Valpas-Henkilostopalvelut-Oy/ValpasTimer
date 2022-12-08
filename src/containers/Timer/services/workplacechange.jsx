@@ -40,7 +40,7 @@ const SelectWork = ({
       await DataStore.query(AllWorkSpaces)
         .then((res) => {
           let workName = res.find((item) => item.id === date.workspaceId);
-          setName(workName.name);
+          setName(workName !== undefined ? workName.name : "Vaihda työpaikkaa");
         })
         .catch((e) => console.warn(e));
     };

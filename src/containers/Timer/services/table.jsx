@@ -35,7 +35,7 @@ const Details = ({ row, lang, workplaces, isEmpty }) => {
             {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
           </IconButton>
         </TableCell>
-        <TableCell align="right">{workplaces.find((item) => item.id === row.workId).name}</TableCell>
+        <TableCell align="right">{workplaces.find((item) => item.id === row.workId) !== undefined ? workplaces.find((item) => item.id === row.workId).name : "Vaihda työpaikkaa"}</TableCell>
 
         <Emptycell />
 
