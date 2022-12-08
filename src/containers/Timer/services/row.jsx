@@ -1,8 +1,9 @@
 import React from "react";
-import { Grid, Typography, Box, Table, TableContainer, TableBody, TableCell, TableRow } from "@mui/material";
+import { Grid, Typography, Box } from "@mui/material";
 import { totaldaytime, totalweektime } from "./totaltime";
-import { Details } from "./table.jsx";
+import { Main } from "./table.jsx";
 import { Reportallweek } from "./buttons.jsx";
+import { PropTypes } from "prop-types";
 
 export const WeekRow = ({ grouped, lang, works, isEmpty }) => {
   return grouped.map((week) => (
@@ -78,12 +79,17 @@ export const Row = ({ week, lang, works, isEmpty }) => {
               </Typography>
             </Box>
 
-            {date.arr.map((row, i) => (
-              <Details key={i} row={row} workplaces={works} lang={lang.history} isEmpty={isEmpty} />
-            ))}
+            <Main row={date} workplaces={works} lang={lang.history} isEmpty={isEmpty} />
           </Box>
         </Grid>
       </Grid>
     ))
   );
+};
+
+WeekRow.propTypes = {
+  grouped: PropTypes.array,
+  lang: PropTypes.object,
+  works: PropTypes.array,
+  isEmpty: PropTypes.bool,
 };

@@ -28,9 +28,7 @@ const EditDescription = ({
     <Box
       sx={{
         cursor: !isSent && "pointer",
-        [theme.breakpoints.up("sm")]: {
-          maxWidth: "280px",
-        },
+        maxWidth: "280px"
       }}
     >
       <Typography variant="p" onClick={() => setOpen(true && !isSent)}>

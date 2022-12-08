@@ -1,102 +1,96 @@
 import React, { Fragment } from "react";
 
-import { Table, TableBody, TableCell, TableRow, IconButton, Collapse, Box, TableContainer } from "@mui/material";
+import { Table, TableBody, TableCell, TableRow, IconButton, Box, TableContainer } from "@mui/material";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import { STime, ETime, EditSTime, EditETime, MoreButton } from "./times.jsx";
 import { TotalTime } from "./edittotaltime.jsx";
-import { StatusMD, StatusSM } from "./isSent.jsx";
+import { StatusMD, StatusSM, Emptycell } from "./isSent.jsx";
 import { EditDescriptionSM, EditDescriptionMD } from "./editdescription.jsx";
 import { ChangeWorkplaceSM, ChangeWorkplaceMD } from "./workplacechange.jsx";
 import { EditDateSM, EditDateMD } from "./editdate.jsx";
 import { PropTypes } from "prop-types";
 
-export const Details = ({ row, workplaces, lang, isEmpty }) => {
-  console.log();
-  const [open, setOpen] = React.useState(false);
+export const Main = ({ row, workplaces, lang, isEmpty }) => {
   return (
     <TableContainer>
-      {row.arr.length > 1 ? (
-        <Table aria-label="collapsible table" size="small">
-          <TableBody>
-            <Fragment>
-              <TableRow onClick={() => setOpen(!open)} sx={{ cursor: "pointer" }}>
-                <TableCell>
-                  <IconButton aria-label="expand row" size="small">
-                    {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
-                  </IconButton>
-                </TableCell>
-                <TableCell align="right">{workplaces.find((item) => item.id === row.workId).name}</TableCell>
-                <TableCell>
-                  <Box width="60px" />
-                </TableCell>
-
-                <TableCell align="right">
-                  <Box sx={{ display: "flex", justifyContent: "space-around", width: "120px" }}>
-                    <STime date={row} /> - <ETime date={row} />
-                  </Box>
-                </TableCell>
-
-                <StatusMD date={row} lang={lang} isEmpty={isEmpty} />
-              </TableRow>
-
-              <StatusSM date={row} lang={lang} isEmpty={isEmpty} />
-
-              <TableRow>
-                <TableCell
-                  colSpan={6}
-                  sx={{
-                    p: 0,
-                  }}
-                >
-                  <Collapse in={open} timeout="auto" unmountOnExit>
-                    {row.arr.map((date, i) => (
-                      <RowDetails key={i} row={date} lang={lang} workplaces={workplaces} isEmpty={isEmpty} />
-                    ))}
-                  </Collapse>
-                </TableCell>
-              </TableRow>
-            </Fragment>
-          </TableBody>
-        </Table>
-      ) : (
-        <RowDetails row={row.arr[0]} lang={lang} workplaces={workplaces} isEmpty={isEmpty} />
-      )}
+      <Table aria-label="collapsible table" size="small">
+        <TableBody>
+          {row.arr.map((row, index) => (
+            <Details key={index} row={row} workplaces={workplaces} lang={lang} isEmpty={isEmpty} />
+          ))}
+        </TableBody>
+      </Table>
     </TableContainer>
+  );
+};
+
+const Details = ({ row, lang, workplaces, isEmpty }) => {
+  const [open, setOpen] = React.useState(false);
+  return (
+    <Fragment>
+      <TableRow onClick={() => setOpen(!open)} sx={{ cursor: "pointer" }}>
+        <TableCell>
+          <IconButton aria-label="expand row" size="small">
+            {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+          </IconButton>
+        </TableCell>
+        <TableCell align="right">{workplaces.find((item) => item.id === row.workId).name}</TableCell>
+
+        <Emptycell />
+
+        <TableCell align="right">
+          <Box display="flex" justifyContent="space-around" width="120px">
+            <STime date={row} /> - <ETime date={row} />
+          </Box>
+        </TableCell>
+
+        <StatusMD date={row} lang={lang} isEmpty={isEmpty} />
+      </TableRow>
+
+      <StatusSM date={row} lang={lang} isEmpty={isEmpty} />
+
+      {open && row.arr.map((date, i) => <RowDetails key={i} row={date} lang={lang} workplaces={workplaces} isEmpty={isEmpty} />)}
+    </Fragment>
   );
 };
 
 const RowDetails = ({ row, lang, workplaces, isEmpty }) => {
   return (
-    <Table size="small">
-      <TableBody>
-        <EditDescriptionSM date={row} lang={lang} />
-        <ChangeWorkplaceSM date={row} workplaces={workplaces} work={row.workspaceId} lang={lang} isEmpty={isEmpty} />
-        <EditDateSM data={row} lang={lang} />
-        <TableRow>
-          <EditDescriptionMD date={row} lang={lang} />
+    <Fragment>
+      <EditDescriptionSM date={row} lang={lang} />
+      <ChangeWorkplaceSM date={row} workplaces={workplaces} work={row.workspaceId} lang={lang} isEmpty={isEmpty} />
+      <EditDateSM data={row} lang={lang} />
+      <TableRow>
+        <EditDescriptionMD date={row} lang={lang} />
 
-          <ChangeWorkplaceMD date={row} workplaces={workplaces} work={row.workspaceId} lang={lang} isEmpty={isEmpty} />
+        <ChangeWorkplaceMD date={row} workplaces={workplaces} work={row.workspaceId} lang={lang} isEmpty={isEmpty} />
 
-          <EditDateMD data={row} lang={lang} />
+        <EditDateMD data={row} lang={lang} />
 
-          <TableCell align="right">
-            <Box sx={{ display: "flex", justifyContent: "space-around", width: "120px" }}>
-              <EditSTime date={row} /> {"-"} <EditETime date={row} />
-            </Box>
-          </TableCell>
+        <TableCell align="right">
+          <Box display="flex" justifyContent="space-around" width="120px">
+            <EditSTime date={row} /> {"-"} <EditETime date={row} />
+          </Box>
+        </TableCell>
 
-          <TableCell align="right">
-            <TotalTime date={row} />
-          </TableCell>
+        <TableCell align="right">
+          <TotalTime date={row} />
+        </TableCell>
 
-          <TableCell align="right">
-            <MoreButton date={row} lang={lang} isEmpty={isEmpty} />
-          </TableCell>
-        </TableRow>
-      </TableBody>
-    </Table>
+        <TableCell align="right">
+          <MoreButton date={row} lang={lang} isEmpty={isEmpty} />
+        </TableCell>
+      </TableRow>
+    </Fragment>
   );
+};
+
+Main.propTypes = {
+  row: PropTypes.object,
+  workplaces: PropTypes.array,
+  lang: PropTypes.object,
+  isEmpty: PropTypes.bool,
 };
 
 Details.propTypes = {

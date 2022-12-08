@@ -2,10 +2,11 @@ import React, { useState } from "react";
 import { Grid, Typography, Box, Collapse, IconButton } from "@mui/material";
 import { totalweektime } from "./totaltime";
 import { Row } from "./row";
+import { MakePDF } from "../../../components/MakePDF";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
+import { PropTypes } from "prop-types";
 
-// eslint-disable-next-line no-unused-vars
 const isSent = (data) => {
   var arr = data.arr;
 
@@ -17,11 +18,11 @@ const isSent = (data) => {
   });
 };
 
-export const HistoryRow = ({ grouped, lang, works, isEmpty }) => {
-  return grouped.map((week) => <CollapseRow key={week.week} week={week} lang={lang} works={works} isEmpty={isEmpty} />);
+export const HistoryRow = ({ grouped, lang, works, isEmpty, selected }) => {
+  return grouped.map((week) => <CollapseRow key={week.week} week={week} lang={lang} works={works} isEmpty={isEmpty} selected={selected} />);
 };
 
-const CollapseRow = ({ week, lang, works, isEmpty }) => {
+const CollapseRow = ({ week, lang, works, isEmpty, selected }) => {
   const [open, setOpen] = useState(false);
 
   return (
@@ -51,8 +52,7 @@ const CollapseRow = ({ week, lang, works, isEmpty }) => {
             </Typography>
 
             <Typography variant="p" color="text.secondary">
-              {lang.history.total_time}{" "}
-              {totalweektime(week).h > 9 ? totalweektime(week).h : "0" + totalweektime(week).h}:
+              {lang.history.total_time} {totalweektime(week).h > 9 ? totalweektime(week).h : "0" + totalweektime(week).h}:
               {totalweektime(week).min > 9 ? totalweektime(week).min : "0" + totalweektime(week).min}
             </Typography>
 
@@ -70,10 +70,27 @@ const CollapseRow = ({ week, lang, works, isEmpty }) => {
       <Grid item xs={12}>
         <Collapse in={open} timeout="auto" unmountOnExit>
           <Box mb="20px">
+            <MakePDF data={week} isEmpty={isEmpty} selected={selected} works={works} />
             <Row week={week} lang={lang} isEmpty={isEmpty} works={works} />
           </Box>
         </Collapse>
       </Grid>
     </Grid>
   );
+};
+
+CollapseRow.propTypes = {
+  week: PropTypes.object,
+  lang: PropTypes.object,
+  works: PropTypes.array,
+  isEmpty: PropTypes.bool,
+  selected: PropTypes.string,
+};
+
+HistoryRow.propTypes = {
+  grouped: PropTypes.array,
+  lang: PropTypes.object,
+  works: PropTypes.array,
+  isEmpty: PropTypes.bool,
+  selected: PropTypes.string,
 };

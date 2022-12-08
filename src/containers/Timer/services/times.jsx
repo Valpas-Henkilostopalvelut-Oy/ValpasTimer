@@ -131,11 +131,7 @@ export const MoreButton = ({
   const isConfirmed = !date.isConfirmed;
 
   return (
-    <Box
-      sx={{
-        width: "40px",
-      }}
-    >
+    <Box>
       <IconButton aria-label="more" aria-controls="long-menu" aria-haspopup="true" onClick={handleClick}>
         <MoreVertIcon />
       </IconButton>

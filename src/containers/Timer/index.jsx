@@ -272,7 +272,7 @@ const Timer = () => {
                 </Typography>
               </Box>
 
-              {confirmedWeeks.length > 0 && <HistoryRow grouped={confirmedWeeks} lang={lang} isEmpty={isEmpty} works={works} />}
+              {confirmedWeeks.length > 0 && <HistoryRow grouped={confirmedWeeks} lang={lang} isEmpty={isEmpty} works={works} selected={selected} />}
             </Box>
           </Grid>
         </Grid>

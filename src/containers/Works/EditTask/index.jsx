@@ -5,6 +5,7 @@ import LoaderButton from "../../../components/LoaderButton/index.jsx";
 import { DataStore } from "aws-amplify";
 import { Tasks } from "../../../models";
 import { UserSelect, SelectDuration, SelectEndDate, SelectStartDate, SelectStartTime, WorkSelect } from "../CreateTask/index.jsx";
+import { PropTypes } from "prop-types";
 
 export const EditTask = ({ data = null, open = false, handleClose, reload }) => {
   const [user, setUser] = useState(data.user);
@@ -59,28 +60,10 @@ export const EditTask = ({ data = null, open = false, handleClose, reload }) => 
               <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 2, width: 350 }}>
                 <Grid container spacing={2}>
                   <Grid item xs={12}>
-                    <TextField
-                      fullWidth
-                      id="title"
-                      label="Title"
-                      name="title"
-                      value={values.title}
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                    />
+                    <TextField fullWidth id="title" label="Title" name="title" value={values.title} onChange={handleChange} onBlur={handleBlur} />
                   </Grid>
                   <Grid item xs={12}>
-                    <TextField
-                      fullWidth
-                      id="description"
-                      label="Description"
-                      name="description"
-                      multiline
-                      rows={4}
-                      value={values.description}
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                    />
+                    <TextField fullWidth id="description" label="Description" name="description" multiline rows={4} value={values.description} onChange={handleChange} onBlur={handleBlur} />
                   </Grid>
                   <Grid item xs={12}>
                     <UserSelect setUser={setUser} id={data.user.userId} />
@@ -89,14 +72,7 @@ export const EditTask = ({ data = null, open = false, handleClose, reload }) => 
                     <WorkSelect setWork={setWork} id={data.workplace.workId} />
                   </Grid>
                   <Grid item xs={6}>
-                    <SelectStartTime
-                      setStartTime={setStartDate}
-                      startTime={new Date(startDate).setHours(
-                        data.startTime.slice(0, 2),
-                        data.startTime.slice(3, 5),
-                        data.startTime.slice(6, 8)
-                      )}
-                    />
+                    <SelectStartTime setStartTime={setStartDate} startTime={new Date(startDate).setHours(data.startTime.slice(0, 2), data.startTime.slice(3, 5), data.startTime.slice(6, 8))} />
                   </Grid>
                   <Grid item xs={6}>
                     <SelectDuration setDuration={setDuration} duration={duration} />
@@ -126,4 +102,11 @@ export const EditTask = ({ data = null, open = false, handleClose, reload }) => 
       </Formik>
     </Dialog>
   );
+};
+
+EditTask.propTypes = {
+  data: PropTypes.object,
+  open: PropTypes.bool,
+  handleClose: PropTypes.func,
+  reload: PropTypes.func,
 };

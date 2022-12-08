@@ -21,6 +21,21 @@ const confirmed = (date) => {
   return isConfirmed === isNotConfirmed;
 };
 
+export const Emptycell = () => {
+  const theme = useTheme();
+  return (
+    <TableCell
+      sx={{
+        [theme.breakpoints.down("sm")]: {
+          display: "none",
+        },
+      }}
+    >
+      <Box width={"50px"} />
+    </TableCell>
+  );
+};
+
 export const StatusSM = ({
   date,
   lang = {
@@ -77,24 +92,39 @@ export const StatusMD = ({
 }) => {
   const theme = useTheme();
   return sent(date) ? (
-    <Fragment
-      sx={{
-        [theme.breakpoints.down("sm")]: {
-          display: "none",
-        },
-      }}
-    >
-      <TableCell>
-        <Box width="60px" />
-      </TableCell>
-      <TableCell align="right">
+    <Fragment>
+      <TableCell
+        sx={{
+          [theme.breakpoints.down("sm")]: {
+            display: "none",
+          },
+        }}
+      />
+
+      <TableCell
+        align="right"
+        sx={{
+          [theme.breakpoints.down("sm")]: {
+            display: "none",
+          },
+        }}
+      >
         <DeleteAll date={date} lang={lang} isEmpty={isEmpty} />
       </TableCell>
     </Fragment>
   ) : (
     <Fragment>
-      <TableCell>
-        {lang.sent}: <TaskAltIcon color="success" />
+      <TableCell
+        align="right"
+        sx={{
+          [theme.breakpoints.down("sm")]: {
+            display: "none",
+          },
+        }}
+      >
+        <Box width="70px">
+          {lang.sent}: <TaskAltIcon color="success" />
+        </Box>
       </TableCell>
       <TableCell
         align="right"

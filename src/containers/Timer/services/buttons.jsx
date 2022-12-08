@@ -29,11 +29,7 @@ export const DeleteAll = ({
   const [open, setOpen] = useState(false);
   var isSent = date.isSent;
   return (
-    <Box
-      sx={{
-        width: "50px",
-      }}
-    >
+    <Box>
       <IconButton onClick={() => setOpen(true)} disabled={!isEmpty}>
         <DeleteIcon />
       </IconButton>

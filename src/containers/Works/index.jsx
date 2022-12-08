@@ -1,18 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {
-  Menu,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableRow,
-  Paper,
-  MenuItem,
-  CircularProgress,
-  IconButton,
-  Tooltip,
-  Container,
-} from "@mui/material";
+import { Menu, Table, TableBody, TableCell, TableContainer, TableRow, Paper, MenuItem, CircularProgress, IconButton, Tooltip, Container } from "@mui/material";
 import { EnhancedWorks } from "./CreateTask/index.jsx";
 import { DataStore } from "aws-amplify";
 import { Tasks } from "../../models";
@@ -20,6 +7,7 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { deleteTask } from "./Tools/index.jsx";
 import { WorkStatus } from "../../services/workLib.jsx";
 import { EditTask } from "./EditTask/index.jsx";
+import { PropTypes } from "prop-types";
 
 const More = ({ data = null, reload }) => {
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -48,13 +36,7 @@ const More = ({ data = null, reload }) => {
   return (
     <div>
       <Tooltip title="More">
-        <IconButton
-          aria-label="more"
-          id="more-button"
-          aria-controls={open ? "more-menu" : undefined}
-          aria-haspopup="true"
-          onClick={handleClick}
-        >
+        <IconButton aria-label="more" id="more-button" aria-controls={open ? "more-menu" : undefined} aria-haspopup="true" onClick={handleClick}>
           <MoreVertIcon />
         </IconButton>
       </Tooltip>
@@ -169,6 +151,16 @@ const Works = () => {
       <CircularProgress />
     </Container>
   );
+};
+
+Works.propTypes = {
+  data: PropTypes.object,
+  reload: PropTypes.func,
+};
+
+More.propTypes = {
+  data: PropTypes.object,
+  reload: PropTypes.func,
 };
 
 export default Works;
