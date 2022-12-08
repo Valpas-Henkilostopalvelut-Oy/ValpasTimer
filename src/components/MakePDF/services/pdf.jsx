@@ -42,7 +42,7 @@ const getTotal = (start, end) => {
 
   h = parseInt(h, 10);
   m = m ? parseInt(m, 10) : 0;
-  return h + m / 60;
+  return (h + m / 60).toFixed(2);
 };
 
 const getArrTotal = (arr) => {
@@ -96,6 +96,30 @@ const check = (arr, sTime, eTime) => {
   else return h + "h " + m.toFixed(0) + "min muu menoja";
 };
 
+const getTotalWeek = (arr, workplace) => {
+  var h = 0;
+  var m = 0;
+
+  arr.forEach((day) => {
+    let arr = day.arr.find((a) => a.workId === workplace).arr.filter((a) => a.isSent && a.isConfirmed);
+    if (arr.length === 0) return;
+    arr.forEach((a) => {
+      let total = Date.parse(a.timeInterval.end) - Date.parse(a.timeInterval.start);
+      h = h + Math.floor(total / (1000 * 60 * 60));
+      m = m + Math.floor((total / (1000 * 60)) % 60);
+      if (m > 59) {
+        h++;
+        m = m % 60;
+      }
+    });
+  });
+
+  h = parseInt(h, 10);
+  m = m ? parseInt(m, 10) : 0;
+
+  return (h + m / 60).toFixed(2);
+};
+
 export const fillWeek = async (data, workplace, works) => {
   if (data === undefined) return;
   var client = await contentful.createClient({
@@ -112,6 +136,7 @@ export const fillWeek = async (data, workplace, works) => {
   form.getField("year").setText(String(getYear(new Date())));
   form.getField("client").setText(getWorkName(workplace, works));
   form.getField("worker").setText(await getWorkerName());
+  form.getField("total").setText(String(getTotalWeek(days, workplace)));
 
   days.forEach((day) => {
     let arr = day.arr.find((a) => a.workId === workplace).arr.filter((a) => a.isSent && a.isConfirmed);
