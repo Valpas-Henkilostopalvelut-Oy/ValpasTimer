@@ -88,7 +88,10 @@ const Timer = () => {
 
         const filtered = databaseTimeList.filter(
           (a) =>
-            !a.isActive && a.userId === currentUser.username && (selected !== "" ? a.workspaceId === selected : true)
+            !a.isActive &&
+            a.userId === currentUser.username &&
+            (selected !== "" ? a.workspaceId === selected : true) &&
+            !a.isSent
         );
 
         setGrouped(groupBy(filtered, works, langValue).filter((t) => t.week === thisweek));
@@ -117,7 +120,7 @@ const Timer = () => {
               (selected !== "" ? a.workspaceId === selected : true)
           );
 
-          setNotConfirmedWeek(groupBy(filtered, works, langValue).filter((w) => w.week !== thisweek));
+          setNotConfirmedWeek(groupBy(filtered, works, langValue));
         });
       });
     };
@@ -141,7 +144,7 @@ const Timer = () => {
               (!a.isSent || a.isConfirmed)
           );
 
-          setConfirmedWeeks(groupBy(filtered, works, langValue).filter((w) => w.week !== thisweek));
+          setConfirmedWeeks(groupBy(filtered, works, langValue));
         });
       });
     };

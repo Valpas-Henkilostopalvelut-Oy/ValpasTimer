@@ -131,7 +131,12 @@ export const Reportallweek = ({
 
   return (
     !isSent() && (
-      <Button variant="text" color="primary" onClick={() => weekreport(date, selected)} disabled={!isEmpty}>
+      <Button
+        variant="text"
+        color="primary"
+        onClick={() => weekreport(date, selected)}
+        disabled={!isEmpty || selected === ""}
+      >
         {lang.buttons.reportweek}
       </Button>
     )
