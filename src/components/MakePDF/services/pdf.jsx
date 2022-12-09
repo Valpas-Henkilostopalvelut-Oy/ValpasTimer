@@ -144,7 +144,7 @@ const setToPDF = async (form, data, workplace, works, page = "") => {
     let values = getDay(arr[0].timeInterval.start);
 
     form.getField(values.dayName + page).setText(values.value);
-    
+
     if (arr.length === 1) {
       let start = new Date(arr[0].timeInterval.start);
       let end = new Date(arr[0].timeInterval.end);
@@ -153,8 +153,11 @@ const setToPDF = async (form, data, workplace, works, page = "") => {
         String(start.getHours()).length > 1 ? String(start.getHours()) : "0" + String(start.getHours())
       }:${String(start.getMinutes()).length > 1 ? String(start.getMinutes()) : "0" + String(start.getMinutes())}`;
 
-      let endTime = `${String(end.getHours()).length > 1 ? String(end.getHours()) : "0" + String(end.getHours())}
-        :${String(end.getMinutes()).length > 1 ? String(end.getMinutes()) : "0" + String(end.getMinutes())}`;
+      let endTime = `${String(end.getHours()).length > 1 ? String(end.getHours()) : "0" + String(end.getHours())}:${
+        String(end.getMinutes()).length > 1 ? String(end.getMinutes()) : "0" + String(end.getMinutes())
+      }`;
+
+      console.log(startTime, endTime);
 
       form.getField(values.dayName + "-start-time" + page).setText(startTime);
       form.getField(values.dayName + "-end-time" + page).setText(endTime);
