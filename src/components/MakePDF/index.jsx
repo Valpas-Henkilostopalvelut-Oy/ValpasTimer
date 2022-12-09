@@ -1,10 +1,10 @@
 import React from "react";
-import { Typography, Button, MenuItem, IconButton, Box } from "@mui/material";
+import { Typography, Button } from "@mui/material";
 
 import { fillWeek } from "./services/pdf.jsx";
 import { PropTypes } from "prop-types";
 
-export const MakePDF = ({ data, isEmpty, setEmpty, selected = "", works }) => {
+export const MakePDF = ({ data, isEmpty, selected = "", works }) => {
   const handleClick = () => {
     fillWeek(data, selected, works);
   };
@@ -19,8 +19,9 @@ export const MakePDF = ({ data, isEmpty, setEmpty, selected = "", works }) => {
 };
 
 MakePDF.propTypes = {
-  data: PropTypes.object,
+  data: PropTypes.array,
   isEmpty: PropTypes.bool,
   setEmpty: PropTypes.func,
   selected: PropTypes.string,
+  works: PropTypes.array,
 };

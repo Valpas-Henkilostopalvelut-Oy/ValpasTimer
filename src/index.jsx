@@ -11,7 +11,8 @@ import awsconfig from "./aws-exports";
 import { createUser } from "./services/createUser.jsx";
 import * as Sentry from "@sentry/react";
 import { BrowserTracing } from "@sentry/tracing";
-
+import { Provider } from "react-redux";
+import { store } from "./app/store";
 
 const rootElement = document.getElementById("root");
 const root = createRoot(rootElement);
@@ -56,9 +57,11 @@ Hub.listen("datastore", async (data) => {
 root.render(
   <React.StrictMode>
     <BrowserRouter>
-      <StyledEngineProvider injectFirst>
-        <App />
-      </StyledEngineProvider>
+      <Provider store={store}>
+        <StyledEngineProvider injectFirst>
+          <App />
+        </StyledEngineProvider>
+      </Provider>
     </BrowserRouter>
   </React.StrictMode>
 );

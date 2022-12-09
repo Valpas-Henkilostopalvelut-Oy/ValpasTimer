@@ -9,6 +9,7 @@ import { useAppContext } from "../../services/contextLib";
 import { getWeekNumber } from "./services/group";
 import { WeekRow } from "./services/row.jsx";
 import { HistoryRow } from "./services/history.jsx";
+import { MakePDF } from "../../components/MakePDF";
 
 const Timer = () => {
   const [grouped, setGrouped] = useState(null);
@@ -265,11 +266,14 @@ const Timer = () => {
                 sx={{
                   backgroundColor: "background.paper",
                   padding: "10px",
+                  display: "flex",
+                  justifyContent: "space-between",
                 }}
               >
                 <Typography variant="h6" color="text.secondary">
                   {lang.history.title.history}
                 </Typography>
+                <MakePDF data={confirmedWeeks} isEmpty={isEmpty} selected={selected} works={works} />
               </Box>
 
               {confirmedWeeks.length > 0 && <HistoryRow grouped={confirmedWeeks} lang={lang} isEmpty={isEmpty} works={works} selected={selected} />}
