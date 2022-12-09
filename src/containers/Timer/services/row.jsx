@@ -5,7 +5,7 @@ import { Main } from "./table.jsx";
 import { Reportallweek } from "./buttons.jsx";
 import { PropTypes } from "prop-types";
 
-export const WeekRow = ({ grouped, lang, works, isEmpty }) => {
+export const WeekRow = ({ grouped, lang, works, isEmpty, selected }) => {
   return grouped.map((week) => (
     <Grid container item spacing={2} key={week.week}>
       <Grid item xs={12}>
@@ -30,7 +30,8 @@ export const WeekRow = ({ grouped, lang, works, isEmpty }) => {
             </Typography>
 
             <Typography variant="p" color="text.secondary">
-              {lang.history.total_time} {totalweektime(week).h > 9 ? totalweektime(week).h : "0" + totalweektime(week).h}:
+              {lang.history.total_time}{" "}
+              {totalweektime(week).h > 9 ? totalweektime(week).h : "0" + totalweektime(week).h}:
               {totalweektime(week).min > 9 ? totalweektime(week).min : "0" + totalweektime(week).min}
             </Typography>
 
@@ -38,7 +39,7 @@ export const WeekRow = ({ grouped, lang, works, isEmpty }) => {
               {week.period}
             </Typography>
           </Box>
-          <Reportallweek date={week} isEmpty={isEmpty} lang={lang.history} />
+          <Reportallweek date={week} isEmpty={isEmpty} lang={lang.history} selected={selected} />
         </Box>
       </Grid>
 
@@ -74,8 +75,8 @@ export const Row = ({ week, lang, works, isEmpty }) => {
                 {date.date}
               </Typography>
               <Typography variant="p" color="text.secondary">
-                {lang.history.total_time} {totaldaytime(date).h > 9 ? totaldaytime(date).h : "0" + totaldaytime(date).h}:
-                {totaldaytime(date).min > 9 ? totaldaytime(date).min : "0" + totaldaytime(date).min}
+                {lang.history.total_time} {totaldaytime(date).h > 9 ? totaldaytime(date).h : "0" + totaldaytime(date).h}
+                :{totaldaytime(date).min > 9 ? totaldaytime(date).min : "0" + totaldaytime(date).min}
               </Typography>
             </Box>
 

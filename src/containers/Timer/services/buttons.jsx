@@ -85,11 +85,14 @@ export const ReportAll = ({
   );
 };
 
-const weekreport = async (date) => {
+const weekreport = async (date, selected) => {
   let arr = date.arr;
+
   arr.forEach((element) => {
     let arr = element.arr;
-    arr.forEach(async (element) => {
+    arr = arr.find((element) => element.workId === selected);
+
+    arr.arr.forEach(async (element) => {
       if (!element.isSent) {
         await DataStore.save(
           TimeEntry.copyOf(element, (update) => {
@@ -107,6 +110,7 @@ export const Reportallweek = ({
     buttons: { reportweek: "Report all week" },
   },
   isEmpty = false,
+  selected,
 }) => {
   let isSent = () => {
     let arr = date.arr;
@@ -127,7 +131,7 @@ export const Reportallweek = ({
 
   return (
     !isSent() && (
-      <Button variant="text" color="primary" onClick={() => weekreport(date)} disabled={!isEmpty}>
+      <Button variant="text" color="primary" onClick={() => weekreport(date, selected)} disabled={!isEmpty}>
         {lang.buttons.reportweek}
       </Button>
     )

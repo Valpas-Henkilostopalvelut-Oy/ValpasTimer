@@ -86,7 +86,10 @@ const Timer = () => {
         const databaseTimeList = await DataStore.query(TimeEntry);
         const currentUser = await Auth.currentAuthenticatedUser();
 
-        const filtered = databaseTimeList.filter((a) => !a.isActive && a.userId === currentUser.username && (selected !== "" ? a.workspaceId === selected : true));
+        const filtered = databaseTimeList.filter(
+          (a) =>
+            !a.isActive && a.userId === currentUser.username && (selected !== "" ? a.workspaceId === selected : true)
+        );
 
         setGrouped(groupBy(filtered, works, langValue).filter((t) => t.week === thisweek));
       } catch (error) {
@@ -105,7 +108,14 @@ const Timer = () => {
     const loadNotConfirmedTimes = async () => {
       await Auth.currentAuthenticatedUser().then(async (user) => {
         await DataStore.query(TimeEntry).then((data) => {
-          const filtered = data.filter((a) => !a.isActive && a.isSent && a.userId === user.username && !a.isConfirmed && (selected !== "" ? a.workspaceId === selected : true));
+          const filtered = data.filter(
+            (a) =>
+              !a.isActive &&
+              a.isSent &&
+              a.userId === user.username &&
+              !a.isConfirmed &&
+              (selected !== "" ? a.workspaceId === selected : true)
+          );
 
           setNotConfirmedWeek(groupBy(filtered, works, langValue).filter((w) => w.week !== thisweek));
         });
@@ -123,7 +133,13 @@ const Timer = () => {
     const loadHistory = async () => {
       await Auth.currentAuthenticatedUser().then(async (user) => {
         await DataStore.query(TimeEntry).then((data) => {
-          const filtered = data.filter((a) => !a.isActive && a.userId === user.username && (selected !== "" ? a.workspaceId === selected : true) && (!a.isSent || a.isConfirmed));
+          const filtered = data.filter(
+            (a) =>
+              !a.isActive &&
+              a.userId === user.username &&
+              (selected !== "" ? a.workspaceId === selected : true) &&
+              (!a.isSent || a.isConfirmed)
+          );
 
           setConfirmedWeeks(groupBy(filtered, works, langValue).filter((w) => w.week !== thisweek));
         });
@@ -212,7 +228,7 @@ const Timer = () => {
               </Box>
 
               {grouped.length > 0 ? (
-                <WeekRow grouped={grouped} lang={lang} isEmpty={isEmpty} works={works} />
+                <WeekRow grouped={grouped} lang={lang} isEmpty={isEmpty} works={works} selected={selected} />
               ) : (
                 <Grid item xs={12}>
                   <Typography variant="h6" color="text.secondary">
@@ -246,7 +262,9 @@ const Timer = () => {
                 </Typography>
               </Box>
 
-              {notConfirmedWeek.length > 0 && <WeekRow grouped={notConfirmedWeek} lang={lang} isEmpty={isEmpty} works={works} />}
+              {notConfirmedWeek.length > 0 && (
+                <WeekRow grouped={notConfirmedWeek} lang={lang} isEmpty={isEmpty} works={works} selected={selected} />
+              )}
             </Box>
           </Grid>
 
@@ -276,7 +294,9 @@ const Timer = () => {
                 <MakePDF data={confirmedWeeks} isEmpty={isEmpty} selected={selected} works={works} />
               </Box>
 
-              {confirmedWeeks.length > 0 && <HistoryRow grouped={confirmedWeeks} lang={lang} isEmpty={isEmpty} works={works} selected={selected} />}
+              {confirmedWeeks.length > 0 && (
+                <HistoryRow grouped={confirmedWeeks} lang={lang} isEmpty={isEmpty} works={works} selected={selected} />
+              )}
             </Box>
           </Grid>
         </Grid>

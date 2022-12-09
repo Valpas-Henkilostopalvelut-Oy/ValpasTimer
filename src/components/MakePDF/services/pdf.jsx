@@ -199,8 +199,8 @@ export const fillWeek = async (data, workplace, works) => {
   const weekrn = getWeekRN();
   var reportWeek;
 
-  if (weekrn % 2 !== 0) reportWeek = data.filter((d) => d.week === weekrn - 1 || d.week === weekrn - 2);
-  else reportWeek = data.filter((d) => d.week === weekrn || d.week === weekrn - 1);
+  if (weekrn % 2 !== 0) reportWeek = data.filter((d) => d.week === weekrn || d.week === weekrn - 1);
+  else reportWeek = data.filter((d) => d.week === weekrn -1 || d.week === weekrn - 2);
 
   var client = await contentful.createClient({
     space: "pqh23768z4fv",
