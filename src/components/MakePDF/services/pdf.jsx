@@ -139,19 +139,22 @@ const setToPDF = async (form, data, workplace, works, page = "") => {
 
   days.forEach((day) => {
     let arr = day.arr.find((a) => a.workId === workplace).arr.filter((a) => a.isSent && a.isConfirmed);
+
     if (arr.length === 0) return;
     let values = getDay(arr[0].timeInterval.start);
+
     form.getField(values.dayName + page).setText(values.value);
+    
     if (arr.length === 1) {
       let start = new Date(arr[0].timeInterval.start);
       let end = new Date(arr[0].timeInterval.end);
+
       let startTime = `${
         String(start.getHours()).length > 1 ? String(start.getHours()) : "0" + String(start.getHours())
-      }:${String(end.getMinutes()).length > 1 ? String(end.getMinutes()) : "0" + String(end.getMinutes())}`;
+      }:${String(start.getMinutes()).length > 1 ? String(start.getMinutes()) : "0" + String(start.getMinutes())}`;
 
-      let endTime = `${String(end.getHours()).length > 1 ? String(end.getHours()) : "0" + String(end.getHours())}:${
-        String(end.getMinutes()).length > 1 ? String(end.getMinutes()) : "0" + String(end.getMinutes())
-      }`;
+      let endTime = `${String(end.getHours()).length > 1 ? String(end.getHours()) : "0" + String(end.getHours())}
+        :${String(end.getMinutes()).length > 1 ? String(end.getMinutes()) : "0" + String(end.getMinutes())}`;
 
       form.getField(values.dayName + "-start-time" + page).setText(startTime);
       form.getField(values.dayName + "-end-time" + page).setText(endTime);

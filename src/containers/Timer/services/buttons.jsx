@@ -158,4 +158,5 @@ Reportallweek.propTypes = {
   date: PropTypes.object,
   lang: PropTypes.object,
   isEmpty: PropTypes.bool,
+  selected: PropTypes.string,
 };
