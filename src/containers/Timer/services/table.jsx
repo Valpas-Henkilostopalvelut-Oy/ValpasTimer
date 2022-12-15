@@ -11,8 +11,7 @@ import { EditDescriptionSM, EditDescriptionMD } from "./editdescription.jsx";
 import { ChangeWorkplaceSM, ChangeWorkplaceMD } from "./workplacechange.jsx";
 import { EditDateSM, EditDateMD } from "./editdate.jsx";
 import { PropTypes } from "prop-types";
-import AddIcon from "@mui/icons-material/Add";
-import { Breakslist } from "./break.jsx";
+import { Breakslist, AddBreak } from "./break.jsx";
 
 export const Main = ({ row, workplaces, lang, isEmpty }) => {
   return (
@@ -30,6 +29,14 @@ export const Main = ({ row, workplaces, lang, isEmpty }) => {
 
 const Details = ({ row, lang, workplaces, isEmpty }) => {
   const [open, setOpen] = React.useState(false);
+
+  const data = row.arr.sort((a, b) => {
+    let sTime = new Date(a.timeInterval.start);
+    let eTime = new Date(b.timeInterval.start);
+
+    return sTime - eTime;
+  });
+
   return (
     <Fragment>
       <TableRow>
@@ -62,12 +69,8 @@ const Details = ({ row, lang, workplaces, isEmpty }) => {
             <TableContainer>
               <Table aria-label="collapsible table" size="small">
                 <TableBody>
-                  <RowDetails data={row} workplaces={workplaces} lang={lang} isEmpty={isEmpty} />
-                  <TableRow>
-                    <TableCell colSpan={7}>
-                      <AddIcon />
-                    </TableCell>
-                  </TableRow>
+                  <RowDetails data={data} workplaces={workplaces} lang={lang} isEmpty={isEmpty} />
+                  <AddBreak data={data} />
                 </TableBody>
               </Table>
             </TableContainer>
@@ -79,7 +82,7 @@ const Details = ({ row, lang, workplaces, isEmpty }) => {
 };
 
 const RowDetails = ({ data, lang, workplaces, isEmpty }) => {
-  return data.arr.map((row, i) => (
+  return data.map((row, i) => (
     <Fragment key={i}>
       <EditDescriptionSM date={row} lang={lang} />
       <ChangeWorkplaceSM date={row} workplaces={workplaces} work={row.workspaceId} lang={lang} isEmpty={isEmpty} />
@@ -106,7 +109,7 @@ const RowDetails = ({ data, lang, workplaces, isEmpty }) => {
         </TableCell>
       </TableRow>
 
-      <Breakslist data={row} />
+      {row.break !== null && row.break.map((item, i) => <Breakslist key={i} item={item} data={row} index={i} />)}
     </Fragment>
   ));
 };

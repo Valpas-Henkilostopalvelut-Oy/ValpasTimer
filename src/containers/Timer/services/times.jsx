@@ -27,6 +27,8 @@ export const ETime = ({ date }) => {
 
 const updateSTime = async (data, time) => {
   let sTime = new Date(data.timeInterval.start).setHours(time.h, time.min, 0, 0);
+  let eTime = new Date(sTime).setHours(time.h + 8, time.min, 0, 0);
+
   await DataStore.save(
     TimeEntry.copyOf(data, (update) => {
       update.timeInterval.start = new Date(sTime).toISOString();

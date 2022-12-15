@@ -5,6 +5,18 @@ const duration = {
   H1: 60,
 };
 
+const calculteBreaks = (breaks) => {
+  let total = 0;
+  if (breaks === null) return total;
+  breaks.forEach((b) => {
+    let start = new Date(b.start);
+    let end = new Date(b.end);
+    total += Date.parse(end) - Date.parse(start);
+  });
+
+  return total;
+};
+
 export const totaldaytime = (array) => {
   //CALCULATE TOTAL TIME FOR EACH DAY
   var h = 0;
@@ -13,10 +25,11 @@ export const totaldaytime = (array) => {
 
   array.arr.forEach((work) => {
     work.arr.forEach((day) => {
+      let breaks = calculteBreaks(day.break);
       let start = new Date(day.timeInterval.start);
       let end = new Date(day.timeInterval.end);
 
-      let total = Date.parse(end) - Date.parse(start);
+      let total = Date.parse(end) - Date.parse(start) - breaks;
 
       h = h + Math.floor(total / 1000 / 60 / 60);
       min = min + Math.floor((total / 1000 / 60) % 60);
@@ -51,10 +64,11 @@ export const totalweektime = (array) => {
 
     weekArr.forEach((work) => {
       work.arr.forEach((day) => {
+        let breaks = calculteBreaks(day.break);
         let start = new Date(day.timeInterval.start);
         let end = new Date(day.timeInterval.end);
 
-        let total = Date.parse(end) - Date.parse(start);
+        let total = Date.parse(end) - Date.parse(start) - breaks;
 
         h = h + Math.floor(total / (1000 * 60 * 60));
         min = min + Math.floor((total / (1000 * 60)) % 60);

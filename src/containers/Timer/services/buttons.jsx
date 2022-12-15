@@ -100,7 +100,7 @@ export const DeleteAll = ({
       </IconButton>
       <Dialog open={open && !isSent} onClose={() => setOpen(false)}>
         <DialogTitle>
-          <Typography variant="h6">{lang.title.deleteTitle}</Typography>
+          <Typography>{lang.title.deleteTitle}</Typography>
         </DialogTitle>
         <DialogContent>
           <Typography variant="body2" color="textSecondary">
@@ -216,6 +216,7 @@ const deleteTime = async (data, close) => {
 
 const dublicateTime = async (data) => {
   let newTimeData = {
+    break: [],
     timeInterval: {
       start: data.timeInterval.start,
       end: data.timeInterval.end,

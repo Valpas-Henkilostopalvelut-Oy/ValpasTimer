@@ -99,17 +99,34 @@ const calculateEndtime = async (start, total, data) => {
   ).catch((e) => console.warn(e));
 };
 
+const calculteBreaks = (breaks) => {
+  let total = 0;
+  if (breaks === null) return total;
+  breaks.forEach((b) => {
+    let start = new Date(b.start);
+    let end = new Date(b.end);
+    total += Date.parse(end) - Date.parse(start);
+  });
+
+  return total;
+};
+
 export const TotalTime = ({ date }) => {
   let isSent = date.isSent;
   let start = new Date(date.timeInterval.start);
   let end = new Date(date.timeInterval.end);
-  let total = Date.parse(end) - Date.parse(start);
+  let breaks = calculteBreaks(date.break);
+  let total = Date.parse(end) - Date.parse(start) - breaks;
 
   let hours = Math.floor(total / (1000 * 60 * 60));
   let minutes = Math.floor((total / (1000 * 60)) % 60);
   let seconds = Math.floor((total / 1000) % 60);
 
-  const [totalTime, setTotalTime] = useState(`${hours > 9 ? hours : "0" + hours}:${minutes > 9 ? minutes : "0" + minutes}:${seconds > 9 ? seconds : "0" + seconds}`);
+  const [totalTime, setTotalTime] = useState(
+    `${hours > 9 ? hours : "0" + hours}:${minutes > 9 ? minutes : "0" + minutes}:${
+      seconds > 9 ? seconds : "0" + seconds
+    }`
+  );
 
   const [open, setOpen] = React.useState(false);
 
@@ -136,7 +153,9 @@ export const TotalTime = ({ date }) => {
             }}
             onBlur={(e) => {
               let t = time(e);
-              setTotalTime(`${t.h > 9 ? t.h : "0" + t.h}:${t.min > 9 ? t.min : "0" + t.min}:${t.sec > 9 ? t.sec : "0" + t.sec}`);
+              setTotalTime(
+                `${t.h > 9 ? t.h : "0" + t.h}:${t.min > 9 ? t.min : "0" + t.min}:${t.sec > 9 ? t.sec : "0" + t.sec}`
+              );
 
               calculateEndtime(start, t, date);
               setOpen(false);
