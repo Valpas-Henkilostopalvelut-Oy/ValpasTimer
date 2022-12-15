@@ -8,20 +8,18 @@ const startTimer = async ({ description, workplace, setTimer }) => {
   await Auth.currentAuthenticatedUser().then(async (user) => {
     await DataStore.save(
       new TimeEntry({
-        breaks: [],
         description: description,
         userId: user.username,
         workspaceId: workplace,
         timeInterval: {
-          duration: "",
-          end: new Date(new Date().setMilliseconds(0)).toISOString(),
           start: new Date(new Date().setMilliseconds(0)).toISOString(),
         },
         isActive: true,
         isLocked: false,
         isSent: false,
         isConfirmed: false,
-        billable: true,
+        break: [],
+        isPaused: false,
       })
     )
       .then(async (time) => {
@@ -49,10 +47,14 @@ const stopTimer = async () => {
         .then(async (userCred) => {
           await DataStore.query(TimeEntry, userCred.activeTimeEntry)
             .then(async (time) => {
+              console.log(time);
               await DataStore.save(
                 TimeEntry.copyOf(time, (updated) => {
+                  updated.isPaused = false;
                   updated.isActive = false;
-                  updated.timeInterval.end = new Date(new Date().setMilliseconds(0)).toISOString();
+                  updated.timeInterval.end = updated.isPaused
+                    ? updated.pauseStart
+                    : new Date(new Date().setMilliseconds(0)).toISOString();
                 })
               )
                 .then(async () => {
@@ -82,6 +84,7 @@ export const StartTimer = ({
     start: "Start",
     stop: "Stop",
   },
+  setIsPaused,
 }) => {
   const handleStart = () => {
     if (!isStarted) {
@@ -95,6 +98,7 @@ export const StartTimer = ({
       stopTimer();
       setTimer(null);
       setStarted(false);
+      setIsPaused(false);
       setTimeout(() => {
         setTime({
           seconds: 0,
@@ -110,7 +114,7 @@ export const StartTimer = ({
       {lang.start}
     </Button>
   ) : (
-    <Button onClick={handleStop} disabled={workplace === ""}>
+    <Button onClick={handleStop} disabled={workplace === ""} color="error">
       {lang.stop}
     </Button>
   );

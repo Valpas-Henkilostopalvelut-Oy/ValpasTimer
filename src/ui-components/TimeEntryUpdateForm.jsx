@@ -10,151 +10,13 @@ import { fetchByPath, validateField } from "./utils";
 import { TimeEntry } from "../models";
 import { getOverrideProps } from "@aws-amplify/ui-react/internal";
 import {
-  Badge,
   Button,
-  Divider,
   Flex,
   Grid,
-  Icon,
-  ScrollView,
-  SelectField,
   SwitchField,
-  Text,
   TextField,
-  useTheme,
 } from "@aws-amplify/ui-react";
 import { DataStore } from "aws-amplify";
-function ArrayField({
-  items = [],
-  onChange,
-  label,
-  inputFieldRef,
-  children,
-  hasError,
-  setFieldValue,
-  currentFieldValue,
-  defaultFieldValue,
-}) {
-  const { tokens } = useTheme();
-  const [selectedBadgeIndex, setSelectedBadgeIndex] = React.useState();
-  const [isEditing, setIsEditing] = React.useState();
-  React.useEffect(() => {
-    if (isEditing) {
-      inputFieldRef?.current?.focus();
-    }
-  }, [isEditing]);
-  const removeItem = async (removeIndex) => {
-    const newItems = items.filter((value, index) => index !== removeIndex);
-    await onChange(newItems);
-    setSelectedBadgeIndex(undefined);
-  };
-  const addItem = async () => {
-    if (
-      (currentFieldValue !== undefined ||
-        currentFieldValue !== null ||
-        currentFieldValue !== "") &&
-      !hasError
-    ) {
-      const newItems = [...items];
-      if (selectedBadgeIndex !== undefined) {
-        newItems[selectedBadgeIndex] = currentFieldValue;
-        setSelectedBadgeIndex(undefined);
-      } else {
-        newItems.push(currentFieldValue);
-      }
-      await onChange(newItems);
-      setIsEditing(false);
-    }
-  };
-  return (
-    <React.Fragment>
-      {isEditing && children}
-      {!isEditing ? (
-        <>
-          <Text>{label}</Text>
-          <Button
-            onClick={() => {
-              setIsEditing(true);
-            }}
-          >
-            Add item
-          </Button>
-        </>
-      ) : (
-        <Flex justifyContent="flex-end">
-          {(currentFieldValue || isEditing) && (
-            <Button
-              children="Cancel"
-              type="button"
-              size="small"
-              onClick={() => {
-                setFieldValue(defaultFieldValue);
-                setIsEditing(false);
-                setSelectedBadgeIndex(undefined);
-              }}
-            ></Button>
-          )}
-          <Button
-            size="small"
-            variation="link"
-            color={tokens.colors.brand.primary[80]}
-            isDisabled={hasError}
-            onClick={addItem}
-          >
-            {selectedBadgeIndex !== undefined ? "Save" : "Add"}
-          </Button>
-        </Flex>
-      )}
-      {!!items?.length && (
-        <ScrollView height="inherit" width="inherit" maxHeight={"7rem"}>
-          {items.map((value, index) => {
-            return (
-              <Badge
-                key={index}
-                style={{
-                  cursor: "pointer",
-                  alignItems: "center",
-                  marginRight: 3,
-                  marginTop: 3,
-                  backgroundColor:
-                    index === selectedBadgeIndex ? "#B8CEF9" : "",
-                }}
-                onClick={() => {
-                  setSelectedBadgeIndex(index);
-                  setFieldValue(items[index]);
-                  setIsEditing(true);
-                }}
-              >
-                {value.toString()}
-                <Icon
-                  style={{
-                    cursor: "pointer",
-                    paddingLeft: 3,
-                    width: 20,
-                    height: 20,
-                  }}
-                  viewBox={{ width: 20, height: 20 }}
-                  paths={[
-                    {
-                      d: "M10 10l5.09-5.09L10 10l5.09 5.09L10 10zm0 0L4.91 4.91 10 10l-5.09 5.09L10 10z",
-                      stroke: "black",
-                    },
-                  ]}
-                  ariaLabel="button"
-                  onClick={(event) => {
-                    event.stopPropagation();
-                    removeItem(index);
-                  }}
-                />
-              </Badge>
-            );
-          })}
-        </ScrollView>
-      )}
-      <Divider orientation="horizontal" marginTop={5} />
-    </React.Fragment>
-  );
-}
 export default function TimeEntryUpdateForm(props) {
   const {
     id,
@@ -176,8 +38,10 @@ export default function TimeEntryUpdateForm(props) {
     isLocked: false,
     isSent: false,
     isConfirmed: false,
-    billable: false,
-    breaks: [],
+    isPaused: false,
+    pauseStart: undefined,
+    nextEntry: undefined,
+    lastEntry: undefined,
   };
   const [description, setDescription] = React.useState(
     initialValues.description
@@ -192,8 +56,10 @@ export default function TimeEntryUpdateForm(props) {
   const [isConfirmed, setIsConfirmed] = React.useState(
     initialValues.isConfirmed
   );
-  const [billable, setBillable] = React.useState(initialValues.billable);
-  const [breaks, setBreaks] = React.useState(initialValues.breaks);
+  const [isPaused, setIsPaused] = React.useState(initialValues.isPaused);
+  const [pauseStart, setPauseStart] = React.useState(initialValues.pauseStart);
+  const [nextEntry, setNextEntry] = React.useState(initialValues.nextEntry);
+  const [lastEntry, setLastEntry] = React.useState(initialValues.lastEntry);
   const [errors, setErrors] = React.useState({});
   const resetStateValues = () => {
     const cleanValues = { ...initialValues, ...timeEntryRecord };
@@ -204,9 +70,10 @@ export default function TimeEntryUpdateForm(props) {
     setIsLocked(cleanValues.isLocked);
     setIsSent(cleanValues.isSent);
     setIsConfirmed(cleanValues.isConfirmed);
-    setBillable(cleanValues.billable);
-    setBreaks(cleanValues.breaks ?? []);
-    setCurrentBreaksValue(undefined);
+    setIsPaused(cleanValues.isPaused);
+    setPauseStart(cleanValues.pauseStart);
+    setNextEntry(cleanValues.nextEntry);
+    setLastEntry(cleanValues.lastEntry);
     setErrors({});
   };
   const [timeEntryRecord, setTimeEntryRecord] = React.useState(timeEntry);
@@ -218,8 +85,6 @@ export default function TimeEntryUpdateForm(props) {
     queryData();
   }, [id, timeEntry]);
   React.useEffect(resetStateValues, [timeEntryRecord]);
-  const [currentBreaksValue, setCurrentBreaksValue] = React.useState(undefined);
-  const breaksRef = React.createRef();
   const validations = {
     description: [],
     userId: [],
@@ -228,8 +93,10 @@ export default function TimeEntryUpdateForm(props) {
     isLocked: [],
     isSent: [],
     isConfirmed: [],
-    billable: [],
-    breaks: [],
+    isPaused: [],
+    pauseStart: [],
+    nextEntry: [],
+    lastEntry: [],
   };
   const runValidationTasks = async (fieldName, value) => {
     let validationResponse = validateField(value, validations[fieldName]);
@@ -239,6 +106,23 @@ export default function TimeEntryUpdateForm(props) {
     }
     setErrors((errors) => ({ ...errors, [fieldName]: validationResponse }));
     return validationResponse;
+  };
+  const convertToLocal = (date) => {
+    const df = new Intl.DateTimeFormat("default", {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
+      calendar: "iso8601",
+      numberingSystem: "latn",
+      hour12: false,
+    });
+    const parts = df.formatToParts(date).reduce((acc, part) => {
+      acc[part.type] = part.value;
+      return acc;
+    }, {});
+    return `${parts.year}-${parts.month}-${parts.day}T${parts.hour}:${parts.minute}`;
   };
   return (
     <Grid
@@ -256,8 +140,10 @@ export default function TimeEntryUpdateForm(props) {
           isLocked,
           isSent,
           isConfirmed,
-          billable,
-          breaks,
+          isPaused,
+          pauseStart,
+          nextEntry,
+          lastEntry,
         };
         const validationResponses = await Promise.all(
           Object.keys(validations).reduce((promises, fieldName) => {
@@ -315,8 +201,10 @@ export default function TimeEntryUpdateForm(props) {
               isLocked,
               isSent,
               isConfirmed,
-              billable,
-              breaks,
+              isPaused,
+              pauseStart,
+              nextEntry,
+              lastEntry,
             };
             const result = onChange(modelFields);
             value = result?.description ?? value;
@@ -347,8 +235,10 @@ export default function TimeEntryUpdateForm(props) {
               isLocked,
               isSent,
               isConfirmed,
-              billable,
-              breaks,
+              isPaused,
+              pauseStart,
+              nextEntry,
+              lastEntry,
             };
             const result = onChange(modelFields);
             value = result?.userId ?? value;
@@ -379,8 +269,10 @@ export default function TimeEntryUpdateForm(props) {
               isLocked,
               isSent,
               isConfirmed,
-              billable,
-              breaks,
+              isPaused,
+              pauseStart,
+              nextEntry,
+              lastEntry,
             };
             const result = onChange(modelFields);
             value = result?.workspaceId ?? value;
@@ -411,8 +303,10 @@ export default function TimeEntryUpdateForm(props) {
               isLocked,
               isSent,
               isConfirmed,
-              billable,
-              breaks,
+              isPaused,
+              pauseStart,
+              nextEntry,
+              lastEntry,
             };
             const result = onChange(modelFields);
             value = result?.isActive ?? value;
@@ -443,8 +337,10 @@ export default function TimeEntryUpdateForm(props) {
               isLocked: value,
               isSent,
               isConfirmed,
-              billable,
-              breaks,
+              isPaused,
+              pauseStart,
+              nextEntry,
+              lastEntry,
             };
             const result = onChange(modelFields);
             value = result?.isLocked ?? value;
@@ -475,8 +371,10 @@ export default function TimeEntryUpdateForm(props) {
               isLocked,
               isSent: value,
               isConfirmed,
-              billable,
-              breaks,
+              isPaused,
+              pauseStart,
+              nextEntry,
+              lastEntry,
             };
             const result = onChange(modelFields);
             value = result?.isSent ?? value;
@@ -507,8 +405,10 @@ export default function TimeEntryUpdateForm(props) {
               isLocked,
               isSent,
               isConfirmed: value,
-              billable,
-              breaks,
+              isPaused,
+              pauseStart,
+              nextEntry,
+              lastEntry,
             };
             const result = onChange(modelFields);
             value = result?.isConfirmed ?? value;
@@ -524,10 +424,10 @@ export default function TimeEntryUpdateForm(props) {
         {...getOverrideProps(overrides, "isConfirmed")}
       ></SwitchField>
       <SwitchField
-        label="Billable"
+        label="Is paused"
         defaultChecked={false}
         isDisabled={false}
-        isChecked={billable}
+        isChecked={isPaused}
         onChange={(e) => {
           let value = e.target.checked;
           if (onChange) {
@@ -539,25 +439,32 @@ export default function TimeEntryUpdateForm(props) {
               isLocked,
               isSent,
               isConfirmed,
-              billable: value,
-              breaks,
+              isPaused: value,
+              pauseStart,
+              nextEntry,
+              lastEntry,
             };
             const result = onChange(modelFields);
-            value = result?.billable ?? value;
+            value = result?.isPaused ?? value;
           }
-          if (errors.billable?.hasError) {
-            runValidationTasks("billable", value);
+          if (errors.isPaused?.hasError) {
+            runValidationTasks("isPaused", value);
           }
-          setBillable(value);
+          setIsPaused(value);
         }}
-        onBlur={() => runValidationTasks("billable", billable)}
-        errorMessage={errors.billable?.errorMessage}
-        hasError={errors.billable?.hasError}
-        {...getOverrideProps(overrides, "billable")}
+        onBlur={() => runValidationTasks("isPaused", isPaused)}
+        errorMessage={errors.isPaused?.errorMessage}
+        hasError={errors.isPaused?.hasError}
+        {...getOverrideProps(overrides, "isPaused")}
       ></SwitchField>
-      <ArrayField
-        onChange={async (items) => {
-          let values = items;
+      <TextField
+        label="Pause start"
+        isRequired={false}
+        isReadOnly={false}
+        type="datetime-local"
+        defaultValue={pauseStart && convertToLocal(new Date(pauseStart))}
+        onChange={(e) => {
+          let { value } = e.target;
           if (onChange) {
             const modelFields = {
               description,
@@ -567,63 +474,92 @@ export default function TimeEntryUpdateForm(props) {
               isLocked,
               isSent,
               isConfirmed,
-              billable,
-              breaks: values,
+              isPaused,
+              pauseStart: value,
+              nextEntry,
+              lastEntry,
             };
             const result = onChange(modelFields);
-            values = result?.breaks ?? values;
+            value = result?.pauseStart ?? value;
           }
-          setBreaks(values);
-          setCurrentBreaksValue(undefined);
+          if (errors.pauseStart?.hasError) {
+            runValidationTasks("pauseStart", value);
+          }
+          setPauseStart(new Date(value).toISOString());
         }}
-        currentFieldValue={currentBreaksValue}
-        label={"Breaks"}
-        items={breaks}
-        hasError={errors.breaks?.hasError}
-        setFieldValue={setCurrentBreaksValue}
-        inputFieldRef={breaksRef}
-        defaultFieldValue={undefined}
-      >
-        <SelectField
-          label="Breaks"
-          placeholder="Please select an option"
-          isDisabled={false}
-          value={currentBreaksValue}
-          onChange={(e) => {
-            let { value } = e.target;
-            if (errors.breaks?.hasError) {
-              runValidationTasks("breaks", value);
-            }
-            setCurrentBreaksValue(value);
-          }}
-          onBlur={() => runValidationTasks("breaks", currentBreaksValue)}
-          errorMessage={errors.breaks?.errorMessage}
-          hasError={errors.breaks?.hasError}
-          ref={breaksRef}
-          {...getOverrideProps(overrides, "breaks")}
-        >
-          <option
-            children="Min15"
-            value="MIN15"
-            {...getOverrideProps(overrides, "breaksoption0")}
-          ></option>
-          <option
-            children="Min30"
-            value="MIN30"
-            {...getOverrideProps(overrides, "breaksoption1")}
-          ></option>
-          <option
-            children="Min45"
-            value="MIN45"
-            {...getOverrideProps(overrides, "breaksoption2")}
-          ></option>
-          <option
-            children="H1"
-            value="H1"
-            {...getOverrideProps(overrides, "breaksoption3")}
-          ></option>
-        </SelectField>
-      </ArrayField>
+        onBlur={() => runValidationTasks("pauseStart", pauseStart)}
+        errorMessage={errors.pauseStart?.errorMessage}
+        hasError={errors.pauseStart?.hasError}
+        {...getOverrideProps(overrides, "pauseStart")}
+      ></TextField>
+      <TextField
+        label="Next entry"
+        isRequired={false}
+        isReadOnly={false}
+        defaultValue={nextEntry}
+        onChange={(e) => {
+          let { value } = e.target;
+          if (onChange) {
+            const modelFields = {
+              description,
+              userId,
+              workspaceId,
+              isActive,
+              isLocked,
+              isSent,
+              isConfirmed,
+              isPaused,
+              pauseStart,
+              nextEntry: value,
+              lastEntry,
+            };
+            const result = onChange(modelFields);
+            value = result?.nextEntry ?? value;
+          }
+          if (errors.nextEntry?.hasError) {
+            runValidationTasks("nextEntry", value);
+          }
+          setNextEntry(value);
+        }}
+        onBlur={() => runValidationTasks("nextEntry", nextEntry)}
+        errorMessage={errors.nextEntry?.errorMessage}
+        hasError={errors.nextEntry?.hasError}
+        {...getOverrideProps(overrides, "nextEntry")}
+      ></TextField>
+      <TextField
+        label="Last entry"
+        isRequired={false}
+        isReadOnly={false}
+        defaultValue={lastEntry}
+        onChange={(e) => {
+          let { value } = e.target;
+          if (onChange) {
+            const modelFields = {
+              description,
+              userId,
+              workspaceId,
+              isActive,
+              isLocked,
+              isSent,
+              isConfirmed,
+              isPaused,
+              pauseStart,
+              nextEntry,
+              lastEntry: value,
+            };
+            const result = onChange(modelFields);
+            value = result?.lastEntry ?? value;
+          }
+          if (errors.lastEntry?.hasError) {
+            runValidationTasks("lastEntry", value);
+          }
+          setLastEntry(value);
+        }}
+        onBlur={() => runValidationTasks("lastEntry", lastEntry)}
+        errorMessage={errors.lastEntry?.errorMessage}
+        hasError={errors.lastEntry?.hasError}
+        {...getOverrideProps(overrides, "lastEntry")}
+      ></TextField>
       <Flex
         justifyContent="space-between"
         {...getOverrideProps(overrides, "CTAFlex")}

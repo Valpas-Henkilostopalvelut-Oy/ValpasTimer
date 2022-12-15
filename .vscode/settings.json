@@ -16,5 +16,8 @@
     "editdescription",
     "Selectwork",
     "workplaceselect"
+  ],
+  "cSpell.enableFiletypes": [
+    "!javascriptreact"
   ]
 }

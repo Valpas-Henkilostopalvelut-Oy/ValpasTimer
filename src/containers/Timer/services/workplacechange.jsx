@@ -1,5 +1,20 @@
 import React, { useEffect, useState } from "react";
-import { Dialog, DialogTitle, DialogContent, DialogActions, Button, TableRow, TableCell, useTheme, FormControl, InputLabel, Select, MenuItem, Box, Typography } from "@mui/material";
+import {
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Button,
+  TableRow,
+  TableCell,
+  useTheme,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  Box,
+  Typography,
+} from "@mui/material";
 import { DataStore } from "aws-amplify";
 import { TimeEntry, AllWorkSpaces } from "../../../models";
 import { PropTypes } from "prop-types";
@@ -60,7 +75,14 @@ const SelectWork = ({
           <DialogContent>
             <FormControl fullWidth margin="normal">
               <InputLabel id="workplace-select">{lang.workplace}</InputLabel>
-              <Select labelId="workplace-select" id="workplace-select" value={workplace} label={lang.workplace} onChange={handleChange} margin="normal">
+              <Select
+                labelId="workplace-select"
+                id="workplace-select"
+                value={workplace}
+                label={lang.workplace}
+                onChange={handleChange}
+                margin="normal"
+              >
                 {workplaces.map((item, i) => (
                   <MenuItem key={i} value={item.id}>
                     {item.name}
@@ -102,11 +124,7 @@ const IsSent = ({ date, lang = { workplace: "Workplace" } }, isEmpty = false) =>
     return () => (isActive = false);
   }, [isEmpty]);
 
-  return (
-    <Typography variant="p">
-      {lang.workplace}: {work}
-    </Typography>
-  );
+  return <Typography variant="p">{work}</Typography>;
 };
 
 export const ChangeWorkplaceSM = ({ date, workplaces = null, work, lang, isEmpty }) => {
@@ -121,7 +139,13 @@ export const ChangeWorkplaceSM = ({ date, workplaces = null, work, lang, isEmpty
         },
       }}
     >
-      <TableCell colSpan={4}>{!isSent ? <SelectWork date={date} workplaces={workplaces} work={work} lang={lang} /> : <IsSent date={date} lang={lang} isEmpty={isEmpty} />}</TableCell>
+      <TableCell colSpan={4}>
+        {!isSent ? (
+          <SelectWork date={date} workplaces={workplaces} work={work} lang={lang} />
+        ) : (
+          <IsSent date={date} lang={lang} isEmpty={isEmpty} />
+        )}
+      </TableCell>
     </TableRow>
   );
 };
@@ -139,7 +163,11 @@ export const ChangeWorkplaceMD = ({ date, workplaces = null, work, lang, isEmpty
         },
       }}
     >
-      {!isSent ? <SelectWork date={date} workplaces={workplaces} work={work} lang={lang} /> : <IsSent date={date} lang={lang} isEmpty={isEmpty} />}
+      {!isSent ? (
+        <SelectWork date={date} workplaces={workplaces} work={work} lang={lang} />
+      ) : (
+        <IsSent date={date} lang={lang} isEmpty={isEmpty} />
+      )}
     </TableCell>
   );
 };

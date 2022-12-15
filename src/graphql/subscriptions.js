@@ -129,7 +129,6 @@ export const onCreateTasks = /* GraphQL */ `
         name
       }
       interval {
-        duration
         end
         start
       }
@@ -168,7 +167,6 @@ export const onUpdateTasks = /* GraphQL */ `
         name
       }
       interval {
-        duration
         end
         start
       }
@@ -207,7 +205,6 @@ export const onDeleteTasks = /* GraphQL */ `
         name
       }
       interval {
-        duration
         end
         start
       }
@@ -234,7 +231,6 @@ export const onCreateTimeEntry = /* GraphQL */ `
       userId
       workspaceId
       timeInterval {
-        duration
         end
         start
       }
@@ -242,8 +238,15 @@ export const onCreateTimeEntry = /* GraphQL */ `
       isLocked
       isSent
       isConfirmed
-      billable
-      breaks
+      break {
+        duration
+        end
+        start
+      }
+      isPaused
+      pauseStart
+      nextEntry
+      lastEntry
       createdAt
       updatedAt
       _version
@@ -263,7 +266,6 @@ export const onUpdateTimeEntry = /* GraphQL */ `
       userId
       workspaceId
       timeInterval {
-        duration
         end
         start
       }
@@ -271,8 +273,15 @@ export const onUpdateTimeEntry = /* GraphQL */ `
       isLocked
       isSent
       isConfirmed
-      billable
-      breaks
+      break {
+        duration
+        end
+        start
+      }
+      isPaused
+      pauseStart
+      nextEntry
+      lastEntry
       createdAt
       updatedAt
       _version
@@ -292,7 +301,6 @@ export const onDeleteTimeEntry = /* GraphQL */ `
       userId
       workspaceId
       timeInterval {
-        duration
         end
         start
       }
@@ -300,8 +308,15 @@ export const onDeleteTimeEntry = /* GraphQL */ `
       isLocked
       isSent
       isConfirmed
-      billable
-      breaks
+      break {
+        duration
+        end
+        start
+      }
+      isPaused
+      pauseStart
+      nextEntry
+      lastEntry
       createdAt
       updatedAt
       _version

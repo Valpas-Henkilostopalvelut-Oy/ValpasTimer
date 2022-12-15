@@ -2,34 +2,11 @@ import { ModelInit, MutableModel } from "@aws-amplify/datastore";
 // @ts-ignore
 import { LazyLoading, LazyLoadingDisabled } from "@aws-amplify/datastore";
 
-export enum Break {
-  MIN15 = "MIN15",
-  MIN30 = "MIN30",
-  MIN45 = "MIN45",
-  H1 = "H1"
-}
-
 export enum Status {
   COMPLETE = "COMPLETE",
   ACTIVE = "ACTIVE",
   INWAITTING = "INWAITTING"
 }
-
-type EagerBreaks = {
-  readonly start?: string | null;
-  readonly duration?: Break | keyof typeof Break | null;
-  readonly reasone?: string | null;
-}
-
-type LazyBreaks = {
-  readonly start?: string | null;
-  readonly duration?: Break | keyof typeof Break | null;
-  readonly reasone?: string | null;
-}
-
-export declare type Breaks = LazyLoading extends LazyLoadingDisabled ? EagerBreaks : LazyBreaks
-
-export declare const Breaks: (new (init: ModelInit<Breaks>) => Breaks)
 
 type EagerUserAgreement = {
   readonly id?: string | null;
@@ -110,22 +87,6 @@ type LazyWorkplace = {
 export declare type Workplace = LazyLoading extends LazyLoadingDisabled ? EagerWorkplace : LazyWorkplace
 
 export declare const Workplace: (new (init: ModelInit<Workplace>) => Workplace)
-
-type EagerTimeInterval = {
-  readonly duration?: string | null;
-  readonly end?: string | null;
-  readonly start?: string | null;
-}
-
-type LazyTimeInterval = {
-  readonly duration?: string | null;
-  readonly end?: string | null;
-  readonly start?: string | null;
-}
-
-export declare type TimeInterval = LazyLoading extends LazyLoadingDisabled ? EagerTimeInterval : LazyTimeInterval
-
-export declare const TimeInterval: (new (init: ModelInit<TimeInterval>) => TimeInterval)
 
 type EagerProfile = {
   readonly profile_picture?: string | null;
@@ -215,6 +176,36 @@ export declare type HourlyRate = LazyLoading extends LazyLoadingDisabled ? Eager
 
 export declare const HourlyRate: (new (init: ModelInit<HourlyRate>) => HourlyRate)
 
+type EagerTimeInterval = {
+  readonly end?: string | null;
+  readonly start?: string | null;
+}
+
+type LazyTimeInterval = {
+  readonly end?: string | null;
+  readonly start?: string | null;
+}
+
+export declare type TimeInterval = LazyLoading extends LazyLoadingDisabled ? EagerTimeInterval : LazyTimeInterval
+
+export declare const TimeInterval: (new (init: ModelInit<TimeInterval>) => TimeInterval)
+
+type EagerBreak = {
+  readonly duration?: string | null;
+  readonly end?: string | null;
+  readonly start?: string | null;
+}
+
+type LazyBreak = {
+  readonly duration?: string | null;
+  readonly end?: string | null;
+  readonly start?: string | null;
+}
+
+export declare type Break = LazyLoading extends LazyLoadingDisabled ? EagerBreak : LazyBreak
+
+export declare const Break: (new (init: ModelInit<Break>) => Break)
+
 type EagerWorkspaceSettings = {
   readonly shortBreak?: number | null;
   readonly dinnerBreak?: number | null;
@@ -248,20 +239,6 @@ type LazyMembership = {
 export declare type Membership = LazyLoading extends LazyLoadingDisabled ? EagerMembership : LazyMembership
 
 export declare const Membership: (new (init: ModelInit<Membership>) => Membership)
-
-type EagerFormItem = {
-  readonly name?: string | null;
-  readonly text?: string | null;
-}
-
-type LazyFormItem = {
-  readonly name?: string | null;
-  readonly text?: string | null;
-}
-
-export declare type FormItem = LazyLoading extends LazyLoadingDisabled ? EagerFormItem : LazyFormItem
-
-export declare const FormItem: (new (init: ModelInit<FormItem>) => FormItem)
 
 type AgreementMetaData = {
   readOnlyFields: 'updatedAt';
@@ -363,8 +340,11 @@ type EagerTimeEntry = {
   readonly isLocked?: boolean | null;
   readonly isSent?: boolean | null;
   readonly isConfirmed?: boolean | null;
-  readonly billable?: boolean | null;
-  readonly breaks?: (Break | null)[] | keyof typeof Break | null;
+  readonly break?: (Break | null)[] | null;
+  readonly isPaused?: boolean | null;
+  readonly pauseStart?: string | null;
+  readonly nextEntry?: string | null;
+  readonly lastEntry?: string | null;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
 }
@@ -379,8 +359,11 @@ type LazyTimeEntry = {
   readonly isLocked?: boolean | null;
   readonly isSent?: boolean | null;
   readonly isConfirmed?: boolean | null;
-  readonly billable?: boolean | null;
-  readonly breaks?: (Break | null)[] | keyof typeof Break | null;
+  readonly break?: (Break | null)[] | null;
+  readonly isPaused?: boolean | null;
+  readonly pauseStart?: string | null;
+  readonly nextEntry?: string | null;
+  readonly lastEntry?: string | null;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
 }

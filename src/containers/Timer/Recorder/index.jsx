@@ -5,11 +5,24 @@ import { Timer } from "./services/timer.jsx";
 import { Manual } from "./services/manual.jsx";
 import { PropTypes } from "prop-types";
 
-export const Recorder = ({ works = null, lang, isEmpty = false }) => {
-  const [description, setDescription] = useState("");
+export const Recorder = ({
+  works = null,
+  lang,
+  isEmpty = false,
+  isStarted,
+  setStarted,
+  description,
+  setDescription,
+  setSel,
+  sel,
+  time,
+  timerTime,
+  setTime,
+  setTimer,
+  setIsPaused,
+  isPaused,
+}) => {
   const [value, setValue] = useState("1");
-  const [sel, setSel] = useState("");
-  const [isStarted, setStarted] = useState(false);
 
   const handleChangeTab = (event, newValue) => {
     setValue(newValue);
@@ -33,6 +46,12 @@ export const Recorder = ({ works = null, lang, isEmpty = false }) => {
             isStarted={isStarted}
             setStarted={setStarted}
             lang={lang.timer}
+            time={time}
+            timerTime={timerTime}
+            setTime={setTime}
+            setTimer={setTimer}
+            isPaused={isPaused}
+            setIsPaused={setIsPaused}
           />
         </TabPanel>
         <TabPanel value="2" sx={{ paddingLeft: 0, paddingRight: 0 }}>

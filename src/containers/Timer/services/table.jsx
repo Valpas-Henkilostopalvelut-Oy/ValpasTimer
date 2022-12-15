@@ -1,15 +1,18 @@
 import React, { Fragment } from "react";
 
-import { Table, TableBody, TableCell, TableRow, IconButton, Box, TableContainer } from "@mui/material";
+import { Table, TableBody, TableCell, TableRow, IconButton, Box, TableContainer, Collapse } from "@mui/material";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
-import { STime, ETime, EditSTime, EditETime, MoreButton } from "./times.jsx";
+import { STime, ETime, EditSTime, EditETime } from "./times.jsx";
+import { MoreButton } from "./buttons.jsx";
 import { TotalTime } from "./edittotaltime.jsx";
 import { StatusMD, StatusSM, Emptycell } from "./isSent.jsx";
 import { EditDescriptionSM, EditDescriptionMD } from "./editdescription.jsx";
 import { ChangeWorkplaceSM, ChangeWorkplaceMD } from "./workplacechange.jsx";
 import { EditDateSM, EditDateMD } from "./editdate.jsx";
 import { PropTypes } from "prop-types";
+import AddIcon from "@mui/icons-material/Add";
+import { Breakslist } from "./break.jsx";
 
 export const Main = ({ row, workplaces, lang, isEmpty }) => {
   return (
@@ -29,18 +32,21 @@ const Details = ({ row, lang, workplaces, isEmpty }) => {
   const [open, setOpen] = React.useState(false);
   return (
     <Fragment>
-      <TableRow onClick={() => setOpen(!open)} sx={{ cursor: "pointer" }}>
+      <TableRow>
         <TableCell>
-          <IconButton aria-label="expand row" size="small">
+          <IconButton aria-label="expand row" size="small" onClick={() => setOpen(!open)} sx={{ cursor: "pointer" }}>
             {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
           </IconButton>
         </TableCell>
-        <TableCell align="right">{workplaces.find((item) => item.id === row.workId) !== undefined ? workplaces.find((item) => item.id === row.workId).name : "Vaihda työpaikkaa"}</TableCell>
 
-        <Emptycell />
+        <TableCell align="left">
+          {workplaces.find((item) => item.id === row.workId) !== undefined
+            ? workplaces.find((item) => item.id === row.workId).name
+            : "Vaihda työpaikkaa"}
+        </TableCell>
 
-        <TableCell align="right">
-          <Box display="flex" justifyContent="space-around" width="120px">
+        <TableCell align="left">
+          <Box display="flex" justifyContent="space-evenly">
             <STime date={row} /> - <ETime date={row} />
           </Box>
         </TableCell>
@@ -50,14 +56,31 @@ const Details = ({ row, lang, workplaces, isEmpty }) => {
 
       <StatusSM date={row} lang={lang} isEmpty={isEmpty} />
 
-      {open && row.arr.map((date, i) => <RowDetails key={i} row={date} lang={lang} workplaces={workplaces} isEmpty={isEmpty} />)}
+      <TableRow>
+        <TableCell colSpan={4}>
+          <Collapse in={open} timeout="auto" unmountOnExit>
+            <TableContainer>
+              <Table aria-label="collapsible table" size="small">
+                <TableBody>
+                  <RowDetails data={row} workplaces={workplaces} lang={lang} isEmpty={isEmpty} />
+                  <TableRow>
+                    <TableCell colSpan={7}>
+                      <AddIcon />
+                    </TableCell>
+                  </TableRow>
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </Collapse>
+        </TableCell>
+      </TableRow>
     </Fragment>
   );
 };
 
-const RowDetails = ({ row, lang, workplaces, isEmpty }) => {
-  return (
-    <Fragment>
+const RowDetails = ({ data, lang, workplaces, isEmpty }) => {
+  return data.arr.map((row, i) => (
+    <Fragment key={i}>
       <EditDescriptionSM date={row} lang={lang} />
       <ChangeWorkplaceSM date={row} workplaces={workplaces} work={row.workspaceId} lang={lang} isEmpty={isEmpty} />
       <EditDateSM data={row} lang={lang} />
@@ -82,8 +105,10 @@ const RowDetails = ({ row, lang, workplaces, isEmpty }) => {
           <MoreButton date={row} lang={lang} isEmpty={isEmpty} />
         </TableCell>
       </TableRow>
+
+      <Breakslist data={row} />
     </Fragment>
-  );
+  ));
 };
 
 Main.propTypes = {

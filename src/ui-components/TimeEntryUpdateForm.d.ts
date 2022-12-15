@@ -7,7 +7,7 @@
 import * as React from "react";
 import { TimeEntry } from "../models";
 import { EscapeHatchProps } from "@aws-amplify/ui-react/internal";
-import { GridProps, SelectFieldProps, SwitchFieldProps, TextFieldProps } from "@aws-amplify/ui-react";
+import { GridProps, SwitchFieldProps, TextFieldProps } from "@aws-amplify/ui-react";
 export declare type ValidationResponse = {
     hasError: boolean;
     errorMessage?: string;
@@ -21,8 +21,10 @@ export declare type TimeEntryUpdateFormInputValues = {
     isLocked?: boolean;
     isSent?: boolean;
     isConfirmed?: boolean;
-    billable?: boolean;
-    breaks?: string[];
+    isPaused?: boolean;
+    pauseStart?: string;
+    nextEntry?: string;
+    lastEntry?: string;
 };
 export declare type TimeEntryUpdateFormValidationValues = {
     description?: ValidationFunction<string>;
@@ -32,8 +34,10 @@ export declare type TimeEntryUpdateFormValidationValues = {
     isLocked?: ValidationFunction<boolean>;
     isSent?: ValidationFunction<boolean>;
     isConfirmed?: ValidationFunction<boolean>;
-    billable?: ValidationFunction<boolean>;
-    breaks?: ValidationFunction<string>;
+    isPaused?: ValidationFunction<boolean>;
+    pauseStart?: ValidationFunction<string>;
+    nextEntry?: ValidationFunction<string>;
+    lastEntry?: ValidationFunction<string>;
 };
 export declare type FormProps<T> = Partial<T> & React.DOMAttributes<HTMLDivElement>;
 export declare type TimeEntryUpdateFormOverridesProps = {
@@ -45,8 +49,10 @@ export declare type TimeEntryUpdateFormOverridesProps = {
     isLocked?: FormProps<SwitchFieldProps>;
     isSent?: FormProps<SwitchFieldProps>;
     isConfirmed?: FormProps<SwitchFieldProps>;
-    billable?: FormProps<SwitchFieldProps>;
-    breaks?: FormProps<SelectFieldProps>;
+    isPaused?: FormProps<SwitchFieldProps>;
+    pauseStart?: FormProps<TextFieldProps>;
+    nextEntry?: FormProps<TextFieldProps>;
+    lastEntry?: FormProps<TextFieldProps>;
 } & EscapeHatchProps;
 export declare type TimeEntryUpdateFormProps = React.PropsWithChildren<{
     overrides?: TimeEntryUpdateFormOverridesProps | undefined | null;

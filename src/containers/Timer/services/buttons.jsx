@@ -1,9 +1,21 @@
 import React, { useState } from "react";
-import { IconButton, Button, Box, Dialog, DialogActions, DialogContent, DialogTitle, Typography } from "@mui/material";
+import {
+  IconButton,
+  Button,
+  Box,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Typography,
+  Menu,
+  MenuItem,
+} from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { DataStore } from "aws-amplify";
 import { TimeEntry } from "../../../models";
 import { PropTypes } from "prop-types";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
 
 const deleteAll = async (date) => {
   let arr = date.arr;
@@ -13,6 +25,59 @@ const deleteAll = async (date) => {
       await DataStore.delete(arr[i]).catch((e) => console.warn(e));
     }
   }
+};
+
+export const MoreButton = ({
+  isEmpty = false,
+  date,
+  lang = {
+    buttons: {
+      delete: "Delete",
+      dublicate: "Dublicate",
+      send: "Send",
+      cancelsend: "Cancel send",
+    },
+  },
+}) => {
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+  const open = Boolean(anchorEl);
+  const isSent = !date.isSent;
+  const isConfirmed = !date.isConfirmed;
+
+  return (
+    <Box>
+      <IconButton aria-label="more" aria-controls="long-menu" aria-haspopup="true" onClick={handleClick}>
+        <MoreVertIcon />
+      </IconButton>
+      <Menu id="long-menu" anchorEl={anchorEl} keepMounted open={open} onClose={handleClose}>
+        <MenuItem onClick={() => dublicateTime(date)} disabled={!isEmpty}>
+          <Typography variant="p">{lang.buttons.dublicate}</Typography>
+        </MenuItem>
+        {isSent ? (
+          <Box>
+            <MenuItem onClick={() => send(date, handleClose())} disabled={!isEmpty}>
+              <Typography variant="p">{lang.buttons.send}</Typography>
+            </MenuItem>
+            <MenuItem onClick={() => deleteTime(date, handleClose())} disabled={!isEmpty}>
+              <Typography variant="p">{lang.buttons.delete}</Typography>
+            </MenuItem>
+          </Box>
+        ) : (
+          isConfirmed && (
+            <MenuItem onClick={() => cancelsend(date, handleClose())} disabled={!isEmpty}>
+              <Typography variant="p">{lang.buttons.cancelsend}</Typography>
+            </MenuItem>
+          )
+        )}
+      </Menu>
+    </Box>
+  );
 };
 
 export const DeleteAll = ({
@@ -141,6 +206,68 @@ export const Reportallweek = ({
       </Button>
     )
   );
+};
+
+const deleteTime = async (data, close) => {
+  await DataStore.delete(data)
+    .then(() => close())
+    .catch((e) => console.warn(e));
+};
+
+const dublicateTime = async (data) => {
+  let newTimeData = {
+    timeInterval: {
+      start: data.timeInterval.start,
+      end: data.timeInterval.end,
+    },
+    description: data.description,
+    workplaceId: data.workspaceId,
+    userId: data.userId,
+  };
+
+  await DataStore.save(
+    new TimeEntry({
+      description: newTimeData.description,
+      userId: newTimeData.userId,
+      workspaceId: newTimeData.workplaceId,
+      timeInterval: {
+        start: data.timeInterval.start,
+        end: data.timeInterval.end,
+      },
+      isActive: false,
+      isLocked: false,
+      isSent: false,
+      isConfirmed: false,
+      billable: false,
+      breaks: [],
+    })
+  ).catch((e) => console.warn(e));
+};
+
+const cancelsend = async (data, close) => {
+  await DataStore.save(
+    TimeEntry.copyOf(data, (update) => {
+      update.isSent = false;
+    })
+  )
+    .then(() => close())
+    .catch((e) => console.warn(e));
+};
+
+const send = async (data, close) => {
+  await DataStore.save(
+    TimeEntry.copyOf(data, (update) => {
+      update.isSent = true;
+    })
+  )
+    .then(() => close())
+    .catch((e) => console.warn(e));
+};
+
+MoreButton.propTypes = {
+  data: PropTypes.object,
+  lang: PropTypes.object,
+  close: PropTypes.func,
 };
 
 DeleteAll.propTypes = {

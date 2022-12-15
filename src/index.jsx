@@ -7,7 +7,7 @@ import reportWebVitals from "./reportWebVitals";
 import { BrowserRouter } from "react-router-dom";
 import { StyledEngineProvider } from "@mui/material/styles";
 import { Amplify, Hub, DataStore } from "aws-amplify";
-import awsconfig from "./aws-exports";
+import awsconfig from "./aws-exports.js";
 import { createUser } from "./services/createUser.jsx";
 import * as Sentry from "@sentry/react";
 import { BrowserTracing } from "@sentry/tracing";

@@ -1,110 +1,30 @@
-import React, { useEffect, useState } from "react";
-import { Auth, DataStore } from "aws-amplify";
-import { TimeEntry, UserCredentials } from "../../../../models";
+import React, { useState } from "react";
 import { Typography, Grid } from "@mui/material";
 import { EditStartTime } from "./editstartedtime";
 import { EditDescriptionTimer } from "./editdescription";
 import { EditWorkplaceTimer } from "./editworkplace";
 import { StartTimer } from "./starttimer";
 import { PropTypes } from "prop-types";
+import { Timerbreak } from "./breaks";
 
-export const Timer = ({ description, sel, setDescription, setSel, works, isStarted, setStarted, lang }) => {
-  const [time, setTime] = useState({
-    seconds: 0,
-    minutes: 0,
-    hours: 0,
-  });
-  const [timerTime, setTimer] = useState(null);
+export const Timer = ({
+  time,
+  timerTime,
+  setTime,
+  setTimer,
+  description,
+  sel,
+  setDescription,
+  setSel,
+  works,
+  isStarted,
+  setStarted,
+  lang,
+  isEmpty,
+  isPaused,
+  setIsPaused,
+}) => {
   const [open, setOpen] = useState(false);
-
-  useEffect(() => {
-    let isActive = true;
-
-    const checkActive = async () => {
-      await Auth.currentAuthenticatedUser().then(async (user) => {
-        let userId = user.attributes["custom:UserCreditails"];
-
-        await DataStore.query(UserCredentials, userId).then(async (userCred) => {
-          await DataStore.query(TimeEntry, userCred.activeTimeEntry)
-            .then(async (res) => {
-              if (res.isActive) {
-                setTimer(res);
-                setSel(res.workspaceId);
-                setDescription(res.description);
-
-                var nTime = new Date();
-                var sTime = new Date(res.timeInterval.start);
-
-                var diff = nTime.getTime() - sTime.getTime();
-
-                var seconds = Math.floor((diff / 1000) % 60);
-                var minutes = Math.floor((diff / (1000 * 60)) % 60);
-                var hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
-
-                setStarted(true);
-                setTime({
-                  seconds: seconds,
-                  minutes: minutes,
-                  hours: hours,
-                });
-              } else {
-                await DataStore.save(
-                  UserCredentials.copyOf(userCred, (updated) => {
-                    updated.activeTimeEntry = null;
-                  })
-                ).catch((err) => console.warn(err));
-              }
-            })
-            .catch(async (e) => {
-              await DataStore.save(
-                UserCredentials.copyOf(userCred, (updated) => {
-                  updated.activeTimeEntry = null;
-                })
-              ).catch((err) => console.warn(err));
-              console.warn(e);
-            });
-        });
-      });
-    };
-
-    if (isActive) {
-      checkActive();
-    }
-
-    return () => (isActive = false);
-  }, []);
-
-  useEffect(() => {
-    let isCanceled = false;
-
-    const advanceTime = () => {
-      setTimeout(() => {
-        let nSeconds = time.seconds;
-        let nMinutes = time.minutes;
-        let nHours = time.hours;
-
-        nSeconds++;
-
-        if (nSeconds > 59) {
-          nMinutes++;
-          nSeconds = 0;
-        }
-        if (nMinutes > 59) {
-          nHours++;
-          nMinutes = 0;
-        }
-        if (nHours > 24) {
-          nHours = 0;
-        }
-
-        setTime({ seconds: nSeconds, minutes: nMinutes, hours: nHours });
-      }, 1000);
-    };
-
-    isStarted && !isCanceled && advanceTime();
-
-    return () => (isCanceled = true);
-  }, [isStarted, time]);
 
   return (
     <Grid container spacing={2} alignItems="center">
@@ -127,7 +47,7 @@ export const Timer = ({ description, sel, setDescription, setSel, works, isStart
           lang={lang}
         />
       </Grid>
-      <Grid item xs={6} md={2}>
+      <Grid item xs={12} md={2}>
         <Typography
           variant="h5"
           align="center"
@@ -146,7 +66,17 @@ export const Timer = ({ description, sel, setDescription, setSel, works, isStart
         </Typography>
         {timerTime && isStarted && <EditStartTime open={open} setOpen={setOpen} timerTime={timerTime} lang={lang} />}
       </Grid>
-      <Grid item xs={6} md={2}>
+      <Grid item xs={3} md={1}>
+        <Timerbreak
+          data={timerTime}
+          isEmpty={isEmpty}
+          disabled={!(timerTime && isStarted)}
+          setTimer={setTimer}
+          isPaused={isPaused}
+          setIsPaused={setIsPaused}
+        />
+      </Grid>
+      <Grid item xs={3} md={1}>
         <StartTimer
           description={description}
           workplace={sel}
@@ -155,6 +85,7 @@ export const Timer = ({ description, sel, setDescription, setSel, works, isStart
           setTimer={setTimer}
           setTime={setTime}
           lang={lang}
+          setIsPaused={setIsPaused}
         />
       </Grid>
     </Grid>

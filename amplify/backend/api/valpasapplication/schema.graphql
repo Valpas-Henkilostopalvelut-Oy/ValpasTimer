@@ -1,16 +1,3 @@
-enum Break {
-  MIN15
-  MIN30
-  MIN45
-  H1
-}
-
-type Breaks {
-  start: AWSDateTime
-  duration: Break
-  reasone: String
-}
-
 type UserAgreement {
   id: ID
   status: Status
@@ -21,28 +8,6 @@ type AditionalInfo {
   name: String
   description: String
   id: ID
-}
-
-type Agreement
-  @model
-  @auth(
-    rules: [
-      { allow: owner, ownerField: "userId" }
-      { allow: groups, groups: ["Workers"], operations: [read, update] }
-      { allow: groups, groups: ["Clients"], operations: [read, update] }
-      { allow: groups, groups: ["Admins"], operations: [read, create, update, delete] }
-    ]
-  ) {
-  id: ID!
-  name: String
-  workers: [ID]
-  client: [ID]
-  createdAt: AWSDateTime
-  userId: String
-  user: User
-  aditionalInfo: [AditionalInfo]
-  userAgreement: [UserAgreement]
-  workspaceId: [ID]
 }
 
 type Comment {
@@ -67,26 +32,6 @@ enum Status {
   COMPLETE
   ACTIVE
   INWAITTING
-}
-
-type Tasks
-  @model
-  @auth(
-    rules: [
-      { allow: owner, ownerField: "username" }
-      { allow: groups, groups: ["Admins"], operations: [read, create, update, delete] }
-    ]
-  ) {
-  id: ID!
-  title: String
-  description: String
-  username: String
-  user: User
-  time: AWSTime
-  status: Status
-  workplace: Workplace
-  interval: TimeInterval
-  comments: [Comment]
 }
 
 type Profile {
@@ -119,31 +64,14 @@ type UserMemberships {
 }
 
 type TimeInterval {
-  duration: String
   end: AWSDateTime
   start: AWSDateTime
 }
 
-type TimeEntry
-  @model
-  @auth(
-    rules: [
-      { allow: owner, ownerField: "userId" }
-      { allow: groups, groups: ["Admins"], operations: [read, create, update, delete] }
-      { allow: groups, groups: ["Clients"], operations: [read, update] }
-    ]
-  ) {
-  id: ID!
-  description: String
-  userId: String
-  workspaceId: ID
-  timeInterval: TimeInterval
-  isActive: Boolean
-  isLocked: Boolean
-  isSent: Boolean
-  isConfirmed: Boolean
-  billable: Boolean
-  breaks: [Break]
+type Break {
+  duration: String
+  end: AWSDateTime
+  start: AWSDateTime
 }
 
 type WorkspaceSettings {
@@ -162,6 +90,72 @@ type Membership {
 type HourlyRate {
   amount: Int
   currency: String
+}
+
+type Agreement
+  @model
+  @auth(
+    rules: [
+      { allow: owner, ownerField: "userId" }
+      { allow: groups, groups: ["Workers"], operations: [read, update] }
+      { allow: groups, groups: ["Clients"], operations: [read, update] }
+      { allow: groups, groups: ["Admins"], operations: [read, create, update, delete] }
+    ]
+  ) {
+  id: ID!
+  name: String
+  workers: [ID]
+  client: [ID]
+  createdAt: AWSDateTime
+  userId: String
+  user: User
+  aditionalInfo: [AditionalInfo]
+  userAgreement: [UserAgreement]
+  workspaceId: [ID]
+}
+
+type Tasks
+  @model
+  @auth(
+    rules: [
+      { allow: owner, ownerField: "username" }
+      { allow: groups, groups: ["Admins"], operations: [read, create, update, delete] }
+    ]
+  ) {
+  id: ID!
+  title: String
+  description: String
+  username: String
+  user: User
+  time: AWSTime
+  status: Status
+  workplace: Workplace
+  interval: TimeInterval
+  comments: [Comment]
+}
+type TimeEntry
+  @model
+  @auth(
+    rules: [
+      { allow: owner, ownerField: "userId" }
+      { allow: groups, groups: ["Admins"], operations: [read, create, update, delete] }
+      { allow: groups, groups: ["Clients"], operations: [read, update] }
+    ]
+  ) {
+  id: ID!
+  description: String
+  userId: String
+  workspaceId: ID
+  timeInterval: TimeInterval
+  isActive: Boolean
+  isLocked: Boolean
+  isSent: Boolean
+  isConfirmed: Boolean
+  break: [Break]
+  isPaused: Boolean
+  pauseStart: AWSDateTime
+  nextEntry: ID
+  lastEntry: ID
 }
 
 type AllWorkSpaces
@@ -201,9 +195,4 @@ type UserCredentials
   profile: Profile
   formChecked: [String]
   settings: UserSettings
-}
-
-type FormItem {
-  name: String
-  text: String
 }

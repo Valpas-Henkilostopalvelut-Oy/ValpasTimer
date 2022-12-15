@@ -1,3 +1,10 @@
+const duration = {
+  MIN15: 15,
+  MIN30: 30,
+  MIN45: 45,
+  H1: 60,
+};
+
 export const totaldaytime = (array) => {
   //CALCULATE TOTAL TIME FOR EACH DAY
   var h = 0;

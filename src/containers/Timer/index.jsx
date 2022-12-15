@@ -10,6 +10,7 @@ import { getWeekNumber } from "./services/group";
 import { WeekRow } from "./services/row.jsx";
 import { HistoryRow } from "./services/history.jsx";
 import { MakePDF } from "../../components/MakePDF";
+import { checkActive, advanceTime } from "./services/loadtimer";
 
 const Timer = () => {
   const [grouped, setGrouped] = useState(null);
@@ -21,6 +22,17 @@ const Timer = () => {
   const [notConfirmedWeek, setNotConfirmedWeek] = useState(null);
   const [confirmedWeeks, setConfirmedWeeks] = useState(null);
   const theme = useTheme();
+  const [isStarted, setStarted] = useState(null);
+  const [description, setDescription] = useState("");
+  const [sel, setSel] = useState("");
+  const [time, setTime] = useState({
+    seconds: 0,
+    minutes: 0,
+    hours: 0,
+  });
+  const [timerTime, setTimer] = useState(null);
+  const [isPaused, setIsPaused] = useState(false);
+
   const lang = langValue.track || {
     recorder: {
       tabs: {
@@ -79,39 +91,38 @@ const Timer = () => {
   };
 
   useEffect(() => {
-    let isActive = false;
+    let isActive = true;
 
-    const loadTimeList = async () => {
-      try {
-        const databaseTimeList = await DataStore.query(TimeEntry);
-        const currentUser = await Auth.currentAuthenticatedUser();
+    if (isActive) {
+      checkActive(setTimer, setTime, setSel, setDescription, setStarted, setIsPaused);
+    }
 
-        const filtered = databaseTimeList.filter(
-          (a) =>
-            !a.isActive &&
-            a.userId === currentUser.username &&
-            (selected !== "" ? a.workspaceId === selected : true) &&
-            !a.isSent
-        );
+    return () => (isActive = false);
+  }, []);
 
-        setGrouped(groupBy(filtered, works, langValue).filter((t) => t.week === thisweek));
-      } catch (error) {
-        console.warn(error);
-      }
-    };
+  useEffect(() => {
+    let isCanceled = false;
 
-    !isActive && isEmpty && loadTimeList();
+    isStarted && !isPaused && !isCanceled && advanceTime(time, setTime);
 
-    return () => (isActive = true);
-  }, [isEmpty, selected]);
+    return () => (isCanceled = true);
+  }, [isStarted, time, isPaused]);
 
   useEffect(() => {
     let isActive = false;
 
-    const loadNotConfirmedTimes = async () => {
+    const loadlist = async () => {
       await Auth.currentAuthenticatedUser().then(async (user) => {
         await DataStore.query(TimeEntry).then((data) => {
-          const filtered = data.filter(
+          const currentweek = data.filter(
+            (a) =>
+              !a.isActive &&
+              a.userId === user.username &&
+              (selected !== "" ? a.workspaceId === selected : true) &&
+              !a.isSent
+          );
+
+          const notconfirmedweek = data.filter(
             (a) =>
               !a.isActive &&
               a.isSent &&
@@ -120,23 +131,7 @@ const Timer = () => {
               (selected !== "" ? a.workspaceId === selected : true)
           );
 
-          setNotConfirmedWeek(groupBy(filtered, works, langValue));
-        });
-      });
-    };
-
-    !isActive && isEmpty && loadNotConfirmedTimes();
-
-    return () => (isActive = true);
-  }, [selected, isEmpty]);
-
-  useEffect(() => {
-    let isActive = false;
-
-    const loadHistory = async () => {
-      await Auth.currentAuthenticatedUser().then(async (user) => {
-        await DataStore.query(TimeEntry).then((data) => {
-          const filtered = data.filter(
+          const confirmedweek = data.filter(
             (a) =>
               !a.isActive &&
               a.userId === user.username &&
@@ -144,13 +139,17 @@ const Timer = () => {
               (!a.isSent || a.isConfirmed)
           );
 
-          setConfirmedWeeks(groupBy(filtered, works, langValue));
+          setConfirmedWeeks(groupBy(confirmedweek, works, langValue));
+          setNotConfirmedWeek(groupBy(notconfirmedweek, works, langValue));
+          setGrouped(groupBy(currentweek, works, langValue).filter((t) => t.week === thisweek));
         });
       });
     };
 
-    !isActive && isEmpty && loadHistory();
-  }, [selected, isEmpty]);
+    !isActive && isEmpty && loadlist();
+
+    return () => (isActive = true);
+  }, [isEmpty, selected]);
 
   useEffect(() => {
     Hub.listen("datastore", async (hubData) => {
@@ -194,10 +193,26 @@ const Timer = () => {
         },
       }}
     >
-      {confirmedWeeks && notConfirmedWeek && grouped ? (
+      {confirmedWeeks && notConfirmedWeek && grouped && !(isStarted === null) ? (
         <Grid container spacing={2}>
           <Grid item xs={12}>
-            <Recorder works={works} isEmpty={isEmpty} lang={lang.recorder} />
+            <Recorder
+              works={works}
+              isEmpty={isEmpty}
+              lang={lang.recorder}
+              isStarted={isStarted}
+              setStarted={setStarted}
+              description={description}
+              setDescription={setDescription}
+              setSel={setSel}
+              sel={sel}
+              time={time}
+              timerTime={timerTime}
+              setTime={setTime}
+              setTimer={setTimer}
+              isPaused={isPaused}
+              setIsPaused={setIsPaused}
+            />
           </Grid>
 
           <Grid item xs={12}>

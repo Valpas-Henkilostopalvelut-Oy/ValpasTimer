@@ -23,8 +23,26 @@ export const Editdate = ({ date = null, setDate, sTime, eTime, setSTime, setETim
         value={date}
         onChange={(newValue) => {
           setDate(newValue);
-          setSTime(new Date(newValue.getFullYear(), newValue.getMonth(), newValue.getDate(), sTime.getHours(), sTime.getMinutes(), sTime.getSeconds()));
-          setETime(new Date(newValue.getFullYear(), newValue.getMonth(), newValue.getDate(), eTime.getHours(), eTime.getMinutes(), eTime.getSeconds()));
+          setSTime(
+            new Date(
+              newValue.getFullYear(),
+              newValue.getMonth(),
+              newValue.getDate(),
+              sTime.getHours(),
+              sTime.getMinutes(),
+              sTime.getSeconds()
+            )
+          );
+          setETime(
+            new Date(
+              newValue.getFullYear(),
+              newValue.getMonth(),
+              newValue.getDate(),
+              eTime.getHours(),
+              eTime.getMinutes(),
+              eTime.getSeconds()
+            )
+          );
         }}
         renderInput={(params) => <TextField variant="outlined" {...params} />}
       />
@@ -39,7 +57,16 @@ export const Editstime = ({ date, sTime, setSTime, lang = { start_time: "Start t
     let isActive = false;
 
     const updateSTime = () => {
-      setSTime(new Date(date.getFullYear(), date.getMonth(), date.getDate(), value.getHours(), value.getMinutes(), value.getSeconds()));
+      setSTime(
+        new Date(
+          date.getFullYear(),
+          date.getMonth(),
+          date.getDate(),
+          value.getHours(),
+          value.getMinutes(),
+          value.getSeconds()
+        )
+      );
     };
 
     if (!isNaN(value) && value && !isActive) {
@@ -71,7 +98,16 @@ export const Edetime = ({ date, eTime, setETime, lang = { end_time: "End time" }
     let isActive = false;
 
     const updateETime = () => {
-      setETime(new Date(date.getFullYear(), date.getMonth(), date.getDate(), value.getHours(), value.getMinutes(), value.getSeconds()));
+      setETime(
+        new Date(
+          date.getFullYear(),
+          date.getMonth(),
+          date.getDate(),
+          value.getHours(),
+          value.getMinutes(),
+          value.getSeconds()
+        )
+      );
     };
     if (!isNaN(value) && value && !isActive) {
       updateETime();
@@ -143,7 +179,6 @@ const createTimeentry = async ({ description = "", sel = "", sTime, eTime }) => 
             timeInterval: {
               start: new Date(sTime).toISOString(),
               end: new Date(eTime).toISOString(),
-              duration: "",
             },
             isActive: false,
             isLocked: false,

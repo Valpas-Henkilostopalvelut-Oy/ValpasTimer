@@ -370,22 +370,43 @@ export const schema = {
                     "isRequired": false,
                     "attributes": []
                 },
-                "billable": {
-                    "name": "billable",
+                "break": {
+                    "name": "break",
+                    "isArray": true,
+                    "type": {
+                        "nonModel": "Break"
+                    },
+                    "isRequired": false,
+                    "attributes": [],
+                    "isArrayNullable": true
+                },
+                "isPaused": {
+                    "name": "isPaused",
                     "isArray": false,
                     "type": "Boolean",
                     "isRequired": false,
                     "attributes": []
                 },
-                "breaks": {
-                    "name": "breaks",
-                    "isArray": true,
-                    "type": {
-                        "enum": "Break"
-                    },
+                "pauseStart": {
+                    "name": "pauseStart",
+                    "isArray": false,
+                    "type": "AWSDateTime",
                     "isRequired": false,
-                    "attributes": [],
-                    "isArrayNullable": true
+                    "attributes": []
+                },
+                "nextEntry": {
+                    "name": "nextEntry",
+                    "isArray": false,
+                    "type": "ID",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "lastEntry": {
+                    "name": "lastEntry",
+                    "isArray": false,
+                    "type": "ID",
+                    "isRequired": false,
+                    "attributes": []
                 },
                 "createdAt": {
                     "name": "createdAt",
@@ -738,15 +759,6 @@ export const schema = {
         }
     },
     "enums": {
-        "Break": {
-            "name": "Break",
-            "values": [
-                "MIN15",
-                "MIN30",
-                "MIN45",
-                "H1"
-            ]
-        },
         "Status": {
             "name": "Status",
             "values": [
@@ -757,34 +769,6 @@ export const schema = {
         }
     },
     "nonModels": {
-        "Breaks": {
-            "name": "Breaks",
-            "fields": {
-                "start": {
-                    "name": "start",
-                    "isArray": false,
-                    "type": "AWSDateTime",
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "duration": {
-                    "name": "duration",
-                    "isArray": false,
-                    "type": {
-                        "enum": "Break"
-                    },
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "reasone": {
-                    "name": "reasone",
-                    "isArray": false,
-                    "type": "String",
-                    "isRequired": false,
-                    "attributes": []
-                }
-            }
-        },
         "UserAgreement": {
             "name": "UserAgreement",
             "fields": {
@@ -916,32 +900,6 @@ export const schema = {
                     "name": "name",
                     "isArray": false,
                     "type": "String",
-                    "isRequired": false,
-                    "attributes": []
-                }
-            }
-        },
-        "TimeInterval": {
-            "name": "TimeInterval",
-            "fields": {
-                "duration": {
-                    "name": "duration",
-                    "isArray": false,
-                    "type": "String",
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "end": {
-                    "name": "end",
-                    "isArray": false,
-                    "type": "AWSDateTime",
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "start": {
-                    "name": "start",
-                    "isArray": false,
-                    "type": "AWSDateTime",
                     "isRequired": false,
                     "attributes": []
                 }
@@ -1109,6 +1067,51 @@ export const schema = {
                 }
             }
         },
+        "TimeInterval": {
+            "name": "TimeInterval",
+            "fields": {
+                "end": {
+                    "name": "end",
+                    "isArray": false,
+                    "type": "AWSDateTime",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "start": {
+                    "name": "start",
+                    "isArray": false,
+                    "type": "AWSDateTime",
+                    "isRequired": false,
+                    "attributes": []
+                }
+            }
+        },
+        "Break": {
+            "name": "Break",
+            "fields": {
+                "duration": {
+                    "name": "duration",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "end": {
+                    "name": "end",
+                    "isArray": false,
+                    "type": "AWSDateTime",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "start": {
+                    "name": "start",
+                    "isArray": false,
+                    "type": "AWSDateTime",
+                    "isRequired": false,
+                    "attributes": []
+                }
+            }
+        },
         "WorkspaceSettings": {
             "name": "WorkspaceSettings",
             "fields": {
@@ -1169,27 +1172,8 @@ export const schema = {
                     "attributes": []
                 }
             }
-        },
-        "FormItem": {
-            "name": "FormItem",
-            "fields": {
-                "name": {
-                    "name": "name",
-                    "isArray": false,
-                    "type": "String",
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "text": {
-                    "name": "text",
-                    "isArray": false,
-                    "type": "String",
-                    "isRequired": false,
-                    "attributes": []
-                }
-            }
         }
     },
     "codegenVersion": "3.3.2",
-    "version": "005d497d8b2df5841b54a174571ffe0c"
+    "version": "01e6778be18df0419229756d65147c3d"
 };

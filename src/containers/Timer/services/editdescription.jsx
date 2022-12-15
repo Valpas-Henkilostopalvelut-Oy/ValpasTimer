@@ -1,8 +1,21 @@
 import React, { useState } from "react";
-import { TextField, Typography, useTheme, TableRow, TableCell, Box, Dialog, DialogActions, DialogContent, DialogTitle, Button } from "@mui/material";
+import {
+  TextField,
+  Typography,
+  useTheme,
+  TableRow,
+  TableCell,
+  Box,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Button,
+} from "@mui/material";
 import { DataStore } from "aws-amplify";
 import { TimeEntry } from "../../../models";
 import { PropTypes } from "prop-types";
+import DescriptionIcon from "@mui/icons-material/Description";
 
 const updateDescription = async (date, newDescription) => {
   await DataStore.save(
@@ -28,16 +41,25 @@ const EditDescription = ({
     <Box
       sx={{
         cursor: !isSent && "pointer",
-        maxWidth: "280px"
+        maxWidth: "280px",
       }}
     >
       <Typography variant="p" onClick={() => setOpen(true && !isSent)}>
-        {desc !== "" ? desc : lang.none_description}
+        {desc !== "" ? desc : <DescriptionIcon />}
       </Typography>
       <Dialog open={open && !isSent} onClose={() => setOpen(false)} maxWidth={"xs"} fullWidth={true}>
         <DialogTitle>{lang.add_description}</DialogTitle>
         <DialogContent>
-          <TextField id="outlined-multiline-static" variant="standard" fullWidth multiline rows={3} value={desc} onChange={(e) => setDesc(e.target.value)} placeholder={lang.add_description} />
+          <TextField
+            id="outlined-multiline-static"
+            variant="standard"
+            fullWidth
+            multiline
+            rows={3}
+            value={desc}
+            onChange={(e) => setDesc(e.target.value)}
+            placeholder={lang.add_description}
+          />
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setOpen(false)} color="primary">

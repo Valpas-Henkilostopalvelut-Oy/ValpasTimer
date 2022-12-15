@@ -92,53 +92,36 @@ export const StatusMD = ({
 }) => {
   const theme = useTheme();
   return sent(date) ? (
-    <Fragment>
-      <TableCell
-        sx={{
-          [theme.breakpoints.down("sm")]: {
-            display: "none",
-          },
-        }}
-      />
-
-      <TableCell
-        align="right"
-        sx={{
-          [theme.breakpoints.down("sm")]: {
-            display: "none",
-          },
-        }}
-      >
-        <DeleteAll date={date} lang={lang} isEmpty={isEmpty} />
-      </TableCell>
-    </Fragment>
+    <TableCell
+      align="right"
+      sx={{
+        [theme.breakpoints.down("sm")]: {
+          display: "none",
+        },
+      }}
+    >
+      <DeleteAll date={date} lang={lang} isEmpty={isEmpty} />
+    </TableCell>
   ) : (
-    <Fragment>
-      <TableCell
-        align="right"
+    <TableCell
+      align="right"
+      sx={{
+        [theme.breakpoints.down("sm")]: {
+          display: "none",
+        },
+      }}
+    >
+      <Box
         sx={{
-          [theme.breakpoints.down("sm")]: {
-            display: "none",
-          },
+          display: "flex",
+          justifyContent: "space-evenly",
+          alignItems: "center",
         }}
       >
-        <Box width="70px">
-          {lang.sent}: <TaskAltIcon color="success" />
-        </Box>
-      </TableCell>
-      <TableCell
-        align="right"
-        sx={{
-          [theme.breakpoints.down("sm")]: {
-            display: "none",
-          },
-        }}
-      >
-        <Box>
-          {lang.confirmed}: {confirmed(date) ? <TaskAltIcon color="success" /> : <ClearIcon color="error" />}
-        </Box>
-      </TableCell>
-    </Fragment>
+        {lang.sent}: <TaskAltIcon color="success" />
+        {lang.confirmed}: {confirmed(date) ? <TaskAltIcon color="success" /> : <ClearIcon color="error" />}
+      </Box>
+    </TableCell>
   );
 };
 

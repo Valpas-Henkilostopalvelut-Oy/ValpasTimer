@@ -109,7 +109,6 @@ export const getTasks = /* GraphQL */ `
         name
       }
       interval {
-        duration
         end
         start
       }
@@ -189,7 +188,6 @@ export const getTimeEntry = /* GraphQL */ `
       userId
       workspaceId
       timeInterval {
-        duration
         end
         start
       }
@@ -197,8 +195,15 @@ export const getTimeEntry = /* GraphQL */ `
       isLocked
       isSent
       isConfirmed
-      billable
-      breaks
+      break {
+        duration
+        end
+        start
+      }
+      isPaused
+      pauseStart
+      nextEntry
+      lastEntry
       createdAt
       updatedAt
       _version
@@ -223,8 +228,10 @@ export const listTimeEntries = /* GraphQL */ `
         isLocked
         isSent
         isConfirmed
-        billable
-        breaks
+        isPaused
+        pauseStart
+        nextEntry
+        lastEntry
         createdAt
         updatedAt
         _version
@@ -258,8 +265,10 @@ export const syncTimeEntries = /* GraphQL */ `
         isLocked
         isSent
         isConfirmed
-        billable
-        breaks
+        isPaused
+        pauseStart
+        nextEntry
+        lastEntry
         createdAt
         updatedAt
         _version
