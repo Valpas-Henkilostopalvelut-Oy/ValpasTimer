@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { TextField, Button, Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
 import { Auth, DataStore } from "aws-amplify";
-import { TimeEntry, UserCredentials } from "../../../../models";
+import { TimeEntry, UserCredentials } from "../../../../models/index.js";
 import { timeMaker } from "../../../../services/time.jsx";
 import { PropTypes } from "prop-types";
 

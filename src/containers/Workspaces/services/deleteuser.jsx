@@ -1,6 +1,6 @@
 import React, { useState, Fragment } from "react";
 import { DataStore } from "aws-amplify";
-import { AllWorkSpaces } from "../../../models";
+import { AllWorkSpaces } from "../../../models/index.js";
 import { Dialog, DialogActions, DialogTitle, Button, DialogContent, IconButton } from "@mui/material";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import { PropTypes } from "prop-types";

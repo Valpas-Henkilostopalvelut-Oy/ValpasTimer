@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { DataStore } from "aws-amplify";
-import { UserCredentials } from "../../../models";
+import { UserCredentials } from "../../../models/index.js";
 import { Table, TableBody, TableHead, TableCell, TableContainer, TableRow, Paper, Collapse, Typography } from "@mui/material";
 import { TopbarMD } from "./topbar.jsx";
 import { Userdetails } from "./userdetails.jsx";

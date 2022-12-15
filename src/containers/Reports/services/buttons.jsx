@@ -1,7 +1,7 @@
 import React from "react";
 import { Button } from "@mui/material";
 import { DataStore } from "aws-amplify";
-import { TimeEntry } from "../../../models";
+import { TimeEntry } from "../../../models/index.js";
 import { PropTypes } from "prop-types";
 
 const handleWeekReport = (data) => {

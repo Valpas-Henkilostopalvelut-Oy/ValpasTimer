@@ -1,7 +1,7 @@
 import React, { useState, useEffect, Fragment } from "react";
 import { Container, Typography, Accordion, AccordionSummary, AccordionDetails, Toolbar, Paper } from "@mui/material";
 import { DataStore } from "aws-amplify";
-import { Agreement } from "../../models";
+import { Agreement } from "../../models/index.js";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 export const AgreementPage = () => {

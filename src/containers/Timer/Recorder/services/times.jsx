@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from "react";
 import { Auth, DataStore } from "aws-amplify";
-import { TimeEntry } from "../../../../models";
+import { TimeEntry } from "../../../../models/index.js";
 import { TextField, Typography, Button } from "@mui/material";
 
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";

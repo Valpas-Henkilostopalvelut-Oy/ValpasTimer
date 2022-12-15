@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Grid, Typography } from "@mui/material";
 import { DataStore } from "aws-amplify";
-import { TimeEntry } from "../../../models";
+import { TimeEntry } from "../../../models/index.js";
 import { groupBy } from "./group.jsx";
 import { totaldaytime, totalweektime } from "./totaltime.jsx";
 import { Details } from "./details.jsx";

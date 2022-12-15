@@ -5,7 +5,7 @@ import { useAppContext } from "../../services/contextLib.jsx";
 import { Formik } from "formik";
 import * as yup from "yup";
 import LoaderButton from "../../components/LoaderButton/index.jsx";
-import { UserCredentials } from "../../models";
+import { UserCredentials } from "../../models/index.js";
 import ChangePassword from "./ChangePassword/index.jsx";
 import { useNavigate } from "react-router-dom";
 import { PropTypes } from "prop-types";

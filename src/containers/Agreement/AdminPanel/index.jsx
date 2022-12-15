@@ -26,7 +26,7 @@ import { Auth, DataStore } from "aws-amplify";
 import { Formik } from "formik";
 import React, { useEffect, useState } from "react";
 import LoaderButton from "../../../components/LoaderButton/index.jsx";
-import { Agreement, AllWorkSpaces } from "../../../models";
+import { Agreement, AllWorkSpaces } from "../../../models/index.js";
 import { UserTable } from "./UserTable/index.jsx";
 import { PropTypes } from "prop-types";
 

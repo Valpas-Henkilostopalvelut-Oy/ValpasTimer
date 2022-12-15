@@ -13,7 +13,7 @@ import {
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { DataStore } from "aws-amplify";
-import { TimeEntry } from "../../../models";
+import { TimeEntry } from "../../../models/index.js";
 import { PropTypes } from "prop-types";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 

@@ -1,6 +1,6 @@
 import React from "react";
 import { Grid, Typography, Box } from "@mui/material";
-import { totaldaytime, totalweektime } from "./totaltime";
+import { totaldaytime, totalweektime } from "./totaltime.jsx";
 import { Main } from "./table.jsx";
 import { Reportallweek } from "./buttons.jsx";
 import { PropTypes } from "prop-types";

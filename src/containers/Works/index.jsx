@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Menu, Table, TableBody, TableCell, TableContainer, TableRow, Paper, MenuItem, CircularProgress, IconButton, Tooltip, Container } from "@mui/material";
 import { EnhancedWorks } from "./CreateTask/index.jsx";
 import { DataStore } from "aws-amplify";
-import { Tasks } from "../../models";
+import { Tasks } from "../../models/index.js";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { deleteTask } from "./Tools/index.jsx";
 import { WorkStatus } from "../../services/workLib.jsx";

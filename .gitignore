@@ -13,7 +13,7 @@
 yarn.lock
 
 # misc
-.eslintrc.js
+.eslintrc.cjs
 .DS_Store
 .env
 .env.local

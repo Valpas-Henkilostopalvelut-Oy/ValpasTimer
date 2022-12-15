@@ -1,7 +1,7 @@
 import React from "react";
 import { TextField } from "@mui/material";
 import { DataStore } from "aws-amplify";
-import { TimeEntry } from "../../../../models";
+import { TimeEntry } from "../../../../models/index.js";
 import { PropTypes } from "prop-types";
 
 export const EditDescription = ({ description, setDescription, lang = { description: "Description" } }) => {

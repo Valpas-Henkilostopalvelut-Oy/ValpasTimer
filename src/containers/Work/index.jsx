@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Box, Container, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from "@mui/material";
 import { DataStore, Auth } from "aws-amplify";
-import { Tasks } from "../../models";
+import { Tasks } from "../../models/index.js";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { WorkStatus } from "../../services/workLib.jsx";
 

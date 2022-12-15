@@ -1,5 +1,5 @@
 import { DataStore, Auth } from "aws-amplify";
-import { TimeEntry, UserCredentials } from "../../../models";
+import { TimeEntry, UserCredentials } from "../../../models/index.js";
 
 export const checkActive = async (setTimer, setTime, setSel, setDescription, setStarted, setIsPaused) => {
   await Auth.currentAuthenticatedUser().then(async (user) => {

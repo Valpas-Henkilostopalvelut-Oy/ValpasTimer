@@ -1,6 +1,6 @@
 import React, { Fragment, useEffect, useState } from "react";
 import { DataStore, Auth } from "aws-amplify";
-import { AllWorkSpaces, UserCredentials } from "../../models";
+import { AllWorkSpaces, UserCredentials } from "../../models/index.js";
 import {
   Container,
   TableContainer,

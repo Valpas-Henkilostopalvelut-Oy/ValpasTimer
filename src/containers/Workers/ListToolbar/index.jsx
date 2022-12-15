@@ -4,7 +4,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import DoDisturbIcon from "@mui/icons-material/DoDisturb";
 import { alpha } from "@mui/material/styles";
 import { DataStore, Auth, API } from "aws-amplify";
-import { UserCredentials } from "../../../models";
+import { UserCredentials } from "../../../models/index.js";
 import { CreateNewUser } from "./createUser.jsx";
 import { PropTypes } from "prop-types";
 

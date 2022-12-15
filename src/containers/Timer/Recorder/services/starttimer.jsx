@@ -1,7 +1,7 @@
 import React from "react";
 import { Button } from "@mui/material";
 import { Auth, DataStore } from "aws-amplify";
-import { UserCredentials, TimeEntry } from "../../../../models";
+import { UserCredentials, TimeEntry } from "../../../../models/index.js";
 import { PropTypes } from "prop-types";
 
 const startTimer = async ({ description, workplace, setTimer }) => {

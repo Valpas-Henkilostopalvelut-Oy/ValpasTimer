@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { Grid } from "@mui/material";
-import { EditDescription } from "./editdescription";
-import { EditWorkplaceManual } from "./editworkplace";
-import { Editdate, Editstime, Edetime, Totaltime, Createtimeentry } from "./times";
+import { EditDescription } from "./editdescription.jsx";
+import { EditWorkplaceManual } from "./editworkplace.jsx";
+import { Editdate, Editstime, Edetime, Totaltime, Createtimeentry } from "./times.jsx";
 import { PropTypes } from "prop-types";
 
 export const Manual = ({ description, sel, setDescription, setSel, works, lang }) => {

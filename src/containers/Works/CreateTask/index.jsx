@@ -6,7 +6,7 @@ import AddIcon from "@mui/icons-material/Add";
 import { Formik } from "formik";
 import LoaderButton from "../../../components/LoaderButton/index.jsx";
 import { DataStore, Auth, API } from "aws-amplify";
-import { Tasks, Status, AllWorkSpaces } from "../../../models";
+import { Tasks, Status, AllWorkSpaces } from "../../../models/index.js";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";

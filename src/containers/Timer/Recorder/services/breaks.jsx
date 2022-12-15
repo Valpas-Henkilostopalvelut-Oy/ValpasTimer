@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { DataStore, Auth } from "aws-amplify";
-import { TimeEntry, UserCredentials } from "../../../../models";
+import { TimeEntry, UserCredentials } from "../../../../models/index.js";
 import { Button } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 

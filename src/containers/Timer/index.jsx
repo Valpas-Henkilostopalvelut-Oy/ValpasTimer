@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { DataStore, Auth, Hub } from "aws-amplify";
-import { AllWorkSpaces, TimeEntry } from "../../models";
+import { AllWorkSpaces, TimeEntry } from "../../models/index.js";
 import { Container, Box, Grid, Typography, useTheme, CircularProgress } from "@mui/material";
 import { Recorder } from "./Recorder/index.jsx";
 import { groupBy } from "./services/group.jsx";
-import { Selectwork } from "./services/workplaceselect";
-import { useAppContext } from "../../services/contextLib";
-import { getWeekNumber } from "./services/group";
+import { Selectwork } from "./services/workplaceselect.jsx";
+import { useAppContext } from "../../services/contextLib.jsx";
+import { getWeekNumber } from "./services/group.jsx";
 import { WeekRow } from "./services/row.jsx";
 import { HistoryRow } from "./services/history.jsx";
-import { MakePDF } from "../../components/MakePDF";
-import { checkActive, advanceTime } from "./services/loadtimer";
+import { MakePDF } from "../../components/MakePDF/index.jsx";
+import { checkActive, advanceTime } from "./services/loadtimer.jsx";
 
 const Timer = () => {
   const [grouped, setGrouped] = useState(null);

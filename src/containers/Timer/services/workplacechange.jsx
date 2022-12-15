@@ -16,7 +16,7 @@ import {
   Typography,
 } from "@mui/material";
 import { DataStore } from "aws-amplify";
-import { TimeEntry, AllWorkSpaces } from "../../../models";
+import { TimeEntry, AllWorkSpaces } from "../../../models/index.js";
 import { PropTypes } from "prop-types";
 
 const updateWorkplace = async (date, newValue, oldValue) => {

@@ -1,7 +1,7 @@
 import React from "react";
 import { createRoot } from "react-dom/client";
 import App from "./App.jsx";
-import reportWebVitals from "./reportWebVitals";
+import reportWebVitals from "./reportWebVitals.js";
 
 //Custom imports
 import { BrowserRouter } from "react-router-dom";
@@ -12,7 +12,7 @@ import { createUser } from "./services/createUser.jsx";
 import * as Sentry from "@sentry/react";
 import { BrowserTracing } from "@sentry/tracing";
 import { Provider } from "react-redux";
-import { store } from "./app/store";
+import { store } from "./app/store.js";
 
 const rootElement = document.getElementById("root");
 const root = createRoot(rootElement);

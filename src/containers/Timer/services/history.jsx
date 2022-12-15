@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Grid, Typography, Box, Collapse, IconButton } from "@mui/material";
-import { totalweektime } from "./totaltime";
-import { Row } from "./row";
+import { totalweektime } from "./totaltime.jsx";
+import { Row } from "./row.jsx";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import { PropTypes } from "prop-types";

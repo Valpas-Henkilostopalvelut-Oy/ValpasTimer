@@ -1,6 +1,6 @@
 import React, { useState, Fragment } from "react";
 import { DataStore } from "aws-amplify";
-import { AllWorkSpaces } from "../../../models";
+import { AllWorkSpaces } from "../../../models/index.js";
 import { Button, Dialog, DialogContent, DialogTitle, Box, TextField, Typography, DialogActions } from "@mui/material";
 import { Formik } from "formik";
 import * as Yup from "yup";

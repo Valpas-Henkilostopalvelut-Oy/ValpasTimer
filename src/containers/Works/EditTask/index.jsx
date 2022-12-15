@@ -3,7 +3,7 @@ import { Dialog, DialogTitle, DialogContent, Box, TextField, Grid } from "@mui/m
 import { Formik } from "formik";
 import LoaderButton from "../../../components/LoaderButton/index.jsx";
 import { DataStore } from "aws-amplify";
-import { Tasks } from "../../../models";
+import { Tasks } from "../../../models/index.js";
 import { UserSelect, SelectDuration, SelectEndDate, SelectStartDate, SelectStartTime, WorkSelect } from "../CreateTask/index.jsx";
 import { PropTypes } from "prop-types";
 

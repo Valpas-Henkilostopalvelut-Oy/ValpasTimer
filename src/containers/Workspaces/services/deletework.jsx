@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { DataStore } from "aws-amplify";
-import { AllWorkSpaces } from "../../../models";
+import { AllWorkSpaces } from "../../../models/index.js";
 import { Typography, Button, Box, Collapse } from "@mui/material";
 import { PropTypes } from "prop-types";
 

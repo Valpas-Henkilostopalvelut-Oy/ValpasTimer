@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { DataStore, Hub } from "aws-amplify";
-import { AllWorkSpaces } from "../../models";
+import { AllWorkSpaces } from "../../models/index.js";
 import { Container, Box, useTheme, Grid, Typography } from "@mui/material";
 import { Worklist } from "./services/userlist.jsx";
-import { Creatework } from "./services/creatework";
-import { useAppContext } from "../../services/contextLib";
+import { Creatework } from "./services/creatework.jsx";
+import { useAppContext } from "../../services/contextLib.jsx";
 
 const Workspaces = () => {
   const [works, setWorks] = useState([]);

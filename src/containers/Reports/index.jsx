@@ -2,11 +2,11 @@ import React, { useEffect, useState } from "react";
 import { Container, Grid, CircularProgress, Typography } from "@mui/material";
 
 import { DataStore, Hub } from "aws-amplify";
-import { UserCredentials, AllWorkSpaces } from "../../models";
+import { UserCredentials, AllWorkSpaces } from "../../models/index.js";
 import { Selectwork } from "./services/selectwork.jsx";
 import { Selectuser } from "./services/selectuser.jsx";
 import { Timelist } from "./services/timelist.jsx";
-import { useAppContext } from "../../services/contextLib";
+import { useAppContext } from "../../services/contextLib.jsx";
 
 const Reports = () => {
   const [selWork, setSelWork] = useState("");

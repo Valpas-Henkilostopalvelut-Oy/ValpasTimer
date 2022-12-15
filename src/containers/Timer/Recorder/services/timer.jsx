@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import { Typography, Grid } from "@mui/material";
-import { EditStartTime } from "./editstartedtime";
-import { EditDescriptionTimer } from "./editdescription";
-import { EditWorkplaceTimer } from "./editworkplace";
-import { StartTimer } from "./starttimer";
+import { EditStartTime } from "./editstartedtime.jsx";
+import { EditDescriptionTimer } from "./editdescription.jsx";
+import { EditWorkplaceTimer } from "./editworkplace.jsx";
+import { StartTimer } from "./starttimer.jsx";
 import { PropTypes } from "prop-types";
-import { Timerbreak } from "./breaks";
+import { Timerbreak } from "./breaks.jsx";
 
 export const Timer = ({
   time,

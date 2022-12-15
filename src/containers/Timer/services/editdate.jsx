@@ -1,6 +1,6 @@
 import React from "react";
 import { DataStore } from "aws-amplify";
-import { TimeEntry } from "../../../models";
+import { TimeEntry } from "../../../models/index.js";
 import { TableCell, TableRow, TextField, Typography, Dialog, DialogActions, DialogContent, DialogTitle, Button, Box, useTheme } from "@mui/material";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";

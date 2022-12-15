@@ -4,7 +4,7 @@ import { IconButton, Dialog, DialogTitle, TableCell, DialogContent, Button, Dial
 import { Formik } from "formik";
 import AddIcon from "@mui/icons-material/Add";
 import * as yup from "yup";
-import { UserCredentials, AllWorkSpaces } from "../../../models";
+import { UserCredentials, AllWorkSpaces } from "../../../models/index.js";
 import { PropTypes } from "prop-types";
 
 export const Adduser = ({ data, lang }) => {

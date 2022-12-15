@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { TextField, Typography, Box, Dialog, DialogTitle, DialogContent, DialogActions, Button } from "@mui/material";
 import { DataStore } from "aws-amplify";
-import { TimeEntry } from "../../../models";
+import { TimeEntry } from "../../../models/index.js";
 
 const time = (e) => {
   let t = e.target.value;
