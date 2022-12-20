@@ -1,7 +1,8 @@
-import React from "react";
+import React, { Fragment } from "react";
 import { Table, Typography, TableBody, TableCell, TableRow, Box } from "@mui/material";
-import { DSTime, DETime } from "./times.jsx";
+import { Time } from "./times.jsx";
 import { PropTypes } from "prop-types";
+import { Breakslist } from "./breaks.jsx";
 
 const TotalTime = ({ date }) => {
   let start = new Date(date.timeInterval.start);
@@ -23,26 +24,27 @@ const TotalTime = ({ date }) => {
 
 export const Detailsrow = ({ date }) => {
   return (
-    <Box>
-      <Table size="small" aria-label="purchases">
-        <TableBody>
-          {date.arr.map((row) => (
+    <Table size="small" aria-label="purchases">
+      <TableBody>
+        {date.arr.map((row) => (
+          <Fragment key={row.id}>
             <TableRow key={row.id}>
               <TableCell>{row.description ? row.description : "No description"}</TableCell>
               <TableCell align="right">
-                <DSTime date={row} />
+                <Time time={row.timeInterval.start} />
               </TableCell>
               <TableCell align="right">
-                <DETime date={row} />
+                <Time time={row.timeInterval.end} />
               </TableCell>
               <TableCell align="right">
                 <TotalTime date={row} />
               </TableCell>
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </Box>
+            <Breakslist date={row} />
+          </Fragment>
+        ))}
+      </TableBody>
+    </Table>
   );
 };
 

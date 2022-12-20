@@ -20,20 +20,11 @@ export const ETime = ({ date }) => {
   );
 };
 
-export const DSTime = ({ date }) => {
-  let sTime = new Date(date.timeInterval.start);
+export const Time = ({ time }) => {
+  let value = new Date(time);
   return (
     <Typography variant="p">
-      {sTime.getHours()}:{sTime.getMinutes()}
-    </Typography>
-  );
-};
-
-export const DETime = ({ date }) => {
-  let eTime = new Date(date.timeInterval.end);
-  return (
-    <Typography variant="p">
-      {eTime.getHours()}:{eTime.getMinutes()}
+      {value.getHours()}:{value.getMinutes()}
     </Typography>
   );
 };
@@ -43,13 +34,5 @@ STime.propTypes = {
 };
 
 ETime.propTypes = {
-  date: PropTypes.object,
-};
-
-DSTime.propTypes = {
-  date: PropTypes.object,
-};
-
-DETime.propTypes = {
   date: PropTypes.object,
 };

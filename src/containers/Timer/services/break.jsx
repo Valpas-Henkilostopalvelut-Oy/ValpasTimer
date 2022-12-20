@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { TableCell, TableRow, IconButton, Typography, InputBase } from "@mui/material";
+import { TableCell, TableRow, IconButton, Typography, InputBase, TextField } from "@mui/material";
 import { DataStore } from "aws-amplify";
 import { TimeEntry } from "../../../models/index.js";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
@@ -10,30 +10,31 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { TimePicker } from "@mui/x-date-pickers/TimePicker";
 import fi from "date-fns/locale/fi";
 
-const addBreak = async (data, sTime, eTime) => {
+const addBreak = async (data) => {
   //get last timeEntry from array
   const oldData = data[data.length - 1];
-
-  console.log(oldData);
-
-  const newData = TimeEntry.copyOf(oldData, (updated) => {
-    // Add a new break to the break array
-    let q = [];
-    if (updated.break !== null) q = updated.break;
-    let bEnd = Date.parse(updated.timeInterval.start) + 1000 * 15 * 60;
-
-    q.push({
-      start: new Date(updated.timeInterval.start).toISOString(),
-      end: new Date(bEnd).toISOString(),
-    });
-
-    updated.break = q;
-  });
+  const bStart = oldData.timeInterval.start;
+  const bEnd = new Date(Date.parse(oldData.timeInterval.start) + 1000 * 60 * 60).toISOString();
 
   // Save the updated data
-  await DataStore.save(newData).then((newData) => {
-    console.log(newData);
-  });
+  await DataStore.save(
+    TimeEntry.copyOf(oldData, (updated) => {
+      // Add a new break to the break array
+      if (!updated.break) {
+        updated.break = [
+          {
+            start: bStart,
+            end: bEnd,
+          },
+        ];
+      } else {
+        updated.break.push({
+          start: bStart,
+          end: bEnd,
+        });
+      }
+    })
+  );
 };
 
 const deleteBreak = async (data, breakIndex) => {
@@ -56,13 +57,10 @@ const Breakstart = ({ start, minStart, maxEnd, setStart }) => {
         label="Start break time"
         value={start}
         onChange={(newValue) => {
+          console.log(newValue);
           setStart(newValue);
         }}
-        renderInput={(params) => {
-          return <InputBase {...params} variant="standard" sx={{ fontSize: "14px" }} />;
-        }}
-        maxTime={new Date(maxEnd)}
-        minTime={new Date(minStart)}
+        renderInput={(params) => <TextField {...params} variant="standard" sx={{ fontSize: "14px" }} />}
       />
     </LocalizationProvider>
   );
@@ -72,14 +70,15 @@ const Breakend = ({ end, minStart, maxEnd, setEnd }) => {
   return (
     <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={fi}>
       <TimePicker
+        disableOpenPicker
         label="End break time"
         value={end}
         onChange={(newValue) => {
           setEnd(newValue);
         }}
-        renderInput={(params) => <InputBase {...params} sx={{ fontSize: "14px" }} />}
-        maxTime={new Date(maxEnd)}
-        minTime={new Date(minStart)}
+        renderInput={(params) => (
+          <TextField {...params} variant="standard" sx={{ fontSize: "14px" }} onBlur={() => console.log(params)} />
+        )}
       />
     </LocalizationProvider>
   );
@@ -105,7 +104,8 @@ export const AddBreak = ({ data }) => {
   );
 };
 
-export const Breakslist = ({ item, data, index }) => {
+export const Breakslist = ({ item, data, index, isEmpty }) => {
+  console.log(item);
   const [end, setEnd] = useState(new Date(item.end));
   const [start, setStart] = useState(new Date(item.start));
   const [total, setTotal] = useState({
@@ -138,7 +138,7 @@ export const Breakslist = ({ item, data, index }) => {
   }, [end, start]);
 
   return (
-    <TableRow key={item.start}>
+    <TableRow key={index}>
       <TableCell colSpan={2}>
         <Breakstart start={start} setStart={setStart} minStart={dStart} maxEnd={dEnd} />
       </TableCell>
@@ -149,7 +149,7 @@ export const Breakslist = ({ item, data, index }) => {
         <Breaktotal total={total} />
       </TableCell>
       <TableCell colSpan={1} align="right">
-        <IconButton onClick={() => deleteBreak(data, index)}>
+        <IconButton onClick={() => deleteBreak(data, index)} disabled={!isEmpty}>
           <DeleteForeverIcon />
         </IconButton>
       </TableCell>
