@@ -196,7 +196,7 @@ export const getTimeEntry = /* GraphQL */ `
       isSent
       isConfirmed
       break {
-        duration
+        reason
         end
         start
       }

@@ -1,32 +1,17 @@
 import React, { useState, useEffect } from "react";
-import {
-  TableCell,
-  TableRow,
-  IconButton,
-  Typography,
-  InputBase,
-  TextField,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-} from "@mui/material";
+import { TableCell, TableRow, IconButton, Typography } from "@mui/material";
 import { DataStore } from "aws-amplify";
 import { TimeEntry } from "../../../models/index.js";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
-import AddIcon from "@mui/icons-material/Add";
-import { PropTypes } from "prop-types";
-import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { TimePicker } from "@mui/x-date-pickers/TimePicker";
-import fi from "date-fns/locale/fi";
 import { TextToTime } from "../../../services/time.jsx";
+import AddIcon from "@mui/icons-material/Add";
+import { Breakmenu } from "./buttons.jsx";
 
-const addBreak = async (data) => {
+const addBreak = async (data, reason, time) => {
   //get last timeEntry from array
   const oldData = data[data.length - 1];
   const bStart = oldData.timeInterval.start;
-  const bEnd = new Date(Date.parse(oldData.timeInterval.start) + 1000 * 60 * 60).toISOString();
+  const bEnd = new Date(Date.parse(oldData.timeInterval.start) + 1000 * 60 * time).toISOString();
 
   // Save the updated data
   await DataStore.save(
@@ -35,12 +20,14 @@ const addBreak = async (data) => {
       if (!updated.break) {
         updated.break = [
           {
+            reason: reason,
             start: bStart,
             end: bEnd,
           },
         ];
       } else {
         updated.break.push({
+          reason: reason,
           start: bStart,
           end: bEnd,
         });
@@ -50,15 +37,14 @@ const addBreak = async (data) => {
 };
 
 const deleteBreak = async (data, breakIndex) => {
+  console.log(data, breakIndex);
   const newData = TimeEntry.copyOf(data, (updated) => {
     // Remove the break at the specified index from the break array
     updated.break = updated.break.filter((_, index) => index !== breakIndex);
   });
 
   // Save the updated data
-  await DataStore.save(newData).then((newData) => {
-    console.log(newData);
-  });
+  await DataStore.save(newData);
 };
 
 const Breakstart = ({ start, minStart, maxEnd, setStart }) => {
@@ -93,19 +79,105 @@ const Breaktotal = ({ total }) => {
   );
 };
 
-export const AddBreak = ({ data, isEmpty, isDisable }) => {
+export const AddBreakMD = (props) => {
+  const { data, isempty, isdisable } = props;
+  const isEmpty = isempty;
+  const isDisable = isdisable;
+  const [anchorEl, setAnchorEl] = useState(null);
+  const open = Boolean(anchorEl);
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  return (
+    <TableRow {...props}>
+      <TableCell colSpan={7}>
+        <IconButton disabled={!isEmpty || isDisable} onClick={handleClick}>
+          <AddIcon />
+        </IconButton>
+        <Breakmenu anchorEl={anchorEl} open={open} data={data} addbreak={addBreak} handleClose={handleClose} />
+      </TableCell>
+    </TableRow>
+  );
+};
+
+export const AddBreakSM = ({ data, isEmpty, isDisable }) => {
+  const [anchorEl, setAnchorEl] = useState(null);
+  const open = Boolean(anchorEl);
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
   return (
     <TableRow>
-      <TableCell colSpan={7}>
-        <IconButton onClick={() => addBreak(data)} disabled={!isEmpty || isDisable}>
+      <TableCell colSpan={3}>
+        <IconButton disabled={!isEmpty || isDisable} onClick={handleClick}>
           <AddIcon />
+        </IconButton>
+        <Breakmenu anchorEl={anchorEl} open={open} data={data} addbreak={addBreak} handleClose={handleClose} />
+      </TableCell>
+    </TableRow>
+  );
+};
+
+export const BreakitemMD = (props) => {
+  const { item, data, index, isempty, issent } = props;
+  const isSent = issent;
+  const isEmpty = isempty;
+
+  const [end, setEnd] = useState(new Date(item.end));
+  const [start, setStart] = useState(new Date(item.start));
+  const [total, setTotal] = useState({
+    hours: 0,
+    minutes: 0,
+  });
+
+  useEffect(() => {
+    let isActive = false;
+
+    const totalTime = () => {
+      const diff = new Date(end).getTime() - new Date(start).getTime();
+      if (diff > 0) {
+        const hours = Math.floor(diff / (1000 * 60 * 60));
+        const minutes = Math.floor((diff / (1000 * 60)) % 60);
+        const seconds = Math.floor((diff / 1000) % 60);
+        setTotal({ hours, minutes, seconds });
+      } else {
+        setTotal({ hours: 0, minutes: 0, seconds: 0 });
+      }
+    };
+
+    if (!isActive && end && start) {
+      totalTime();
+    }
+
+    return () => (isActive = true);
+  }, [end, start]);
+
+  return (
+    <TableRow {...props}>
+      <TableCell colSpan={3} />
+      <TableCell align="right">
+        <Breakstart start={start} setStart={setStart} /> - <Breakend end={end} setEnd={setEnd} />
+      </TableCell>
+      <TableCell align="right">
+        <Breaktotal total={total} />
+      </TableCell>
+      <TableCell colSpan={1} align="right">
+        <IconButton onClick={() => deleteBreak(data, index)} disabled={!isEmpty || isSent}>
+          <DeleteForeverIcon />
         </IconButton>
       </TableCell>
     </TableRow>
   );
 };
 
-const Item = ({ item, data, index, isEmpty, isSent }) => {
+export const BreakitemSM = ({ item, data, index, isEmpty, isSent }) => {
   const [end, setEnd] = useState(new Date(item.end));
   const [start, setStart] = useState(new Date(item.start));
   const [total, setTotal] = useState({
@@ -150,18 +222,5 @@ const Item = ({ item, data, index, isEmpty, isSent }) => {
         </IconButton>
       </TableCell>
     </TableRow>
-  );
-};
-
-export const Breakslist = ({ data, isEmpty }) => {
-  const isSent = data.isSent;
-  const breaks = data.break;
-  console.log(breaks);
-
-  return (
-    breaks !== null &&
-    breaks.map((item, index) => (
-      <Item key={index} item={item} data={data} index={index} isEmpty={isEmpty} isSent={isSent} />
-    ))
   );
 };

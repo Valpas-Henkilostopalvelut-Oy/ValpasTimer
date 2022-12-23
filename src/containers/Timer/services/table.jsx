@@ -8,7 +8,7 @@ import {
   IconButton,
   Box,
   TableContainer,
-  Collapse,
+  useTheme,
   Typography,
   Grid,
 } from "@mui/material";
@@ -18,11 +18,11 @@ import { Time, EditSTime, EditETime } from "./times.jsx";
 import { Moreitem, Moreitemday } from "./buttons.jsx";
 import { TotalTime } from "./edittotaltime.jsx";
 import { StatusMD, StatusSM, Emptycell } from "./isSent.jsx";
-import { EditDescriptionSM, EditDescriptionMD } from "./editdescription.jsx";
-import { ChangeWorkplaceSM, ChangeWorkplaceMD } from "./workplacechange.jsx";
-import { EditDateSM, EditDateMD } from "./editdate.jsx";
+import { EditDescriptionMD } from "./editdescription.jsx";
+import { ChangeWorkplaceMD } from "./workplacechange.jsx";
+import { EditDateMD } from "./editdate.jsx";
 import { PropTypes } from "prop-types";
-import { Breakslist, AddBreak } from "./break.jsx";
+import { BreakitemMD, AddBreakMD, AddBreakSM } from "./break.jsx";
 import { totaldaytime, totalweektime } from "./totaltime.jsx";
 import { Reportallweek } from "./buttons.jsx";
 
@@ -74,11 +74,14 @@ export const WeekRow = ({ grouped, lang, works, isEmpty, selected }) => {
 };
 
 const Row = ({ week, lang, works, isEmpty }) => {
+  const theme = useTheme();
+
   return (
     week &&
     week.arr.map((date) => {
       let hours = String(totaldaytime(date).h).padStart(2, "0");
       let minutes = String(totaldaytime(date).min).padStart(2, "0");
+
       return (
         <Box
           sx={{
@@ -93,15 +96,36 @@ const Row = ({ week, lang, works, isEmpty }) => {
             <Table aria-label="collapsible table" size="small">
               <TableBody>
                 {date.arr.map((row, index) => (
-                  <Details
-                    key={index}
-                    row={row}
-                    workplaces={works}
-                    lang={lang}
-                    isEmpty={isEmpty}
-                    total={`${hours}:${minutes}`}
-                    date={date.date}
-                  />
+                  <>
+                    <DetailsMD
+                      sx={{
+                        [theme.breakpoints.down("sm")]: {
+                          display: "none",
+                        },
+                      }}
+                      key={[index, "md"]}
+                      row={row}
+                      workplaces={works}
+                      lang={lang}
+                      isempty={isEmpty}
+                      total={`${hours}:${minutes}`}
+                      date={date.date}
+                    />
+                    <DetailsSM
+                      sx={{
+                        [theme.breakpoints.up("sm")]: {
+                          display: "none",
+                        },
+                      }}
+                      key={[index, "sm"]}
+                      row={row}
+                      workplaces={works}
+                      lang={lang}
+                      isempty={isEmpty}
+                      total={`${hours}:${minutes}`}
+                      date={date.date}
+                    />
+                  </>
                 ))}
               </TableBody>
             </Table>
@@ -112,7 +136,9 @@ const Row = ({ week, lang, works, isEmpty }) => {
   );
 };
 
-const Details = ({ row, lang, workplaces, isEmpty, total, date }) => {
+const DetailsSM = (props) => {
+  const { row, workplaces, lang, isempty, total, date } = props;
+  const isEmpty = isempty;
   const [open, setOpen] = React.useState(false);
 
   const data = row.arr.sort((a, b) => {
@@ -124,7 +150,75 @@ const Details = ({ row, lang, workplaces, isEmpty, total, date }) => {
 
   return (
     <Fragment>
-      <TableRow>
+      <TableRow {...props}>
+        <TableCell>
+          <IconButton aria-label="expand row" size="small" onClick={() => setOpen(!open)} sx={{ cursor: "pointer" }}>
+            {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+          </IconButton>
+        </TableCell>
+
+        <TableCell align="center">
+          <Typography variant="p">{date}</Typography>
+        </TableCell>
+
+        <TableCell align="right">
+          <Moreitemday date={row} lang={lang} />
+        </TableCell>
+      </TableRow>
+
+      <TableRow {...props}>
+        <TableCell colSpan={3}>
+          <Typography variant="p">
+            {workplaces.find((item) => item.id === row.workId) !== undefined
+              ? workplaces.find((item) => item.id === row.workId).name
+              : "Vaihda työpaikkaa"}
+          </Typography>
+        </TableCell>
+      </TableRow>
+
+      <TableRow {...props}>
+        <TableCell align="left">
+          <Typography variant="p">
+            <Time time={row.arr[row.arr.length - 1].timeInterval.start} />
+          </Typography>
+        </TableCell>
+
+        <TableCell align="left">
+          <Typography variant="p">
+            <Time time={row.arr[0].timeInterval.end} />
+          </Typography>
+        </TableCell>
+
+        <TableCell align="right">
+          <Typography variant="p">{total}</Typography>
+        </TableCell>
+      </TableRow>
+
+      {open && (
+        <>
+          <RowDetailsSM data={data} workplaces={workplaces} lang={lang} isEmpty={isEmpty} />
+          <AddBreakSM data={data} isEmpty={isEmpty} isDisable={isSent(row)} />
+        </>
+      )}
+    </Fragment>
+  );
+};
+
+const DetailsMD = (props) => {
+  const { row, workplaces, lang, isempty, total, date } = props;
+  const isEmpty = isempty;
+  const [open, setOpen] = React.useState(false);
+
+  const data = row.arr.sort((a, b) => {
+    let sTime = new Date(a.timeInterval.start);
+    let eTime = new Date(b.timeInterval.start);
+
+    return sTime - eTime;
+  });
+
+  return (
+    <Fragment>
+      <TableRow {...props}>
         <TableCell>
           <IconButton aria-label="expand row" size="small" onClick={() => setOpen(!open)} sx={{ cursor: "pointer" }}>
             {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
@@ -154,27 +248,24 @@ const Details = ({ row, lang, workplaces, isEmpty, total, date }) => {
         </TableCell>
 
         <TableCell align="right">
-          <Moreitemday date={row} isEmpty={isEmpty} />
+          <Moreitemday date={row} lang={lang} />
         </TableCell>
       </TableRow>
 
       {open && (
         <>
-          <RowDetails data={data} workplaces={workplaces} lang={lang} isEmpty={isEmpty} />
-          <AddBreak data={data} isEmpty={isEmpty} isDisable={isSent(row)} />
+          <RowDetailsMD {...props} data={data} workplaces={workplaces} lang={lang} isempty={isEmpty} />
+          <AddBreakMD {...props} data={data} isempty={isEmpty} isdisable={isSent(row)} />
         </>
       )}
     </Fragment>
   );
 };
 
-const RowDetails = ({ data, lang, workplaces, isEmpty }) => {
+const RowDetailsSM = ({ data, lang, workplaces, isEmpty }) => {
   return data.map((row, i) => {
     return (
       <Fragment key={i}>
-        <EditDescriptionSM date={row} lang={lang} />
-        <ChangeWorkplaceSM date={row} workplaces={workplaces} work={row.workspaceId} lang={lang} isEmpty={isEmpty} />
-        <EditDateSM data={row} lang={lang} />
         <TableRow>
           <EditDescriptionMD date={row} lang={lang} />
 
@@ -194,7 +285,40 @@ const RowDetails = ({ data, lang, workplaces, isEmpty }) => {
             <Moreitem date={row} lang={lang} isEmpty={isEmpty} />
           </TableCell>
         </TableRow>
-        <Breakslist data={row} isEmpty={isEmpty} />
+      </Fragment>
+    );
+  });
+};
+
+const RowDetailsMD = (props) => {
+  const { data, lang, workplaces, isempty } = props;
+  const isEmpty = isempty;
+  return data.map((row, i) => {
+    return (
+      <Fragment key={i}>
+        <TableRow {...props}>
+          <EditDescriptionMD date={row} lang={lang} />
+
+          <EditDateMD data={row} lang={lang} />
+
+          <ChangeWorkplaceMD date={row} workplaces={workplaces} work={row.workspaceId} lang={lang} isEmpty={isEmpty} />
+
+          <TableCell align="right">
+            <EditSTime date={row} /> {" - "} <EditETime date={row} />
+          </TableCell>
+
+          <TableCell align="right">
+            <TotalTime date={row} />
+          </TableCell>
+
+          <TableCell align="right">
+            <Moreitem date={row} lang={lang} isEmpty={isEmpty} />
+          </TableCell>
+        </TableRow>
+        {row.break &&
+          row.break.map((item, i) => (
+            <BreakitemMD {...props} key={i} item={item} data={row} index={i} isempty={isEmpty} issent={data.isSent} />
+          ))}
       </Fragment>
     );
   });

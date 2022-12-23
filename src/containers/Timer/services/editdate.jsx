@@ -37,23 +37,7 @@ export const EditDateMD = ({ data, lang }) => {
   );
 };
 
-export const EditDateSM = ({ data, lang }) => {
-  const theme = useTheme();
-  return (
-    <Box
-      component={TableRow}
-      sx={{
-        [theme.breakpoints.up("sm")]: {
-          display: "none",
-        },
-      }}
-    >
-      <TableCell colSpan={4}>
-        <EditDate data={data} lang={lang} />
-      </TableCell>
-    </Box>
-  );
-};
+
 
 const updateDate = async ({ value, data }) => {
   let year = new Date(value).getFullYear();
@@ -125,7 +109,4 @@ EditDateMD.propTypes = {
   lang: PropTypes.object,
 };
 
-EditDateSM.propTypes = {
-  data: PropTypes.object.isRequired,
-  lang: PropTypes.object,
-};
+

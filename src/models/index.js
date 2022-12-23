@@ -8,6 +8,14 @@ const Status = {
   "INWAITTING": "INWAITTING"
 };
 
+const Breakreason = {
+  "LUNCH": "LUNCH",
+  "DINNER": "DINNER",
+  "SHORT": "SHORT",
+  "LONG": "LONG",
+  "GOING": "GOING"
+};
+
 const { Agreement, Tasks, TimeEntry, AllWorkSpaces, UserCredentials, UserAgreement, User, AditionalInfo, Comment, Workplace, Profile, UserSettings, CostRate, UserMemberships, HourlyRate, TimeInterval, Break, WorkspaceSettings, Membership, Work } = initSchema(schema);
 
 export {
@@ -17,6 +25,7 @@ export {
   AllWorkSpaces,
   UserCredentials,
   Status,
+  Breakreason,
   UserAgreement,
   User,
   AditionalInfo,

@@ -8,6 +8,14 @@ export enum Status {
   INWAITTING = "INWAITTING"
 }
 
+export enum Breakreason {
+  LUNCH = "LUNCH",
+  DINNER = "DINNER",
+  SHORT = "SHORT",
+  LONG = "LONG",
+  GOING = "GOING"
+}
+
 type EagerUserAgreement = {
   readonly id?: string | null;
   readonly status?: Status | keyof typeof Status | null;
@@ -191,13 +199,13 @@ export declare type TimeInterval = LazyLoading extends LazyLoadingDisabled ? Eag
 export declare const TimeInterval: (new (init: ModelInit<TimeInterval>) => TimeInterval)
 
 type EagerBreak = {
-  readonly duration?: string | null;
+  readonly reason?: Breakreason | keyof typeof Breakreason | null;
   readonly end?: string | null;
   readonly start?: string | null;
 }
 
 type LazyBreak = {
-  readonly duration?: string | null;
+  readonly reason?: Breakreason | keyof typeof Breakreason | null;
   readonly end?: string | null;
   readonly start?: string | null;
 }

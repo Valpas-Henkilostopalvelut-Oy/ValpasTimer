@@ -80,26 +80,6 @@ const EditDescription = ({
   );
 };
 
-export const EditDescriptionSM = ({ date, lang }) => {
-  const theme = useTheme();
-
-  return (
-    <TableRow
-      sx={{
-        paddingLeft: 1,
-        paddingRight: 1,
-        [theme.breakpoints.up("sm")]: {
-          display: "none",
-        },
-      }}
-    >
-      <TableCell colSpan={4}>
-        <EditDescription date={date} lang={lang} />
-      </TableCell>
-    </TableRow>
-  );
-};
-
 export const EditDescriptionMD = ({ date, lang }) => {
   const theme = useTheme();
 
@@ -117,11 +97,6 @@ export const EditDescriptionMD = ({ date, lang }) => {
 };
 
 EditDescription.propTypes = {
-  date: PropTypes.object,
-  lang: PropTypes.object,
-};
-
-EditDescriptionSM.propTypes = {
   date: PropTypes.object,
   lang: PropTypes.object,
 };

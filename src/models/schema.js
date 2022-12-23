@@ -783,6 +783,16 @@ export const schema = {
                 "ACTIVE",
                 "INWAITTING"
             ]
+        },
+        "Breakreason": {
+            "name": "Breakreason",
+            "values": [
+                "LUNCH",
+                "DINNER",
+                "SHORT",
+                "LONG",
+                "GOING"
+            ]
         }
     },
     "nonModels": {
@@ -1106,10 +1116,12 @@ export const schema = {
         "Break": {
             "name": "Break",
             "fields": {
-                "duration": {
-                    "name": "duration",
+                "reason": {
+                    "name": "reason",
                     "isArray": false,
-                    "type": "String",
+                    "type": {
+                        "enum": "Breakreason"
+                    },
                     "isRequired": false,
                     "attributes": []
                 },
@@ -1218,5 +1230,5 @@ export const schema = {
         }
     },
     "codegenVersion": "3.3.2",
-    "version": "7c5b72ef870881b0bccfe7e96d9907c0"
+    "version": "5ded4744f358e550f980d3aed713c15a"
 };

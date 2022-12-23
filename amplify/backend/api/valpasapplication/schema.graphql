@@ -28,12 +28,6 @@ type User {
   icon: AWSURL
 }
 
-enum Status {
-  COMPLETE
-  ACTIVE
-  INWAITTING
-}
-
 type Profile {
   profile_picture: AWSURL
   first_name: String
@@ -69,7 +63,7 @@ type TimeInterval {
 }
 
 type Break {
-  duration: String
+  reason: Breakreason
   end: AWSDateTime
   start: AWSDateTime
 }
@@ -96,6 +90,20 @@ type Work {
   name: String
   description: String
   id: ID
+}
+
+enum Status {
+  COMPLETE
+  ACTIVE
+  INWAITTING
+}
+
+enum Breakreason {
+  LUNCH
+  DINNER
+  SHORT
+  LONG
+  GOING
 }
 
 type Agreement

@@ -13,9 +13,31 @@ import {
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { DataStore } from "aws-amplify";
-import { TimeEntry } from "../../../models/index.js";
+import { TimeEntry, Breakreason } from "../../../models/index.js";
 import { PropTypes } from "prop-types";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
+
+export const Breakmenu = ({ data, lang, open, anchorEl, addbreak, handleClose }) => {
+  return (
+    <Menu id="break-menu" anchorEl={anchorEl} open={open} onClose={handleClose}>
+      <MenuItem onClick={() => addbreak(data, Breakreason.DINNER, 30)}>
+        <Typography variant="p">Dinner</Typography>
+      </MenuItem>
+      <MenuItem onClick={() => addbreak(data, Breakreason.LUNCH, 15)}>
+        <Typography variant="p">Lunch</Typography>
+      </MenuItem>
+      <MenuItem onClick={() => addbreak(data, Breakreason.SHORT, 15)}>
+        <Typography variant="p">Short Break</Typography>
+      </MenuItem>
+      <MenuItem onClick={() => addbreak(data, Breakreason.LONG, 30)}>
+        <Typography variant="p">Long Break</Typography>
+      </MenuItem>
+      <MenuItem onClick={() => addbreak(data, Breakreason.GOING, 60)}>
+        <Typography variant="p">Going</Typography>
+      </MenuItem>
+    </Menu>
+  );
+};
 
 const cancelsentall = async (date) => {
   let arr = date.arr;
@@ -86,11 +108,11 @@ export const Moreitem = ({
   const isConfirmed = !date.isConfirmed;
 
   return (
-    <>
+    <Box>
       <IconButton aria-label="more" aria-controls="long-menu" aria-haspopup="true" onClick={handleClick}>
         <MoreVertIcon />
       </IconButton>
-      <Menu id="long-menu" anchorEl={anchorEl} keepMounted open={open} onClose={handleClose}>
+      <Menu id="long-menu" anchorEl={anchorEl} open={open} onClose={handleClose}>
         <MenuItem onClick={() => dublicateTime(date)} disabled={!isEmpty}>
           <Typography variant="p">{lang.buttons.dublicate}</Typography>
         </MenuItem>
@@ -111,7 +133,7 @@ export const Moreitem = ({
           )
         )}
       </Menu>
-    </>
+    </Box>
   );
 };
 
@@ -140,7 +162,7 @@ export const Moreitemday = ({
   var isConfirmed = !checkConfirm(date.arr);
 
   return (
-    <>
+    <Box>
       <IconButton aria-label="more" aria-controls="long-menu" aria-haspopup="true" onClick={handleClick}>
         <MoreVertIcon />
       </IconButton>
@@ -180,7 +202,7 @@ export const Moreitemday = ({
           )
         )}
       </Menu>
-    </>
+    </Box>
   );
 };
 

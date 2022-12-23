@@ -66,8 +66,13 @@ const SelectWork = ({
 
   return (
     workplaces !== null && (
-      <Box sx={{ cursor: !isSent && "pointer" }}>
-        <Typography variant="p" onClick={() => setOpen(true && !isSent)}>
+      <>
+        <Typography
+          variant="p"
+          onClick={() => setOpen(true && !isSent)}
+          textOverflow={"ellipsis"}
+          sx={{ cursor: !isSent && "pointer" }}
+        >
           {name}
         </Typography>
         <Dialog open={open && !isSent} onClose={() => setOpen(false)} maxWidth={"xs"} fullWidth>
@@ -100,7 +105,7 @@ const SelectWork = ({
             </Button>
           </DialogActions>
         </Dialog>
-      </Box>
+      </>
     )
   );
 };
@@ -124,29 +129,10 @@ const IsSent = ({ date, lang = { workplace: "Workplace" } }, isEmpty = false) =>
     return () => (isActive = false);
   }, [isEmpty]);
 
-  return <Typography variant="p">{work}</Typography>;
-};
-
-export const ChangeWorkplaceSM = ({ date, workplaces = null, work, lang, isEmpty }) => {
-  const theme = useTheme();
-  const isSent = date.isSent;
-
   return (
-    <TableRow
-      sx={{
-        [theme.breakpoints.up("sm")]: {
-          display: "none",
-        },
-      }}
-    >
-      <TableCell colSpan={4}>
-        {!isSent ? (
-          <SelectWork date={date} workplaces={workplaces} work={work} lang={lang} />
-        ) : (
-          <IsSent date={date} lang={lang} isEmpty={isEmpty} />
-        )}
-      </TableCell>
-    </TableRow>
+    <Typography variant="p" textOverflow={"ellipsis"}>
+      {work}
+    </Typography>
   );
 };
 
@@ -171,12 +157,6 @@ export const ChangeWorkplaceMD = ({ date, workplaces = null, work, lang, isEmpty
   );
 };
 
-ChangeWorkplaceSM.propTypes = {
-  date: PropTypes.object,
-  workplaces: PropTypes.array,
-  work: PropTypes.string,
-  lang: PropTypes.object,
-};
 
 ChangeWorkplaceMD.propTypes = {
   date: PropTypes.object,

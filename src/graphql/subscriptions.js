@@ -239,7 +239,7 @@ export const onCreateTimeEntry = /* GraphQL */ `
       isSent
       isConfirmed
       break {
-        duration
+        reason
         end
         start
       }
@@ -275,7 +275,7 @@ export const onUpdateTimeEntry = /* GraphQL */ `
       isSent
       isConfirmed
       break {
-        duration
+        reason
         end
         start
       }
@@ -311,7 +311,7 @@ export const onDeleteTimeEntry = /* GraphQL */ `
       isSent
       isConfirmed
       break {
-        duration
+        reason
         end
         start
       }
