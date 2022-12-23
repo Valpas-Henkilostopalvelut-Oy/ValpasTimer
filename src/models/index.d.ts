@@ -240,6 +240,22 @@ export declare type Membership = LazyLoading extends LazyLoadingDisabled ? Eager
 
 export declare const Membership: (new (init: ModelInit<Membership>) => Membership)
 
+type EagerWork = {
+  readonly name?: string | null;
+  readonly description?: string | null;
+  readonly id?: string | null;
+}
+
+type LazyWork = {
+  readonly name?: string | null;
+  readonly description?: string | null;
+  readonly id?: string | null;
+}
+
+export declare type Work = LazyLoading extends LazyLoadingDisabled ? EagerWork : LazyWork
+
+export declare const Work: (new (init: ModelInit<Work>) => Work)
+
 type AgreementMetaData = {
   readOnlyFields: 'updatedAt';
 }
@@ -345,6 +361,7 @@ type EagerTimeEntry = {
   readonly pauseStart?: string | null;
   readonly nextEntry?: string | null;
   readonly lastEntry?: string | null;
+  readonly work?: string | null;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
 }
@@ -364,6 +381,7 @@ type LazyTimeEntry = {
   readonly pauseStart?: string | null;
   readonly nextEntry?: string | null;
   readonly lastEntry?: string | null;
+  readonly work?: string | null;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
 }
@@ -383,6 +401,7 @@ type EagerAllWorkSpaces = {
   readonly workspaceSettings?: WorkspaceSettings | null;
   readonly workers?: (string | null)[] | null;
   readonly adminId?: (string | null)[] | null;
+  readonly work?: (Work | null)[] | null;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
 }
@@ -396,6 +415,7 @@ type LazyAllWorkSpaces = {
   readonly workspaceSettings?: WorkspaceSettings | null;
   readonly workers?: (string | null)[] | null;
   readonly adminId?: (string | null)[] | null;
+  readonly work?: (Work | null)[] | null;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
 }

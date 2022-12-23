@@ -408,6 +408,13 @@ export const schema = {
                     "isRequired": false,
                     "attributes": []
                 },
+                "work": {
+                    "name": "work",
+                    "isArray": false,
+                    "type": "ID",
+                    "isRequired": false,
+                    "attributes": []
+                },
                 "createdAt": {
                     "name": "createdAt",
                     "isArray": false,
@@ -543,6 +550,16 @@ export const schema = {
                     "name": "adminId",
                     "isArray": true,
                     "type": "String",
+                    "isRequired": false,
+                    "attributes": [],
+                    "isArrayNullable": true
+                },
+                "work": {
+                    "name": "work",
+                    "isArray": true,
+                    "type": {
+                        "nonModel": "Work"
+                    },
                     "isRequired": false,
                     "attributes": [],
                     "isArrayNullable": true
@@ -1172,8 +1189,34 @@ export const schema = {
                     "attributes": []
                 }
             }
+        },
+        "Work": {
+            "name": "Work",
+            "fields": {
+                "name": {
+                    "name": "name",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "description": {
+                    "name": "description",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "id": {
+                    "name": "id",
+                    "isArray": false,
+                    "type": "ID",
+                    "isRequired": false,
+                    "attributes": []
+                }
+            }
         }
     },
     "codegenVersion": "3.3.2",
-    "version": "01e6778be18df0419229756d65147c3d"
+    "version": "7c5b72ef870881b0bccfe7e96d9907c0"
 };

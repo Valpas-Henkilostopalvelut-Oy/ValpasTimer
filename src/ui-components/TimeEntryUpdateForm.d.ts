@@ -25,6 +25,7 @@ export declare type TimeEntryUpdateFormInputValues = {
     pauseStart?: string;
     nextEntry?: string;
     lastEntry?: string;
+    work?: string;
 };
 export declare type TimeEntryUpdateFormValidationValues = {
     description?: ValidationFunction<string>;
@@ -38,6 +39,7 @@ export declare type TimeEntryUpdateFormValidationValues = {
     pauseStart?: ValidationFunction<string>;
     nextEntry?: ValidationFunction<string>;
     lastEntry?: ValidationFunction<string>;
+    work?: ValidationFunction<string>;
 };
 export declare type FormProps<T> = Partial<T> & React.DOMAttributes<HTMLDivElement>;
 export declare type TimeEntryUpdateFormOverridesProps = {
@@ -53,6 +55,7 @@ export declare type TimeEntryUpdateFormOverridesProps = {
     pauseStart?: FormProps<TextFieldProps>;
     nextEntry?: FormProps<TextFieldProps>;
     lastEntry?: FormProps<TextFieldProps>;
+    work?: FormProps<TextFieldProps>;
 } & EscapeHatchProps;
 export declare type TimeEntryUpdateFormProps = React.PropsWithChildren<{
     overrides?: TimeEntryUpdateFormOverridesProps | undefined | null;

@@ -92,6 +92,12 @@ type HourlyRate {
   currency: String
 }
 
+type Work {
+  name: String
+  description: String
+  id: ID
+}
+
 type Agreement
   @model
   @auth(
@@ -156,6 +162,7 @@ type TimeEntry
   pauseStart: AWSDateTime
   nextEntry: ID
   lastEntry: ID
+  work: ID
 }
 
 type AllWorkSpaces
@@ -175,6 +182,7 @@ type AllWorkSpaces
   workspaceSettings: WorkspaceSettings
   workers: [String]
   adminId: [String]
+  work: [Work]
 }
 
 type UserCredentials

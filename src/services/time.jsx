@@ -47,7 +47,9 @@ export const timeMaker = (event, time) => {
 };
 
 export const TextToTime = ({ date = new Date(), onChange, isSent = true }) => {
-  const [time, setTime] = useState(`${String("0" + new Date(date).getHours()).slice(-2)}:${String("0" + new Date(date).getMinutes()).slice(-2)}`);
+  const [time, setTime] = useState(
+    `${String("0" + new Date(date).getHours()).slice(-2)}:${String("0" + new Date(date).getMinutes()).slice(-2)}`
+  );
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState({ h: 0, m: 0 });
   const handleSave = () => {
@@ -56,12 +58,14 @@ export const TextToTime = ({ date = new Date(), onChange, isSent = true }) => {
   };
 
   return (
-    <Box
-      sx={{
-        cursor: !isSent ? "pointer" : "default",
-      }}
-    >
-      <Typography onClick={() => setOpen(true)} variant="p">
+    <>
+      <Typography
+        onClick={() => setOpen(true)}
+        variant="p"
+        sx={{
+          cursor: !isSent ? "pointer" : "default",
+        }}
+      >
         {time}
       </Typography>
       <Dialog open={open && !isSent} onClose={() => setOpen(false)} maxWidth="xs" fullWidth={true}>
@@ -87,7 +91,7 @@ export const TextToTime = ({ date = new Date(), onChange, isSent = true }) => {
           <Button onClick={handleSave}>Ok</Button>
         </DialogActions>
       </Dialog>
-    </Box>
+    </>
   );
 };
 

@@ -1,7 +1,20 @@
 export const eng = {
   name: "English",
   main: {
-    months: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
+    months: [
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December",
+    ],
     lang_select: "Select language",
     landingpage: {
       register: "Register",
@@ -183,6 +196,8 @@ export const eng = {
       none_description: "No description",
       confirm: "Confirm",
       unconfirm: "Unconfirm",
+      sent: "Sent",
+      confirmed: "Confirmed",
       alert: {
         title: "Confirm all entries",
         message: "Are you sure you want to confirm all entries?",

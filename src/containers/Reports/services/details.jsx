@@ -22,14 +22,9 @@ export const Details = ({ date, isEmpty = true, lang }) => {
                 {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
               </IconButton>
             </TableCell>
-            <TableCell>
-              <EDiscription data={date} lang={lang} />
-            </TableCell>
+
             <TableCell align="right">
-              <STime date={date} />
-            </TableCell>
-            <TableCell align="right">
-              <ETime date={date} />
+              <STime date={date} /> - <ETime date={date} />
             </TableCell>
 
             <ConfirmreportMD date={date} isEmpty={isEmpty} lang={lang} />

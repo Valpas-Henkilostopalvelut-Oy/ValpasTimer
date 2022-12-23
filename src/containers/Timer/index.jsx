@@ -7,8 +7,7 @@ import { groupBy } from "./services/group.jsx";
 import { Selectwork } from "./services/workplaceselect.jsx";
 import { useAppContext } from "../../services/contextLib.jsx";
 import { getWeekNumber } from "./services/group.jsx";
-import { WeekRow } from "./services/row.jsx";
-import { HistoryRow } from "./services/history.jsx";
+import { WeekRow } from "./services/table.jsx";
 import { MakePDF } from "../../components/MakePDF/index.jsx";
 import { checkActive, advanceTime } from "./services/loadtimer.jsx";
 
@@ -216,12 +215,6 @@ const Timer = () => {
           </Grid>
 
           <Grid item xs={12}>
-            <Box>
-              <Selectwork works={works} sel={selected} setSel={setSelected} lang={lang.history} />
-            </Box>
-          </Grid>
-
-          <Grid item xs={12}>
             <Box
               sx={{
                 backgroundColor: "track.yellow",
@@ -282,38 +275,6 @@ const Timer = () => {
 
               {notConfirmedWeek.length > 0 && (
                 <WeekRow grouped={notConfirmedWeek} lang={lang} isEmpty={isEmpty} works={works} selected={selected} />
-              )}
-            </Box>
-          </Grid>
-
-          <Grid item xs={12}>
-            <Box
-              sx={{
-                backgroundColor: "track.green",
-                [theme.breakpoints.up("sm")]: {
-                  padding: "10px",
-                },
-                [theme.breakpoints.down("sm")]: {
-                  padding: "10px 0px",
-                },
-              }}
-            >
-              <Box
-                sx={{
-                  backgroundColor: "background.paper",
-                  padding: "10px",
-                  display: "flex",
-                  justifyContent: "space-between",
-                }}
-              >
-                <Typography variant="h6" color="text.secondary">
-                  {lang.history.title.history}
-                </Typography>
-                <MakePDF data={confirmedWeeks} isEmpty={isEmpty} selected={selected} works={works} />
-              </Box>
-
-              {confirmedWeeks.length > 0 && (
-                <HistoryRow grouped={confirmedWeeks} lang={lang} isEmpty={isEmpty} works={works} selected={selected} />
               )}
             </Box>
           </Grid>

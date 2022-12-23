@@ -247,6 +247,7 @@ export const createTimeEntry = /* GraphQL */ `
       pauseStart
       nextEntry
       lastEntry
+      work
       createdAt
       updatedAt
       _version
@@ -282,6 +283,7 @@ export const updateTimeEntry = /* GraphQL */ `
       pauseStart
       nextEntry
       lastEntry
+      work
       createdAt
       updatedAt
       _version
@@ -317,6 +319,7 @@ export const deleteTimeEntry = /* GraphQL */ `
       pauseStart
       nextEntry
       lastEntry
+      work
       createdAt
       updatedAt
       _version
@@ -350,6 +353,11 @@ export const createAllWorkSpaces = /* GraphQL */ `
       }
       workers
       adminId
+      work {
+        name
+        description
+        id
+      }
       createdAt
       updatedAt
       _version
@@ -383,6 +391,11 @@ export const updateAllWorkSpaces = /* GraphQL */ `
       }
       workers
       adminId
+      work {
+        name
+        description
+        id
+      }
       createdAt
       updatedAt
       _version
@@ -416,6 +429,11 @@ export const deleteAllWorkSpaces = /* GraphQL */ `
       }
       workers
       adminId
+      work {
+        name
+        description
+        id
+      }
       createdAt
       updatedAt
       _version

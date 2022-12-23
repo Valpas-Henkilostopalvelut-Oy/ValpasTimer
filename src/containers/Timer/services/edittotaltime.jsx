@@ -120,12 +120,9 @@ export const TotalTime = ({ date }) => {
 
   let hours = Math.floor(total / (1000 * 60 * 60));
   let minutes = Math.floor((total / (1000 * 60)) % 60);
-  let seconds = Math.floor((total / 1000) % 60);
 
   const [totalTime, setTotalTime] = useState(
-    `${hours > 9 ? hours : "0" + hours}:${minutes > 9 ? minutes : "0" + minutes}:${
-      seconds > 9 ? seconds : "0" + seconds
-    }`
+    `${hours > 9 ? hours : "0" + hours}:${minutes > 9 ? minutes : "0" + minutes}`
   );
 
   const [open, setOpen] = React.useState(false);
@@ -134,7 +131,6 @@ export const TotalTime = ({ date }) => {
     <Box
       sx={{
         cursor: !isSent ? "pointer" : "default",
-        width: "60px",
       }}
     >
       <Typography variant="p" onClick={() => setOpen(!open)}>
@@ -153,9 +149,7 @@ export const TotalTime = ({ date }) => {
             }}
             onBlur={(e) => {
               let t = time(e);
-              setTotalTime(
-                `${t.h > 9 ? t.h : "0" + t.h}:${t.min > 9 ? t.min : "0" + t.min}:${t.sec > 9 ? t.sec : "0" + t.sec}`
-              );
+              setTotalTime(`${t.h > 9 ? t.h : "0" + t.h}:${t.min > 9 ? t.min : "0" + t.min}`);
 
               calculateEndtime(start, t, date);
               setOpen(false);

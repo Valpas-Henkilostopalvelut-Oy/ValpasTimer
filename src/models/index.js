@@ -8,7 +8,7 @@ const Status = {
   "INWAITTING": "INWAITTING"
 };
 
-const { Agreement, Tasks, TimeEntry, AllWorkSpaces, UserCredentials, UserAgreement, User, AditionalInfo, Comment, Workplace, Profile, UserSettings, CostRate, UserMemberships, HourlyRate, TimeInterval, Break, WorkspaceSettings, Membership } = initSchema(schema);
+const { Agreement, Tasks, TimeEntry, AllWorkSpaces, UserCredentials, UserAgreement, User, AditionalInfo, Comment, Workplace, Profile, UserSettings, CostRate, UserMemberships, HourlyRate, TimeInterval, Break, WorkspaceSettings, Membership, Work } = initSchema(schema);
 
 export {
   Agreement,
@@ -30,5 +30,6 @@ export {
   TimeInterval,
   Break,
   WorkspaceSettings,
-  Membership
+  Membership,
+  Work
 };

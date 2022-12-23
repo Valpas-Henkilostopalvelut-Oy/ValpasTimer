@@ -1,8 +1,6 @@
 import React, { Fragment } from "react";
 import { DeleteAll } from "./buttons.jsx";
 import { TableRow, TableCell, useTheme, Typography, Box } from "@mui/material";
-import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import ThumbUpAltIcon from "@mui/icons-material/ThumbUpAlt";
 import TaskAltIcon from "@mui/icons-material/TaskAlt";
 import ClearIcon from "@mui/icons-material/Clear";
 import { PropTypes } from "prop-types";
@@ -55,7 +53,7 @@ export const StatusSM = ({
       }}
     >
       <TableCell align="center" colSpan={4}>
-        <DeleteAll date={date} lang={lang} isEmpty={isEmpty} />
+        <DeleteAll date={date} isEmpty={isEmpty} />
       </TableCell>
     </TableRow>
   ) : (
@@ -100,7 +98,7 @@ export const StatusMD = ({
         },
       }}
     >
-      <DeleteAll date={date} lang={lang} isEmpty={isEmpty} />
+      <DeleteAll date={date} isEmpty={isEmpty} />
     </TableCell>
   ) : (
     <TableCell

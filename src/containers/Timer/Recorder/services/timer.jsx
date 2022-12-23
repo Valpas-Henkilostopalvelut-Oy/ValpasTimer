@@ -29,19 +29,20 @@ export const Timer = ({
   return (
     <Grid container spacing={2} alignItems="center">
       <Grid item xs={12} md={4}>
-        <EditDescriptionTimer
-          description={description}
-          setDescription={setDescription}
+        <EditWorkplaceTimer
+          sel={sel}
+          setSel={setSel}
+          works={works}
           data={timerTime}
           isStarted={isStarted}
           lang={lang}
         />
       </Grid>
+
       <Grid item xs={12} md={4}>
-        <EditWorkplaceTimer
-          sel={sel}
-          setSel={setSel}
-          works={works}
+        <EditDescriptionTimer
+          description={description}
+          setDescription={setDescription}
           data={timerTime}
           isStarted={isStarted}
           lang={lang}

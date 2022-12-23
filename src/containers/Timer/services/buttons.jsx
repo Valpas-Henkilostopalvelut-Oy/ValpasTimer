@@ -17,6 +17,21 @@ import { TimeEntry } from "../../../models/index.js";
 import { PropTypes } from "prop-types";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 
+const cancelsentall = async (date) => {
+  let arr = date.arr;
+  for (let i = 0; i < arr.length; i++) {
+    let isSent = arr[i].isSent;
+    if (isSent) {
+      await DataStore.save(
+        TimeEntry.copyOf(arr[i], (updated) => {
+          updated.isSent = false;
+          updated.isConfirmed = false;
+        })
+      ).catch((e) => console.warn(e));
+    }
+  }
+};
+
 const deleteAll = async (date) => {
   let arr = date.arr;
   for (let i = 0; i < arr.length; i++) {
@@ -27,7 +42,27 @@ const deleteAll = async (date) => {
   }
 };
 
-export const MoreButton = ({
+const checkConfirm = (arr) => {
+  let isConfirmed = false;
+  for (let i = 0; i < arr.length; i++) {
+    if (arr[i].isConfirmed) {
+      isConfirmed = true;
+    }
+  }
+  return isConfirmed;
+};
+
+const checkSent = (arr) => {
+  let isSent = false;
+  for (let i = 0; i < arr.length; i++) {
+    if (arr[i].isSent) {
+      isSent = true;
+    }
+  }
+  return isSent;
+};
+
+export const Moreitem = ({
   isEmpty = false,
   date,
   lang = {
@@ -51,7 +86,7 @@ export const MoreButton = ({
   const isConfirmed = !date.isConfirmed;
 
   return (
-    <Box>
+    <>
       <IconButton aria-label="more" aria-controls="long-menu" aria-haspopup="true" onClick={handleClick}>
         <MoreVertIcon />
       </IconButton>
@@ -60,14 +95,14 @@ export const MoreButton = ({
           <Typography variant="p">{lang.buttons.dublicate}</Typography>
         </MenuItem>
         {isSent ? (
-          <Box>
+          <>
             <MenuItem onClick={() => send(date, handleClose())} disabled={!isEmpty}>
               <Typography variant="p">{lang.buttons.send}</Typography>
             </MenuItem>
             <MenuItem onClick={() => deleteTime(date, handleClose())} disabled={!isEmpty}>
               <Typography variant="p">{lang.buttons.delete}</Typography>
             </MenuItem>
-          </Box>
+          </>
         ) : (
           isConfirmed && (
             <MenuItem onClick={() => cancelsend(date, handleClose())} disabled={!isEmpty}>
@@ -76,7 +111,76 @@ export const MoreButton = ({
           )
         )}
       </Menu>
-    </Box>
+    </>
+  );
+};
+
+export const Moreitemday = ({
+  isEmpty = false,
+  date,
+  lang = {
+    buttons: {
+      delete: "Delete",
+      dublicate: "Dublicate",
+      send: "Send",
+      cancelsend: "Cancel send",
+    },
+  },
+}) => {
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+  const open = Boolean(anchorEl);
+
+  var isSent = !checkSent(date.arr);
+  var isConfirmed = !checkConfirm(date.arr);
+
+  return (
+    <>
+      <IconButton aria-label="more" aria-controls="long-menu" aria-haspopup="true" onClick={handleClick}>
+        <MoreVertIcon />
+      </IconButton>
+      <Menu id="long-menu" anchorEl={anchorEl} keepMounted open={open} onClose={handleClose}>
+        {isSent ? (
+          <>
+            <MenuItem
+              onClick={() => {
+                reportAll(date);
+                handleClose();
+              }}
+              disabled={!isEmpty}
+            >
+              <Typography variant="p">{lang.buttons.send}</Typography>
+            </MenuItem>
+            <MenuItem
+              onClick={() => {
+                deleteAll(date);
+                handleClose();
+              }}
+              disabled={!isEmpty}
+            >
+              <Typography variant="p">{lang.buttons.delete}</Typography>
+            </MenuItem>
+          </>
+        ) : (
+          isConfirmed && (
+            <MenuItem
+              onClick={() => {
+                cancelsentall(date);
+                handleClose();
+              }}
+              disabled={!isEmpty}
+            >
+              <Typography variant="p">{lang.buttons.cancelsend}</Typography>
+            </MenuItem>
+          )
+        )}
+      </Menu>
+    </>
   );
 };
 
@@ -265,7 +369,7 @@ const send = async (data, close) => {
     .catch((e) => console.warn(e));
 };
 
-MoreButton.propTypes = {
+Moreitem.propTypes = {
   data: PropTypes.object,
   lang: PropTypes.object,
   close: PropTypes.func,

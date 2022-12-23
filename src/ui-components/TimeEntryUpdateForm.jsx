@@ -42,6 +42,7 @@ export default function TimeEntryUpdateForm(props) {
     pauseStart: undefined,
     nextEntry: undefined,
     lastEntry: undefined,
+    work: undefined,
   };
   const [description, setDescription] = React.useState(
     initialValues.description
@@ -60,6 +61,7 @@ export default function TimeEntryUpdateForm(props) {
   const [pauseStart, setPauseStart] = React.useState(initialValues.pauseStart);
   const [nextEntry, setNextEntry] = React.useState(initialValues.nextEntry);
   const [lastEntry, setLastEntry] = React.useState(initialValues.lastEntry);
+  const [work, setWork] = React.useState(initialValues.work);
   const [errors, setErrors] = React.useState({});
   const resetStateValues = () => {
     const cleanValues = { ...initialValues, ...timeEntryRecord };
@@ -74,6 +76,7 @@ export default function TimeEntryUpdateForm(props) {
     setPauseStart(cleanValues.pauseStart);
     setNextEntry(cleanValues.nextEntry);
     setLastEntry(cleanValues.lastEntry);
+    setWork(cleanValues.work);
     setErrors({});
   };
   const [timeEntryRecord, setTimeEntryRecord] = React.useState(timeEntry);
@@ -97,6 +100,7 @@ export default function TimeEntryUpdateForm(props) {
     pauseStart: [],
     nextEntry: [],
     lastEntry: [],
+    work: [],
   };
   const runValidationTasks = async (fieldName, value) => {
     let validationResponse = validateField(value, validations[fieldName]);
@@ -144,6 +148,7 @@ export default function TimeEntryUpdateForm(props) {
           pauseStart,
           nextEntry,
           lastEntry,
+          work,
         };
         const validationResponses = await Promise.all(
           Object.keys(validations).reduce((promises, fieldName) => {
@@ -205,6 +210,7 @@ export default function TimeEntryUpdateForm(props) {
               pauseStart,
               nextEntry,
               lastEntry,
+              work,
             };
             const result = onChange(modelFields);
             value = result?.description ?? value;
@@ -239,6 +245,7 @@ export default function TimeEntryUpdateForm(props) {
               pauseStart,
               nextEntry,
               lastEntry,
+              work,
             };
             const result = onChange(modelFields);
             value = result?.userId ?? value;
@@ -273,6 +280,7 @@ export default function TimeEntryUpdateForm(props) {
               pauseStart,
               nextEntry,
               lastEntry,
+              work,
             };
             const result = onChange(modelFields);
             value = result?.workspaceId ?? value;
@@ -307,6 +315,7 @@ export default function TimeEntryUpdateForm(props) {
               pauseStart,
               nextEntry,
               lastEntry,
+              work,
             };
             const result = onChange(modelFields);
             value = result?.isActive ?? value;
@@ -341,6 +350,7 @@ export default function TimeEntryUpdateForm(props) {
               pauseStart,
               nextEntry,
               lastEntry,
+              work,
             };
             const result = onChange(modelFields);
             value = result?.isLocked ?? value;
@@ -375,6 +385,7 @@ export default function TimeEntryUpdateForm(props) {
               pauseStart,
               nextEntry,
               lastEntry,
+              work,
             };
             const result = onChange(modelFields);
             value = result?.isSent ?? value;
@@ -409,6 +420,7 @@ export default function TimeEntryUpdateForm(props) {
               pauseStart,
               nextEntry,
               lastEntry,
+              work,
             };
             const result = onChange(modelFields);
             value = result?.isConfirmed ?? value;
@@ -443,6 +455,7 @@ export default function TimeEntryUpdateForm(props) {
               pauseStart,
               nextEntry,
               lastEntry,
+              work,
             };
             const result = onChange(modelFields);
             value = result?.isPaused ?? value;
@@ -478,6 +491,7 @@ export default function TimeEntryUpdateForm(props) {
               pauseStart: value,
               nextEntry,
               lastEntry,
+              work,
             };
             const result = onChange(modelFields);
             value = result?.pauseStart ?? value;
@@ -512,6 +526,7 @@ export default function TimeEntryUpdateForm(props) {
               pauseStart,
               nextEntry: value,
               lastEntry,
+              work,
             };
             const result = onChange(modelFields);
             value = result?.nextEntry ?? value;
@@ -546,6 +561,7 @@ export default function TimeEntryUpdateForm(props) {
               pauseStart,
               nextEntry,
               lastEntry: value,
+              work,
             };
             const result = onChange(modelFields);
             value = result?.lastEntry ?? value;
@@ -559,6 +575,41 @@ export default function TimeEntryUpdateForm(props) {
         errorMessage={errors.lastEntry?.errorMessage}
         hasError={errors.lastEntry?.hasError}
         {...getOverrideProps(overrides, "lastEntry")}
+      ></TextField>
+      <TextField
+        label="Work"
+        isRequired={false}
+        isReadOnly={false}
+        defaultValue={work}
+        onChange={(e) => {
+          let { value } = e.target;
+          if (onChange) {
+            const modelFields = {
+              description,
+              userId,
+              workspaceId,
+              isActive,
+              isLocked,
+              isSent,
+              isConfirmed,
+              isPaused,
+              pauseStart,
+              nextEntry,
+              lastEntry,
+              work: value,
+            };
+            const result = onChange(modelFields);
+            value = result?.work ?? value;
+          }
+          if (errors.work?.hasError) {
+            runValidationTasks("work", value);
+          }
+          setWork(value);
+        }}
+        onBlur={() => runValidationTasks("work", work)}
+        errorMessage={errors.work?.errorMessage}
+        hasError={errors.work?.hasError}
+        {...getOverrideProps(overrides, "work")}
       ></TextField>
       <Flex
         justifyContent="space-between"

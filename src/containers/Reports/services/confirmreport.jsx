@@ -1,8 +1,24 @@
-import React from "react";
-import { Button, TableRow, TableCell, useTheme, Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
+import React, { useState } from "react";
+import {
+  Box,
+  Menu,
+  MenuItem,
+  IconButton,
+  Button,
+  TableRow,
+  TableCell,
+  useTheme,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+} from "@mui/material";
 import { DataStore } from "aws-amplify";
 import { TimeEntry } from "../../../models/index.js";
 import { PropTypes } from "prop-types";
+import TaskAltIcon from "@mui/icons-material/TaskAlt";
+import ClearIcon from "@mui/icons-material/Clear";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
 
 const unconfirmAll = async (date) => {
   let arr = date.arr;
@@ -28,6 +44,44 @@ const confirmAll = async (date) => {
       ).catch((e) => console.warn(e));
     }
   }
+};
+
+const MoreButton = ({ date, lang = { more: "More" } }) => {
+  const [anchorEl, setAnchorEl] = useState(null);
+  const open = Boolean(anchorEl);
+
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  return (
+    <Box>
+      <IconButton aria-label="more" aria-controls="long-menu" aria-haspopup="true" onClick={handleClick}>
+        <MoreVertIcon />
+      </IconButton>
+      <Menu id="long-menu" anchorEl={anchorEl} keepMounted open={open} onClose={handleClose}>
+        <MenuItem
+          onClick={() => {
+            handleClose();
+            unconfirmAll(date);
+          }}
+        >
+          {lang.unconfirm}
+        </MenuItem>
+        <MenuItem
+          onClick={() => {
+            handleClose();
+            confirmAll(date);
+          }}
+        >
+          {lang.confirm}
+        </MenuItem>
+      </Menu>
+    </Box>
+  );
 };
 
 const Confirmdialog = ({
@@ -68,6 +122,8 @@ export const ConfirmreportSM = ({
   lang = {
     confirm: "Confirm",
     unconfirm: "Unconfirm",
+    sent: "Sent",
+    confirmed: "Confirmed",
   },
 }) => {
   const theme = useTheme();
@@ -83,18 +139,17 @@ export const ConfirmreportSM = ({
       }}
     >
       <TableCell align="center" colSpan={4}>
-        {!isConfirmed ? (
-          <>
-            <Button variant="contained" color="success" onClick={() => setOpen(!open)} disabled={!isEmpty}>
-              {lang.confirm}
-            </Button>
-            <Confirmdialog date={date} open={open} setOpen={setOpen} lang={lang} />
-          </>
-        ) : (
-          <Button variant="contained" color="error" onClick={() => unconfirmAll(date)} disabled={!isEmpty}>
-            {lang.unconfirm}
-          </Button>
-        )}
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-evenly",
+            alignItems: "center",
+          }}
+        >
+          {lang.sent}: <TaskAltIcon color="success" />
+          {lang.confirmed}: {isConfirmed ? <TaskAltIcon color="success" /> : <ClearIcon color="error" />}
+          <MoreButton date={date} lang={lang} />
+        </Box>
       </TableCell>
     </TableRow>
   );
@@ -106,6 +161,8 @@ export const ConfirmreportMD = ({
   lang = {
     confirm: "Confirm",
     unconfirm: "Unconfirm",
+    sent: "Sent",
+    confirmed: "Confirmed",
   },
 }) => {
   const theme = useTheme();
@@ -114,25 +171,24 @@ export const ConfirmreportMD = ({
 
   return (
     <TableCell
-      align="center"
+      align="right"
       sx={{
         [theme.breakpoints.down("sm")]: {
           display: "none",
         },
       }}
     >
-      {!isConfirmed ? (
-        <>
-          <Button variant="contained" color="success" onClick={() => setOpen(!open)} disabled={!isEmpty}>
-            {lang.confirm}
-          </Button>
-          <Confirmdialog date={date} open={open} setOpen={setOpen} lang={lang} />
-        </>
-      ) : (
-        <Button variant="contained" color="error" onClick={() => unconfirmAll(date)} disabled={!isEmpty}>
-          {lang.unconfirm}
-        </Button>
-      )}
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "space-evenly",
+          alignItems: "center",
+        }}
+      >
+        {lang.sent}: <TaskAltIcon color="success" />
+        {lang.confirmed}: {isConfirmed ? <TaskAltIcon color="success" /> : <ClearIcon color="error" />}
+        <MoreButton date={date} lang={lang} />
+      </Box>
     </TableCell>
   );
 };

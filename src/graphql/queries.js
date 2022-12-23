@@ -204,6 +204,7 @@ export const getTimeEntry = /* GraphQL */ `
       pauseStart
       nextEntry
       lastEntry
+      work
       createdAt
       updatedAt
       _version
@@ -232,6 +233,7 @@ export const listTimeEntries = /* GraphQL */ `
         pauseStart
         nextEntry
         lastEntry
+        work
         createdAt
         updatedAt
         _version
@@ -269,6 +271,7 @@ export const syncTimeEntries = /* GraphQL */ `
         pauseStart
         nextEntry
         lastEntry
+        work
         createdAt
         updatedAt
         _version
@@ -302,6 +305,11 @@ export const getAllWorkSpaces = /* GraphQL */ `
       }
       workers
       adminId
+      work {
+        name
+        description
+        id
+      }
       createdAt
       updatedAt
       _version

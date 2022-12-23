@@ -1,4 +1,23 @@
 export const customPalette = {
+  typography: {
+    fontFamily: ["Source Sans Pro", "sans-serif"].join(","),
+    p: {
+      fontSize: "16px",
+      fontWeight: 400,
+    },
+    span: {
+      fontSize: "12px",
+      fontWeight: 400,
+    },
+    h4: {
+      fontSize: "24px",
+      fontWeight: 400,
+    },
+    h5: {
+      fontSize: "20px",
+      fontWeight: 400,
+    },
+  },
   palette: {
     default: {
       white: "#ffffff",

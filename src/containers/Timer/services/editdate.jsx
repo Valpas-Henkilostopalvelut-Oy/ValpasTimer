@@ -1,7 +1,19 @@
 import React from "react";
 import { DataStore } from "aws-amplify";
 import { TimeEntry } from "../../../models/index.js";
-import { TableCell, TableRow, TextField, Typography, Dialog, DialogActions, DialogContent, DialogTitle, Button, Box, useTheme } from "@mui/material";
+import {
+  TableCell,
+  TableRow,
+  TextField,
+  Typography,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Button,
+  Box,
+  useTheme,
+} from "@mui/material";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
@@ -12,10 +24,9 @@ export const EditDateMD = ({ data, lang }) => {
   const theme = useTheme();
   return (
     <Box
-      align="right"
+      align="left"
       component={TableCell}
       sx={{
-        width: "60px",
         [theme.breakpoints.down("sm")]: {
           display: "none",
         },
@@ -76,13 +87,19 @@ const EditDate = ({ data, lang = { date: "Date" } }) => {
       }}
     >
       <Typography variant="p" onClick={() => setOpen(true)}>
-        {new Date(data.timeInterval.start).getDate()}.{new Date(data.timeInterval.start).getMonth() + 1}.{new Date(data.timeInterval.start).getFullYear()}
+        {new Date(data.timeInterval.start).getDate()}.{new Date(data.timeInterval.start).getMonth() + 1}.
+        {new Date(data.timeInterval.start).getFullYear()}
       </Typography>
       <Dialog open={open && !isSent} onClose={() => setOpen(false)} maxWidth={"xs"} fullWidth={true}>
         <DialogTitle>{lang.date}</DialogTitle>
         <DialogContent>
           <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={ruLocale}>
-            <DatePicker label={lang.date} value={value} onChange={(newValue) => setValue(newValue)} renderInput={(params) => <TextField {...params} fullWidth margin="normal" />} />
+            <DatePicker
+              label={lang.date}
+              value={value}
+              onChange={(newValue) => setValue(newValue)}
+              renderInput={(params) => <TextField {...params} fullWidth margin="normal" />}
+            />
           </LocalizationProvider>
         </DialogContent>
         <DialogActions>

@@ -106,8 +106,6 @@ export const EditDescriptionMD = ({ date, lang }) => {
   return (
     <TableCell
       sx={{
-        paddingLeft: 1,
-        paddingRight: 1,
         [theme.breakpoints.down("sm")]: {
           display: "none",
         },

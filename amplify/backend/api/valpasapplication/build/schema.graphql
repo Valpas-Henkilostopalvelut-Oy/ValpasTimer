@@ -93,6 +93,12 @@ type HourlyRate @aws_iam @aws_cognito_user_pools {
   currency: String
 }
 
+type Work @aws_iam @aws_cognito_user_pools {
+  name: String
+  description: String
+  id: ID
+}
+
 type Agreement @aws_iam @aws_cognito_user_pools {
   id: ID!
   name: String
@@ -143,6 +149,7 @@ type TimeEntry @aws_iam @aws_cognito_user_pools {
   pauseStart: AWSDateTime
   nextEntry: ID
   lastEntry: ID
+  work: ID
   createdAt: AWSDateTime!
   updatedAt: AWSDateTime!
   _version: Int!
@@ -159,6 +166,7 @@ type AllWorkSpaces @aws_iam @aws_cognito_user_pools {
   workspaceSettings: WorkspaceSettings
   workers: [String]
   adminId: [String]
+  work: [Work]
   createdAt: AWSDateTime!
   updatedAt: AWSDateTime!
   _version: Int!
@@ -599,6 +607,7 @@ input ModelTimeEntryFilterInput {
   pauseStart: ModelStringInput
   nextEntry: ModelIDInput
   lastEntry: ModelIDInput
+  work: ModelIDInput
   and: [ModelTimeEntryFilterInput]
   or: [ModelTimeEntryFilterInput]
   not: ModelTimeEntryFilterInput
@@ -616,6 +625,7 @@ input ModelTimeEntryConditionInput {
   pauseStart: ModelStringInput
   nextEntry: ModelIDInput
   lastEntry: ModelIDInput
+  work: ModelIDInput
   and: [ModelTimeEntryConditionInput]
   or: [ModelTimeEntryConditionInput]
   not: ModelTimeEntryConditionInput
@@ -636,6 +646,7 @@ input CreateTimeEntryInput {
   pauseStart: AWSDateTime
   nextEntry: ID
   lastEntry: ID
+  work: ID
   _version: Int
 }
 
@@ -654,6 +665,7 @@ input UpdateTimeEntryInput {
   pauseStart: AWSDateTime
   nextEntry: ID
   lastEntry: ID
+  work: ID
   _version: Int
 }
 
@@ -674,6 +686,7 @@ input ModelSubscriptionTimeEntryFilterInput {
   pauseStart: ModelSubscriptionStringInput
   nextEntry: ModelSubscriptionIDInput
   lastEntry: ModelSubscriptionIDInput
+  work: ModelSubscriptionIDInput
   and: [ModelSubscriptionTimeEntryFilterInput]
   or: [ModelSubscriptionTimeEntryFilterInput]
 }
@@ -694,6 +707,12 @@ input MembershipInput {
 input WorkspaceSettingsInput {
   shortBreak: Int
   dinnerBreak: Int
+}
+
+input WorkInput {
+  name: String
+  description: String
+  id: ID
 }
 
 type ModelAllWorkSpacesConnection @aws_iam @aws_cognito_user_pools {
@@ -732,6 +751,7 @@ input CreateAllWorkSpacesInput {
   workspaceSettings: WorkspaceSettingsInput
   workers: [String]
   adminId: [String]
+  work: [WorkInput]
   _version: Int
 }
 
@@ -744,6 +764,7 @@ input UpdateAllWorkSpacesInput {
   workspaceSettings: WorkspaceSettingsInput
   workers: [String]
   adminId: [String]
+  work: [WorkInput]
   _version: Int
 }
 

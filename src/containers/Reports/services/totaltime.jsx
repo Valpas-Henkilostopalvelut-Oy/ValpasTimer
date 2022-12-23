@@ -26,10 +26,24 @@ export const totalweektime = (array) => {
     let arr = array.arr[i];
     for (let ii = 0; ii < arr.arr.length; ii++) {
       const timeL = arr.arr[ii];
+      const breaks = timeL.breaks;
+      const breaksL = 0;
+
+      if (breaks) {
+        breaks.forEach((element) => {
+          let bstart = new Date(element.start);
+          let bend = new Date(element.end);
+
+          let btotal = Date.parse(bend) - Date.parse(bstart);
+
+          breaksL += btotal;
+        });
+      }
+
       let start = new Date(timeL.timeInterval.start);
       let end = new Date(timeL.timeInterval.end);
 
-      let total = Date.parse(end) - Date.parse(start);
+      let total = Date.parse(end) - Date.parse(start) - breaksL;
 
       date = {
         h: date.h + Math.floor(total / (1000 * 60 * 60)),

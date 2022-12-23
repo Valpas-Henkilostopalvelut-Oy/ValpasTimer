@@ -7,7 +7,16 @@ import { Breakslist } from "./breaks.jsx";
 const TotalTime = ({ date }) => {
   let start = new Date(date.timeInterval.start);
   let end = new Date(date.timeInterval.end);
-  let total = Date.parse(end) - Date.parse(start);
+  let breaks = 0;
+
+  let breaksArr = date.break;
+
+  breaksArr &&
+    breaksArr.forEach((element) => {
+      breaks += Date.parse(element.end) - Date.parse(element.start);
+    });
+
+  let total = Date.parse(end) - Date.parse(start) - breaks;
 
   let hours = Math.floor(total / (1000 * 60 * 60));
   let minutes = Math.floor((total / (1000 * 60)) % 60);
@@ -31,10 +40,7 @@ export const Detailsrow = ({ date }) => {
             <TableRow key={row.id}>
               <TableCell>{row.description ? row.description : "No description"}</TableCell>
               <TableCell align="right">
-                <Time time={row.timeInterval.start} />
-              </TableCell>
-              <TableCell align="right">
-                <Time time={row.timeInterval.end} />
+                <Time time={row.timeInterval.start} /> - <Time time={row.timeInterval.end} />
               </TableCell>
               <TableCell align="right">
                 <TotalTime date={row} />

@@ -1,0 +1,1 @@
+import RestaurantIcon from '@mui/icons-material/Restaurant';

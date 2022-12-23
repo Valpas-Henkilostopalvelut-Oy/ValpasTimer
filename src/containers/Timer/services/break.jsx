@@ -1,5 +1,16 @@
 import React, { useState, useEffect } from "react";
-import { TableCell, TableRow, IconButton, Typography, InputBase, TextField } from "@mui/material";
+import {
+  TableCell,
+  TableRow,
+  IconButton,
+  Typography,
+  InputBase,
+  TextField,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+} from "@mui/material";
 import { DataStore } from "aws-amplify";
 import { TimeEntry } from "../../../models/index.js";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
@@ -9,6 +20,7 @@ import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { TimePicker } from "@mui/x-date-pickers/TimePicker";
 import fi from "date-fns/locale/fi";
+import { TextToTime } from "../../../services/time.jsx";
 
 const addBreak = async (data) => {
   //get last timeEntry from array
@@ -51,52 +63,41 @@ const deleteBreak = async (data, breakIndex) => {
 
 const Breakstart = ({ start, minStart, maxEnd, setStart }) => {
   return (
-    <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={fi}>
-      <TimePicker
-        disableOpenPicker
-        label="Start break time"
-        value={start}
-        onChange={(newValue) => {
-          console.log(newValue);
-          setStart(newValue);
-        }}
-        renderInput={(params) => <TextField {...params} variant="standard" sx={{ fontSize: "14px" }} />}
-      />
-    </LocalizationProvider>
+    <TextToTime
+      date={new Date(start)}
+      onChange={(t) => {
+        setStart(new Date(start).setHours(t.h, t.min, 0, 0));
+      }}
+      isSent={false}
+    />
   );
 };
 
 const Breakend = ({ end, minStart, maxEnd, setEnd }) => {
   return (
-    <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={fi}>
-      <TimePicker
-        disableOpenPicker
-        label="End break time"
-        value={end}
-        onChange={(newValue) => {
-          setEnd(newValue);
-        }}
-        renderInput={(params) => (
-          <TextField {...params} variant="standard" sx={{ fontSize: "14px" }} onBlur={() => console.log(params)} />
-        )}
-      />
-    </LocalizationProvider>
+    <TextToTime
+      date={new Date(end)}
+      onChange={(t) => setEnd(new Date(end).setHours(t.h, t.min, 0, 0))}
+      isSent={false}
+    />
   );
 };
 
 const Breaktotal = ({ total }) => {
+  let hours = String(total.hours).padStart(2, "0");
+  let minutes = String(total.minutes).padStart(2, "0");
   return (
-    <Typography variant="subtitle2">
-      {total.hours}h {total.minutes}m
+    <Typography variant="p">
+      {hours}:{minutes}
     </Typography>
   );
 };
 
-export const AddBreak = ({ data }) => {
+export const AddBreak = ({ data, isEmpty, isDisable }) => {
   return (
     <TableRow>
       <TableCell colSpan={7}>
-        <IconButton onClick={() => addBreak(data)}>
+        <IconButton onClick={() => addBreak(data)} disabled={!isEmpty || isDisable}>
           <AddIcon />
         </IconButton>
       </TableCell>
@@ -104,22 +105,19 @@ export const AddBreak = ({ data }) => {
   );
 };
 
-export const Breakslist = ({ item, data, index, isEmpty }) => {
-  console.log(item);
+const Item = ({ item, data, index, isEmpty, isSent }) => {
   const [end, setEnd] = useState(new Date(item.end));
   const [start, setStart] = useState(new Date(item.start));
   const [total, setTotal] = useState({
     hours: 0,
     minutes: 0,
   });
-  const dStart = data.timeInterval.start;
-  const dEnd = data.timeInterval.end;
 
   useEffect(() => {
     let isActive = false;
 
     const totalTime = () => {
-      const diff = end.getTime() - start.getTime();
+      const diff = new Date(end).getTime() - new Date(start).getTime();
       if (diff > 0) {
         const hours = Math.floor(diff / (1000 * 60 * 60));
         const minutes = Math.floor((diff / (1000 * 60)) % 60);
@@ -138,21 +136,32 @@ export const Breakslist = ({ item, data, index, isEmpty }) => {
   }, [end, start]);
 
   return (
-    <TableRow key={index}>
-      <TableCell colSpan={2}>
-        <Breakstart start={start} setStart={setStart} minStart={dStart} maxEnd={dEnd} />
+    <TableRow>
+      <TableCell colSpan={3} />
+      <TableCell align="right">
+        <Breakstart start={start} setStart={setStart} /> - <Breakend end={end} setEnd={setEnd} />
       </TableCell>
-      <TableCell colSpan={2}>
-        <Breakend end={end} setEnd={setEnd} minStart={dStart} maxEnd={dEnd} />
-      </TableCell>
-      <TableCell colSpan={1}>
+      <TableCell align="right">
         <Breaktotal total={total} />
       </TableCell>
       <TableCell colSpan={1} align="right">
-        <IconButton onClick={() => deleteBreak(data, index)} disabled={!isEmpty}>
+        <IconButton onClick={() => deleteBreak(data, index)} disabled={!isEmpty || isSent}>
           <DeleteForeverIcon />
         </IconButton>
       </TableCell>
     </TableRow>
+  );
+};
+
+export const Breakslist = ({ data, isEmpty }) => {
+  const isSent = data.isSent;
+  const breaks = data.break;
+  console.log(breaks);
+
+  return (
+    breaks !== null &&
+    breaks.map((item, index) => (
+      <Item key={index} item={item} data={data} index={index} isEmpty={isEmpty} isSent={isSent} />
+    ))
   );
 };
