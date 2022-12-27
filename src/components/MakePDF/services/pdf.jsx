@@ -32,8 +32,6 @@ const getTotal = (start, end, breaks) => {
   var h = 0;
   var m = 0;
 
-  
-
   let total = Date.parse(end) - Date.parse(start) - breaks;
 
   console.log(total);
@@ -52,9 +50,18 @@ const getTotal = (start, end, breaks) => {
 const getArrTotal = (arr) => {
   var h = 0;
   var m = 0;
+  let breakstotal = 0;
 
   arr.forEach((a) => {
-    let total = Date.parse(a.timeInterval.end) - Date.parse(a.timeInterval.start);
+    let breaks = a.breaks;
+    if (breaks !== null) {
+      breaks.forEach((b) => {
+        breakstotal = breakstotal + (Date.parse(b.end) - Date.parse(b.start));
+      });
+    }
+
+    let total = Date.parse(a.timeInterval.end) - Date.parse(a.timeInterval.start) - breakstotal;
+
     h = h + Math.floor(total / (1000 * 60 * 60));
     m = m + Math.floor((total / (1000 * 60)) % 60);
     if (m > 59) {
@@ -161,7 +168,6 @@ const setToPDF = async (form, data, workplace, works, page = "") => {
           totalbreaks = totalbreaks + (end - start);
         });
       }
-
 
       let startTime = `${
         String(start.getHours()).length > 1 ? String(start.getHours()) : "0" + String(start.getHours())
