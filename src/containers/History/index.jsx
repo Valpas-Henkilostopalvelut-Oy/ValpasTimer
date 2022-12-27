@@ -5,6 +5,8 @@ import { DataStore, Auth, Hub } from "aws-amplify";
 import { TimeEntry, AllWorkSpaces } from "../../models";
 import { groupBy } from "../Timer/services/group.jsx";
 import { WeekRow } from "../Timer/services/table.jsx";
+import { MakePDF } from "../../components/MakePDF/index.jsx";
+import { Selectwork } from "../Timer/services/workplaceselect";
 
 export const History = () => {
   const { langValue } = useAppContext();
@@ -95,11 +97,25 @@ export const History = () => {
             sx={{
               backgroundColor: "background.paper",
               padding: "10px",
+              marginBottom: "10px",
+            }}
+          >
+            <Selectwork works={works} setSel={setSelected} sel={selected} lang={lang} />
+          </Box>
+
+          <Box
+            sx={{
+              backgroundColor: "background.paper",
+              padding: "10px",
+              display: "flex",
+              justifyContent: "space-between",
             }}
           >
             <Typography variant="h6" color="text.secondary">
               History
             </Typography>
+
+            <MakePDF data={confirmedWeeks} isEmpty={isEmpty} works={works} selected={selected} />
           </Box>
 
           {confirmedWeeks.length > 0 ? (

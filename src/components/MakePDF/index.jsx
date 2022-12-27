@@ -21,7 +21,6 @@ export const MakePDF = ({ data, isEmpty, selected = "", works }) => {
 MakePDF.propTypes = {
   data: PropTypes.array,
   isEmpty: PropTypes.bool,
-  setEmpty: PropTypes.func,
   selected: PropTypes.string,
   works: PropTypes.array,
 };

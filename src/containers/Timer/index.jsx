@@ -10,6 +10,7 @@ import { getWeekNumber } from "./services/group.jsx";
 import { WeekRow } from "./services/table.jsx";
 import { MakePDF } from "../../components/MakePDF/index.jsx";
 import { checkActive, advanceTime } from "./services/loadtimer.jsx";
+import { ReportAll } from "./services/buttons.jsx";
 
 const Timer = () => {
   const [grouped, setGrouped] = useState(null);
@@ -225,11 +226,14 @@ const Timer = () => {
                 sx={{
                   backgroundColor: "background.paper",
                   padding: "10px",
+                  display: "flex",
+                  justifyContent: "space-between",
                 }}
               >
                 <Typography variant="h6" color="text.secondary">
                   {lang.history.title.this_week}
                 </Typography>
+                <ReportAll week={grouped} lang={lang.track} works={works} />
               </Box>
 
               {grouped.length > 0 ? (
