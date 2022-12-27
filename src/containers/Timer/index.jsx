@@ -13,14 +13,13 @@ import { checkActive, advanceTime } from "./services/loadtimer.jsx";
 
 const Timer = () => {
   const [grouped, setGrouped] = useState(null);
-  const [selected, setSelected] = useState("");
   const [isEmpty, setIsEmpty] = useState(true);
   const [works, setWorks] = useState(null);
   const { langValue } = useAppContext();
   const thisweek = getWeekNumber(new Date());
   const [notConfirmedWeek, setNotConfirmedWeek] = useState(null);
-  const [confirmedWeeks, setConfirmedWeeks] = useState(null);
   const theme = useTheme();
+  const [selected, setSelected] = useState("");
   const [isStarted, setStarted] = useState(null);
   const [description, setDescription] = useState("");
   const [sel, setSel] = useState("");
@@ -130,15 +129,6 @@ const Timer = () => {
               (selected !== "" ? a.workspaceId === selected : true)
           );
 
-          const confirmedweek = data.filter(
-            (a) =>
-              !a.isActive &&
-              a.userId === user.username &&
-              (selected !== "" ? a.workspaceId === selected : true) &&
-              (!a.isSent || a.isConfirmed)
-          );
-
-          setConfirmedWeeks(groupBy(confirmedweek, works, langValue));
           setNotConfirmedWeek(groupBy(notconfirmedweek, works, langValue));
           setGrouped(groupBy(currentweek, works, langValue).filter((t) => t.week === thisweek));
         });
@@ -148,7 +138,7 @@ const Timer = () => {
     !isActive && isEmpty && loadlist();
 
     return () => (isActive = true);
-  }, [isEmpty, selected]);
+  }, [isEmpty, works, langValue, thisweek, selected]);
 
   useEffect(() => {
     Hub.listen("datastore", async (hubData) => {
@@ -192,7 +182,7 @@ const Timer = () => {
         },
       }}
     >
-      {confirmedWeeks && notConfirmedWeek && grouped && !(isStarted === null) ? (
+      {notConfirmedWeek && grouped && !(isStarted === null) ? (
         <Grid container spacing={2}>
           <Grid item xs={12}>
             <Recorder
@@ -212,6 +202,10 @@ const Timer = () => {
               isPaused={isPaused}
               setIsPaused={setIsPaused}
             />
+          </Grid>
+
+          <Grid item xs={12}>
+            <Selectwork works={works} sel={selected} setSel={setSelected} />
           </Grid>
 
           <Grid item xs={12}>

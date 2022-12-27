@@ -7,6 +7,7 @@ import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
 import WorkIcon from "@mui/icons-material/Work";
 import AssignmentIcon from "@mui/icons-material/Assignment";
 import WorkHistoryIcon from "@mui/icons-material/WorkHistory";
+import HistoryIcon from "@mui/icons-material/History";
 import { useAppContext } from "../../services/contextLib.jsx";
 import { LinkContainer } from "react-router-bootstrap";
 import { ListItemText, List, ListItemButton, ListItemIcon, ListItem } from "@mui/material";
@@ -46,6 +47,14 @@ export const SidebarList = ({
       link: "/timer",
       default: false,
       access: ["Clients", "Admins", "Workers"],
+    },
+    {
+      title: "History",
+      type: "page",
+      icon: <HistoryIcon />,
+      link: "/history",
+      default: false,
+      access: ["Workers", "Clients", "Admins"],
     },
     {
       title: lang.project,

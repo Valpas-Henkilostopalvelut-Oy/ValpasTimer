@@ -15,6 +15,7 @@ import NoAccessPage from "./components/NoAccessPage/index.jsx";
 import ForgotPassword from "./containers/ForgotPassword/index.jsx";
 import TasksPage from "./containers/Work/index.jsx";
 import Works from "./containers/Works/index.jsx";
+import { History } from "./containers/History/index.jsx";
 import { ConfirmPage } from "./containers/ConfirmPage/index.jsx";
 import { AgreementAdminPanel } from "./containers/Agreement/AdminPanel/index.jsx";
 import { AgreementPage } from "./containers/Agreement/index.jsx";
@@ -34,6 +35,7 @@ const Navigation = ({ isAuthenticated, groups }) => {
         element={!isAuthenticated ? <ForgotPassword /> : <Navigate replace to="/home" />}
       />
 
+      <Route exact path="history" element={isAuthenticated ? <History /> : <Redirect />} />
       <Route exact path="home" element={isAuthenticated ? <Home /> : <Redirect />} />
       <Route exact path="/" element={!isAuthenticated ? <LandingPage /> : <Navigate replace to="/home" />} />
       <Route exact path="onboarding" element={isAuthenticated ? <AgreementPage /> : <Redirect />} />

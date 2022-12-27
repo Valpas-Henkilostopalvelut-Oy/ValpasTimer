@@ -104,8 +104,9 @@ export const Moreitem = ({
     setAnchorEl(null);
   };
   const open = Boolean(anchorEl);
-  const isSent = !date.isSent;
-  const isConfirmed = !date.isConfirmed;
+  const isSent = date.isSent;
+  const isConfirmed = date.isConfirmed;
+ 
 
   return (
     <Box>
@@ -113,25 +114,21 @@ export const Moreitem = ({
         <MoreVertIcon />
       </IconButton>
       <Menu id="long-menu" anchorEl={anchorEl} open={open} onClose={handleClose}>
-        <MenuItem onClick={() => dublicateTime(date)} disabled={!isEmpty}>
+        <MenuItem onClick={() => send(date, handleClose)} disabled={!isEmpty} hidden={isSent}>
+          <Typography variant="p">{lang.buttons.send}</Typography>
+        </MenuItem>
+
+        <MenuItem onClick={() => deleteitem(date, handleClose)} disabled={!isEmpty} hidden={isSent}>
+          <Typography variant="p">{lang.buttons.delete}</Typography>
+        </MenuItem>
+
+        <MenuItem onClick={() => dublicateTime(date, handleClose, isSent && !isConfirmed)} disabled={!isEmpty}>
           <Typography variant="p">{lang.buttons.dublicate}</Typography>
         </MenuItem>
-        {isSent ? (
-          <>
-            <MenuItem onClick={() => send(date, handleClose())} disabled={!isEmpty}>
-              <Typography variant="p">{lang.buttons.send}</Typography>
-            </MenuItem>
-            <MenuItem onClick={() => deleteTime(date, handleClose())} disabled={!isEmpty}>
-              <Typography variant="p">{lang.buttons.delete}</Typography>
-            </MenuItem>
-          </>
-        ) : (
-          isConfirmed && (
-            <MenuItem onClick={() => cancelsend(date, handleClose())} disabled={!isEmpty}>
-              <Typography variant="p">{lang.buttons.cancelsend}</Typography>
-            </MenuItem>
-          )
-        )}
+
+        <MenuItem onClick={() => cancelsend(date, handleClose)} disabled={!isEmpty} hidden={!isSent || isConfirmed}>
+          <Typography variant="p">{lang.buttons.cancelsend}</Typography>
+        </MenuItem>
       </Menu>
     </Box>
   );
@@ -167,40 +164,37 @@ export const Moreitemday = ({
         <MoreVertIcon />
       </IconButton>
       <Menu id="long-menu" anchorEl={anchorEl} keepMounted open={open} onClose={handleClose}>
-        {isSent ? (
-          <>
-            <MenuItem
-              onClick={() => {
-                reportAll(date);
-                handleClose();
-              }}
-              disabled={!isEmpty}
-            >
-              <Typography variant="p">{lang.buttons.send}</Typography>
-            </MenuItem>
-            <MenuItem
-              onClick={() => {
-                deleteAll(date);
-                handleClose();
-              }}
-              disabled={!isEmpty}
-            >
-              <Typography variant="p">{lang.buttons.delete}</Typography>
-            </MenuItem>
-          </>
-        ) : (
-          isConfirmed && (
-            <MenuItem
-              onClick={() => {
-                cancelsentall(date);
-                handleClose();
-              }}
-              disabled={!isEmpty}
-            >
-              <Typography variant="p">{lang.buttons.cancelsend}</Typography>
-            </MenuItem>
-          )
-        )}
+        <MenuItem
+          onClick={() => {
+            reportAll(date);
+            handleClose();
+          }}
+          disabled={!isEmpty}
+          hidden={!isSent}
+        >
+          <Typography variant="p">{lang.buttons.send}</Typography>
+        </MenuItem>
+        <MenuItem
+          onClick={() => {
+            deleteAll(date);
+            handleClose();
+          }}
+          disabled={!isEmpty}
+          hidden={!isSent}
+        >
+          <Typography variant="p">{lang.buttons.delete}</Typography>
+        </MenuItem>
+
+        <MenuItem
+          onClick={() => {
+            cancelsentall(date);
+            handleClose();
+          }}
+          disabled={!isEmpty}
+          hidden={isSent && isConfirmed}
+        >
+          <Typography variant="p">{lang.buttons.cancelsend}</Typography>
+        </MenuItem>
       </Menu>
     </Box>
   );
@@ -334,41 +328,33 @@ export const Reportallweek = ({
   );
 };
 
-const deleteTime = async (data, close) => {
+const deleteitem = async (data, close) => {
   await DataStore.delete(data)
-    .then(() => close())
+    .then(close())
     .catch((e) => console.warn(e));
 };
 
-const dublicateTime = async (data) => {
-  let newTimeData = {
-    break: [],
-    timeInterval: {
-      start: data.timeInterval.start,
-      end: data.timeInterval.end,
-    },
-    description: data.description,
-    workplaceId: data.workspaceId,
-    userId: data.userId,
-  };
+const dublicateTime = async (data, close, isSent = false) => {
 
   await DataStore.save(
     new TimeEntry({
-      description: newTimeData.description,
-      userId: newTimeData.userId,
-      workspaceId: newTimeData.workplaceId,
+      description: data.description,
+      userId: data.userId,
+      workspaceId: data.workspaceId,
       timeInterval: {
         start: data.timeInterval.start,
         end: data.timeInterval.end,
       },
       isActive: false,
       isLocked: false,
-      isSent: false,
+      isSent: isSent,
       isConfirmed: false,
       billable: false,
       breaks: [],
     })
-  ).catch((e) => console.warn(e));
+  )
+    .then(close())
+    .catch((e) => console.warn(e));
 };
 
 const cancelsend = async (data, close) => {

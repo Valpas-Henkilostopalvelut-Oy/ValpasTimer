@@ -15,16 +15,14 @@ import {
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import { Time, EditSTime, EditETime } from "./times.jsx";
-import { Moreitem, Moreitemday } from "./buttons.jsx";
+import { Moreitem, Moreitemday, Reportallweek } from "./buttons.jsx";
 import { TotalTime } from "./edittotaltime.jsx";
-import { StatusMD, StatusSM, Emptycell } from "./isSent.jsx";
 import { EditDescriptionMD } from "./editdescription.jsx";
 import { ChangeWorkplaceMD } from "./workplacechange.jsx";
 import { EditDateMD } from "./editdate.jsx";
 import { PropTypes } from "prop-types";
 import { BreakitemMD, AddBreakMD, AddBreakSM } from "./break.jsx";
 import { totaldaytime, totalweektime } from "./totaltime.jsx";
-import { Reportallweek } from "./buttons.jsx";
 
 const isSent = (data) => {
   const items = data.arr.length;
@@ -35,41 +33,33 @@ const isSent = (data) => {
 
 export const WeekRow = ({ grouped, lang, works, isEmpty, selected }) => {
   return grouped.map((week) => (
-    <Grid item spacing={2} key={week.week}>
+    <Fragment key={week.week}>
       <Box
         sx={{
           display: "flex",
-          backgroundColor: "background.paper",
-          justifyContent: "space-between",
+          flexDirection: "column",
+          padding: 1,
           marginTop: 1,
+          marginBottom: 1,
+          backgroundColor: "background.paper",
         }}
       >
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            padding: 1,
-            backgroundColor: "background.paper",
-          }}
-        >
-          <Typography variant="h6" color="text.secondary">
-            {lang.history.week} {week.week}
-          </Typography>
+        <Typography variant="h6" color="text.secondary">
+          {lang.history.week} {week.week}
+        </Typography>
 
-          <Typography variant="p" color="text.secondary">
-            {lang.history.total_time} {totalweektime(week).h > 9 ? totalweektime(week).h : "0" + totalweektime(week).h}:
-            {totalweektime(week).min > 9 ? totalweektime(week).min : "0" + totalweektime(week).min}
-          </Typography>
+        <Typography variant="p" color="text.secondary">
+          {lang.history.total_time} {totalweektime(week).h > 9 ? totalweektime(week).h : "0" + totalweektime(week).h}:
+          {totalweektime(week).min > 9 ? totalweektime(week).min : "0" + totalweektime(week).min}
+        </Typography>
 
-          <Typography variant="caption" color="text.secondary">
-            {week.period}
-          </Typography>
-        </Box>
-        <Reportallweek date={week} isEmpty={isEmpty} lang={lang.history} selected={selected} />
+        <Typography variant="caption" color="text.secondary">
+          {week.period}
+        </Typography>
       </Box>
 
       <Row week={week} lang={lang.history} isEmpty={isEmpty} works={works} />
-    </Grid>
+    </Fragment>
   ));
 };
 
@@ -162,7 +152,7 @@ const DetailsSM = (props) => {
         </TableCell>
 
         <TableCell align="right">
-          <Moreitemday date={row} lang={lang} />
+          <Moreitemday date={row} lang={lang} isEmpty={isEmpty} />
         </TableCell>
       </TableRow>
 
@@ -248,7 +238,7 @@ const DetailsMD = (props) => {
         </TableCell>
 
         <TableCell align="right">
-          <Moreitemday date={row} lang={lang} />
+          <Moreitemday date={row} lang={lang} isEmpty={isEmpty} />
         </TableCell>
       </TableRow>
 
