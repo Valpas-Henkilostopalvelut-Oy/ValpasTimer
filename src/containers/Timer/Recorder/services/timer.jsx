@@ -6,6 +6,7 @@ import { EditWorkplaceTimer } from "./editworkplace.jsx";
 import { StartTimer } from "./starttimer.jsx";
 import { PropTypes } from "prop-types";
 import { Timerbreak } from "./breaks.jsx";
+import { EditWorkitemTimer } from "./editworkitem.jsx";
 
 export const Timer = ({
   time,
@@ -23,16 +24,31 @@ export const Timer = ({
   isEmpty,
   isPaused,
   setIsPaused,
+  workitems,
+  workitem,
+  setWorkitem,
 }) => {
   const [open, setOpen] = useState(false);
 
   return (
     <Grid container spacing={2} alignItems="center">
-      <Grid item xs={12} md={4}>
+      <Grid item xs={6} md={4}>
         <EditWorkplaceTimer
           sel={sel}
           setSel={setSel}
           works={works}
+          data={timerTime}
+          isStarted={isStarted}
+          lang={lang}
+          setWorkitem={setWorkitem}
+        />
+      </Grid>
+
+      <Grid item xs={6} md={4}>
+        <EditWorkitemTimer
+          workitem={workitem}
+          setWorkitem={setWorkitem}
+          workitems={workitems}
           data={timerTime}
           isStarted={isStarted}
           lang={lang}
@@ -79,6 +95,8 @@ export const Timer = ({
       </Grid>
       <Grid item xs={3} md={1}>
         <StartTimer
+          workitem={workitem}
+          workitems={workitems}
           description={description}
           workplace={sel}
           isStarted={isStarted}

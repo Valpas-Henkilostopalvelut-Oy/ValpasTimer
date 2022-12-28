@@ -238,16 +238,19 @@ export const onCreateTimeEntry = /* GraphQL */ `
       isLocked
       isSent
       isConfirmed
+      isPaused
+      pauseStart
       break {
+        id
         reason
         end
         start
       }
-      isPaused
-      pauseStart
-      nextEntry
-      lastEntry
-      work
+      work {
+        name
+        description
+        id
+      }
       createdAt
       updatedAt
       _version
@@ -274,16 +277,19 @@ export const onUpdateTimeEntry = /* GraphQL */ `
       isLocked
       isSent
       isConfirmed
+      isPaused
+      pauseStart
       break {
+        id
         reason
         end
         start
       }
-      isPaused
-      pauseStart
-      nextEntry
-      lastEntry
-      work
+      work {
+        name
+        description
+        id
+      }
       createdAt
       updatedAt
       _version
@@ -310,16 +316,19 @@ export const onDeleteTimeEntry = /* GraphQL */ `
       isLocked
       isSent
       isConfirmed
+      isPaused
+      pauseStart
       break {
+        id
         reason
         end
         start
       }
-      isPaused
-      pauseStart
-      nextEntry
-      lastEntry
-      work
+      work {
+        name
+        description
+        id
+      }
       createdAt
       updatedAt
       _version

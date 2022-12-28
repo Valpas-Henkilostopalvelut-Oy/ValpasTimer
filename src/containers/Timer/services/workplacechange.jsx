@@ -41,28 +41,19 @@ const SelectWork = ({
   },
 }) => {
   const [workplace, setWorkplace] = useState(date.workspaceId);
+  const [work, setWork] = useState("");
   const [open, setOpen] = useState(false);
-  const [name, setName] = useState("");
+
   const handleChange = (event) => {
     setWorkplace(event.target.value);
   };
+
+  const handleChangeWork = (event) => {
+    setWork(event.target.value);
+  };
   var isSent = date.isSent;
-
-  useEffect(() => {
-    let isActive = true;
-
-    const fetchWorkplaces = async () => {
-      await DataStore.query(AllWorkSpaces)
-        .then((res) => {
-          let workName = res.find((item) => item.id === date.workspaceId);
-          setName(workName !== undefined ? workName.name : "Vaihda työpaikkaa");
-        })
-        .catch((e) => console.warn(e));
-    };
-
-    isActive && fetchWorkplaces();
-    return () => (isActive = false);
-  }, []);
+  const workitem = date.work;
+  const works = workplaces.find((item) => item.id === workplace).works;
 
   return (
     workplaces !== null && (
@@ -73,12 +64,12 @@ const SelectWork = ({
           textOverflow={"ellipsis"}
           sx={{ cursor: !isSent && "pointer" }}
         >
-          {name}
+          {workitem ? workitem.name : "No Work item"}
         </Typography>
         <Dialog open={open && !isSent} onClose={() => setOpen(false)} maxWidth={"xs"} fullWidth>
           <DialogTitle>{lang.workplace}</DialogTitle>
           <DialogContent>
-            <FormControl fullWidth margin="normal">
+            <FormControl fullWidth>
               <InputLabel id="workplace-select">{lang.workplace}</InputLabel>
               <Select
                 labelId="workplace-select"
@@ -86,10 +77,26 @@ const SelectWork = ({
                 value={workplace}
                 label={lang.workplace}
                 onChange={handleChange}
-                margin="normal"
               >
                 {workplaces.map((item, i) => (
                   <MenuItem key={i} value={item.id}>
+                    {item.name}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+
+            <FormControl fullWidth>
+              <InputLabel id="workplace-select">{lang.workplace}</InputLabel>
+              <Select
+                labelId="workplace-select"
+                id="workplace-select"
+                value={work}
+                label="Work"
+                onChange={handleChangeWork}
+              >
+                {works.map((item, i) => (
+                  <MenuItem key={item.id} value={item.id}>
                     {item.name}
                   </MenuItem>
                 ))}
@@ -156,7 +163,6 @@ export const ChangeWorkplaceMD = ({ date, workplaces = null, work, lang, isEmpty
     </TableCell>
   );
 };
-
 
 ChangeWorkplaceMD.propTypes = {
   date: PropTypes.object,

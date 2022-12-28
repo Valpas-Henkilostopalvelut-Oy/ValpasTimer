@@ -63,6 +63,7 @@ type TimeInterval {
 }
 
 type Break {
+  id: ID
   reason: Breakreason
   end: AWSDateTime
   start: AWSDateTime
@@ -165,12 +166,10 @@ type TimeEntry
   isLocked: Boolean
   isSent: Boolean
   isConfirmed: Boolean
-  break: [Break]
   isPaused: Boolean
   pauseStart: AWSDateTime
-  nextEntry: ID
-  lastEntry: ID
-  work: ID
+  break: [Break]
+  work: Work
 }
 
 type AllWorkSpaces

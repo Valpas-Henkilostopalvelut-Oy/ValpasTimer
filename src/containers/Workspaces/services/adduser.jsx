@@ -1,6 +1,17 @@
 import React, { useState } from "react";
 import { DataStore } from "aws-amplify";
-import { IconButton, Dialog, DialogTitle, TableCell, DialogContent, Button, DialogActions, Box, TextField, Typography } from "@mui/material";
+import {
+  IconButton,
+  Dialog,
+  DialogTitle,
+  TableCell,
+  DialogContent,
+  Button,
+  DialogActions,
+  Box,
+  TextField,
+  Typography,
+} from "@mui/material";
 import { Formik } from "formik";
 import AddIcon from "@mui/icons-material/Add";
 import * as yup from "yup";
@@ -46,7 +57,7 @@ const AdduserDialog = ({
   return (
     <Dialog open={open} onClose={handleClose} maxWidth={"xs"} fullWidth={true}>
       <DialogTitle>
-        <Typography variant="h6">{lang.add_user.title}</Typography>
+        <Typography>{lang.add_user.title}</Typography>
       </DialogTitle>
       <Formik
         initialValues={{
@@ -72,14 +83,9 @@ const AdduserDialog = ({
                   margin="normal"
                   variant="outlined"
                   required
-                  error={touched.email && Boolean(errors.email)}
-                  helperText={touched.email && errors.email}
+                  error={(touched.email && Boolean(errors.email)) || Boolean(warnText)}
+                  helperText={(touched.email && errors.email) || warnText}
                 />
-                {warnText && (
-                  <Typography color="error" variant="caption">
-                    {warnText}
-                  </Typography>
-                )}
               </Box>
             </DialogContent>
             <DialogActions>

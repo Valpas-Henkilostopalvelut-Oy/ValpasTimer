@@ -195,16 +195,19 @@ export const getTimeEntry = /* GraphQL */ `
       isLocked
       isSent
       isConfirmed
+      isPaused
+      pauseStart
       break {
+        id
         reason
         end
         start
       }
-      isPaused
-      pauseStart
-      nextEntry
-      lastEntry
-      work
+      work {
+        name
+        description
+        id
+      }
       createdAt
       updatedAt
       _version
@@ -231,9 +234,6 @@ export const listTimeEntries = /* GraphQL */ `
         isConfirmed
         isPaused
         pauseStart
-        nextEntry
-        lastEntry
-        work
         createdAt
         updatedAt
         _version
@@ -269,9 +269,6 @@ export const syncTimeEntries = /* GraphQL */ `
         isConfirmed
         isPaused
         pauseStart
-        nextEntry
-        lastEntry
-        work
         createdAt
         updatedAt
         _version

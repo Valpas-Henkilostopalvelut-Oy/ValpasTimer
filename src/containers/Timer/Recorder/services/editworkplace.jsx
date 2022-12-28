@@ -19,11 +19,13 @@ export const EditWorkplaceTimer = ({
   isStarted = false,
   data,
   lang = { workplace: "Workplace" },
+  setWorkitem,
 }) => {
   const handleChange = (event) => {
     if (data && isStarted) {
       updateWork(data, event.target.value);
     }
+    setWorkitem("");
     setSel(event.target.value);
   };
 

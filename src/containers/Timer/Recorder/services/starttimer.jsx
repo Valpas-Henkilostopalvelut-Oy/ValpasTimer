@@ -4,13 +4,14 @@ import { Auth, DataStore } from "aws-amplify";
 import { UserCredentials, TimeEntry } from "../../../../models/index.js";
 import { PropTypes } from "prop-types";
 
-const startTimer = async ({ description, workplace, setTimer }) => {
+const startTimer = async ({ description, workplace, setTimer, work = null }) => {
   await Auth.currentAuthenticatedUser().then(async (user) => {
     await DataStore.save(
       new TimeEntry({
         description: description,
         userId: user.username,
         workspaceId: workplace,
+        work: work,
         timeInterval: {
           start: new Date(new Date().setMilliseconds(0)).toISOString(),
         },
@@ -74,6 +75,8 @@ const stopTimer = async () => {
 };
 
 export const StartTimer = ({
+  workitem,
+  workitems,
   description = "",
   workplace = "",
   isStarted = false,
@@ -88,7 +91,8 @@ export const StartTimer = ({
 }) => {
   const handleStart = () => {
     if (!isStarted) {
-      startTimer({ description, workplace, setTimer: (e) => setTimer(e) });
+      let work = workitems && workitems.find((item) => item.id === workitem);
+      startTimer({ description, workplace, setTimer: (e) => setTimer(e), work });
       setStarted(true);
     }
   };

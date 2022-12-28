@@ -21,6 +21,10 @@ export const Recorder = ({
   setTimer,
   setIsPaused,
   isPaused,
+  workitems,
+  setWorkitems,
+  workitem,
+  setWorkitem,
 }) => {
   const [value, setValue] = useState("1");
 
@@ -52,6 +56,10 @@ export const Recorder = ({
             setTimer={setTimer}
             isPaused={isPaused}
             setIsPaused={setIsPaused}
+            workitems={workitems}
+            setWorkitems={setWorkitems}
+            workitem={workitem}
+            setWorkitem={setWorkitem}
           />
         </TabPanel>
         <TabPanel value="2" sx={{ paddingLeft: 0, paddingRight: 0 }}>

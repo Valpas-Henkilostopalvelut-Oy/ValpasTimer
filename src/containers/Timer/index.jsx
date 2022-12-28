@@ -8,7 +8,6 @@ import { Selectwork } from "./services/workplaceselect.jsx";
 import { useAppContext } from "../../services/contextLib.jsx";
 import { getWeekNumber } from "./services/group.jsx";
 import { WeekRow } from "./services/table.jsx";
-import { MakePDF } from "../../components/MakePDF/index.jsx";
 import { checkActive, advanceTime } from "./services/loadtimer.jsx";
 import { ReportAll } from "./services/buttons.jsx";
 
@@ -31,6 +30,8 @@ const Timer = () => {
   });
   const [timerTime, setTimer] = useState(null);
   const [isPaused, setIsPaused] = useState(false);
+  const [workitems, setWorkitems] = useState(null);
+  const [workitem, setWorkitem] = useState("");
 
   const lang = langValue.track || {
     recorder: {
@@ -142,6 +143,29 @@ const Timer = () => {
   }, [isEmpty, works, langValue, thisweek, selected]);
 
   useEffect(() => {
+    let isActive = false;
+
+    const loadWorks = async () => {
+      await DataStore.query(AllWorkSpaces)
+        .then((data) => {
+          let w = [];
+          for (let i = 0; i < data.length; i++) {
+            let work = data[i];
+            w.push({
+              id: work.id,
+              name: work.name,
+              works: work.work,
+            });
+          }
+          setWorks(w);
+        })
+        .catch((error) => console.warn(error));
+    };
+
+    !isActive && loadWorks();
+  }, []);
+
+  useEffect(() => {
     Hub.listen("datastore", async (hubData) => {
       const { event, data } = hubData.payload;
       if (event === "outboxStatus") {
@@ -154,26 +178,18 @@ const Timer = () => {
   useEffect(() => {
     let isActive = false;
 
-    const loadWorks = async () => {
-      await DataStore.query(AllWorkSpaces)
+    const loadWorklist = async () => {
+      await DataStore.query(AllWorkSpaces, sel)
         .then((data) => {
-          let w = [];
-          for (let i = 0; i < data.length; i++) {
-            let work = data[i];
-            w.push({
-              id: work.id,
-              name: work.name,
-            });
-          }
-          setWorks(w);
+          setWorkitems(data.work);
         })
         .catch((error) => console.warn(error));
     };
 
-    !isActive && loadWorks();
-  }, []);
+    !isActive && sel !== "" && loadWorklist();
 
-  //loading if grouped, timelist and selected option are null
+    return () => (isActive = true);
+  }, [sel]);
 
   return (
     <Container
@@ -202,6 +218,10 @@ const Timer = () => {
               setTimer={setTimer}
               isPaused={isPaused}
               setIsPaused={setIsPaused}
+              workitems={workitems}
+              setWorkitems={setWorkitems}
+              workitem={workitem}
+              setWorkitem={setWorkitem}
             />
           </Grid>
 
@@ -236,14 +256,8 @@ const Timer = () => {
                 <ReportAll week={grouped} lang={lang.track} works={works} />
               </Box>
 
-              {grouped.length > 0 ? (
+              {grouped.length > 0 && (
                 <WeekRow grouped={grouped} lang={lang} isEmpty={isEmpty} works={works} selected={selected} />
-              ) : (
-                <Grid item xs={12}>
-                  <Typography variant="h6" color="text.secondary">
-                    {lang.history.title.none_times}
-                  </Typography>
-                </Grid>
               )}
             </Box>
           </Grid>

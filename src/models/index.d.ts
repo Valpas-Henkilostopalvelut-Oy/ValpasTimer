@@ -199,12 +199,14 @@ export declare type TimeInterval = LazyLoading extends LazyLoadingDisabled ? Eag
 export declare const TimeInterval: (new (init: ModelInit<TimeInterval>) => TimeInterval)
 
 type EagerBreak = {
+  readonly id?: string | null;
   readonly reason?: Breakreason | keyof typeof Breakreason | null;
   readonly end?: string | null;
   readonly start?: string | null;
 }
 
 type LazyBreak = {
+  readonly id?: string | null;
   readonly reason?: Breakreason | keyof typeof Breakreason | null;
   readonly end?: string | null;
   readonly start?: string | null;
@@ -364,12 +366,10 @@ type EagerTimeEntry = {
   readonly isLocked?: boolean | null;
   readonly isSent?: boolean | null;
   readonly isConfirmed?: boolean | null;
-  readonly break?: (Break | null)[] | null;
   readonly isPaused?: boolean | null;
   readonly pauseStart?: string | null;
-  readonly nextEntry?: string | null;
-  readonly lastEntry?: string | null;
-  readonly work?: string | null;
+  readonly break?: (Break | null)[] | null;
+  readonly work?: Work | null;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
 }
@@ -384,12 +384,10 @@ type LazyTimeEntry = {
   readonly isLocked?: boolean | null;
   readonly isSent?: boolean | null;
   readonly isConfirmed?: boolean | null;
-  readonly break?: (Break | null)[] | null;
   readonly isPaused?: boolean | null;
   readonly pauseStart?: string | null;
-  readonly nextEntry?: string | null;
-  readonly lastEntry?: string | null;
-  readonly work?: string | null;
+  readonly break?: (Break | null)[] | null;
+  readonly work?: Work | null;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
 }

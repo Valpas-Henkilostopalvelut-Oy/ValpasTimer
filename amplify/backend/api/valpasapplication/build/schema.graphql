@@ -64,6 +64,7 @@ type TimeInterval @aws_iam @aws_cognito_user_pools {
 }
 
 type Break @aws_iam @aws_cognito_user_pools {
+  id: ID
   reason: Breakreason
   end: AWSDateTime
   start: AWSDateTime
@@ -152,12 +153,10 @@ type TimeEntry @aws_iam @aws_cognito_user_pools {
   isLocked: Boolean
   isSent: Boolean
   isConfirmed: Boolean
-  break: [Break]
   isPaused: Boolean
   pauseStart: AWSDateTime
-  nextEntry: ID
-  lastEntry: ID
-  work: ID
+  break: [Break]
+  work: Work
   createdAt: AWSDateTime!
   updatedAt: AWSDateTime!
   _version: Int!
@@ -591,9 +590,16 @@ input ModelSubscriptionTasksFilterInput {
 }
 
 input BreakInput {
+  id: ID
   reason: Breakreason
   end: AWSDateTime
   start: AWSDateTime
+}
+
+input WorkInput {
+  name: String
+  description: String
+  id: ID
 }
 
 type ModelTimeEntryConnection @aws_iam @aws_cognito_user_pools {
@@ -613,9 +619,6 @@ input ModelTimeEntryFilterInput {
   isConfirmed: ModelBooleanInput
   isPaused: ModelBooleanInput
   pauseStart: ModelStringInput
-  nextEntry: ModelIDInput
-  lastEntry: ModelIDInput
-  work: ModelIDInput
   and: [ModelTimeEntryFilterInput]
   or: [ModelTimeEntryFilterInput]
   not: ModelTimeEntryFilterInput
@@ -631,9 +634,6 @@ input ModelTimeEntryConditionInput {
   isConfirmed: ModelBooleanInput
   isPaused: ModelBooleanInput
   pauseStart: ModelStringInput
-  nextEntry: ModelIDInput
-  lastEntry: ModelIDInput
-  work: ModelIDInput
   and: [ModelTimeEntryConditionInput]
   or: [ModelTimeEntryConditionInput]
   not: ModelTimeEntryConditionInput
@@ -649,12 +649,10 @@ input CreateTimeEntryInput {
   isLocked: Boolean
   isSent: Boolean
   isConfirmed: Boolean
-  break: [BreakInput]
   isPaused: Boolean
   pauseStart: AWSDateTime
-  nextEntry: ID
-  lastEntry: ID
-  work: ID
+  break: [BreakInput]
+  work: WorkInput
   _version: Int
 }
 
@@ -668,12 +666,10 @@ input UpdateTimeEntryInput {
   isLocked: Boolean
   isSent: Boolean
   isConfirmed: Boolean
-  break: [BreakInput]
   isPaused: Boolean
   pauseStart: AWSDateTime
-  nextEntry: ID
-  lastEntry: ID
-  work: ID
+  break: [BreakInput]
+  work: WorkInput
   _version: Int
 }
 
@@ -692,9 +688,6 @@ input ModelSubscriptionTimeEntryFilterInput {
   isConfirmed: ModelSubscriptionBooleanInput
   isPaused: ModelSubscriptionBooleanInput
   pauseStart: ModelSubscriptionStringInput
-  nextEntry: ModelSubscriptionIDInput
-  lastEntry: ModelSubscriptionIDInput
-  work: ModelSubscriptionIDInput
   and: [ModelSubscriptionTimeEntryFilterInput]
   or: [ModelSubscriptionTimeEntryFilterInput]
 }
@@ -715,12 +708,6 @@ input MembershipInput {
 input WorkspaceSettingsInput {
   shortBreak: Int
   dinnerBreak: Int
-}
-
-input WorkInput {
-  name: String
-  description: String
-  id: ID
 }
 
 type ModelAllWorkSpacesConnection @aws_iam @aws_cognito_user_pools {
