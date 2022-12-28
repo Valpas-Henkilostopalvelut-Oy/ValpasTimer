@@ -95,11 +95,12 @@ const SelectWork = ({
                 label="Work"
                 onChange={handleChangeWork}
               >
-                {works.map((item, i) => (
-                  <MenuItem key={item.id} value={item.id}>
-                    {item.name}
-                  </MenuItem>
-                ))}
+                {works &&
+                  works.map((item, i) => (
+                    <MenuItem key={item.id} value={item.id}>
+                      {item.name}
+                    </MenuItem>
+                  ))}
               </Select>
             </FormControl>
           </DialogContent>
