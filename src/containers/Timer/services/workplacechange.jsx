@@ -110,6 +110,7 @@ const SelectWork = ({
                   value={work}
                   label="Workitem"
                   onChange={handleChangeWork}
+                  disabled={!Boolean(works)}
                 >
                   {works &&
                     works.map((item, i) => (

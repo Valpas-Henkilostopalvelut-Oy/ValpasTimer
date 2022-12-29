@@ -20,11 +20,11 @@ export const Workitem = ({ item, data }) => {
 
 const deleteWork = async (id, data) => {
   const work = data.work.filter((item) => item.id !== id);
+  const newData = work.length === 0 ? null : work;
 
   await DataStore.save(
     AllWorkSpaces.copyOf(data, (updated) => {
-      updated.work = work;
+      updated.work = newData;
     })
-  )
-  .catch((err) => console.log(err));
+  ).catch((err) => console.log(err));
 };

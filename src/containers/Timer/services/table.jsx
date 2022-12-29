@@ -21,7 +21,7 @@ import { EditDescriptionMD } from "./editdescription.jsx";
 import { ChangeWorkplaceMD } from "./workplacechange.jsx";
 import { EditDateMD } from "./editdate.jsx";
 import { PropTypes } from "prop-types";
-import { BreakitemMD, AddBreakMD, AddBreakSM } from "./break.jsx";
+import { BreakitemMD, AddBreakMD, AddBreakSM, BreakitemSM } from "./break.jsx";
 import { totaldaytime, totalweektime } from "./totaltime.jsx";
 
 const isSent = (data) => {
@@ -186,7 +186,7 @@ const DetailsSM = ({ row, workplaces, lang, isEmpty, total, date, sx }) => {
       {open && (
         <>
           <RowDetailsSM data={data} workplaces={workplaces} lang={lang} isEmpty={isEmpty} sx={sx} />
-          <AddBreakSM data={data} isEmpty={isEmpty} isDisable={isSent(row)} />
+          <AddBreakSM data={data} isEmpty={isEmpty} isDisable={isSent(row)} sx={sx} />
         </>
       )}
     </Fragment>
@@ -274,7 +274,7 @@ const RowDetailsSM = ({ data, lang, workplaces, isEmpty, sx }) => {
 
         {row.break &&
           row.break.map((item, i) => (
-            <BreakitemMD sx={sx} key={i} item={item} data={row} index={i} isEmpty={isEmpty} isSent={data.isSent} />
+            <BreakitemSM sx={sx} key={i} item={item} data={row} index={i} isEmpty={isEmpty} isSent={data.isSent} />
           ))}
       </Fragment>
     );
