@@ -19,14 +19,13 @@ import { DataStore } from "aws-amplify";
 import { TimeEntry, AllWorkSpaces } from "../../../models/index.js";
 import { PropTypes } from "prop-types";
 
-const updateWorkplace = async (date, newValue, oldValue) => {
-  if (newValue !== oldValue) {
-    await DataStore.save(
-      TimeEntry.copyOf(date, (update) => {
-        update.workspaceId = newValue;
-      })
-    ).catch((e) => console.warn(e));
-  }
+const updateWorkplace = async (date, newValue, workit) => {
+  await DataStore.save(
+    TimeEntry.copyOf(date, (update) => {
+      update.workspaceId = newValue;
+      update.work = workit;
+    })
+  ).catch((e) => console.warn(e));
 };
 
 const SelectWork = ({
@@ -43,6 +42,9 @@ const SelectWork = ({
   const [workplace, setWorkplace] = useState(date.workspaceId);
   const [work, setWork] = useState(date.work ? date.work.id : "");
   const [open, setOpen] = useState(false);
+  const isSent = date.isSent;
+  const works = workplaces.find((item) => item.id === workplace).works;
+  const workit = works.find((item) => item.id === work) || null;
 
   const handleChange = (event) => {
     setWorkplace(event.target.value);
@@ -52,9 +54,15 @@ const SelectWork = ({
     setWork(event.target.value);
   };
 
-  var isSent = date.isSent;
-  const works = workplaces.find((item) => item.id === workplace).works;
-  const workit = works.find((item) => item.id === work);
+  const handleCancel = () => {
+    setWork(date.work ? date.work.id : "");
+    setOpen(false);
+  };
+
+  const handleSave = () => {
+    updateWorkplace(date, date.workspaceId, workit);
+    setOpen(false);
+  };
 
   return (
     workplaces !== null && (
@@ -67,7 +75,7 @@ const SelectWork = ({
         >
           {work ? workit.name : "No Work item"}
         </Typography>
-        <Dialog open={open && !isSent} onClose={() => setOpen(false)} maxWidth={"xs"} fullWidth>
+        <Dialog open={open && !isSent} onClose={handleCancel} maxWidth={"xs"} fullWidth>
           <DialogTitle>{lang.workplace}</DialogTitle>
           <DialogContent>
             <Box
@@ -95,12 +103,12 @@ const SelectWork = ({
 
             <Box padding="1rem">
               <FormControl fullWidth>
-                <InputLabel id="workplace-select">{lang.workplace}</InputLabel>
+                <InputLabel id="workplace-select">Workitem</InputLabel>
                 <Select
                   labelId="workplace-select"
                   id="workplace-select"
                   value={work}
-                  label="Work"
+                  label="Workitem"
                   onChange={handleChangeWork}
                 >
                   {works &&
@@ -114,10 +122,10 @@ const SelectWork = ({
             </Box>
           </DialogContent>
           <DialogActions>
-            <Button onClick={() => setOpen(false)} color="primary">
+            <Button onClick={handleCancel} color="primary">
               {lang.buttons.cancel}
             </Button>
-            <Button onClick={() => updateWorkplace(date, workplace, date.workplaceId, setOpen(false))} color="primary">
+            <Button onClick={handleSave} color="primary">
               {lang.buttons.save}
             </Button>
           </DialogActions>
@@ -128,23 +136,7 @@ const SelectWork = ({
 };
 
 const IsSent = ({ date, lang = { workplace: "Workplace" } }, isEmpty = false) => {
-  const [work, setWork] = useState("");
-
-  useEffect(() => {
-    let isActive = true;
-
-    const fetchWorkplaces = async () => {
-      await DataStore.query(AllWorkSpaces)
-        .then((res) => {
-          let workName = res.find((item) => item.id === date.workspaceId);
-          setWork(workName.name);
-        })
-        .catch((e) => console.warn(e));
-    };
-
-    isActive && isEmpty && fetchWorkplaces();
-    return () => (isActive = false);
-  }, [isEmpty]);
+  const work = date.work ? date.work.name : "No Work item";
 
   return (
     <Typography variant="p" textOverflow={"ellipsis"}>

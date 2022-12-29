@@ -39,6 +39,7 @@ export const History = () => {
             w.push({
               id: work.id,
               name: work.name,
+              works: work.work,
             });
           }
           setWorks(w);
