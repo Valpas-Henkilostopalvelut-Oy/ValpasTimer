@@ -44,7 +44,7 @@ const SelectWork = ({
   const [open, setOpen] = useState(false);
   const isSent = date.isSent;
   const works = workplaces.find((item) => item.id === workplace).works;
-  const workit = works.find((item) => item.id === work) || null;
+  const workit = works ? works.find((item) => item.id === work) : null;
 
   const handleChange = (event) => {
     setWorkplace(event.target.value);
