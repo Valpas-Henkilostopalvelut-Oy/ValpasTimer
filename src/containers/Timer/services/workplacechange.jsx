@@ -1,11 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   Dialog,
   DialogTitle,
   DialogContent,
   DialogActions,
   Button,
-  TableRow,
   TableCell,
   useTheme,
   FormControl,
@@ -16,7 +15,7 @@ import {
   Typography,
 } from "@mui/material";
 import { DataStore } from "aws-amplify";
-import { TimeEntry, AllWorkSpaces } from "../../../models/index.js";
+import { TimeEntry } from "../../../models/index.js";
 import { PropTypes } from "prop-types";
 
 const updateWorkplace = async (date, newValue, workit) => {
@@ -32,7 +31,9 @@ const SelectWork = ({
   date,
   workplaces,
   lang = {
+    no_work: "No Work item",
     workplace: "Workplace",
+    workitem: "Työtehtävä",
     buttons: {
       save: "Save",
       cancel: "Cancel",
@@ -73,7 +74,7 @@ const SelectWork = ({
           textOverflow={"ellipsis"}
           sx={{ cursor: !isSent && "pointer" }}
         >
-          {work ? workit.name : "No Work item"}
+          {work ? workit.name : lang.no_work}
         </Typography>
         <Dialog open={open && !isSent} onClose={handleCancel} maxWidth={"xs"} fullWidth>
           <DialogTitle>{lang.workplace}</DialogTitle>
@@ -103,17 +104,17 @@ const SelectWork = ({
 
             <Box padding="1rem">
               <FormControl fullWidth>
-                <InputLabel id="workplace-select">Workitem</InputLabel>
+                <InputLabel id="workplace-select">{lang.workitem}</InputLabel>
                 <Select
                   labelId="workplace-select"
                   id="workplace-select"
                   value={work}
-                  label="Workitem"
+                  label={lang.workitem}
                   onChange={handleChangeWork}
-                  disabled={!Boolean(works)}
+                  disabled={!works}
                 >
                   {works &&
-                    works.map((item, i) => (
+                    works.map((item) => (
                       <MenuItem key={item.id} value={item.id}>
                         {item.name}
                       </MenuItem>
@@ -136,8 +137,8 @@ const SelectWork = ({
   );
 };
 
-const IsSent = ({ date, lang = { workplace: "Workplace" } }, isEmpty = false) => {
-  const work = date.work ? date.work.name : "No Work item";
+const IsSent = ({ date, lang = { workplace: "Workplace", no_work: "No Work item" } }, isEmpty = false) => {
+  const work = date.work ? date.work.name : lang.no_work;
 
   return (
     <Typography variant="p" textOverflow={"ellipsis"}>

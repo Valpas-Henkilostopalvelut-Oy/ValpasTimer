@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useAppContext } from "../../services/contextLib";
-import { Container, Box, Grid, Typography, useTheme, CircularProgress } from "@mui/material";
+import { Container, Box, Typography, useTheme, CircularProgress } from "@mui/material";
 import { DataStore, Auth, Hub } from "aws-amplify";
 import { TimeEntry, AllWorkSpaces } from "../../models";
 import { groupBy } from "../Timer/services/group.jsx";

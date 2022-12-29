@@ -1,7 +1,20 @@
 export const fin = {
   name: "Finnish",
   main: {
-    months: ["Tammikuu", "Helmikuu", "Maaliskuu", "Huhtikuu", "Toukokuu", "Kesäkuu", "Heinäkuu", "Elokuu", "Syyskuu", "Lokakuu", "Marraskuu", "Joulukuu"],
+    months: [
+      "Tammikuu",
+      "Helmikuu",
+      "Maaliskuu",
+      "Huhtikuu",
+      "Toukokuu",
+      "Kesäkuu",
+      "Heinäkuu",
+      "Elokuu",
+      "Syyskuu",
+      "Lokakuu",
+      "Marraskuu",
+      "Joulukuu",
+    ],
     lang_select: "Valitse kieli",
     landingpage: {
       register: "Luo tili",
@@ -115,6 +128,7 @@ export const fin = {
       projects: "Projektit",
       workers: "Työntekijät",
       workplaces: "Työpaikat",
+      history: "Historia",
     },
     track: {
       recorder: {
@@ -124,7 +138,8 @@ export const fin = {
         },
         timer: {
           description: "Kuvaus",
-          workplace: "Työpaikka",
+          workplace: "Asiakas",
+          workitem: "Työtehtävä",
           start: "Aloita",
           stop: "Lopeta",
           edit_start: {
@@ -136,7 +151,8 @@ export const fin = {
         },
         manual: {
           description: "Kuvaus",
-          workplace: "Työpaikka",
+          workplace: "Asiakas",
+          workitem: "Työtehtävä",
           date: "Päivämäärä",
           start_time: "Aloitusaika",
           end_time: "Lopetusaika",
@@ -148,7 +164,9 @@ export const fin = {
         total_time: "Yhteensä",
         none_description: "Ei kuvausta",
         date: "Päivämäärä",
-        workplace: "Työpaikka",
+        workplace: "Asiakas",
+        workitem: "Työtehtävä",
+        no_work: "Ei ole työtä",
         sent: "Lähetetty",
         confirmed: "Vahvistettu",
         add_description: "Lisää kuvaus",
@@ -193,6 +211,10 @@ export const fin = {
       title: "Työpaikat",
       create_workplace: "Luo työpaikka",
       worker_name: "Työntekijän nimi",
+      work_name: "Työtehtävän nimi",
+      add_work: "Lisää työtehtävä",
+      name: "Nimi",
+      description: "Työtehtävän kuvaus",
       create_work: {
         title: "Luo työ",
         name: "Nimi",
@@ -203,6 +225,14 @@ export const fin = {
           is_too_long: "Nimi on liian pitkä",
           is_required: "Nimi on pakollinen",
         },
+      },
+      alert_work: {
+        min_name: "Nimi pitää olla vähintään 3 merkkiä pitkä",
+        max_name: "Nimi voi olla enintään 20 merkkiä pitkä",
+        required_name: "Nimi on pakollinen",
+        min_description: "Kuvaus pitää olla vähintään 3 merkkiä pitkä",
+        max_description: "Kuvaus voi olla enintään 20 merkkiä pitkä",
+        required_description: "Kuvaus on pakollinen",
       },
       allert_workplace: {
         title: "Vahvistus poistosta",

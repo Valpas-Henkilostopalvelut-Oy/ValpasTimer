@@ -1,11 +1,65 @@
 import React, { useState, useEffect } from "react";
-import { TableCell, TableRow, IconButton, Typography } from "@mui/material";
+import { TableCell, TableRow, IconButton, Typography, Select, MenuItem, InputLabel, FormControl } from "@mui/material";
 import { DataStore } from "aws-amplify";
 import { TimeEntry, Breakreason } from "../../../models/index.js";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import { TextToTime } from "../../../services/time.jsx";
 import AddIcon from "@mui/icons-material/Add";
 import { Breakmenu } from "./buttons.jsx";
+
+const updateBreak = async (data, item, reason) => {
+  const newData = {
+    id: item.id,
+    start: item.start,
+    end: item.end,
+    reason: reason,
+  };
+  const oldBreak = data.break.filter((item) => item.id !== newData.id);
+  const newBreak = [...oldBreak, newData];
+
+  await DataStore.save(
+    TimeEntry.copyOf(data, (updated) => {
+      updated.break = newBreak;
+    })
+  );
+};
+
+const Breakreasonselect = ({ data, item }) => {
+  const breaks = [
+    { id: Breakreason.DINNER, name: "Dinner" },
+    { id: Breakreason.LUNCH, name: "Lunch" },
+    { id: Breakreason.SHORT, name: "Short" },
+    { id: Breakreason.LONG, name: "Long" },
+    { id: Breakreason.GOING, name: "Going" },
+  ];
+  const [reason, setReason] = useState(item.reason);
+
+  const handleChange = (event) => {
+    setReason(event.target.value);
+    updateBreak(data, item, event.target.value);
+  };
+  return (
+    <FormControl fullWidth>
+      <InputLabel id="breakreason-select-label">Breakreason</InputLabel>
+      <Select
+        labelId="breakreason-select-label"
+        id="breakreason-select"
+        value={reason}
+        label="Breakreason"
+        onChange={handleChange}
+        variant="standard"
+      >
+        {breaks.map((e) => {
+          return (
+            <MenuItem value={e.id} key={e.id}>
+              <Typography variant="p">{e.name}</Typography>
+            </MenuItem>
+          );
+        })}
+      </Select>
+    </FormControl>
+  );
+};
 
 const updateStartBreak = async (data, item, time) => {
   const newTime = new Date(new Date(item.start).setHours(time.h, time.min, 0, 0)).toISOString();
@@ -196,7 +250,10 @@ export const BreakitemMD = ({ item, data, isEmpty, sx }) => {
 
   return (
     <TableRow sx={sx}>
-      <TableCell colSpan={3} />
+      <TableCell />
+      <TableCell colSpan={2}>
+        <Breakreasonselect item={item} data={data} />
+      </TableCell>
       <TableCell align="right">
         <Breakstart start={start} setStart={setStart} item={item} data={data} isDisable={isSent} />
         {" - "}
@@ -246,20 +303,25 @@ export const BreakitemSM = ({ item, data, isEmpty, sx }) => {
   }, [end, start]);
 
   return (
-    <TableRow sx={sx}>
-      <TableCell align="right">
-        <Breakstart start={start} setStart={setStart} item={item} data={data} isDisable={isSent} />
-        {" - "}
-        <Breakend end={end} setEnd={setEnd} item={item} data={data} isSent isDisable={isSent} />
-      </TableCell>
-      <TableCell align="right">
-        <Breaktotal total={total} />
-      </TableCell>
-      <TableCell align="right">
-        <IconButton onClick={() => deleteBreak(data, item)} disabled={!isEmpty || isSent}>
-          <DeleteForeverIcon />
-        </IconButton>
-      </TableCell>
-    </TableRow>
+    <>
+      <TableRow sx={sx}>
+        <Breakreasonselect item={item} data={data} />
+      </TableRow>
+      <TableRow sx={sx}>
+        <TableCell align="right">
+          <Breakstart start={start} setStart={setStart} item={item} data={data} isDisable={isSent} />
+          {" - "}
+          <Breakend end={end} setEnd={setEnd} item={item} data={data} isSent isDisable={isSent} />
+        </TableCell>
+        <TableCell align="right">
+          <Breaktotal total={total} />
+        </TableCell>
+        <TableCell align="right">
+          <IconButton onClick={() => deleteBreak(data, item)} disabled={!isEmpty || isSent}>
+            <DeleteForeverIcon />
+          </IconButton>
+        </TableCell>
+      </TableRow>
+    </>
   );
 };

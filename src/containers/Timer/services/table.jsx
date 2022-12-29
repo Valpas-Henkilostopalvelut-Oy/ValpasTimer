@@ -10,17 +10,15 @@ import {
   TableContainer,
   useTheme,
   Typography,
-  Grid,
 } from "@mui/material";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import { Time, EditSTime, EditETime } from "./times.jsx";
-import { Moreitem, Moreitemday, Reportallweek } from "./buttons.jsx";
+import { Moreitem, Moreitemday } from "./buttons.jsx";
 import { TotalTime } from "./edittotaltime.jsx";
 import { EditDescriptionMD } from "./editdescription.jsx";
 import { ChangeWorkplaceMD } from "./workplacechange.jsx";
 import { EditDateMD } from "./editdate.jsx";
-import { PropTypes } from "prop-types";
 import { BreakitemMD, AddBreakMD, AddBreakSM, BreakitemSM } from "./break.jsx";
 import { totaldaytime, totalweektime } from "./totaltime.jsx";
 
@@ -129,7 +127,6 @@ const Row = ({ week, lang, works, isEmpty }) => {
 
 const DetailsSM = ({ row, workplaces, lang, isEmpty, total, date, sx }) => {
   const [open, setOpen] = React.useState(false);
-
   const data = row.arr.sort((a, b) => {
     let sTime = new Date(a.timeInterval.start);
     let eTime = new Date(b.timeInterval.start);
@@ -160,7 +157,7 @@ const DetailsSM = ({ row, workplaces, lang, isEmpty, total, date, sx }) => {
           <Typography variant="p">
             {workplaces.find((item) => item.id === row.workId) !== undefined
               ? workplaces.find((item) => item.id === row.workId).name
-              : "Vaihda työpaikkaa"}
+              : lang.title.select_workplace}
           </Typography>
         </TableCell>
       </TableRow>

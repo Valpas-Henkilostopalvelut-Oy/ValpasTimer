@@ -15,7 +15,7 @@ import { DataStore } from "aws-amplify";
 import { Formik } from "formik";
 import AddIcon from "@mui/icons-material/Add";
 import * as yup from "yup";
-import { UserCredentials, AllWorkSpaces } from "../../../models/index.js";
+import { AllWorkSpaces } from "../../../models/index.js";
 
 export const Addwork = ({ data, lang }) => {
   const [open, setOpen] = useState(false);
@@ -32,25 +32,30 @@ export const Addwork = ({ data, lang }) => {
   );
 };
 
-const AddworkDialog = ({ data, open = false, handleClose }) => {
+const AddworkDialog = ({
+  data,
+  open = false,
+  handleClose,
+  lang = { add_work: "Add work", name: "Name", description: "Desctiption" },
+}) => {
   const validationSchema = yup.object({
     name: yup
       .string()
-      .min(3, "Name must be at least 3 characters")
-      .max(20, "Name must be at most 20 characters")
-      .required("Name is required"),
+      .min(3, lang.alert_work.min_name)
+      .max(20, lang.alert_work.max_name)
+      .required(lang.alert_work.required_name),
     description: yup
       .string()
-      .min(3, "Description must be at least 3 characters")
-      .max(20, "Description must be at most 20 characters")
-      .required("Description is required"),
+      .min(3, lang.alert_work.min_description)
+      .max(20, lang.alert_work.max_description)
+      .required(lang.alert_work.required_description),
   });
   const [warnText, setWarnText] = useState(null);
 
   return (
     <Dialog open={open} onClose={handleClose} maxWidth={"xs"} fullWidth={true}>
       <DialogTitle>
-        <Typography>Add Work</Typography>
+        <Typography>{lang.add_work}</Typography>
       </DialogTitle>
       <Formik
         initialValues={{
@@ -66,7 +71,7 @@ const AddworkDialog = ({ data, open = false, handleClose }) => {
               <Box component="form" onSubmit={handleSubmit}>
                 <TextField
                   name="name"
-                  label="Name"
+                  label={lang.name}
                   value={values.name}
                   onChange={handleChange}
                   onBlur={(e) => {
@@ -83,7 +88,7 @@ const AddworkDialog = ({ data, open = false, handleClose }) => {
 
                 <TextField
                   name="description"
-                  label="Description"
+                  label={lang.description}
                   value={values.description}
                   onChange={handleChange}
                   onBlur={(e) => {

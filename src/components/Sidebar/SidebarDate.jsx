@@ -27,6 +27,7 @@ export const SidebarList = ({
     projects: "Projects Admin",
     workers: "Workers",
     workplaces: "Workplaces",
+    history: "History",
   },
 }) => {
   const { groups } = useAppContext();
@@ -49,7 +50,7 @@ export const SidebarList = ({
       access: ["Clients", "Admins", "Workers"],
     },
     {
-      title: "History",
+      title: lang.history,
       type: "page",
       icon: <HistoryIcon />,
       link: "/history",

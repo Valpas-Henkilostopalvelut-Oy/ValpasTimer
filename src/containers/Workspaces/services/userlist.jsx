@@ -15,7 +15,6 @@ import {
 import { TopbarMD } from "./topbar.jsx";
 import { Userdetails } from "./userdetails.jsx";
 import { Adduser } from "./adduser.jsx";
-import { PropTypes } from "prop-types";
 import { Addwork } from "./addwork.jsx";
 import { Workitem } from "./workitem.jsx";
 
@@ -62,7 +61,7 @@ export const Worklist = ({ data, lang }) => {
           <TableRow>
             <TableCell colSpan={3} padding="none">
               <Collapse in={open} timeout="auto" unmountOnExit>
-                <Works data={data} />
+                <Works data={data} lang={lang} />
                 <Users data={data} includedUsers={includedUsers} lang={lang} />
               </Collapse>
             </TableCell>
@@ -73,7 +72,7 @@ export const Worklist = ({ data, lang }) => {
   );
 };
 
-const Works = ({ data }) => {
+const Works = ({ data, lang = { work_name: "Work name" } }) => {
   const items = data.work;
 
   return (
@@ -86,9 +85,9 @@ const Works = ({ data }) => {
         >
           <TableRow>
             <TableCell align="left" colSpan={2}>
-              <Typography variant="p">Work name</Typography>
+              <Typography variant="p">{lang.work_name}</Typography>
             </TableCell>
-            <Addwork data={data} />
+            <Addwork data={data} lang={lang}/>
           </TableRow>
         </TableHead>
         <TableBody>{items && items.map((item) => <Workitem item={item} key={item.id} data={data} />)}</TableBody>

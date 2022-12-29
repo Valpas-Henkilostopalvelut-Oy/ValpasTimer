@@ -12,7 +12,7 @@ export const MakePDF = ({ data, isEmpty, selected = "", works }) => {
   return (
     selected && (
       <Button onClick={handleClick} disabled={!isEmpty} variant="contained">
-        <Typography variant="p">Make PDF</Typography>
+        <Typography variant="p">PDF</Typography>
       </Button>
     )
   );

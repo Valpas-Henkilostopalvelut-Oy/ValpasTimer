@@ -1,10 +1,3 @@
-const duration = {
-  MIN15: 15,
-  MIN30: 30,
-  MIN45: 45,
-  H1: 60,
-};
-
 const calculteBreaks = (breaks) => {
   let total = 0;
   if (breaks === null) return total;

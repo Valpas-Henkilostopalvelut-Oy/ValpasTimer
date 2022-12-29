@@ -2,7 +2,6 @@ import React from "react";
 import { InputLabel, MenuItem, FormControl, Select } from "@mui/material";
 import { DataStore } from "aws-amplify";
 import { TimeEntry } from "../../../../models/index.js";
-import { PropTypes } from "prop-types";
 
 const updateworkitem = async (data, item) => {
   await DataStore.save(
@@ -12,7 +11,8 @@ const updateworkitem = async (data, item) => {
   ).catch((e) => console.warn(e));
 };
 
-export const EditWorkitemTimer = ({ workitems, workitem, setWorkitem, isStarted, data }) => {
+export const EditWorkitemTimer = ({ workitems, workitem, setWorkitem, isStarted, data, lang }) => {
+  console.log(lang);
   const handleChange = (event) => {
     if (data && isStarted) {
       const item = workitems ? workitems.find((item) => item.id === event.target.value) : null;
@@ -23,12 +23,12 @@ export const EditWorkitemTimer = ({ workitems, workitem, setWorkitem, isStarted,
 
   return (
     <FormControl fullWidth>
-      <InputLabel id="workitem-select-label">Workitem</InputLabel>
+      <InputLabel id="workitem-select-label">{lang.workitem}</InputLabel>
       <Select
         labelId="workitem-select-label"
         id="workitem-select"
         value={workitems ? workitem : ""}
-        label="Workitem"
+        label={lang.workitem}
         onChange={handleChange}
         disabled={!Boolean(workitems)}
       >
@@ -43,19 +43,19 @@ export const EditWorkitemTimer = ({ workitems, workitem, setWorkitem, isStarted,
   );
 };
 
-export const EditWorkitemManual = ({ workitems, workitem, setWorkitem }) => {
+export const EditWorkitemManual = ({ workitems, workitem, setWorkitem, lang = { workitem: "Workitem" } }) => {
   const handleChange = (event) => {
     setWorkitem(event.target.value);
   };
 
   return (
     <FormControl fullWidth>
-      <InputLabel id="workitem-select-label">Workitem</InputLabel>
+      <InputLabel id="workitem-select-label">{lang.workitem}</InputLabel>
       <Select
         labelId="workitem-select-label"
         id="workitem-select"
         value={workitems ? workitem : ""}
-        label="Workitem"
+        label={lang.workitem}
         onChange={handleChange}
         disabled={!Boolean(workitems)}
       >

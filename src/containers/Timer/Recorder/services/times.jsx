@@ -74,7 +74,7 @@ export const Editstime = ({ date, sTime, setSTime, lang = { start_time: "Start t
     }
 
     return () => (isActive = true);
-  }, [value]);
+  }, [date, setSTime, value]);
 
   return (
     <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={fi}>
@@ -114,7 +114,7 @@ export const Edetime = ({ date, eTime, setETime, lang = { end_time: "End time" }
     }
 
     return () => (isActive = true);
-  }, [value]);
+  }, [date, setETime, value]);
 
   return (
     <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={fi}>

@@ -128,6 +128,7 @@ export const eng = {
       projects: "Projects Admin",
       workers: "Workers",
       workplaces: "Workplaces",
+      history: "History",
     },
     track: {
       recorder: {
@@ -209,6 +210,8 @@ export const eng = {
       title: "Workplacess",
       create_workplace: "Create workplace",
       worker_name: "Worker name",
+      work_name: "Work name",
+      add_work: "Add work",
       email: "Email",
       create_work: {
         title: "Create workplace",
@@ -220,6 +223,14 @@ export const eng = {
           is_too_long: "Too long name",
           is_required: "Name is required",
         },
+      },
+      alert_work: {
+        min_name: "Name must be at least 3 characters long",
+        max_name: "Name can be up to 20 characters long",
+        required_name: "Name is required",
+        min_description: "Description must be at least 3 characters long",
+        max_description: "Description can be up to 20 characters long",
+        required_description: "Description is required",
       },
       allert_workplace: {
         title: "Confirm to delete this workplace",
