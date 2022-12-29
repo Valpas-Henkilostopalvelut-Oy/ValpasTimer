@@ -166,7 +166,7 @@ export const Totaltime = ({ sTime = null, eTime = null }) => {
   );
 };
 
-const createTimeentry = async ({ description = "", sel = "", sTime, eTime }) => {
+const createTimeentry = async ({ description = "", sel = "", sTime, eTime, workit }) => {
   sel !== "" &&
     (await Auth.currentAuthenticatedUser()
       .then(async (user) => {
@@ -180,6 +180,7 @@ const createTimeentry = async ({ description = "", sel = "", sTime, eTime }) => 
               start: new Date(sTime).toISOString(),
               end: new Date(eTime).toISOString(),
             },
+            work: workit,
             isActive: false,
             isLocked: false,
             isSent: false,
@@ -199,6 +200,7 @@ export const Createtimeentry = ({
   sel = "",
   sTime,
   eTime,
+  workit,
   lang = {
     create: "Create",
   },
@@ -212,7 +214,7 @@ export const Createtimeentry = ({
       color="primary"
       disabled={disabled}
       onClick={() => {
-        createTimeentry({ description, sel, sTime, eTime });
+        createTimeentry({ description, sel, sTime, eTime, workit });
       }}
     >
       {lang.create}

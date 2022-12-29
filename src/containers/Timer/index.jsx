@@ -91,16 +91,6 @@ const Timer = () => {
   };
 
   useEffect(() => {
-    let isActive = true;
-
-    if (isActive) {
-      checkActive(setTimer, setTime, setSel, setDescription, setStarted, setIsPaused);
-    }
-
-    return () => (isActive = false);
-  }, []);
-
-  useEffect(() => {
     let isCanceled = false;
 
     isStarted && !isPaused && !isCanceled && advanceTime(time, setTime);
@@ -164,6 +154,16 @@ const Timer = () => {
 
     !isActive && loadWorks();
   }, []);
+
+  useEffect(() => {
+    let isActive = true;
+
+    if (isActive && works !== null) {
+      checkActive(setTimer, setTime, setSel, setDescription, setStarted, setIsPaused, setWorkitem);
+    }
+
+    return () => (isActive = false);
+  }, [works]);
 
   useEffect(() => {
     Hub.listen("datastore", async (hubData) => {

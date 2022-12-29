@@ -79,10 +79,7 @@ const Breaktotal = ({ total }) => {
   );
 };
 
-export const AddBreakMD = (props) => {
-  const { data, isempty, isdisable } = props;
-  const isEmpty = isempty;
-  const isDisable = isdisable;
+export const AddBreakMD = ({ data, isEmpty, isDisable, sx }) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -92,8 +89,10 @@ export const AddBreakMD = (props) => {
     setAnchorEl(null);
   };
 
+  console.log(!isEmpty);
+
   return (
-    <TableRow {...props}>
+    <TableRow sx={sx}>
       <TableCell colSpan={7}>
         <IconButton disabled={!isEmpty || isDisable} onClick={handleClick}>
           <AddIcon />

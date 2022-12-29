@@ -1,7 +1,7 @@
 import { DataStore, Auth } from "aws-amplify";
 import { TimeEntry, UserCredentials } from "../../../models/index.js";
 
-export const checkActive = async (setTimer, setTime, setSel, setDescription, setStarted, setIsPaused) => {
+export const checkActive = async (setTimer, setTime, setSel, setDescription, setStarted, setIsPaused, setWorkitem) => {
   await Auth.currentAuthenticatedUser().then(async (user) => {
     let userId = user.attributes["custom:UserCreditails"];
 
@@ -13,6 +13,7 @@ export const checkActive = async (setTimer, setTime, setSel, setDescription, set
             setSel(res.workspaceId);
             setDescription(res.description);
             setIsPaused(res.isPaused);
+            setWorkitem(res.work.id);
 
             var breaks = 0;
             var nTime = new Date();

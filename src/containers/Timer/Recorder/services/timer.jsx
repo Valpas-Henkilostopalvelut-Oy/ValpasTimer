@@ -55,15 +55,6 @@ export const Timer = ({
         />
       </Grid>
 
-      <Grid item xs={12} md={4}>
-        <EditDescriptionTimer
-          description={description}
-          setDescription={setDescription}
-          data={timerTime}
-          isStarted={isStarted}
-          lang={lang}
-        />
-      </Grid>
       <Grid item xs={12} md={2}>
         <Typography
           variant="h5"
@@ -83,7 +74,7 @@ export const Timer = ({
         </Typography>
         {timerTime && isStarted && <EditStartTime open={open} setOpen={setOpen} timerTime={timerTime} lang={lang} />}
       </Grid>
-      <Grid item xs={3} md={1}>
+      <Grid item xs={6} md={1}>
         <Timerbreak
           data={timerTime}
           isEmpty={isEmpty}
@@ -93,7 +84,7 @@ export const Timer = ({
           setIsPaused={setIsPaused}
         />
       </Grid>
-      <Grid item xs={3} md={1}>
+      <Grid item xs={6} md={1}>
         <StartTimer
           workitem={workitem}
           workitems={workitems}
@@ -105,6 +96,16 @@ export const Timer = ({
           setTime={setTime}
           lang={lang}
           setIsPaused={setIsPaused}
+        />
+      </Grid>
+
+      <Grid item xs={12}>
+        <EditDescriptionTimer
+          description={description}
+          setDescription={setDescription}
+          data={timerTime}
+          isStarted={isStarted}
+          lang={lang}
         />
       </Grid>
     </Grid>

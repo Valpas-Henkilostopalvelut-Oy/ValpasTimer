@@ -71,6 +71,9 @@ export const Recorder = ({
             setSel={setSel}
             works={works}
             lang={lang.manual}
+            setWorkitem={setWorkitem}
+            workitem={workitem}
+            workitems={workitems}
           />
         </TabPanel>
       </TabContext>

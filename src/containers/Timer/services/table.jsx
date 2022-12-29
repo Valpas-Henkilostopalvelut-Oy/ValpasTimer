@@ -74,6 +74,7 @@ const Row = ({ week, lang, works, isEmpty }) => {
 
       return (
         <Box
+          key={date.date}
           sx={{
             border: "1px solid #e0e0e0",
             borderRadius: "1px",
@@ -86,7 +87,7 @@ const Row = ({ week, lang, works, isEmpty }) => {
             <Table aria-label="collapsible table" size="small">
               <TableBody>
                 {date.arr.map((row, index) => (
-                  <>
+                  <Fragment key={index}>
                     <DetailsMD
                       sx={{
                         [theme.breakpoints.down("sm")]: {
@@ -97,7 +98,7 @@ const Row = ({ week, lang, works, isEmpty }) => {
                       row={row}
                       workplaces={works}
                       lang={lang}
-                      isempty={isEmpty}
+                      isEmpty={isEmpty}
                       total={`${hours}:${minutes}`}
                       date={date.date}
                     />
@@ -111,11 +112,11 @@ const Row = ({ week, lang, works, isEmpty }) => {
                       row={row}
                       workplaces={works}
                       lang={lang}
-                      isempty={isEmpty}
+                      isEmpty={isEmpty}
                       total={`${hours}:${minutes}`}
                       date={date.date}
                     />
-                  </>
+                  </Fragment>
                 ))}
               </TableBody>
             </Table>
@@ -126,9 +127,8 @@ const Row = ({ week, lang, works, isEmpty }) => {
   );
 };
 
-const DetailsSM = (props) => {
-  const { row, workplaces, lang, isempty, total, date } = props;
-  const isEmpty = isempty;
+const DetailsSM = ({ row, workplaces, lang, isEmpty, total, date, sx }) => {
+
   const [open, setOpen] = React.useState(false);
 
   const data = row.arr.sort((a, b) => {
@@ -140,7 +140,7 @@ const DetailsSM = (props) => {
 
   return (
     <Fragment>
-      <TableRow {...props}>
+      <TableRow sx={sx}>
         <TableCell>
           <IconButton aria-label="expand row" size="small" onClick={() => setOpen(!open)} sx={{ cursor: "pointer" }}>
             {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
@@ -156,7 +156,7 @@ const DetailsSM = (props) => {
         </TableCell>
       </TableRow>
 
-      <TableRow {...props}>
+      <TableRow sx={sx}>
         <TableCell colSpan={3}>
           <Typography variant="p">
             {workplaces.find((item) => item.id === row.workId) !== undefined
@@ -166,7 +166,7 @@ const DetailsSM = (props) => {
         </TableCell>
       </TableRow>
 
-      <TableRow {...props}>
+      <TableRow sx={sx}>
         <TableCell align="left">
           <Typography variant="p">
             <Time time={row.arr[row.arr.length - 1].timeInterval.start} />
@@ -194,11 +194,8 @@ const DetailsSM = (props) => {
   );
 };
 
-const DetailsMD = (props) => {
-  const { row, workplaces, lang, isempty, total, date } = props;
-  const isEmpty = isempty;
+const DetailsMD = ({ row, workplaces, lang, isEmpty, total, date, sx }) => {
   const [open, setOpen] = React.useState(false);
-
   const data = row.arr.sort((a, b) => {
     let sTime = new Date(a.timeInterval.start);
     let eTime = new Date(b.timeInterval.start);
@@ -208,7 +205,7 @@ const DetailsMD = (props) => {
 
   return (
     <Fragment>
-      <TableRow {...props}>
+      <TableRow sx={sx}>
         <TableCell>
           <IconButton aria-label="expand row" size="small" onClick={() => setOpen(!open)} sx={{ cursor: "pointer" }}>
             {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
@@ -244,8 +241,8 @@ const DetailsMD = (props) => {
 
       {open && (
         <>
-          <RowDetailsMD {...props} data={data} workplaces={workplaces} lang={lang} isempty={isEmpty} />
-          <AddBreakMD {...props} data={data} isempty={isEmpty} isdisable={isSent(row)} />
+          <RowDetailsMD sx={sx} data={data} workplaces={workplaces} lang={lang} isEmpty={isEmpty} />
+          <AddBreakMD sx={sx} data={data} isEmpty={isEmpty} isDisable={isSent(row)} />
         </>
       )}
     </Fragment>
@@ -280,13 +277,11 @@ const RowDetailsSM = ({ data, lang, workplaces, isEmpty }) => {
   });
 };
 
-const RowDetailsMD = (props) => {
-  const { data, lang, workplaces, isempty } = props;
-  const isEmpty = isempty;
+const RowDetailsMD = ({ data, lang, workplaces, isEmpty, sx }) => {
   return data.map((row, i) => {
     return (
       <Fragment key={i}>
-        <TableRow {...props}>
+        <TableRow sx={sx}>
           <EditDescriptionMD date={row} lang={lang} />
 
           <EditDateMD data={row} lang={lang} />
@@ -307,7 +302,7 @@ const RowDetailsMD = (props) => {
         </TableRow>
         {row.break &&
           row.break.map((item, i) => (
-            <BreakitemMD {...props} key={i} item={item} data={row} index={i} isempty={isEmpty} issent={data.isSent} />
+            <BreakitemMD sx={sx} key={i} item={item} data={row} index={i} isempty={isEmpty} issent={data.isSent} />
           ))}
       </Fragment>
     );
