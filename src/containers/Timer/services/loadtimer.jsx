@@ -13,7 +13,7 @@ export const checkActive = async (setTimer, setTime, setSel, setDescription, set
             setSel(res.workspaceId);
             setDescription(res.description);
             setIsPaused(res.isPaused);
-            setWorkitem(res.work.id);
+            setWorkitem(res.work ? res.work.id : "");
 
             var breaks = 0;
             var nTime = new Date();
@@ -42,7 +42,6 @@ export const checkActive = async (setTimer, setTime, setSel, setDescription, set
               hours: hours,
             });
           } else {
-            console.log("q");
             setStarted(false);
             await DataStore.save(
               UserCredentials.copyOf(userCred, (updated) => {

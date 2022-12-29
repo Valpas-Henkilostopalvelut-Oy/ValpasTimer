@@ -41,7 +41,7 @@ const SelectWork = ({
   },
 }) => {
   const [workplace, setWorkplace] = useState(date.workspaceId);
-  const [work, setWork] = useState("");
+  const [work, setWork] = useState(date.work ? date.work.id : "");
   const [open, setOpen] = useState(false);
 
   const handleChange = (event) => {
@@ -51,9 +51,10 @@ const SelectWork = ({
   const handleChangeWork = (event) => {
     setWork(event.target.value);
   };
+
   var isSent = date.isSent;
-  const workitem = date.work;
   const works = workplaces.find((item) => item.id === workplace).works;
+  const workit = works.find((item) => item.id === work);
 
   return (
     workplaces !== null && (
@@ -64,45 +65,53 @@ const SelectWork = ({
           textOverflow={"ellipsis"}
           sx={{ cursor: !isSent && "pointer" }}
         >
-          {workitem ? workitem.name : "No Work item"}
+          {work ? workit.name : "No Work item"}
         </Typography>
         <Dialog open={open && !isSent} onClose={() => setOpen(false)} maxWidth={"xs"} fullWidth>
           <DialogTitle>{lang.workplace}</DialogTitle>
           <DialogContent>
-            <FormControl fullWidth>
-              <InputLabel id="workplace-select">{lang.workplace}</InputLabel>
-              <Select
-                labelId="workplace-select"
-                id="workplace-select"
-                value={workplace}
-                label={lang.workplace}
-                onChange={handleChange}
-              >
-                {workplaces.map((item, i) => (
-                  <MenuItem key={i} value={item.id}>
-                    {item.name}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-
-            <FormControl fullWidth>
-              <InputLabel id="workplace-select">{lang.workplace}</InputLabel>
-              <Select
-                labelId="workplace-select"
-                id="workplace-select"
-                value={work}
-                label="Work"
-                onChange={handleChangeWork}
-              >
-                {works &&
-                  works.map((item, i) => (
-                    <MenuItem key={item.id} value={item.id}>
+            <Box
+              sx={{
+                padding: "1rem",
+              }}
+            >
+              <FormControl fullWidth>
+                <InputLabel id="workplace-select">{lang.workplace}</InputLabel>
+                <Select
+                  labelId="workplace-select"
+                  id="workplace-select"
+                  value={workplace}
+                  label={lang.workplace}
+                  onChange={handleChange}
+                >
+                  {workplaces.map((item, i) => (
+                    <MenuItem key={i} value={item.id}>
                       {item.name}
                     </MenuItem>
                   ))}
-              </Select>
-            </FormControl>
+                </Select>
+              </FormControl>
+            </Box>
+
+            <Box padding="1rem">
+              <FormControl fullWidth>
+                <InputLabel id="workplace-select">{lang.workplace}</InputLabel>
+                <Select
+                  labelId="workplace-select"
+                  id="workplace-select"
+                  value={work}
+                  label="Work"
+                  onChange={handleChangeWork}
+                >
+                  {works &&
+                    works.map((item, i) => (
+                      <MenuItem key={item.id} value={item.id}>
+                        {item.name}
+                      </MenuItem>
+                    ))}
+                </Select>
+              </FormControl>
+            </Box>
           </DialogContent>
           <DialogActions>
             <Button onClick={() => setOpen(false)} color="primary">

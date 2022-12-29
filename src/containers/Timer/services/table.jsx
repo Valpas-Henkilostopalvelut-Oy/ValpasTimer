@@ -128,7 +128,6 @@ const Row = ({ week, lang, works, isEmpty }) => {
 };
 
 const DetailsSM = ({ row, workplaces, lang, isEmpty, total, date, sx }) => {
-
   const [open, setOpen] = React.useState(false);
 
   const data = row.arr.sort((a, b) => {
@@ -186,7 +185,7 @@ const DetailsSM = ({ row, workplaces, lang, isEmpty, total, date, sx }) => {
 
       {open && (
         <>
-          <RowDetailsSM data={data} workplaces={workplaces} lang={lang} isEmpty={isEmpty} />
+          <RowDetailsSM data={data} workplaces={workplaces} lang={lang} isEmpty={isEmpty} sx={sx} />
           <AddBreakSM data={data} isEmpty={isEmpty} isDisable={isSent(row)} />
         </>
       )}
@@ -249,7 +248,7 @@ const DetailsMD = ({ row, workplaces, lang, isEmpty, total, date, sx }) => {
   );
 };
 
-const RowDetailsSM = ({ data, lang, workplaces, isEmpty }) => {
+const RowDetailsSM = ({ data, lang, workplaces, isEmpty, sx }) => {
   return data.map((row, i) => {
     return (
       <Fragment key={i}>
@@ -272,6 +271,11 @@ const RowDetailsSM = ({ data, lang, workplaces, isEmpty }) => {
             <Moreitem date={row} lang={lang} isEmpty={isEmpty} />
           </TableCell>
         </TableRow>
+
+        {row.break &&
+          row.break.map((item, i) => (
+            <BreakitemMD sx={sx} key={i} item={item} data={row} index={i} isEmpty={isEmpty} isSent={data.isSent} />
+          ))}
       </Fragment>
     );
   });
@@ -300,9 +304,10 @@ const RowDetailsMD = ({ data, lang, workplaces, isEmpty, sx }) => {
             <Moreitem date={row} lang={lang} isEmpty={isEmpty} />
           </TableCell>
         </TableRow>
+
         {row.break &&
           row.break.map((item, i) => (
-            <BreakitemMD sx={sx} key={i} item={item} data={row} index={i} isempty={isEmpty} issent={data.isSent} />
+            <BreakitemMD sx={sx} key={i} item={item} data={row} index={i} isEmpty={isEmpty} isSent={data.isSent} />
           ))}
       </Fragment>
     );

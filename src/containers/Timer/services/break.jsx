@@ -37,7 +37,6 @@ const addBreak = async (data, reason, time) => {
 };
 
 const deleteBreak = async (data, breakIndex) => {
-  console.log(data, breakIndex);
   const newData = TimeEntry.copyOf(data, (updated) => {
     // Remove the break at the specified index from the break array
     updated.break = updated.break.filter((_, index) => index !== breakIndex);
@@ -88,9 +87,6 @@ export const AddBreakMD = ({ data, isEmpty, isDisable, sx }) => {
   const handleClose = () => {
     setAnchorEl(null);
   };
-
-  console.log(!isEmpty);
-
   return (
     <TableRow sx={sx}>
       <TableCell colSpan={7}>
@@ -124,11 +120,7 @@ export const AddBreakSM = ({ data, isEmpty, isDisable }) => {
   );
 };
 
-export const BreakitemMD = (props) => {
-  const { item, data, index, isempty, issent } = props;
-  const isSent = issent;
-  const isEmpty = isempty;
-
+export const BreakitemMD = ({ item, data, index, isEmpty, isSent, sx }) => {
   const [end, setEnd] = useState(new Date(item.end));
   const [start, setStart] = useState(new Date(item.start));
   const [total, setTotal] = useState({
@@ -159,7 +151,7 @@ export const BreakitemMD = (props) => {
   }, [end, start]);
 
   return (
-    <TableRow {...props}>
+    <TableRow sx={sx}>
       <TableCell colSpan={3} />
       <TableCell align="right">
         <Breakstart start={start} setStart={setStart} /> - <Breakend end={end} setEnd={setEnd} />
