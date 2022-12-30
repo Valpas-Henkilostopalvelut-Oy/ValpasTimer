@@ -102,10 +102,11 @@ enum Status {
 
 enum Breakreason {
   LUNCH
-  DINNER
+  LUNCH_L
   SHORT
   LONG
   GOING
+  ACCIDENT
 }
 
 type Agreement @aws_iam @aws_cognito_user_pools {

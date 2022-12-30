@@ -17,24 +17,37 @@ import { TimeEntry, Breakreason } from "../../../models/index.js";
 import { PropTypes } from "prop-types";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 
-export const Breakmenu = ({ data, lang, open, anchorEl, addbreak, handleClose }) => {
+export const Breakmenu = ({
+  data,
+  open,
+  anchorEl,
+  addbreak,
+  handleClose,
+  lang = {
+    lunch: "Lunch 30 min",
+    lunch_l: "Lunch other",
+    short: "Short Break 15 min",
+    long: "Long Break 30 min",
+    going: "Own dealings",
+    accident: "Accident",
+  },
+}) => {
+  const breaks = [
+    { id: Breakreason.LUNCH, name: lang.lunch, time: 30 },
+    { id: Breakreason.LUNCH_L, name: lang.lunch_l, time: 30 },
+    { id: Breakreason.SHORT, name: lang.short, time: 15 },
+    { id: Breakreason.LONG, name: lang.long, time: 30 },
+    { id: Breakreason.GOING, name: lang.going, time: 60 },
+    { id: Breakreason.ACCIDENT, name: lang.accident, time: 60 },
+  ];
+
   return (
     <Menu id="break-menu" anchorEl={anchorEl} open={open} onClose={handleClose}>
-      <MenuItem onClick={() => addbreak(data, Breakreason.DINNER, 30)}>
-        <Typography variant="p">Dinner</Typography>
-      </MenuItem>
-      <MenuItem onClick={() => addbreak(data, Breakreason.LUNCH, 15)}>
-        <Typography variant="p">Lunch</Typography>
-      </MenuItem>
-      <MenuItem onClick={() => addbreak(data, Breakreason.SHORT, 15)}>
-        <Typography variant="p">Short Break</Typography>
-      </MenuItem>
-      <MenuItem onClick={() => addbreak(data, Breakreason.LONG, 30)}>
-        <Typography variant="p">Long Break</Typography>
-      </MenuItem>
-      <MenuItem onClick={() => addbreak(data, Breakreason.GOING, 60)}>
-        <Typography variant="p">Going</Typography>
-      </MenuItem>
+      {breaks.map((item) => (
+        <MenuItem onClick={() => addbreak(data, item.id, item.time)} key={item.id}>
+          <Typography variant="p">{item.name}</Typography>
+        </MenuItem>
+      ))}
     </Menu>
   );
 };
@@ -106,7 +119,6 @@ export const Moreitem = ({
   const open = Boolean(anchorEl);
   const isSent = date.isSent;
   const isConfirmed = date.isConfirmed;
- 
 
   return (
     <Box>
@@ -335,7 +347,6 @@ const deleteitem = async (data, close) => {
 };
 
 const dublicateTime = async (data, close, isSent = false) => {
-
   await DataStore.save(
     new TimeEntry({
       description: data.description,

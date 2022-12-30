@@ -11,7 +11,7 @@ import RestaurantIcon from "@mui/icons-material/Restaurant";
 
 const Breakicon = ({ item }) => {
   if (item.reason === Breakreason.DINNER) {
-    return <RestaurantIcon color="gray"/>;
+    return <RestaurantIcon color="gray" />;
   } else if (item.reason === Breakreason.LUNCH) {
     return <RestaurantIcon />;
   }
@@ -34,13 +34,15 @@ const updateBreak = async (data, item, reason) => {
   );
 };
 
-const Breakreasonselect = ({ data, item }) => {
+const Breakreasonselect = ({ data, item, lang }) => {
+  console.log(lang);
   const breaks = [
-    { id: Breakreason.DINNER, name: "Dinner" },
-    { id: Breakreason.LUNCH, name: "Lunch" },
-    { id: Breakreason.SHORT, name: "Short" },
-    { id: Breakreason.LONG, name: "Long" },
-    { id: Breakreason.GOING, name: "Going" },
+    { id: Breakreason.LUNCH, name: lang.lunch },
+    { id: Breakreason.LUNCH_L, name: lang.lunch_l },
+    { id: Breakreason.SHORT, name: lang.short },
+    { id: Breakreason.LONG, name: lang.long },
+    { id: Breakreason.GOING, name: lang.going },
+    { id: Breakreason.ACCIDENT, name: lang.accident },
   ];
   const [reason, setReason] = useState(item.reason);
 
@@ -49,7 +51,7 @@ const Breakreasonselect = ({ data, item }) => {
     updateBreak(data, item, event.target.value);
   };
   return (
-    <FormControl fullWidth>
+    <FormControl fullWidth unde>
       <Select
         labelId="breakreason-select-label"
         id="breakreason-select"
@@ -183,7 +185,7 @@ const Breaktotal = ({ total }) => {
   );
 };
 
-export const AddBreakMD = ({ data, isEmpty, isDisable, sx }) => {
+export const AddBreakMD = ({ data, isEmpty, isDisable, sx, lang }) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -192,19 +194,28 @@ export const AddBreakMD = ({ data, isEmpty, isDisable, sx }) => {
   const handleClose = () => {
     setAnchorEl(null);
   };
+
+  console.log(lang);
   return (
     <TableRow sx={sx}>
       <CustomTableCell colSpan={7}>
         <IconButton disabled={!isEmpty || isDisable} onClick={handleClick}>
           <AddIcon />
         </IconButton>
-        <Breakmenu anchorEl={anchorEl} open={open} data={data} addbreak={addBreak} handleClose={handleClose} />
+        <Breakmenu
+          anchorEl={anchorEl}
+          open={open}
+          data={data}
+          addbreak={addBreak}
+          handleClose={handleClose}
+          lang={lang}
+        />
       </CustomTableCell>
     </TableRow>
   );
 };
 
-export const AddBreakSM = ({ data, isEmpty, isDisable, sx }) => {
+export const AddBreakSM = ({ data, isEmpty, isDisable, sx, lang }) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -219,13 +230,20 @@ export const AddBreakSM = ({ data, isEmpty, isDisable, sx }) => {
         <IconButton disabled={!isEmpty || isDisable} onClick={handleClick}>
           <AddIcon />
         </IconButton>
-        <Breakmenu anchorEl={anchorEl} open={open} data={data} addbreak={addBreak} handleClose={handleClose} />
+        <Breakmenu
+          anchorEl={anchorEl}
+          open={open}
+          data={data}
+          addbreak={addBreak}
+          handleClose={handleClose}
+          lang={lang}
+        />
       </CustomTableCell>
     </TableRow>
   );
 };
 
-export const BreakitemMD = ({ item, data, isEmpty, sx }) => {
+export const BreakitemMD = ({ item, data, isEmpty, sx, lang }) => {
   const [end, setEnd] = useState(new Date(item.end));
   const [start, setStart] = useState(new Date(item.start));
   const [total, setTotal] = useState({
@@ -262,7 +280,7 @@ export const BreakitemMD = ({ item, data, isEmpty, sx }) => {
         <Breakicon item={item} />
       </CustomTableCell>
       <CustomTableCell colSpan={2}>
-        <Breakreasonselect item={item} data={data} />
+        <Breakreasonselect item={item} data={data} lang={lang} />
       </CustomTableCell>
       <CustomTableCell align="right">
         <Breakstart start={start} setStart={setStart} item={item} data={data} isDisable={isSent} />
@@ -281,7 +299,7 @@ export const BreakitemMD = ({ item, data, isEmpty, sx }) => {
   );
 };
 
-export const BreakitemSM = ({ item, data, isEmpty, sx }) => {
+export const BreakitemSM = ({ item, data, isEmpty, sx, lang }) => {
   const [end, setEnd] = useState(new Date(item.end));
   const [start, setStart] = useState(new Date(item.start));
   const [total, setTotal] = useState({
@@ -315,24 +333,44 @@ export const BreakitemSM = ({ item, data, isEmpty, sx }) => {
   return (
     <>
       <TableRow sx={sx}>
-        <CustomTableCell colSpan={4}>
-          <Breakreasonselect item={item} data={data} />
-        </CustomTableCell>
-      </TableRow>
-      <TableRow sx={sx}>
-        <CustomTableCell align="right">
+        <CustomTableCell
+          align="right"
+          sx={{
+            borderBottom: "none",
+          }}
+        >
           <Breakstart start={start} setStart={setStart} item={item} data={data} isDisable={isSent} />
         </CustomTableCell>
-        <CustomTableCell align="left">
+        <CustomTableCell
+          align="left"
+          sx={{
+            borderBottom: "none",
+          }}
+        >
           <Breakend end={end} setEnd={setEnd} item={item} data={data} isSent isDisable={isSent} />
         </CustomTableCell>
-        <CustomTableCell align="right">
+        <CustomTableCell
+          align="right"
+          sx={{
+            borderBottom: "none",
+          }}
+        >
           <Breaktotal total={total} />
         </CustomTableCell>
-        <CustomTableCell align="right">
+        <CustomTableCell
+          align="right"
+          sx={{
+            borderBottom: "none",
+          }}
+        >
           <IconButton onClick={() => deleteBreak(data, item)} disabled={!isEmpty || isSent}>
             <DeleteForeverIcon />
           </IconButton>
+        </CustomTableCell>
+      </TableRow>
+      <TableRow sx={sx}>
+        <CustomTableCell colSpan={4}>
+          <Breakreasonselect item={item} data={data} lang={lang} />
         </CustomTableCell>
       </TableRow>
     </>

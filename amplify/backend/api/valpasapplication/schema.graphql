@@ -101,10 +101,11 @@ enum Status {
 
 enum Breakreason {
   LUNCH
-  DINNER
+  LUNCH_L
   SHORT
   LONG
   GOING
+  ACCIDENT
 }
 
 type Agreement

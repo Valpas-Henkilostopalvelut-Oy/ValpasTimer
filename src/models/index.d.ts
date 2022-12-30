@@ -10,10 +10,11 @@ export enum Status {
 
 export enum Breakreason {
   LUNCH = "LUNCH",
-  DINNER = "DINNER",
+  LUNCH_L = "LUNCH_L",
   SHORT = "SHORT",
   LONG = "LONG",
-  GOING = "GOING"
+  GOING = "GOING",
+  ACCIDENT = "ACCIDENT"
 }
 
 type EagerUserAgreement = {

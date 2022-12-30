@@ -164,9 +164,10 @@ export const fin = {
         total_time: "Yhteensä",
         none_description: "Ei kuvausta",
         date: "Päivämäärä",
-        workplace: "Asiakas",
+        workplace: "Näytä",
+        all: "Kaikki",
         workitem: "Työtehtävä",
-        no_work: "Ei ole työtä",
+        no_work: "Kohdetta ei valittu",
         sent: "Lähetetty",
         confirmed: "Vahvistettu",
         add_description: "Lisää kuvaus",
@@ -179,6 +180,16 @@ export const fin = {
           deleteTitle: "Oletko varma että haluat poistaa tämän ajan?",
           deleteAlert: "Tätä toimintoa ei voi perua",
         },
+
+        breaks: {
+          lunch: "Lounas 30 min",
+          lunch_l: "Lounas muu kesto",
+          short: "Tauko 15 min",
+          long: "Tauko 30 min",
+          going: "Oma asiointi",
+          accident: "Tapaturma",
+        },
+
         buttons: {
           report: "Raportoi",
           delete: "Poista",
@@ -211,7 +222,7 @@ export const fin = {
       title: "Työpaikat",
       create_workplace: "Luo työpaikka",
       worker_name: "Työntekijän nimi",
-      work_name: "Työtehtävän nimi",
+      work_name: "Työkohden nimi",
       add_work: "Lisää työtehtävä",
       name: "Nimi",
       description: "Työtehtävän kuvaus",

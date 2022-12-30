@@ -38,7 +38,7 @@ export const EditDateMD = ({ data, lang }) => {
 
 export const EditDateSM = ({ data, lang, sx }) => {
   return (
-    <CustomTableCell colSpan={2}>
+    <CustomTableCell colSpan={2} sx={sx} align="center">
       <EditDate data={data} lang={lang} />
     </CustomTableCell>
   );

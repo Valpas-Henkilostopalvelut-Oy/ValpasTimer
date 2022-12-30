@@ -163,6 +163,7 @@ export const eng = {
         none_description: "No description",
         date: "Date",
         workplace: "Workplace",
+        all: "All",
         sent: "Sent",
         confirmed: "Confirmed",
         add_description: "Add description",
@@ -174,6 +175,15 @@ export const eng = {
           not_confirmed: "Not confirmed times",
           deleteTitle: "Are you sure you want to delete this entry?",
           deleteAlert: "This entry will be deleted permanently",
+        },
+
+        breaks: {
+          lunch: "Lunch 30 min",
+          lunch_l: "Lunch other",
+          short: "Short Break 15 min",
+          long: "Long Break 30 min",
+          going: "Own dealings",
+          accident: "Accident",
         },
 
         buttons: {

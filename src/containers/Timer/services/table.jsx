@@ -178,7 +178,7 @@ const DetailsSM = ({ row, workplaces, lang, isEmpty, total, date, sx }) => {
       {open && (
         <>
           <RowDetailsSM data={data} workplaces={workplaces} lang={lang} isEmpty={isEmpty} sx={sx} />
-          <AddBreakSM data={data} isEmpty={isEmpty} isDisable={isSent(row)} sx={sx} />
+          <AddBreakSM data={data} isEmpty={isEmpty} isDisable={isSent(row)} sx={sx} lang={lang.breaks} />
         </>
       )}
     </Fragment>
@@ -237,7 +237,7 @@ const DetailsMD = ({ row, workplaces, lang, isEmpty, total, date, sx }) => {
       {open && (
         <>
           <RowDetailsMD sx={sx} data={data} workplaces={workplaces} lang={lang} isEmpty={isEmpty} />
-          <AddBreakMD sx={sx} data={data} isEmpty={isEmpty} isDisable={isSent(row)} />
+          <AddBreakMD sx={sx} data={data} isEmpty={isEmpty} isDisable={isSent(row)} lang={lang.breaks} />
         </>
       )}
     </Fragment>
@@ -249,26 +249,23 @@ const RowDetailsSM = ({ data, lang, workplaces, isEmpty, sx }) => {
     return (
       <Fragment key={i}>
         <TableRow sx={sx}>
+          <EditDateSM data={row} lang={lang} sx={{ ...sx, borderBottom: "none" }} />
           <ChangeWorkplaceSM
             date={row}
             workplaces={workplaces}
             work={row.workspaceId}
             lang={lang}
             isEmpty={isEmpty}
-            sx={sx}
+            sx={{ ...sx, borderBottom: "none" }}
           />
-
-          <EditDateSM data={row} lang={lang} />
         </TableRow>
 
         <TableRow>
-          <EditDescriptionMD date={row} lang={lang} />
-
           <CustomTableCell align="right">
             <EditSTime date={row} />
           </CustomTableCell>
 
-          <CustomTableCell align="right">
+          <CustomTableCell align="left">
             <EditETime date={row} />
           </CustomTableCell>
 
@@ -283,7 +280,16 @@ const RowDetailsSM = ({ data, lang, workplaces, isEmpty, sx }) => {
 
         {row.break &&
           row.break.map((item, i) => (
-            <BreakitemSM sx={sx} key={i} item={item} data={row} index={i} isEmpty={isEmpty} isSent={data.isSent} />
+            <BreakitemSM
+              sx={sx}
+              key={i}
+              item={item}
+              data={row}
+              index={i}
+              isEmpty={isEmpty}
+              isSent={data.isSent}
+              lang={lang.breaks}
+            />
           ))}
       </Fragment>
     );
@@ -316,7 +322,16 @@ const RowDetailsMD = ({ data, lang, workplaces, isEmpty, sx }) => {
 
         {row.break &&
           row.break.map((item, i) => (
-            <BreakitemMD sx={sx} key={i} item={item} data={row} index={i} isEmpty={isEmpty} isSent={data.isSent} />
+            <BreakitemMD
+              sx={sx}
+              key={i}
+              item={item}
+              data={row}
+              index={i}
+              isEmpty={isEmpty}
+              isSent={data.isSent}
+              lang={lang.breaks}
+            />
           ))}
       </Fragment>
     );

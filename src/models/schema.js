@@ -776,10 +776,11 @@ export const schema = {
             "name": "Breakreason",
             "values": [
                 "LUNCH",
-                "DINNER",
+                "LUNCH_L",
                 "SHORT",
                 "LONG",
-                "GOING"
+                "GOING",
+                "ACCIDENT"
             ]
         }
     },

@@ -172,7 +172,7 @@ export const ChangeWorkplaceSM = ({ date, workplaces = null, work, lang, isEmpty
   const isSent = date.isSent;
 
   return (
-    <CustomTableCell sx={sx} colSpan={2}>
+    <CustomTableCell sx={sx} colSpan={2} align="center">
       {!isSent ? (
         <SelectWork date={date} workplaces={workplaces} work={work} lang={lang} />
       ) : (

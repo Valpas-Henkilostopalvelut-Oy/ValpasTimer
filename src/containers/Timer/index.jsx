@@ -226,7 +226,7 @@ const Timer = () => {
           </Grid>
 
           <Grid item xs={12}>
-            <Selectwork works={works} sel={selected} setSel={setSelected} />
+            <Selectwork works={works} sel={selected} setSel={setSelected} lang={lang.history} />
           </Grid>
 
           <Grid item xs={12}>

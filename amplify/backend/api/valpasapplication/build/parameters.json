@@ -15,5 +15,5 @@
         "Ref": "UnauthRoleName"
     },
     "S3DeploymentBucket": "amplify-valpasapplication-staging-64726-deployment",
-    "S3DeploymentRootKey": "amplify-appsync-files/739cdc7890b6dae5f0b874fff600489cc429d1fc"
+    "S3DeploymentRootKey": "amplify-appsync-files/db3b5548f5b236a3eb7257fb8c02a6ccee21330c"
 }

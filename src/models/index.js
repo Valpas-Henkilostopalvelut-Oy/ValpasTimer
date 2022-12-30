@@ -10,10 +10,11 @@ const Status = {
 
 const Breakreason = {
   "LUNCH": "LUNCH",
-  "DINNER": "DINNER",
+  "LUNCH_L": "LUNCH_L",
   "SHORT": "SHORT",
   "LONG": "LONG",
-  "GOING": "GOING"
+  "GOING": "GOING",
+  "ACCIDENT": "ACCIDENT"
 };
 
 const { Agreement, Tasks, TimeEntry, AllWorkSpaces, UserCredentials, UserAgreement, User, AditionalInfo, Comment, Workplace, Profile, UserSettings, CostRate, UserMemberships, HourlyRate, TimeInterval, Break, WorkspaceSettings, Membership, Work } = initSchema(schema);

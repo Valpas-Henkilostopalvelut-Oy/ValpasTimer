@@ -1,7 +1,7 @@
 import React from "react";
 import { FormControl, InputLabel, Select, MenuItem } from "@mui/material";
 
-export const Selectwork = ({ works, setSel, sel, lang = { workplace: "Workplace" } }) => {
+export const Selectwork = ({ works, setSel, sel, lang = { workplace: "Workplace", all: "All" } }) => {
   return (
     works !== null && (
       <FormControl fullWidth>
@@ -13,7 +13,7 @@ export const Selectwork = ({ works, setSel, sel, lang = { workplace: "Workplace"
           label={lang.workplace}
           onChange={(e) => setSel(e.target.value)}
         >
-          <MenuItem value="">Select workplace</MenuItem>
+          <MenuItem value="">{lang.all}</MenuItem>
           {works.map((item) => (
             <MenuItem key={item.id} value={item.id}>
               {item.name}
