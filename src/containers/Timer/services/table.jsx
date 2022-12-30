@@ -249,14 +249,14 @@ const RowDetailsSM = ({ data, lang, workplaces, isEmpty, sx }) => {
     return (
       <Fragment key={i}>
         <TableRow sx={sx}>
-          <EditDateSM data={row} lang={lang} sx={{ ...sx, borderBottom: "none" }} />
+          <EditDateSM data={row} lang={lang} sx={{ ...sx }} />
           <ChangeWorkplaceSM
             date={row}
             workplaces={workplaces}
             work={row.workspaceId}
             lang={lang}
             isEmpty={isEmpty}
-            sx={{ ...sx, borderBottom: "none" }}
+            sx={{ ...sx }}
           />
         </TableRow>
 

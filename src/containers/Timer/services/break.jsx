@@ -333,36 +333,16 @@ export const BreakitemSM = ({ item, data, isEmpty, sx, lang }) => {
   return (
     <>
       <TableRow sx={sx}>
-        <CustomTableCell
-          align="right"
-          sx={{
-            borderBottom: "none",
-          }}
-        >
+        <CustomTableCell align="right">
           <Breakstart start={start} setStart={setStart} item={item} data={data} isDisable={isSent} />
         </CustomTableCell>
-        <CustomTableCell
-          align="left"
-          sx={{
-            borderBottom: "none",
-          }}
-        >
+        <CustomTableCell align="left">
           <Breakend end={end} setEnd={setEnd} item={item} data={data} isSent isDisable={isSent} />
         </CustomTableCell>
-        <CustomTableCell
-          align="right"
-          sx={{
-            borderBottom: "none",
-          }}
-        >
+        <CustomTableCell align="right">
           <Breaktotal total={total} />
         </CustomTableCell>
-        <CustomTableCell
-          align="right"
-          sx={{
-            borderBottom: "none",
-          }}
-        >
+        <CustomTableCell align="right">
           <IconButton onClick={() => deleteBreak(data, item)} disabled={!isEmpty || isSent}>
             <DeleteForeverIcon />
           </IconButton>

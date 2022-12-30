@@ -7,6 +7,6 @@ export const CustomTableCell = styled(TableCell)(({ theme }) => ({
     color: theme.palette.common.white,
   },
   [`&.${tableCellClasses.body}`]: {
-    borderBottomColor: theme.palette.table.cell.border_color,
+    borderBottomColor: theme.palette.table.cell.border_color
   },
 }));
