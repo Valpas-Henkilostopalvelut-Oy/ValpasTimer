@@ -128,12 +128,14 @@ export const TotalTime = ({ date }) => {
   const [open, setOpen] = React.useState(false);
 
   return (
-    <Box
-      sx={{
-        cursor: !isSent ? "pointer" : "default",
-      }}
-    >
-      <Typography variant="p" onClick={() => setOpen(!open)}>
+    <>
+      <Typography
+        sx={{
+          cursor: !isSent ? "pointer" : "default",
+        }}
+        variant="p"
+        onClick={() => setOpen(!open)}
+      >
         {totalTime}
       </Typography>
       <Dialog open={open && !isSent} onClose={() => setOpen(false)} fullWidth maxWidth="xs">
@@ -160,6 +162,6 @@ export const TotalTime = ({ date }) => {
           <Button onClick={() => setOpen(false)}>Cancel</Button>
         </DialogActions>
       </Dialog>
-    </Box>
+    </>
   );
 };

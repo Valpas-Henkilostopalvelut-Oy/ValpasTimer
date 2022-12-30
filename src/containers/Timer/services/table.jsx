@@ -17,8 +17,8 @@ import { Time, EditSTime, EditETime } from "./times.jsx";
 import { Moreitem, Moreitemday } from "./buttons.jsx";
 import { TotalTime } from "./edittotaltime.jsx";
 import { EditDescriptionMD } from "./editdescription.jsx";
-import { ChangeWorkplaceMD } from "./workplacechange.jsx";
-import { EditDateMD } from "./editdate.jsx";
+import { ChangeWorkplaceMD, ChangeWorkplaceSM } from "./workplacechange.jsx";
+import { EditDateMD, EditDateSM } from "./editdate.jsx";
 import { BreakitemMD, AddBreakMD, AddBreakSM, BreakitemSM } from "./break.jsx";
 import { totaldaytime, totalweektime } from "./totaltime.jsx";
 
@@ -143,7 +143,7 @@ const DetailsSM = ({ row, workplaces, lang, isEmpty, total, date, sx }) => {
           </IconButton>
         </TableCell>
 
-        <TableCell align="center">
+        <TableCell align="center" colSpan={2}>
           <Typography variant="p">{date}</Typography>
         </TableCell>
 
@@ -153,7 +153,7 @@ const DetailsSM = ({ row, workplaces, lang, isEmpty, total, date, sx }) => {
       </TableRow>
 
       <TableRow sx={sx}>
-        <TableCell colSpan={3}>
+        <TableCell colSpan={4}>
           <Typography variant="p">
             {workplaces.find((item) => item.id === row.workId) !== undefined
               ? workplaces.find((item) => item.id === row.workId).name
@@ -175,7 +175,7 @@ const DetailsSM = ({ row, workplaces, lang, isEmpty, total, date, sx }) => {
           </Typography>
         </TableCell>
 
-        <TableCell align="right">
+        <TableCell align="right" colSpan={2}>
           <Typography variant="p">{total}</Typography>
         </TableCell>
       </TableRow>
@@ -249,15 +249,28 @@ const RowDetailsSM = ({ data, lang, workplaces, isEmpty, sx }) => {
   return data.map((row, i) => {
     return (
       <Fragment key={i}>
+        <TableRow sx={sx}>
+          <ChangeWorkplaceSM
+            date={row}
+            workplaces={workplaces}
+            work={row.workspaceId}
+            lang={lang}
+            isEmpty={isEmpty}
+            sx={sx}
+          />
+
+          <EditDateSM data={row} lang={lang} />
+        </TableRow>
+
         <TableRow>
           <EditDescriptionMD date={row} lang={lang} />
 
-          <EditDateMD data={row} lang={lang} />
-
-          <ChangeWorkplaceMD date={row} workplaces={workplaces} work={row.workspaceId} lang={lang} isEmpty={isEmpty} />
+          <TableCell align="right">
+            <EditSTime date={row} />
+          </TableCell>
 
           <TableCell align="right">
-            <EditSTime date={row} /> {" - "} <EditETime date={row} />
+            <EditETime date={row} />
           </TableCell>
 
           <TableCell align="right">

@@ -37,7 +37,13 @@ export const EditDateMD = ({ data, lang }) => {
   );
 };
 
-
+export const EditDateSM = ({ data, lang, sx }) => {
+  return (
+    <TableCell colSpan={2}>
+      <EditDate data={data} lang={lang} />
+    </TableCell>
+  );
+};
 
 const updateDate = async ({ value, data }) => {
   let year = new Date(value).getFullYear();
@@ -108,5 +114,3 @@ EditDateMD.propTypes = {
   data: PropTypes.object.isRequired,
   lang: PropTypes.object,
 };
-
-

@@ -207,7 +207,7 @@ export const AddBreakSM = ({ data, isEmpty, isDisable, sx }) => {
   };
   return (
     <TableRow sx={sx}>
-      <TableCell colSpan={3}>
+      <TableCell colSpan={4}>
         <IconButton disabled={!isEmpty || isDisable} onClick={handleClick}>
           <AddIcon />
         </IconButton>
@@ -305,12 +305,15 @@ export const BreakitemSM = ({ item, data, isEmpty, sx }) => {
   return (
     <>
       <TableRow sx={sx}>
-        <Breakreasonselect item={item} data={data} />
+        <TableCell colSpan={4}>
+          <Breakreasonselect item={item} data={data} />
+        </TableCell>
       </TableRow>
       <TableRow sx={sx}>
         <TableCell align="right">
           <Breakstart start={start} setStart={setStart} item={item} data={data} isDisable={isSent} />
-          {" - "}
+        </TableCell>
+        <TableCell align="left">
           <Breakend end={end} setEnd={setEnd} item={item} data={data} isSent isDisable={isSent} />
         </TableCell>
         <TableCell align="right">

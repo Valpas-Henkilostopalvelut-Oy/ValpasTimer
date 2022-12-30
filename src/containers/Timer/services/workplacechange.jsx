@@ -13,6 +13,7 @@ import {
   MenuItem,
   Box,
   Typography,
+  TableRow,
 } from "@mui/material";
 import { DataStore } from "aws-amplify";
 import { TimeEntry } from "../../../models/index.js";
@@ -159,6 +160,20 @@ export const ChangeWorkplaceMD = ({ date, workplaces = null, work, lang, isEmpty
         },
       }}
     >
+      {!isSent ? (
+        <SelectWork date={date} workplaces={workplaces} work={work} lang={lang} />
+      ) : (
+        <IsSent date={date} lang={lang} isEmpty={isEmpty} />
+      )}
+    </TableCell>
+  );
+};
+
+export const ChangeWorkplaceSM = ({ date, workplaces = null, work, lang, isEmpty, sx }) => {
+  const isSent = date.isSent;
+
+  return (
+    <TableCell sx={sx} colSpan={2}>
       {!isSent ? (
         <SelectWork date={date} workplaces={workplaces} work={work} lang={lang} />
       ) : (
