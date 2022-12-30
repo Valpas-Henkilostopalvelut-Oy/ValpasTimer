@@ -1,5 +1,4 @@
 import React from "react";
-import { Typography } from "@mui/material";
 import { TextToTime } from "../../../services/time.jsx";
 import { DataStore } from "aws-amplify";
 import { TimeEntry } from "../../../models/index.js";

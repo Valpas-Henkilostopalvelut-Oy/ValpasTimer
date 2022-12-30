@@ -3,8 +3,6 @@ import {
   TextField,
   Typography,
   useTheme,
-  TableRow,
-  TableCell,
   Box,
   Dialog,
   DialogActions,
@@ -16,6 +14,7 @@ import { DataStore } from "aws-amplify";
 import { TimeEntry } from "../../../models/index.js";
 import { PropTypes } from "prop-types";
 import DescriptionIcon from "@mui/icons-material/Description";
+import { CustomTableCell } from "./tablecell.jsx";
 
 const updateDescription = async (date, newDescription) => {
   await DataStore.save(
@@ -34,7 +33,6 @@ const EditDescription = ({
 }) => {
   const [desc, setDesc] = useState(date.description);
   const [open, setOpen] = useState(false);
-  const theme = useTheme();
   const isSent = date.isSent;
 
   return (
@@ -80,19 +78,11 @@ const EditDescription = ({
   );
 };
 
-export const EditDescriptionMD = ({ date, lang }) => {
-  const theme = useTheme();
-
+export const EditDescriptionMD = ({ date, lang, sx }) => {
   return (
-    <TableCell
-      sx={{
-        [theme.breakpoints.down("sm")]: {
-          display: "none",
-        },
-      }}
-    >
+    <CustomTableCell>
       <EditDescription date={date} lang={lang} />
-    </TableCell>
+    </CustomTableCell>
   );
 };
 

@@ -1,11 +1,21 @@
 import React, { useState, useEffect } from "react";
-import { TableCell, TableRow, IconButton, Typography, Select, MenuItem, InputLabel, FormControl } from "@mui/material";
+import { TableRow, IconButton, Typography, Select, MenuItem, InputLabel, FormControl } from "@mui/material";
 import { DataStore } from "aws-amplify";
 import { TimeEntry, Breakreason } from "../../../models/index.js";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import { TextToTime } from "../../../services/time.jsx";
 import AddIcon from "@mui/icons-material/Add";
 import { Breakmenu } from "./buttons.jsx";
+import { CustomTableCell } from "./tablecell.jsx";
+import RestaurantIcon from "@mui/icons-material/Restaurant";
+
+const Breakicon = ({ item }) => {
+  if (item.reason === Breakreason.DINNER) {
+    return <RestaurantIcon color="gray"/>;
+  } else if (item.reason === Breakreason.LUNCH) {
+    return <RestaurantIcon />;
+  }
+};
 
 const updateBreak = async (data, item, reason) => {
   const newData = {
@@ -40,12 +50,10 @@ const Breakreasonselect = ({ data, item }) => {
   };
   return (
     <FormControl fullWidth>
-      <InputLabel id="breakreason-select-label">Breakreason</InputLabel>
       <Select
         labelId="breakreason-select-label"
         id="breakreason-select"
         value={reason}
-        label="Breakreason"
         onChange={handleChange}
         variant="standard"
       >
@@ -186,12 +194,12 @@ export const AddBreakMD = ({ data, isEmpty, isDisable, sx }) => {
   };
   return (
     <TableRow sx={sx}>
-      <TableCell colSpan={7}>
+      <CustomTableCell colSpan={7}>
         <IconButton disabled={!isEmpty || isDisable} onClick={handleClick}>
           <AddIcon />
         </IconButton>
         <Breakmenu anchorEl={anchorEl} open={open} data={data} addbreak={addBreak} handleClose={handleClose} />
-      </TableCell>
+      </CustomTableCell>
     </TableRow>
   );
 };
@@ -207,12 +215,12 @@ export const AddBreakSM = ({ data, isEmpty, isDisable, sx }) => {
   };
   return (
     <TableRow sx={sx}>
-      <TableCell colSpan={4}>
+      <CustomTableCell colSpan={4}>
         <IconButton disabled={!isEmpty || isDisable} onClick={handleClick}>
           <AddIcon />
         </IconButton>
         <Breakmenu anchorEl={anchorEl} open={open} data={data} addbreak={addBreak} handleClose={handleClose} />
-      </TableCell>
+      </CustomTableCell>
     </TableRow>
   );
 };
@@ -250,23 +258,25 @@ export const BreakitemMD = ({ item, data, isEmpty, sx }) => {
 
   return (
     <TableRow sx={sx}>
-      <TableCell />
-      <TableCell colSpan={2}>
+      <CustomTableCell>
+        <Breakicon item={item} />
+      </CustomTableCell>
+      <CustomTableCell colSpan={2}>
         <Breakreasonselect item={item} data={data} />
-      </TableCell>
-      <TableCell align="right">
+      </CustomTableCell>
+      <CustomTableCell align="right">
         <Breakstart start={start} setStart={setStart} item={item} data={data} isDisable={isSent} />
         {" - "}
         <Breakend end={end} setEnd={setEnd} item={item} data={data} isDisable={isSent} />
-      </TableCell>
-      <TableCell align="right">
+      </CustomTableCell>
+      <CustomTableCell align="right">
         <Breaktotal total={total} />
-      </TableCell>
-      <TableCell colSpan={1} align="right">
+      </CustomTableCell>
+      <CustomTableCell colSpan={1} align="right">
         <IconButton onClick={() => deleteBreak(data, item)} disabled={!isEmpty || isSent}>
           <DeleteForeverIcon />
         </IconButton>
-      </TableCell>
+      </CustomTableCell>
     </TableRow>
   );
 };
@@ -305,25 +315,25 @@ export const BreakitemSM = ({ item, data, isEmpty, sx }) => {
   return (
     <>
       <TableRow sx={sx}>
-        <TableCell colSpan={4}>
+        <CustomTableCell colSpan={4}>
           <Breakreasonselect item={item} data={data} />
-        </TableCell>
+        </CustomTableCell>
       </TableRow>
       <TableRow sx={sx}>
-        <TableCell align="right">
+        <CustomTableCell align="right">
           <Breakstart start={start} setStart={setStart} item={item} data={data} isDisable={isSent} />
-        </TableCell>
-        <TableCell align="left">
+        </CustomTableCell>
+        <CustomTableCell align="left">
           <Breakend end={end} setEnd={setEnd} item={item} data={data} isSent isDisable={isSent} />
-        </TableCell>
-        <TableCell align="right">
+        </CustomTableCell>
+        <CustomTableCell align="right">
           <Breaktotal total={total} />
-        </TableCell>
-        <TableCell align="right">
+        </CustomTableCell>
+        <CustomTableCell align="right">
           <IconButton onClick={() => deleteBreak(data, item)} disabled={!isEmpty || isSent}>
             <DeleteForeverIcon />
           </IconButton>
-        </TableCell>
+        </CustomTableCell>
       </TableRow>
     </>
   );

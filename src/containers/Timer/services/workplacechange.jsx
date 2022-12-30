@@ -5,7 +5,6 @@ import {
   DialogContent,
   DialogActions,
   Button,
-  TableCell,
   useTheme,
   FormControl,
   InputLabel,
@@ -13,11 +12,11 @@ import {
   MenuItem,
   Box,
   Typography,
-  TableRow,
 } from "@mui/material";
 import { DataStore } from "aws-amplify";
 import { TimeEntry } from "../../../models/index.js";
 import { PropTypes } from "prop-types";
+import { CustomTableCell } from "./tablecell.jsx";
 
 const updateWorkplace = async (date, newValue, workit) => {
   await DataStore.save(
@@ -153,7 +152,7 @@ export const ChangeWorkplaceMD = ({ date, workplaces = null, work, lang, isEmpty
   const isSent = date.isSent;
 
   return (
-    <TableCell
+    <CustomTableCell
       sx={{
         [theme.breakpoints.down("sm")]: {
           display: "none",
@@ -165,7 +164,7 @@ export const ChangeWorkplaceMD = ({ date, workplaces = null, work, lang, isEmpty
       ) : (
         <IsSent date={date} lang={lang} isEmpty={isEmpty} />
       )}
-    </TableCell>
+    </CustomTableCell>
   );
 };
 
@@ -173,13 +172,13 @@ export const ChangeWorkplaceSM = ({ date, workplaces = null, work, lang, isEmpty
   const isSent = date.isSent;
 
   return (
-    <TableCell sx={sx} colSpan={2}>
+    <CustomTableCell sx={sx} colSpan={2}>
       {!isSent ? (
         <SelectWork date={date} workplaces={workplaces} work={work} lang={lang} />
       ) : (
         <IsSent date={date} lang={lang} isEmpty={isEmpty} />
       )}
-    </TableCell>
+    </CustomTableCell>
   );
 };
 

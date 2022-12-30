@@ -1,16 +1,6 @@
 import React, { Fragment } from "react";
 
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableRow,
-  IconButton,
-  Box,
-  TableContainer,
-  useTheme,
-  Typography,
-} from "@mui/material";
+import { Table, TableBody, TableRow, IconButton, Box, TableContainer, useTheme, Typography } from "@mui/material";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import { Time, EditSTime, EditETime } from "./times.jsx";
@@ -21,6 +11,7 @@ import { ChangeWorkplaceMD, ChangeWorkplaceSM } from "./workplacechange.jsx";
 import { EditDateMD, EditDateSM } from "./editdate.jsx";
 import { BreakitemMD, AddBreakMD, AddBreakSM, BreakitemSM } from "./break.jsx";
 import { totaldaytime, totalweektime } from "./totaltime.jsx";
+import { CustomTableCell } from "./tablecell.jsx";
 
 const isSent = (data) => {
   const items = data.arr.length;
@@ -137,47 +128,51 @@ const DetailsSM = ({ row, workplaces, lang, isEmpty, total, date, sx }) => {
   return (
     <Fragment>
       <TableRow sx={sx}>
-        <TableCell>
+        <CustomTableCell>
           <IconButton aria-label="expand row" size="small" onClick={() => setOpen(!open)} sx={{ cursor: "pointer" }}>
             {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
           </IconButton>
-        </TableCell>
+        </CustomTableCell>
 
-        <TableCell align="center" colSpan={2}>
-          <Typography variant="p">{date}</Typography>
-        </TableCell>
+        <CustomTableCell align="center" colSpan={2}>
+          <Typography variant="p" fontWeight="800">
+            {date}
+          </Typography>
+        </CustomTableCell>
 
-        <TableCell align="right">
+        <CustomTableCell align="right">
           <Moreitemday date={row} lang={lang} isEmpty={isEmpty} />
-        </TableCell>
+        </CustomTableCell>
       </TableRow>
 
       <TableRow sx={sx}>
-        <TableCell colSpan={4}>
-          <Typography variant="p">
+        <CustomTableCell colSpan={4}>
+          <Typography variant="p" fontWeight="800">
             {workplaces.find((item) => item.id === row.workId) !== undefined
               ? workplaces.find((item) => item.id === row.workId).name
               : lang.title.select_workplace}
           </Typography>
-        </TableCell>
+        </CustomTableCell>
       </TableRow>
 
       <TableRow sx={sx}>
-        <TableCell align="left">
-          <Typography variant="p">
+        <CustomTableCell align="left">
+          <Typography variant="p" fontWeight="800">
             <Time time={row.arr[row.arr.length - 1].timeInterval.start} />
           </Typography>
-        </TableCell>
+        </CustomTableCell>
 
-        <TableCell align="left">
-          <Typography variant="p">
+        <CustomTableCell align="left">
+          <Typography variant="p" fontWeight="800">
             <Time time={row.arr[0].timeInterval.end} />
           </Typography>
-        </TableCell>
+        </CustomTableCell>
 
-        <TableCell align="right" colSpan={2}>
-          <Typography variant="p">{total}</Typography>
-        </TableCell>
+        <CustomTableCell align="right" colSpan={2}>
+          <Typography variant="p" fontWeight="800">
+            {total}
+          </Typography>
+        </CustomTableCell>
       </TableRow>
 
       {open && (
@@ -202,37 +197,41 @@ const DetailsMD = ({ row, workplaces, lang, isEmpty, total, date, sx }) => {
   return (
     <Fragment>
       <TableRow sx={sx}>
-        <TableCell>
+        <CustomTableCell>
           <IconButton aria-label="expand row" size="small" onClick={() => setOpen(!open)} sx={{ cursor: "pointer" }}>
             {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
           </IconButton>
-        </TableCell>
+        </CustomTableCell>
 
-        <TableCell align="left">
-          <Typography variant="p">{date}</Typography>
-        </TableCell>
+        <CustomTableCell align="left">
+          <Typography variant="p" fontWeight="800">
+            {date}
+          </Typography>
+        </CustomTableCell>
 
-        <TableCell align="left">
-          <Typography variant="p">
+        <CustomTableCell align="left">
+          <Typography variant="p" fontWeight="800">
             {workplaces.find((item) => item.id === row.workId) !== undefined
               ? workplaces.find((item) => item.id === row.workId).name
               : "Vaihda työpaikkaa"}
           </Typography>
-        </TableCell>
+        </CustomTableCell>
 
-        <TableCell align="right">
-          <Typography variant="p">
+        <CustomTableCell align="right">
+          <Typography variant="p" fontWeight="800">
             <Time time={row.arr[row.arr.length - 1].timeInterval.start} /> - <Time time={row.arr[0].timeInterval.end} />
           </Typography>
-        </TableCell>
+        </CustomTableCell>
 
-        <TableCell align="right">
-          <Typography variant="p">{total}</Typography>
-        </TableCell>
+        <CustomTableCell align="right">
+          <Typography variant="p" fontWeight="800">
+            {total}
+          </Typography>
+        </CustomTableCell>
 
-        <TableCell align="right">
+        <CustomTableCell align="right">
           <Moreitemday date={row} lang={lang} isEmpty={isEmpty} />
-        </TableCell>
+        </CustomTableCell>
       </TableRow>
 
       {open && (
@@ -265,21 +264,21 @@ const RowDetailsSM = ({ data, lang, workplaces, isEmpty, sx }) => {
         <TableRow>
           <EditDescriptionMD date={row} lang={lang} />
 
-          <TableCell align="right">
+          <CustomTableCell align="right">
             <EditSTime date={row} />
-          </TableCell>
+          </CustomTableCell>
 
-          <TableCell align="right">
+          <CustomTableCell align="right">
             <EditETime date={row} />
-          </TableCell>
+          </CustomTableCell>
 
-          <TableCell align="right">
+          <CustomTableCell align="right">
             <TotalTime date={row} />
-          </TableCell>
+          </CustomTableCell>
 
-          <TableCell align="right">
+          <CustomTableCell align="right">
             <Moreitem date={row} lang={lang} isEmpty={isEmpty} />
-          </TableCell>
+          </CustomTableCell>
         </TableRow>
 
         {row.break &&
@@ -302,17 +301,17 @@ const RowDetailsMD = ({ data, lang, workplaces, isEmpty, sx }) => {
 
           <ChangeWorkplaceMD date={row} workplaces={workplaces} work={row.workspaceId} lang={lang} isEmpty={isEmpty} />
 
-          <TableCell align="right">
+          <CustomTableCell align="right">
             <EditSTime date={row} /> {" - "} <EditETime date={row} />
-          </TableCell>
+          </CustomTableCell>
 
-          <TableCell align="right">
+          <CustomTableCell align="right">
             <TotalTime date={row} />
-          </TableCell>
+          </CustomTableCell>
 
-          <TableCell align="right">
+          <CustomTableCell align="right">
             <Moreitem date={row} lang={lang} isEmpty={isEmpty} />
-          </TableCell>
+          </CustomTableCell>
         </TableRow>
 
         {row.break &&

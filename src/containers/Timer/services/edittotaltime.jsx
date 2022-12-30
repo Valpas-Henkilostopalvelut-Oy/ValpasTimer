@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { TextField, Typography, Box, Dialog, DialogTitle, DialogContent, DialogActions, Button } from "@mui/material";
+import { TextField, Typography, Dialog, DialogTitle, DialogContent, DialogActions, Button } from "@mui/material";
 import { DataStore } from "aws-amplify";
 import { TimeEntry } from "../../../models/index.js";
 

@@ -1,26 +1,42 @@
 export const customPalette = {
   typography: {
     fontFamily: ["Source Sans Pro", "sans-serif"].join(","),
+
     p: {
       fontSize: "16px",
       fontWeight: 400,
+      color: "#707070",
     },
     span: {
       fontSize: "12px",
       fontWeight: 400,
+      color: "#707070",
     },
     h4: {
       fontSize: "24px",
       fontWeight: 400,
+      color: "#707070",
     },
     h5: {
       fontSize: "20px",
       fontWeight: 400,
+      color: "#707070",
+    },
+    h6: {
+      fontSize: "18px",
+      fontWeight: 400,
+      color: "#707070",
     },
   },
   palette: {
+    table: {
+      cell: {
+        border_color: "#e6e6ef",
+      },
+    },
     default: {
       white: "#ffffff",
+      gray: "#707070",
     },
     navbar: {
       main: "#00adef",

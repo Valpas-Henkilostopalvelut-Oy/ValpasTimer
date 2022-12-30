@@ -2,8 +2,6 @@ import React from "react";
 import { DataStore } from "aws-amplify";
 import { TimeEntry } from "../../../models/index.js";
 import {
-  TableCell,
-  TableRow,
   TextField,
   Typography,
   Dialog,
@@ -19,13 +17,14 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import ruLocale from "date-fns/locale/ru";
 import { PropTypes } from "prop-types";
+import { CustomTableCell } from "./tablecell.jsx";
 
 export const EditDateMD = ({ data, lang }) => {
   const theme = useTheme();
   return (
     <Box
       align="left"
-      component={TableCell}
+      component={CustomTableCell}
       sx={{
         [theme.breakpoints.down("sm")]: {
           display: "none",
@@ -39,9 +38,9 @@ export const EditDateMD = ({ data, lang }) => {
 
 export const EditDateSM = ({ data, lang, sx }) => {
   return (
-    <TableCell colSpan={2}>
+    <CustomTableCell colSpan={2}>
       <EditDate data={data} lang={lang} />
-    </TableCell>
+    </CustomTableCell>
   );
 };
 

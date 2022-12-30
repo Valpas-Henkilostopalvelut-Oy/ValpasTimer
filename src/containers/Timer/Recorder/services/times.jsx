@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { Auth, DataStore } from "aws-amplify";
 import { TimeEntry } from "../../../../models/index.js";
-import { TextField, Typography, Button } from "@mui/material";
+import { TextField, Typography, Button, Box } from "@mui/material";
 
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
@@ -159,10 +159,25 @@ export const Totaltime = ({ sTime = null, eTime = null }) => {
     return () => (isActive = true);
   }, [sTime, eTime]);
 
+  const h = String(total.hours).padStart(2, "0");
+  const m = String(total.minutes).padStart(2, "0");
+
+  //Typography chenter in box
+
   return (
-    <Typography variant="h6">
-      {total.hours}h {total.minutes}m {total.seconds}s
-    </Typography>
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        textAlign: "center",
+      }}
+    >
+      <Typography variant="p">
+        {h}:{m}
+      </Typography>
+    </Box>
   );
 };
 
