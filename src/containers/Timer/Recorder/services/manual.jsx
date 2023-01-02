@@ -7,12 +7,9 @@ import { PropTypes } from "prop-types";
 import { EditWorkitemManual } from "./editworkitem.jsx";
 
 const findWork = (w, workitem) => {
-  let q;
-  w.forEach((element) => {
-    q = element.works.find((work) => work.id === workitem);
+  return w.forEach((element) => {
+    return element.works && element.works.find((work) => work.id === workitem);
   });
-
-  return q;
 };
 
 export const Manual = ({ description, sel, setDescription, setSel, works, lang, workitems, workitem, setWorkitem }) => {
