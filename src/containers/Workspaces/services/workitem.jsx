@@ -3,6 +3,7 @@ import { TableRow, TableCell, IconButton } from "@mui/material";
 import { AllWorkSpaces } from "../../../models";
 import { DataStore } from "aws-amplify";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
+import { PropTypes } from "prop-types";
 
 export const Workitem = ({ item, data }) => {
   return (
@@ -26,5 +27,10 @@ const deleteWork = async (id, data) => {
     AllWorkSpaces.copyOf(data, (updated) => {
       updated.work = newData;
     })
-  ).catch((err) => console.log(err));
+  ).catch((err) => console.warn(err));
+};
+
+Workitem.propTypes = {
+  item: PropTypes.object.isRequired,
+  data: PropTypes.object.isRequired,
 };

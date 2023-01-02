@@ -48,7 +48,6 @@ const stopTimer = async () => {
         .then(async (userCred) => {
           await DataStore.query(TimeEntry, userCred.activeTimeEntry)
             .then(async (time) => {
-              console.log(time);
               await DataStore.save(
                 TimeEntry.copyOf(time, (updated) => {
                   updated.isPaused = false;

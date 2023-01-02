@@ -1,5 +1,5 @@
 import React, { Fragment } from "react";
-import { Table, Typography, TableBody, TableCell, TableRow, Box } from "@mui/material";
+import { Table, Typography, TableBody, TableCell, TableRow } from "@mui/material";
 import { Time } from "./times.jsx";
 import { PropTypes } from "prop-types";
 import { Breakslist } from "./breaks.jsx";
@@ -40,10 +40,10 @@ export const Detailsrow = ({ date }) => {
   );
 };
 
-TotalTime.propTypes = {
-  date: PropTypes.object,
+Detailsrow.propTypes = {
+  date: PropTypes.object.isRequired,
 };
 
-Detailsrow.propTypes = {
-  date: PropTypes.object,
+TotalTime.propTypes = {
+  date: PropTypes.object.isRequired,
 };

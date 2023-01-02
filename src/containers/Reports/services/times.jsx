@@ -42,3 +42,7 @@ STime.propTypes = {
 ETime.propTypes = {
   date: PropTypes.object,
 };
+
+Time.propTypes = {
+  time: PropTypes.string,
+};

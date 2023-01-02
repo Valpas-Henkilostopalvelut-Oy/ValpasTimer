@@ -33,8 +33,6 @@ const getTotal = (start, end, breaks) => {
   var m = 0;
 
   let total = Date.parse(end) - Date.parse(start) - breaks;
-
-  console.log(total);
   h = h + Math.floor(total / (1000 * 60 * 60));
   m = m + Math.floor((total / (1000 * 60)) % 60);
   if (m > 59) {

@@ -60,9 +60,12 @@ export const Manual = ({ description, sel, setDescription, setSel, works, lang, 
 
 Manual.propTypes = {
   description: PropTypes.string,
-  sel: PropTypes.string,
   setDescription: PropTypes.func,
+  sel: PropTypes.string,
   setSel: PropTypes.func,
   works: PropTypes.array,
   lang: PropTypes.object,
+  workitems: PropTypes.array,
+  workitem: PropTypes.string,
+  setWorkitem: PropTypes.func,
 };

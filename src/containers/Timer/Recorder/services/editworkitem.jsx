@@ -2,6 +2,7 @@ import React from "react";
 import { InputLabel, MenuItem, FormControl, Select } from "@mui/material";
 import { DataStore } from "aws-amplify";
 import { TimeEntry } from "../../../../models/index.js";
+import { PropTypes } from "prop-types";
 
 const updateworkitem = async (data, item) => {
   await DataStore.save(
@@ -12,7 +13,6 @@ const updateworkitem = async (data, item) => {
 };
 
 export const EditWorkitemTimer = ({ workitems, workitem, setWorkitem, isStarted, data, lang }) => {
-  console.log(lang);
   const handleChange = (event) => {
     if (data && isStarted) {
       const item = workitems ? workitems.find((item) => item.id === event.target.value) : null;
@@ -60,7 +60,7 @@ export const EditWorkitemManual = ({ workitems, workitem, setWorkitem, lang = { 
         disabled={!workitems}
       >
         {workitems &&
-          workitems.map((item, i) => (
+          workitems.map((item) => (
             <MenuItem key={item.id} value={item.id}>
               {item.name}
             </MenuItem>
@@ -68,4 +68,20 @@ export const EditWorkitemManual = ({ workitems, workitem, setWorkitem, lang = { 
       </Select>
     </FormControl>
   );
+};
+
+EditWorkitemTimer.propTypes = {
+  workitems: PropTypes.array,
+  workitem: PropTypes.string,
+  setWorkitem: PropTypes.func,
+  isStarted: PropTypes.bool,
+  data: PropTypes.object,
+  lang: PropTypes.object,
+};
+
+EditWorkitemManual.propTypes = {
+  workitems: PropTypes.array,
+  workitem: PropTypes.string,
+  setWorkitem: PropTypes.func,
+  lang: PropTypes.object,
 };

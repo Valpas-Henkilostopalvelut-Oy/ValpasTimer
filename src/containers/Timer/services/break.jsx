@@ -8,6 +8,7 @@ import AddIcon from "@mui/icons-material/Add";
 import { Breakmenu } from "./buttons.jsx";
 import { CustomTableCell } from "./tablecell.jsx";
 import RestaurantIcon from "@mui/icons-material/Restaurant";
+import { PropTypes } from "prop-types";
 
 const Breakicon = ({ item }) => {
   if (item.reason === Breakreason.DINNER) {
@@ -35,7 +36,6 @@ const updateBreak = async (data, item, reason) => {
 };
 
 const Breakreasonselect = ({ data, item, lang }) => {
-  console.log(lang);
   const breaks = [
     { id: Breakreason.LUNCH, name: lang.lunch },
     { id: Breakreason.LUNCH_L, name: lang.lunch_l },
@@ -136,7 +136,7 @@ const addBreak = async (data, reason, time) => {
         });
       }
     })
-  ).then((e) => console.log(e));
+  ).catch((err) => console.warn(err));
 };
 
 const deleteBreak = async (data, item) => {
@@ -171,7 +171,6 @@ const Breakend = ({ end, setEnd, data, item, isDisable }) => {
         setEnd(new Date(end).setHours(t.h, t.min, 0, 0));
       }}
       isSent={isDisable}
-      onBlur={(e) => console.log(e)}
     />
   );
 };
@@ -196,7 +195,6 @@ export const AddBreakMD = ({ data, isEmpty, isDisable, sx, lang }) => {
     setAnchorEl(null);
   };
 
-  console.log(lang);
   return (
     <TableRow sx={sx}>
       <CustomTableCell colSpan={7}>
@@ -356,4 +354,77 @@ export const BreakitemSM = ({ item, data, isEmpty, sx, lang }) => {
       </TableRow>
     </>
   );
+};
+
+Breakicon.propTypes = {
+  item: PropTypes.object,
+};
+
+Breakstart.propTypes = {
+  start: PropTypes.object,
+  setStart: PropTypes.func,
+  item: PropTypes.object,
+  data: PropTypes.object,
+  isDisable: PropTypes.bool,
+};
+
+Breakend.propTypes = {
+  end: PropTypes.object,
+  setEnd: PropTypes.func,
+  item: PropTypes.object,
+  data: PropTypes.object,
+  isDisable: PropTypes.bool,
+};
+
+Breaktotal.propTypes = {
+  total: PropTypes.object,
+};
+
+Breakreasonselect.propTypes = {
+  item: PropTypes.object,
+  data: PropTypes.object,
+  lang: PropTypes.object,
+};
+
+Breakmenu.propTypes = {
+  anchorEl: PropTypes.object,
+  open: PropTypes.bool,
+  data: PropTypes.array,
+  addbreak: PropTypes.func,
+  handleClose: PropTypes.func,
+  lang: PropTypes.object,
+};
+
+AddBreakMD.propTypes = {
+  data: PropTypes.array,
+  addBreak: PropTypes.func,
+  lang: PropTypes.object,
+  isEmpty: PropTypes.bool,
+  isDisable: PropTypes.bool,
+  sx: PropTypes.object,
+};
+
+AddBreakSM.propTypes = {
+  data: PropTypes.array,
+  addBreak: PropTypes.func,
+  lang: PropTypes.object,
+  isEmpty: PropTypes.bool,
+  isDisable: PropTypes.bool,
+  sx: PropTypes.object,
+};
+
+BreakitemMD.propTypes = {
+  item: PropTypes.object,
+  data: PropTypes.object,
+  isEmpty: PropTypes.bool,
+  sx: PropTypes.object,
+  lang: PropTypes.object,
+};
+
+BreakitemSM.propTypes = {
+  item: PropTypes.object,
+  data: PropTypes.object,
+  isEmpty: PropTypes.bool,
+  sx: PropTypes.object,
+  lang: PropTypes.object,
 };
