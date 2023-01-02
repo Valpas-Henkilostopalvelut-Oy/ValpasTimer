@@ -1,6 +1,6 @@
 export function groupBy(array) {
   //group by work name in work array and push in array
-  return array
+  let sorted = array
     .sort((date1, date2) => {
       let d1 = new Date(date2.timeInterval.start);
       let d2 = new Date(date1.timeInterval.start);
@@ -10,7 +10,6 @@ export function groupBy(array) {
     .reduce((res, val) => {
       const dat = new Date(val.timeInterval.start);
       const by = dat.toDateString();
-
       const week = getWeekNumber(dat);
 
       if (res.filter((w) => w.week === week).length === 0) {
@@ -27,11 +26,21 @@ export function groupBy(array) {
       return res;
     }, []);
 
-  function getWeekNumber(d) {
-    d = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
-    d.setUTCDate(d.getUTCDate() + 4 - (d.getUTCDay() || 7));
-    var yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
-    var weekNo = Math.ceil(((d - yearStart) / 86400000 + 1) / 7);
-    return weekNo;
-  }
+  sorted.forEach((w) => {
+    w.arr.sort((a, b) => {
+      let d1 = new Date(a.date);
+      let d2 = new Date(b.date);
+      return d1 - d2;
+    });
+  });
+
+  return sorted;
+}
+
+function getWeekNumber(d) {
+  d = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+  d.setUTCDate(d.getUTCDate() + 4 - (d.getUTCDay() || 7));
+  var yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
+  var weekNo = Math.ceil(((d - yearStart) / 86400000 + 1) / 7);
+  return weekNo;
 }

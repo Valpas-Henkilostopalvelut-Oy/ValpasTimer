@@ -1,56 +1,119 @@
+const calculteBreaks = (breaks) => {
+  let total = 0;
+  if (breaks === null) return total;
+  breaks.forEach((b) => {
+    let start = new Date(b.start);
+    let end = new Date(b.end);
+    total += Date.parse(end) - Date.parse(start);
+  });
+
+  return total;
+};
+
 export const totaldaytime = (day) => {
   //CALCULATE TOTAL TIME FOR EACH DAY
+  var h = 0;
+  var min = 0;
+  var sec = 0;
 
-  let date = { h: 0, min: 0, sec: 0 };
-  for (let i = 0; i < day.arr.length; i++) {
-    const timeL = day.arr[i];
-    let start = new Date(timeL.timeInterval.start);
-    let end = new Date(timeL.timeInterval.end);
+  day.arr.forEach((item) => {
+    let start = new Date(item.timeInterval.start);
+    let end = new Date(item.timeInterval.end);
+    let breaks = calculteBreaks(item.break);
 
-    let total = Date.parse(end) - Date.parse(start);
+    let total = Date.parse(end) - Date.parse(start) - breaks;
 
-    date = {
-      h: date.h + Math.floor(total / (1000 * 60 * 60)),
-      min: date.min + Math.floor((total / (1000 * 60)) % 60),
-      sec: date.sec + Math.floor((total / 1000) % 60),
-    };
-  }
+    if (Date.parse(end) > Date.parse(start)) {
+      h = h + Math.floor(total / 1000 / 60 / 60);
+      min = min + Math.floor((total / 1000 / 60) % 60);
+      sec = sec + Math.floor((total / 1000) % 60);
 
-  return date;
+      if (min >= 60) {
+        h++;
+        min = min % 60;
+      }
+      if (sec >= 60) {
+        min++;
+        sec = sec % 60;
+      }
+    }
+  });
+
+  return {
+    h: h,
+    min: min,
+    sec: sec,
+  };
 };
 
 export const totalweektime = (array) => {
   //CALCULATE TOTAL TIME FOR EACH WEEK
-  let date = { h: 0, min: 0, sec: 0 };
-  for (let i = 0; i < array.arr.length; i++) {
-    let arr = array.arr[i];
-    for (let ii = 0; ii < arr.arr.length; ii++) {
-      const timeL = arr.arr[ii];
-      const breaks = timeL.breaks;
-      const breaksL = 0;
+  let h = 0;
+  let min = 0;
+  let sec = 0;
 
-      if (breaks) {
-        breaks.forEach((element) => {
-          let bstart = new Date(element.start);
-          let bend = new Date(element.end);
+  array.arr.forEach((week) => {
+    week.arr.forEach((day) => {
+      let start = new Date(day.timeInterval.start);
+      let end = new Date(day.timeInterval.end);
+      let breaks = calculteBreaks(day.break);
 
-          let btotal = Date.parse(bend) - Date.parse(bstart);
+      if (Date.parse(end) > Date.parse(start)) {
+        let total = Date.parse(end) - Date.parse(start) - breaks;
 
-          breaksL += btotal;
-        });
+        h = h + Math.floor(total / 1000 / 60 / 60);
+        min = min + Math.floor((total / 1000 / 60) % 60);
+        sec = sec + Math.floor((total / 1000) % 60);
+
+        if (min >= 60) {
+          h++;
+          min = min % 60;
+        }
+        if (sec >= 60) {
+          min++;
+          sec = sec % 60;
+        }
       }
+    });
+  });
 
-      let start = new Date(timeL.timeInterval.start);
-      let end = new Date(timeL.timeInterval.end);
+  return {
+    h: h,
+    min: min,
+    sec: sec,
+  };
+};
 
-      let total = Date.parse(end) - Date.parse(start) - breaksL;
+export const totalrowtime = (date) => {
+  //CALCULATE TOTAL TIME FOR EACH ROW
+  let h = 0;
+  let min = 0;
+  let sec = 0;
 
-      date = {
-        h: date.h + Math.floor(total / (1000 * 60 * 60)),
-        min: date.min + Math.floor((total / (1000 * 60)) % 60),
-        sec: date.sec + Math.floor((total / 1000) % 60),
-      };
+  let start = new Date(date.timeInterval.start);
+  let end = new Date(date.timeInterval.end);
+  let breaks = calculteBreaks(date.break);
+
+  if (Date.parse(end) > Date.parse(start)) {
+    let total = Date.parse(end) - Date.parse(start) - breaks;
+
+    h = h + Math.floor(total / (1000 * 60 * 60));
+    min = min + Math.floor((total / (1000 * 60)) % 60);
+    sec = sec + Math.floor((total / 1000) % 60);
+
+    if (sec > 59) {
+      min++;
+      sec = sec % 60;
+    }
+    if (min > 59) {
+      h++;
+      min = min % 60;
     }
   }
-  return date;
+
+  return {
+    h: h,
+    min: min,
+    sec: sec,
+  };
 };

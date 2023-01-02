@@ -18,7 +18,14 @@ export function groupBy(array, works = Array(), lang = Object()) {
       if (res.filter((w) => w.week === week).length === 0) {
         res.push({
           week: week,
-          period: getMonthName(startOfWeek.getMonth(), lang) + " " + startOfWeek.getDate() + " - " + getMonthName(endOfWeek.getMonth(), lang) + " " + endOfWeek.getDate(),
+          period:
+            getMonthName(startOfWeek.getMonth(), lang) +
+            " " +
+            startOfWeek.getDate() +
+            " - " +
+            getMonthName(endOfWeek.getMonth(), lang) +
+            " " +
+            endOfWeek.getDate(),
           arr: [{ date: by, arr: [{ workId: val.workspaceId, arr: [val] }] }],
         });
       } else if (res.find((w) => w.week === week).arr.filter((f) => f.date === by).length === 0) {
@@ -40,8 +47,6 @@ export function groupBy(array, works = Array(), lang = Object()) {
           .arr.find((f) => f.workId === val.workspaceId)
           .arr.push(val);
       }
-
-      //sort by monday to sunday
 
       return res;
     }, []);

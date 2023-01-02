@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { TableRow, IconButton, Typography, Select, MenuItem, InputLabel, FormControl } from "@mui/material";
+import { TableRow, IconButton, Typography, Select, MenuItem, InputBase, FormControl } from "@mui/material";
 import { DataStore } from "aws-amplify";
 import { TimeEntry, Breakreason } from "../../../models/index.js";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
@@ -58,6 +58,7 @@ const Breakreasonselect = ({ data, item, lang }) => {
         value={reason}
         onChange={handleChange}
         variant="standard"
+        input={<InputBase />}
       >
         {breaks.map((e) => {
           return (
