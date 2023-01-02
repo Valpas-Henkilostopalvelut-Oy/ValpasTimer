@@ -45,6 +45,7 @@ const Breakreasonselect = ({ data, item, lang }) => {
     { id: Breakreason.ACCIDENT, name: lang.accident },
   ];
   const [reason, setReason] = useState(item.reason);
+  const isSent = data.isSent;
 
   const handleChange = (event) => {
     setReason(event.target.value);
@@ -59,6 +60,7 @@ const Breakreasonselect = ({ data, item, lang }) => {
         onChange={handleChange}
         variant="standard"
         input={<InputBase />}
+        disabled={isSent}
       >
         {breaks.map((e) => {
           return (

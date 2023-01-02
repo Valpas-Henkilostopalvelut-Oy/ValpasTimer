@@ -28,7 +28,14 @@ export const Settings = ({
       <Button onClick={handleOpen} variant="contained">
         {lang.buttons.settings}
       </Button>
-      <Dialog open={open} onClose={handleClose} aria-labelledby="dialog-title" aria-describedby="dialog-description" maxWidth={"xs"} fullWidth={true}>
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="dialog-title"
+        aria-describedby="dialog-description"
+        maxWidth={"xs"}
+        fullWidth={true}
+      >
         <DialogTitle id="dialog-title">
           {lang.delete.message} {data.name}
         </DialogTitle>
@@ -37,7 +44,8 @@ export const Settings = ({
             <Grid item xs={12}>
               <ChangeworkName data={data} />
             </Grid>
-            <Grid item xs={12}>
+
+            <Grid item container xs={12}>
               <Deletework data={data} handleClose={handleClose} lang={lang} />
             </Grid>
           </Grid>

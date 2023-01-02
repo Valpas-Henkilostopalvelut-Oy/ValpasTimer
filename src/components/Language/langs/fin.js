@@ -139,7 +139,7 @@ export const fin = {
         timer: {
           description: "Kuvaus",
           workplace: "Asiakas",
-          workitem: "Työtehtävä",
+          workitem: "Työkohde",
           start: "Aloita",
           stop: "Lopeta",
           edit_start: {
@@ -152,7 +152,7 @@ export const fin = {
         manual: {
           description: "Kuvaus",
           workplace: "Asiakas",
-          workitem: "Työtehtävä",
+          workitem: "Työkohde",
           date: "Päivämäärä",
           start_time: "Aloitusaika",
           end_time: "Lopetusaika",
@@ -166,7 +166,7 @@ export const fin = {
         date: "Päivämäärä",
         workplace: "Näytä",
         all: "Kaikki",
-        workitem: "Työtehtävä",
+        workitem: "Työkohde",
         no_work: "Kohdetta ei valittu",
         sent: "Lähetetty",
         confirmed: "Vahvistettu",

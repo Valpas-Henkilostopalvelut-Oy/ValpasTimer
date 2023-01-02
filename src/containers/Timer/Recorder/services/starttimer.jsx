@@ -124,6 +124,8 @@ export const StartTimer = ({
 };
 
 StartTimer.propTypes = {
+  workitem: PropTypes.string,
+  workitems: PropTypes.array,
   description: PropTypes.string,
   workplace: PropTypes.string,
   isStarted: PropTypes.bool,
@@ -131,4 +133,5 @@ StartTimer.propTypes = {
   setTimer: PropTypes.func,
   setTime: PropTypes.func,
   lang: PropTypes.object,
+  setIsPaused: PropTypes.func,
 };
