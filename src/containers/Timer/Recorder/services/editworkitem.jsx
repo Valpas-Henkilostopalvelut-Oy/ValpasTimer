@@ -30,7 +30,7 @@ export const EditWorkitemTimer = ({ workitems, workitem, setWorkitem, isStarted,
         value={workitems ? workitem : ""}
         label={lang.workitem}
         onChange={handleChange}
-        disabled={!Boolean(workitems)}
+        disabled={!workitems}
       >
         {workitems &&
           workitems.map((item, i) => (
@@ -57,7 +57,7 @@ export const EditWorkitemManual = ({ workitems, workitem, setWorkitem, lang = { 
         value={workitems ? workitem : ""}
         label={lang.workitem}
         onChange={handleChange}
-        disabled={!Boolean(workitems)}
+        disabled={!workitems}
       >
         {workitems &&
           workitems.map((item, i) => (
