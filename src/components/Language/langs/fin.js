@@ -239,10 +239,10 @@ export const fin = {
       },
       alert_work: {
         min_name: "Nimi pitää olla vähintään 3 merkkiä pitkä",
-        max_name: "Nimi voi olla enintään 20 merkkiä pitkä",
+        max_name: "Nimi voi olla enintään 35 merkkiä pitkä",
         required_name: "Nimi on pakollinen",
         min_description: "Kuvaus pitää olla vähintään 3 merkkiä pitkä",
-        max_description: "Kuvaus voi olla enintään 20 merkkiä pitkä",
+        max_description: "Kuvaus voi olla enintään 50 merkkiä pitkä",
         required_description: "Kuvaus on pakollinen",
       },
       allert_workplace: {

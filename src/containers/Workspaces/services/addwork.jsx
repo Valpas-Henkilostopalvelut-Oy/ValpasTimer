@@ -42,13 +42,9 @@ const AddworkDialog = ({
     name: yup
       .string()
       .min(3, lang.alert_work.min_name)
-      .max(20, lang.alert_work.max_name)
+      .max(35, lang.alert_work.max_name)
       .required(lang.alert_work.required_name),
-    description: yup
-      .string()
-      .min(3, lang.alert_work.min_description)
-      .max(20, lang.alert_work.max_description)
-      .required(lang.alert_work.required_description),
+    description: yup.string().min(3, lang.alert_work.min_description).max(50, lang.alert_work.max_description),
   });
   const [warnText, setWarnText] = useState(null);
 

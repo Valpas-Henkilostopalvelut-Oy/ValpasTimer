@@ -61,6 +61,7 @@ const Breakreasonselect = ({ data, item, lang }) => {
         variant="standard"
         input={<InputBase />}
         disabled={isSent}
+        fullWidth
       >
         {breaks.map((e) => {
           return (
