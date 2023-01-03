@@ -67,10 +67,33 @@ const weekissent = (arr, selected) => {
   return false;
 };
 
-export const WeekRow = ({ grouped, lang, works, isEmpty, selected, isThis = false}) => {
+const weekisconformed = (arr, selected) => {
+  for (let i = 0; i < arr.length; i++) {
+    if (selected !== "") {
+      const work = arr[i].arr.filter((item) => item.workId === selected);
+
+      for (let ii = 0; ii < work.length; ii++) {
+        const items = work[ii].arr;
+
+        for (let iii = 0; iii < items.length; iii++) {
+          const element = items[iii];
+          if (element.isConfirmed) return true;
+        }
+      }
+    }
+  }
+
+  return false;
+};
+
+export const WeekRow = ({ grouped, lang, works, isEmpty, selected, isThis = false }) => {
   const theme = useTheme();
   return grouped.map((week) => {
     let isSent = weekissent(week.arr, selected);
+    let isConfirmed = weekisconformed(week.arr, selected);
+    let h = totalweektime(week).h;
+    let min = totalweektime(week).min;
+
     return (
       <Fragment key={week.week}>
         <Box
@@ -101,16 +124,14 @@ export const WeekRow = ({ grouped, lang, works, isEmpty, selected, isThis = fals
                   </CustomTableCell>
 
                   <CustomTableCell align="center" sx={{ borderTop: "0px" }}>
-                    <Typography variant="caption" color="text.secondary">
+                    <Typography variant="p" color="text.secondary">
                       {week.period}
                     </Typography>
                   </CustomTableCell>
 
                   <CustomTableCell align="right" sx={{ borderTop: "0px" }}>
                     <Typography variant="p" color="text.secondary">
-                      {lang.history.total_time}{" "}
-                      {totalweektime(week).h > 9 ? totalweektime(week).h : "0" + totalweektime(week).h}:
-                      {totalweektime(week).min > 9 ? totalweektime(week).min : "0" + totalweektime(week).min}
+                      {h}h {min}min
                     </Typography>
                   </CustomTableCell>
 
@@ -134,11 +155,13 @@ export const WeekRow = ({ grouped, lang, works, isEmpty, selected, isThis = fals
                         />
                       </IconButton>
                     ) : (
-                      <HourglassTopIcon
-                        sx={{
-                          color: "default.valpas",
-                        }}
-                      />
+                      !isConfirmed && (
+                        <HourglassTopIcon
+                          sx={{
+                            color: "default.valpas",
+                          }}
+                        />
+                      )
                     )}
                   </CustomTableCell>
                 </TableRow>
@@ -164,7 +187,7 @@ const Row = ({ week, lang, works, isEmpty }) => {
 
       return (
         <Box
-          key={date.date}
+          key={date.id}
           sx={{
             border: "1px solid #e0e0e0",
             borderRadius: "1px",

@@ -10,6 +10,8 @@ export function groupBy(array, works = Array(), lang = Object()) {
     .reduce((res, val) => {
       const dat = new Date(val.timeInterval.start);
       const by = dat.toDateString();
+      const day = dat.getDay();
+
       const week = getWeekNumber(dat);
 
       var startOfWeek = getDateOfISOWeek(week, dat.getFullYear());
@@ -18,32 +20,39 @@ export function groupBy(array, works = Array(), lang = Object()) {
       if (res.filter((w) => w.week === week).length === 0) {
         res.push({
           week: week,
-          period:
-            getMonthName(startOfWeek.getMonth(), lang) +
-            " " +
-            startOfWeek.getDate() +
-            " - " +
-            getMonthName(endOfWeek.getMonth(), lang) +
-            " " +
-            endOfWeek.getDate(),
-          arr: [{ date: by, arr: [{ workId: val.workspaceId, arr: [val] }] }],
+          period: `${startOfWeek.getDay()}.${startOfWeek.getMonth() + 1} - ${endOfWeek.getDate()}.${
+            endOfWeek.getMonth() + 1
+          }.${endOfWeek.getFullYear()}`,
+          arr: [
+            {
+              date: `${days[day - 1]} ${dat.getUTCDate()}.${dat.getMonth() + 1}`,
+              id: by,
+              arr: [{ workId: val.workspaceId, arr: [val] }],
+            },
+          ],
         });
-      } else if (res.find((w) => w.week === week).arr.filter((f) => f.date === by).length === 0) {
-        res.find((w) => w.week === week).arr.push({ date: by, arr: [{ workId: val.workspaceId, arr: [val] }] });
+      } else if (res.find((w) => w.week === week).arr.filter((f) => f.id === by).length === 0) {
+        res
+          .find((w) => w.week === week)
+          .arr.push({
+            date: `${days[day - 1]} ${dat.getUTCDate()}.${dat.getMonth() + 1}`,
+            id: by,
+            arr: [{ workId: val.workspaceId, arr: [val] }],
+          });
       } else if (
         res
           .find((w) => w.week === week)
-          .arr.find((f) => f.date === by)
+          .arr.find((f) => f.id === by)
           .arr.filter((f) => f.workId === val.workspaceId).length === 0
       ) {
         res
           .find((w) => w.week === week)
-          .arr.find((f) => f.date === by)
+          .arr.find((f) => f.id === by)
           .arr.push({ workId: val.workspaceId, arr: [val] });
       } else {
         res
           .find((w) => w.week === week)
-          .arr.find((f) => f.date === by)
+          .arr.find((f) => f.id === by)
           .arr.find((f) => f.workId === val.workspaceId)
           .arr.push(val);
       }
@@ -53,8 +62,8 @@ export function groupBy(array, works = Array(), lang = Object()) {
 
   sorted.forEach((w) => {
     w.arr.sort((a, b) => {
-      let d1 = new Date(a.date);
-      let d2 = new Date(b.date);
+      let d1 = new Date(a.id);
+      let d2 = new Date(b.id);
       return d1 - d2;
     });
   });
@@ -88,7 +97,4 @@ function getEndOfISOWeek(d) {
   return endOfISOWeek;
 }
 
-function getMonthName(month, lang = Object()) {
-  const months = lang.months;
-  return months[month];
-}
+const days = ["Ma", "Ti", "Ke", "To", "Pe", "La", "Su"];

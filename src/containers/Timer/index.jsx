@@ -205,7 +205,7 @@ const Timer = () => {
     <Container
       sx={{
         [theme.breakpoints.down("sm")]: {
-          padding: "0px",
+          padding: "5px",
         },
       }}
     >
@@ -265,15 +265,18 @@ const Timer = () => {
           <Grid item xs={12}>
             <Box
               sx={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
                 backgroundColor: "background.paper",
                 padding: "10px",
               }}
             >
-              <Typography variant="h6" color="text.secondary" sx={{flex: "80% auto"}}>
+              <Typography variant="h6" color="text.secondary">
                 Ei lähetetty
               </Typography>
 
-              <ErrorOutlineIcon />
+              <ErrorOutlineIcon sx={{color: "error.light"}}/>
             </Box>
 
             {notsent.length > 0 && (
