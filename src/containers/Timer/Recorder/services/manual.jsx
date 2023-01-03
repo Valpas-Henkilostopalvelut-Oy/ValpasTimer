@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Grid } from "@mui/material";
 import { EditDescription } from "./editdescription.jsx";
 import { EditWorkplaceManual } from "./editworkplace.jsx";
-import { Editdate, Editstime, Edetime, Totaltime, Createtimeentry } from "./times.jsx";
+import { Editdate, Edittime, Edetime, Totaltime, Createtimeentry } from "./times.jsx";
 import { PropTypes } from "prop-types";
 import { EditWorkitemManual } from "./editworkitem.jsx";
 
@@ -43,10 +43,10 @@ export const Manual = ({ description, sel, setDescription, setSel, works, lang, 
         />
       </Grid>
       <Grid item xs={4} md={2.4}>
-        <Editstime sTime={sTime} setSTime={setSTime} lang={lang} date={date} />
+        <Edittime time={sTime} setTime={setSTime} label={lang.start_time} date={date} />
       </Grid>
       <Grid item xs={4} md={2.4}>
-        <Edetime eTime={eTime} setETime={setETime} lang={lang} date={date} />
+        <Edittime time={eTime} setTime={setETime} label={lang.end_time} date={date} />
       </Grid>
       <Grid item xs={12} md={2.4}>
         <Totaltime sTime={sTime} eTime={eTime} />

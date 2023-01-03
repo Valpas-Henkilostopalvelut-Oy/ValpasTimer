@@ -12,6 +12,7 @@ import { EditDateMD, EditDateSM } from "./editdate.jsx";
 import { BreakitemMD, AddBreakMD, AddBreakSM, BreakitemSM } from "./break.jsx";
 import { totaldaytime, totalweektime } from "./totaltime.jsx";
 import { CustomTableCell } from "./tablecell.jsx";
+import { PropTypes } from "prop-types";
 
 const isSent = (data) => {
   const items = data.arr.length;
@@ -20,7 +21,7 @@ const isSent = (data) => {
   return sent === items;
 };
 
-export const WeekRow = ({ grouped, lang, works, isEmpty, selected }) => {
+export const WeekRow = ({ grouped, lang, works, isEmpty }) => {
   return grouped.map((week) => (
     <Fragment key={week.week}>
       <Box
@@ -336,4 +337,24 @@ const RowDetailsMD = ({ data, lang, workplaces, isEmpty, sx }) => {
       </Fragment>
     );
   });
+};
+
+DetailsSM.propTypes = {
+  row: PropTypes.object,
+  workplaces: PropTypes.array,
+  lang: PropTypes.object,
+  isEmpty: PropTypes.bool,
+  total: PropTypes.string,
+  date: PropTypes.string,
+  sx: PropTypes.object,
+};
+
+DetailsMD.propTypes = {
+  row: PropTypes.object,
+  workplaces: PropTypes.array,
+  lang: PropTypes.object,
+  isEmpty: PropTypes.bool,
+  total: PropTypes.string,
+  date: PropTypes.string,
+  sx: PropTypes.object,
 };

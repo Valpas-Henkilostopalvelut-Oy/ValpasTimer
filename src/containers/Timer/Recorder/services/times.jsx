@@ -9,8 +9,7 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { TimePicker } from "@mui/x-date-pickers/TimePicker";
 import fi from "date-fns/locale/fi";
-//import enGB from "date-fns/esm/locale/en-GB";
-//import { useAppContext } from "../../../../services/contextLib";
+import { timeMaker } from "../../../../services/time.jsx";
 import { PropTypes } from "prop-types";
 
 export const Editdate = ({ date = null, setDate, sTime, eTime, setSTime, setETime, lang = { date: "Date" } }) => {
@@ -50,44 +49,27 @@ export const Editdate = ({ date = null, setDate, sTime, eTime, setSTime, setETim
   );
 };
 
-export const Editstime = ({ date, sTime, setSTime, lang = { start_time: "Start time" } }) => {
-  const [value, setValue] = useState(new Date(sTime));
+export const Edittime = ({ date, time, setTime, label = "Time" }) => {
+  let hours = String(new Date(time).getHours()).padStart(2, "0");
+  let minutes = String(new Date(time).getMinutes()).padStart(2, "0");
 
-  useEffect(() => {
-    let isActive = false;
-
-    const updateSTime = () => {
-      setSTime(
-        new Date(
-          date.getFullYear(),
-          date.getMonth(),
-          date.getDate(),
-          value.getHours(),
-          value.getMinutes(),
-          value.getSeconds()
-        )
-      );
-    };
-
-    if (!isNaN(value) && value && !isActive) {
-      updateSTime();
-    }
-
-    return () => (isActive = true);
-  }, [date, setSTime, value]);
+  const [value, setValue] = useState(`${hours}:${minutes}`);
 
   return (
-    <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={fi}>
-      <TimePicker
-        disableOpenPicker
-        label={lang.start_time}
-        value={value}
-        onChange={(newValue) => {
-          setValue(newValue);
-        }}
-        renderInput={(params) => <TextField variant="outlined" {...params} />}
-      />
-    </LocalizationProvider>
+    <TextField
+      label={label}
+      variant="outlined"
+      value={value}
+      onChange={(e) => {
+        setValue(e.target.value);
+      }}
+      onBlur={(e) => {
+        let hours = String(timeMaker(e, time).h).padStart(2, "0");
+        let minutes = String(timeMaker(e, time).m).padStart(2, "0");
+        setTime(new Date(date.getFullYear(), date.getMonth(), date.getDate(), hours, minutes, 0));
+        setValue(`${hours}:${minutes}`);
+      }}
+    />
   );
 };
 
@@ -246,7 +228,7 @@ Editdate.propTypes = {
   lang: PropTypes.object,
 };
 
-Editstime.propTypes = {
+Edittime.propTypes = {
   date: PropTypes.instanceOf(Date),
   sTime: PropTypes.instanceOf(Date),
   setSTime: PropTypes.func,
