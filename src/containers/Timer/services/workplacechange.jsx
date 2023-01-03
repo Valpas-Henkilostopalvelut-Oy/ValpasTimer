@@ -72,7 +72,7 @@ const SelectWork = ({
           variant="p"
           onClick={() => setOpen(true && !isSent)}
           textOverflow={"ellipsis"}
-          sx={{ cursor: !isSent && "pointer" }}
+          sx={{ cursor: !isSent && "pointer", color: !work && "default.valpas" }}
         >
           {work ? workit.name : lang.no_work}
         </Typography>
@@ -172,7 +172,7 @@ export const ChangeWorkplaceSM = ({ date, workplaces = null, work, lang, isEmpty
   const isSent = date.isSent;
 
   return (
-    <CustomTableCell sx={sx} colSpan={2} align="center">
+    <CustomTableCell sx={sx} colSpan={3} align="left">
       {!isSent ? (
         <SelectWork date={date} workplaces={workplaces} work={work} lang={lang} />
       ) : (

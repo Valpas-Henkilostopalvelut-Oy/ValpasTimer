@@ -8,7 +8,7 @@ import { Moreitem, Moreitemday } from "./buttons.jsx";
 import { TotalTime } from "./edittotaltime.jsx";
 import { EditDescriptionMD } from "./editdescription.jsx";
 import { ChangeWorkplaceMD, ChangeWorkplaceSM } from "./workplacechange.jsx";
-import { EditDateMD, EditDateSM } from "./editdate.jsx";
+import { EditDateMD, EditDate } from "./editdate.jsx";
 import { BreakitemMD, AddBreakMD, AddBreakSM, BreakitemSM } from "./break.jsx";
 import { totaldaytime, totalweektime } from "./totaltime.jsx";
 import { CustomTableCell } from "./tablecell.jsx";
@@ -86,14 +86,149 @@ const weekisconformed = (arr, selected) => {
   return false;
 };
 
+const WeekHeadMD = ({ week, selected, lang, isEmpty, isThis, sx }) => {
+  const theme = useTheme();
+  let isSent = weekissent(week.arr, selected);
+  let isConfirmed = weekisconformed(week.arr, selected);
+  let h = totalweektime(week).h;
+  let min = totalweektime(week).min;
+
+  return (
+    <TableRow sx={sx}>
+      <CustomTableCell
+        width={"9%"}
+        sx={{
+          borderTop: "0px",
+          [theme.breakpoints.down("sm")]: {
+            display: "none",
+          },
+        }}
+      />
+
+      <CustomTableCell sx={{ borderTop: "0px" }}>
+        <Typography variant="h6" color="#ff6600">
+          {lang.history.week} {week.week}
+        </Typography>
+      </CustomTableCell>
+
+      <CustomTableCell align="center" sx={{ borderTop: "0px" }}>
+        <Typography variant="p" color="text.secondary">
+          {week.period}
+        </Typography>
+      </CustomTableCell>
+
+      <CustomTableCell align="right" sx={{ borderTop: "0px" }}>
+        <Typography variant="p" color="text.secondary">
+          {h}h {min}min
+        </Typography>
+      </CustomTableCell>
+
+      <CustomTableCell sx={{ borderTop: "0px" }} align="right" width={"9%"}>
+        {!isSent ? (
+          <IconButton
+            size="small"
+            sx={{
+              ":focus": {
+                outline: "0px",
+              },
+            }}
+            disabled={!isEmpty}
+            onClick={() => sendweek(week.arr, selected)}
+            hidden={isSent || !selected}
+          >
+            <SendIcon
+              sx={{
+                color: !isThis ? "error.light" : "default.valpas",
+              }}
+            />
+          </IconButton>
+        ) : (
+          !isConfirmed && (
+            <HourglassTopIcon
+              sx={{
+                color: "default.valpas",
+              }}
+            />
+          )
+        )}
+      </CustomTableCell>
+    </TableRow>
+  );
+};
+
+const WeekHeadSM = ({ week, selected, lang, isEmpty, isThis, sx }) => {
+  const theme = useTheme();
+  let isSent = weekissent(week.arr, selected);
+  let isConfirmed = weekisconformed(week.arr, selected);
+  let h = totalweektime(week).h;
+  let min = totalweektime(week).min;
+
+  return (
+    <TableRow sx={sx}>
+      <CustomTableCell
+        width={"9%"}
+        sx={{
+          borderTop: "0px",
+          [theme.breakpoints.down("sm")]: {
+            display: "none",
+          },
+        }}
+      />
+
+      <CustomTableCell sx={{ borderTop: "0px" }}>
+        <Typography variant="h6" color="#ff6600">
+          {lang.history.week} {week.week}
+        </Typography>
+      </CustomTableCell>
+
+      <CustomTableCell align="left" sx={{ borderTop: "0px" }}>
+        <Typography variant="p" color="text.secondary">
+          {week.period}
+        </Typography>
+      </CustomTableCell>
+
+      <CustomTableCell align="left" sx={{ borderTop: "0px" }}>
+        <Typography variant="p" color="text.secondary">
+          {h}h {min}min
+        </Typography>
+      </CustomTableCell>
+
+      <CustomTableCell sx={{ borderTop: "0px" }} align="right" width={"9%"}>
+        {!isSent ? (
+          <IconButton
+            size="small"
+            sx={{
+              ":focus": {
+                outline: "0px",
+              },
+            }}
+            disabled={!isEmpty}
+            onClick={() => sendweek(week.arr, selected)}
+            hidden={isSent || !selected}
+          >
+            <SendIcon
+              sx={{
+                color: !isThis ? "error.light" : "default.valpas",
+              }}
+            />
+          </IconButton>
+        ) : (
+          !isConfirmed && (
+            <HourglassTopIcon
+              sx={{
+                color: "default.valpas",
+              }}
+            />
+          )
+        )}
+      </CustomTableCell>
+    </TableRow>
+  );
+};
+
 export const WeekRow = ({ grouped, lang, works, isEmpty, selected, isThis = false }) => {
   const theme = useTheme();
   return grouped.map((week) => {
-    let isSent = weekissent(week.arr, selected);
-    let isConfirmed = weekisconformed(week.arr, selected);
-    let h = totalweektime(week).h;
-    let min = totalweektime(week).min;
-
     return (
       <Fragment key={week.week}>
         <Box
@@ -106,65 +241,31 @@ export const WeekRow = ({ grouped, lang, works, isEmpty, selected, isThis = fals
           <TableContainer>
             <Table aria-label="collapsible table" size="small">
               <TableBody>
-                <TableRow>
-                  <CustomTableCell
-                    width={"9%"}
-                    sx={{
-                      borderTop: "0px",
-                      [theme.breakpoints.down("sm")]: {
-                        display: "none",
-                      },
-                    }}
-                  />
+                <WeekHeadMD
+                  week={week}
+                  selected={selected}
+                  lang={lang}
+                  isEmpty={isEmpty}
+                  isThis={isThis}
+                  sx={{
+                    [theme.breakpoints.down("sm")]: {
+                      display: "none",
+                    },
+                  }}
+                />
 
-                  <CustomTableCell sx={{ borderTop: "0px" }}>
-                    <Typography variant="h6" color="#ff6600">
-                      {lang.history.week} {week.week}
-                    </Typography>
-                  </CustomTableCell>
-
-                  <CustomTableCell align="center" sx={{ borderTop: "0px" }}>
-                    <Typography variant="p" color="text.secondary">
-                      {week.period}
-                    </Typography>
-                  </CustomTableCell>
-
-                  <CustomTableCell align="right" sx={{ borderTop: "0px" }}>
-                    <Typography variant="p" color="text.secondary">
-                      {h}h {min}min
-                    </Typography>
-                  </CustomTableCell>
-
-                  <CustomTableCell sx={{ borderTop: "0px" }} align="right" width={"9%"}>
-                    {!isSent ? (
-                      <IconButton
-                        size="small"
-                        sx={{
-                          ":focus": {
-                            outline: "0px",
-                          },
-                        }}
-                        disabled={!isEmpty}
-                        onClick={() => sendweek(week.arr, selected)}
-                        hidden={isSent || !selected}
-                      >
-                        <SendIcon
-                          sx={{
-                            color: !isThis ? "error.light" : "default.valpas",
-                          }}
-                        />
-                      </IconButton>
-                    ) : (
-                      !isConfirmed && (
-                        <HourglassTopIcon
-                          sx={{
-                            color: "default.valpas",
-                          }}
-                        />
-                      )
-                    )}
-                  </CustomTableCell>
-                </TableRow>
+                <WeekHeadSM
+                  week={week}
+                  selected={selected}
+                  lang={lang}
+                  isEmpty={isEmpty}
+                  isThis={isThis}
+                  sx={{
+                    [theme.breakpoints.up("sm")]: {
+                      display: "none",
+                    },
+                  }}
+                />
               </TableBody>
             </Table>
           </TableContainer>
@@ -226,7 +327,7 @@ const Row = ({ week, lang, works, isEmpty }) => {
                       workplaces={works}
                       lang={lang}
                       isEmpty={isEmpty}
-                      total={`${hours}:${minutes}`}
+                      total={{ h: hours, min: minutes }}
                       date={date.date}
                     />
                   </Fragment>
@@ -258,11 +359,13 @@ const DetailsSM = ({ row, workplaces, lang, isEmpty, total, date, sx }) => {
           </IconButton>
         </CustomTableCell>
 
-        <CustomTableCell align="center" colSpan={2} sx={{ borderTop: "0px" }}>
+        <CustomTableCell align="left" sx={{ borderTop: "0px" }}>
           <Typography variant="p" fontWeight="800">
             {date}
           </Typography>
         </CustomTableCell>
+
+        <CustomTableCell sx={{ borderTop: "0px" }} />
 
         <CustomTableCell align="right" sx={{ borderTop: "0px" }}>
           <Moreitemday date={row} lang={lang} isEmpty={isEmpty} />
@@ -270,8 +373,9 @@ const DetailsSM = ({ row, workplaces, lang, isEmpty, total, date, sx }) => {
       </TableRow>
 
       <TableRow sx={sx}>
-        <CustomTableCell colSpan={4}>
-          <Typography variant="p" fontWeight="800">
+        <CustomTableCell />
+        <CustomTableCell colSpan={3} align="left">
+          <Typography variant="p">
             {workplaces.find((item) => item.id === row.workId) !== undefined
               ? workplaces.find((item) => item.id === row.workId).name
               : lang.title.select_workplace}
@@ -280,23 +384,21 @@ const DetailsSM = ({ row, workplaces, lang, isEmpty, total, date, sx }) => {
       </TableRow>
 
       <TableRow sx={sx}>
+        <CustomTableCell align="left" width={"28%"} />
+
         <CustomTableCell align="left">
-          <Typography variant="p" fontWeight="800">
-            <Time time={row.arr[row.arr.length - 1].timeInterval.start} />
+          <Typography variant="p">
+            <Time time={row.arr[row.arr.length - 1].timeInterval.start} /> - <Time time={row.arr[0].timeInterval.end} />
           </Typography>
         </CustomTableCell>
 
         <CustomTableCell align="left">
-          <Typography variant="p" fontWeight="800">
-            <Time time={row.arr[0].timeInterval.end} />
+          <Typography variant="p">
+            {total.h}h {total.min}min
           </Typography>
         </CustomTableCell>
 
-        <CustomTableCell align="right" colSpan={2}>
-          <Typography variant="p" fontWeight="800">
-            {total}
-          </Typography>
-        </CustomTableCell>
+        <CustomTableCell />
       </TableRow>
 
       {open && (
@@ -378,7 +480,7 @@ const RowDetailsSM = ({ data, lang, workplaces, isEmpty, sx }) => {
     return (
       <Fragment key={i}>
         <TableRow sx={sx}>
-          <EditDateSM data={row} lang={lang} sx={{ ...sx }} />
+          <CustomTableCell />
           <ChangeWorkplaceSM
             date={row}
             workplaces={workplaces}
@@ -390,15 +492,15 @@ const RowDetailsSM = ({ data, lang, workplaces, isEmpty, sx }) => {
         </TableRow>
 
         <TableRow>
-          <CustomTableCell align="right">
-            <EditSTime date={row} />
+          <CustomTableCell align="center">
+            <EditDate data={row} lang={lang} />
           </CustomTableCell>
 
           <CustomTableCell align="left">
-            <EditETime date={row} />
+            <EditSTime date={row} /> - <EditETime date={row} />
           </CustomTableCell>
 
-          <CustomTableCell align="right">
+          <CustomTableCell align="left">
             <TotalTime date={row} />
           </CustomTableCell>
 
@@ -472,7 +574,7 @@ DetailsSM.propTypes = {
   workplaces: PropTypes.array,
   lang: PropTypes.object,
   isEmpty: PropTypes.bool,
-  total: PropTypes.string,
+  total: PropTypes.object,
   date: PropTypes.string,
   sx: PropTypes.object,
 };

@@ -36,14 +36,6 @@ export const EditDateMD = ({ data, lang }) => {
   );
 };
 
-export const EditDateSM = ({ data, lang, sx }) => {
-  return (
-    <CustomTableCell colSpan={2} sx={sx} align="center">
-      <EditDate data={data} lang={lang} />
-    </CustomTableCell>
-  );
-};
-
 const updateDate = async ({ value, data }) => {
   let year = new Date(value).getFullYear();
   let date = new Date(value).getDate();
@@ -60,7 +52,7 @@ const updateDate = async ({ value, data }) => {
   ).catch((e) => console.warn(e));
 };
 
-const EditDate = ({ data, lang = { date: "Date" } }) => {
+export const EditDate = ({ data, lang = { date: "Date" } }) => {
   const [value, setValue] = React.useState(new Date(data.timeInterval.start));
   const [open, setOpen] = React.useState(false);
   const isSent = data.isSent;
@@ -70,12 +62,14 @@ const EditDate = ({ data, lang = { date: "Date" } }) => {
   };
 
   return (
-    <Box
-      sx={{
-        cursor: !isSent ? "pointer" : "default",
-      }}
-    >
-      <Typography variant="p" onClick={() => setOpen(true)}>
+    <>
+      <Typography
+        variant="p"
+        onClick={() => setOpen(true)}
+        sx={{
+          cursor: !isSent ? "pointer" : "default",
+        }}
+      >
         {new Date(data.timeInterval.start).getDate()}.{new Date(data.timeInterval.start).getMonth() + 1}.
         {new Date(data.timeInterval.start).getFullYear()}
       </Typography>
@@ -100,7 +94,7 @@ const EditDate = ({ data, lang = { date: "Date" } }) => {
           </Button>
         </DialogActions>
       </Dialog>
-    </Box>
+    </>
   );
 };
 
