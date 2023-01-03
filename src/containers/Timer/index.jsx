@@ -109,7 +109,7 @@ const Timer = () => {
             (a) =>
               !a.isActive &&
               a.userId === user.username &&
-              (selected !== "" ? a.workspaceId === selected : true) &&
+              (selected !== "all" ? a.workspaceId === selected : true) &&
               !a.isSent
           );
 
@@ -119,7 +119,7 @@ const Timer = () => {
               a.isSent &&
               a.userId === user.username &&
               !a.isConfirmed &&
-              (selected !== "" ? a.workspaceId === selected : true)
+              (selected !== "all" ? a.workspaceId === selected : true)
           );
 
           const notsentweek = data.filter(
@@ -127,7 +127,7 @@ const Timer = () => {
               !a.isActive &&
               !a.isSent &&
               a.userId === user.username &&
-              (selected !== "" ? a.workspaceId === selected : true)
+              (selected !== "all" ? a.workspaceId === selected : true)
           );
 
           setNotConfirmedWeek(groupBy(notconfirmedweek, works, langValue));
@@ -158,6 +158,7 @@ const Timer = () => {
             });
           }
           setWorks(w);
+          setSelected("all")
         })
         .catch((error) => console.warn(error));
     };
@@ -276,7 +277,7 @@ const Timer = () => {
                 Ei lähetetty
               </Typography>
 
-              <ErrorOutlineIcon sx={{color: "error.light"}}/>
+              <ErrorOutlineIcon sx={{ color: "error.light" }} />
             </Box>
 
             {notsent.length > 0 && (

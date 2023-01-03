@@ -13,8 +13,6 @@ import { BreakitemMD, AddBreakMD, AddBreakSM, BreakitemSM } from "./break.jsx";
 import { totaldaytime, totalweektime } from "./totaltime.jsx";
 import { CustomTableCell } from "./tablecell.jsx";
 import { PropTypes } from "prop-types";
-import { MakePDF } from "../../../components/MakePDF/index.jsx";
-import { ReportAll } from "./buttons.jsx";
 import SendIcon from "@mui/icons-material/Send";
 import { DataStore } from "aws-amplify";
 import { TimeEntry } from "../../../models/index.js";
@@ -27,39 +25,35 @@ const isSent = (data) => {
   return sent === items;
 };
 
-const sendweek = async (arr, selected) => {
+const sendweek = async (arr) => {
   for (let i = 0; i < arr.length; i++) {
-    if (selected !== "") {
-      const work = arr[i].arr.filter((item) => item.workId === selected);
+    const work = arr[i].arr;
 
-      for (let ii = 0; ii < work.length; ii++) {
-        const items = work[ii].arr;
+    for (let ii = 0; ii < work.length; ii++) {
+      const items = work[ii].arr;
 
-        for (let iii = 0; iii < items.length; iii++) {
-          const element = items[iii];
-          await DataStore.save(
-            TimeEntry.copyOf(element, (updated) => {
-              updated.isSent = true;
-            })
-          );
-        }
+      for (let iii = 0; iii < items.length; iii++) {
+        const element = items[iii];
+        await DataStore.save(
+          TimeEntry.copyOf(element, (updated) => {
+            updated.isSent = true;
+          })
+        );
       }
     }
   }
 };
 
-const weekissent = (arr, selected) => {
+const weekissent = (arr) => {
   for (let i = 0; i < arr.length; i++) {
-    if (selected !== "") {
-      const work = arr[i].arr.filter((item) => item.workId === selected);
+    const work = arr[i].arr
 
-      for (let ii = 0; ii < work.length; ii++) {
-        const items = work[ii].arr;
+    for (let ii = 0; ii < work.length; ii++) {
+      const items = work[ii].arr;
 
-        for (let iii = 0; iii < items.length; iii++) {
-          const element = items[iii];
-          if (element.isSent) return true;
-        }
+      for (let iii = 0; iii < items.length; iii++) {
+        const element = items[iii];
+        if (element.isSent) return true;
       }
     }
   }
@@ -90,8 +84,8 @@ const WeekHeadMD = ({ week, selected, lang, isEmpty, isThis, sx }) => {
   const theme = useTheme();
   let isSent = weekissent(week.arr, selected);
   let isConfirmed = weekisconformed(week.arr, selected);
-  let h = totalweektime(week).h;
-  let min = totalweektime(week).min;
+  let h = totalweektime(week).h !== 0 ? totalweektime(week).h + " h " : "";
+  let min = totalweektime(week).min !== 0 ? totalweektime(week).min + " min" : "";
 
   return (
     <TableRow sx={sx}>
@@ -119,7 +113,7 @@ const WeekHeadMD = ({ week, selected, lang, isEmpty, isThis, sx }) => {
 
       <CustomTableCell align="right" sx={{ borderTop: "0px" }}>
         <Typography variant="p" color="text.secondary">
-          {h}h {min}min
+          {h} {min}
         </Typography>
       </CustomTableCell>
 
@@ -160,9 +154,8 @@ const WeekHeadSM = ({ week, selected, lang, isEmpty, isThis, sx }) => {
   const theme = useTheme();
   let isSent = weekissent(week.arr, selected);
   let isConfirmed = weekisconformed(week.arr, selected);
-  let h = totalweektime(week).h;
-  let min = totalweektime(week).min;
-
+  let h = totalweektime(week).h !== 0 ? totalweektime(week).h + " h " : "";
+  let min = totalweektime(week).min !== 0 ? totalweektime(week).min + " min" : "";
   return (
     <TableRow sx={sx}>
       <CustomTableCell
@@ -189,7 +182,7 @@ const WeekHeadSM = ({ week, selected, lang, isEmpty, isThis, sx }) => {
 
       <CustomTableCell align="left" sx={{ borderTop: "0px" }}>
         <Typography variant="p" color="text.secondary">
-          {h}h {min}min
+          {h} {min}
         </Typography>
       </CustomTableCell>
 
@@ -283,8 +276,8 @@ const Row = ({ week, lang, works, isEmpty }) => {
   return (
     week &&
     week.arr.map((date) => {
-      let hours = String(totaldaytime(date).h).padStart(2, "0");
-      let minutes = String(totaldaytime(date).min).padStart(2, "0");
+      let h = totaldaytime(date).h !== 0 ? totaldaytime(date).h + " h " : "";
+      let min = totaldaytime(date).min !== 0 ? totaldaytime(date).min + " min" : "";
 
       return (
         <Box
@@ -313,7 +306,7 @@ const Row = ({ week, lang, works, isEmpty }) => {
                       workplaces={works}
                       lang={lang}
                       isEmpty={isEmpty}
-                      total={`${hours}:${minutes}`}
+                      total={{ h: h, min: min }}
                       date={date.date}
                     />
                     <DetailsSM
@@ -327,7 +320,7 @@ const Row = ({ week, lang, works, isEmpty }) => {
                       workplaces={works}
                       lang={lang}
                       isEmpty={isEmpty}
-                      total={{ h: hours, min: minutes }}
+                      total={{ h: h, min: min }}
                       date={date.date}
                     />
                   </Fragment>
@@ -353,7 +346,7 @@ const DetailsSM = ({ row, workplaces, lang, isEmpty, total, date, sx }) => {
   return (
     <Fragment>
       <TableRow sx={sx}>
-        <CustomTableCell sx={{ borderTop: "0px" }}>
+        <CustomTableCell sx={{ borderTop: "0px" }} width={"10%"}>
           <IconButton aria-label="expand row" size="small" onClick={() => setOpen(!open)} sx={{ cursor: "pointer" }}>
             {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
           </IconButton>
@@ -394,7 +387,7 @@ const DetailsSM = ({ row, workplaces, lang, isEmpty, total, date, sx }) => {
 
         <CustomTableCell align="left">
           <Typography variant="p">
-            {total.h}h {total.min}min
+            {total.h} {total.min}
           </Typography>
         </CustomTableCell>
 
@@ -450,13 +443,13 @@ const DetailsMD = ({ row, workplaces, lang, isEmpty, total, date, sx }) => {
 
         <CustomTableCell align="right" sx={{ borderTop: "0px" }}>
           <Typography variant="p" fontWeight="800">
-            <Time time={row.arr[row.arr.length - 1].timeInterval.start} /> - <Time time={row.arr[0].timeInterval.end} />
+            <Time time={row.arr[0].timeInterval.start} /> - <Time time={row.arr[row.arr.length - 1].timeInterval.end} />
           </Typography>
         </CustomTableCell>
 
         <CustomTableCell align="right" sx={{ borderTop: "0px" }}>
           <Typography variant="p" fontWeight="800">
-            {total}
+            {total.h} {total.min}
           </Typography>
         </CustomTableCell>
 

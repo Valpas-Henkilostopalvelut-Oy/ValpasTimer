@@ -13,7 +13,7 @@ export const Selectwork = ({ works, setSel, sel, lang = { workplace: "Workplace"
           label={lang.workplace}
           onChange={(e) => setSel(e.target.value)}
         >
-          <MenuItem value="">{lang.all}</MenuItem>
+          <MenuItem value="all">{lang.all}</MenuItem>
           {works.map((item) => (
             <MenuItem key={item.id} value={item.id}>
               {item.name}

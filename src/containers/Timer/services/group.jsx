@@ -10,7 +10,7 @@ export function groupBy(array, works = Array(), lang = Object()) {
     .reduce((res, val) => {
       const dat = new Date(val.timeInterval.start);
       const by = dat.toDateString();
-      const day = dat.getDay();
+      const day = dat.getUTCDay();
 
       const week = getWeekNumber(dat);
 
@@ -25,7 +25,7 @@ export function groupBy(array, works = Array(), lang = Object()) {
           }.${endOfWeek.getFullYear()}`,
           arr: [
             {
-              date: `${days[day - 1]} ${dat.getUTCDate()}.${dat.getMonth() + 1}`,
+              date: `${days[day]} ${dat.getUTCDate()}.${dat.getMonth() + 1}`,
               id: by,
               arr: [{ workId: val.workspaceId, arr: [val] }],
             },
@@ -97,4 +97,4 @@ function getEndOfISOWeek(d) {
   return endOfISOWeek;
 }
 
-const days = ["Ma", "Ti", "Ke", "To", "Pe", "La", "Su"];
+const days = ["Su", "Ma", "Ti", "Ke", "To", "Pe", "La"];
