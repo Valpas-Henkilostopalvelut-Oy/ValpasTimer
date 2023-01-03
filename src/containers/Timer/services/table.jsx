@@ -385,13 +385,13 @@ const DetailsSM = ({ row, workplaces, lang, isEmpty, total, date, sx }) => {
           </Typography>
         </CustomTableCell>
 
-        <CustomTableCell align="left">
+        <CustomTableCell align="left" colSpan={2}>
           <Typography variant="p">
             {total.h} {total.min}
           </Typography>
         </CustomTableCell>
 
-        <CustomTableCell />
+      
       </TableRow>
 
       {open && (
@@ -447,7 +447,7 @@ const DetailsMD = ({ row, workplaces, lang, isEmpty, total, date, sx }) => {
           </Typography>
         </CustomTableCell>
 
-        <CustomTableCell align="right" sx={{ borderTop: "0px" }}>
+        <CustomTableCell align="right" sx={{ borderTop: "0px" }} width="20%">
           <Typography variant="p" fontWeight="800">
             {total.h} {total.min}
           </Typography>
