@@ -9,7 +9,7 @@ import { useAppContext } from "../../services/contextLib.jsx";
 import { getWeekNumber } from "./services/group.jsx";
 import { WeekRow } from "./services/table.jsx";
 import { checkActive, advanceTime } from "./services/loadtimer.jsx";
-import { ReportAll } from "./services/buttons.jsx";
+import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 
 const Timer = () => {
   const [grouped, setGrouped] = useState(null);
@@ -32,6 +32,7 @@ const Timer = () => {
   const [isPaused, setIsPaused] = useState(false);
   const [workitems, setWorkitems] = useState(null);
   const [workitem, setWorkitem] = useState("");
+  const [notsent, setNotsent] = useState(null);
 
   const lang = langValue.track || {
     recorder: {
@@ -121,8 +122,17 @@ const Timer = () => {
               (selected !== "" ? a.workspaceId === selected : true)
           );
 
+          const notsentweek = data.filter(
+            (a) =>
+              !a.isActive &&
+              !a.isSent &&
+              a.userId === user.username &&
+              (selected !== "" ? a.workspaceId === selected : true)
+          );
+
           setNotConfirmedWeek(groupBy(notconfirmedweek, works, langValue));
           setGrouped(groupBy(currentweek, works, langValue).filter((t) => t.week === thisweek));
+          setNotsent(groupBy(notsentweek, works, langValue));
         });
       });
     };
@@ -232,63 +242,60 @@ const Timer = () => {
           <Grid item xs={12}>
             <Box
               sx={{
-                backgroundColor: "track.yellow",
-
-                [theme.breakpoints.up("sm")]: {
-                  padding: "10px",
-                },
-                [theme.breakpoints.down("sm")]: {
-                  padding: "10px 0px",
-                },
+                padding: "10px",
               }}
             >
-              <Box
-                sx={{
-                  backgroundColor: "background.paper",
-                  padding: "10px",
-                  display: "flex",
-                  justifyContent: "space-between",
-                }}
-              >
-                <Typography variant="h6" color="text.secondary">
-                  {lang.history.title.this_week}
-                </Typography>
-                <ReportAll week={grouped} lang={lang.track} works={works} />
-              </Box>
-
-              {grouped.length > 0 && (
-                <WeekRow grouped={grouped} lang={lang} isEmpty={isEmpty} works={works} selected={selected} />
-              )}
+              <Typography variant="h6" color="text.secondary">
+                {lang.history.title.this_week}
+              </Typography>
             </Box>
+
+            {grouped.length > 0 && (
+              <WeekRow
+                grouped={grouped}
+                lang={lang}
+                isEmpty={isEmpty}
+                works={works}
+                selected={selected}
+                isThis={true}
+              />
+            )}
           </Grid>
 
           <Grid item xs={12}>
             <Box
               sx={{
-                backgroundColor: "track.red",
-                [theme.breakpoints.up("sm")]: {
-                  padding: "10px",
-                },
-                [theme.breakpoints.down("sm")]: {
-                  padding: "20px 0px",
-                },
+                backgroundColor: "background.paper",
+                padding: "10px",
               }}
             >
-              <Box
-                sx={{
-                  backgroundColor: "background.paper",
-                  padding: "10px",
-                }}
-              >
-                <Typography variant="h6" color="text.secondary">
-                  {lang.history.title.not_confirmed}
-                </Typography>
-              </Box>
+              <Typography variant="h6" color="text.secondary" sx={{flex: "80% auto"}}>
+                Ei lähetetty
+              </Typography>
 
-              {notConfirmedWeek.length > 0 && (
-                <WeekRow grouped={notConfirmedWeek} lang={lang} isEmpty={isEmpty} works={works} selected={selected} />
-              )}
+              <ErrorOutlineIcon />
             </Box>
+
+            {notsent.length > 0 && (
+              <WeekRow grouped={notsent} lang={lang} isEmpty={isEmpty} works={works} selected={selected} />
+            )}
+          </Grid>
+
+          <Grid item xs={12}>
+            <Box
+              sx={{
+                backgroundColor: "background.paper",
+                padding: "10px",
+              }}
+            >
+              <Typography variant="h6" color="text.secondary">
+                {lang.history.title.not_confirmed}
+              </Typography>
+            </Box>
+
+            {notConfirmedWeek.length > 0 && (
+              <WeekRow grouped={notConfirmedWeek} lang={lang} isEmpty={isEmpty} works={works} selected={selected} />
+            )}
           </Grid>
         </Grid>
       ) : (

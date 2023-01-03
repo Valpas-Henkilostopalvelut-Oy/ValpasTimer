@@ -215,6 +215,9 @@ export const eng = {
         confirm: "Confirm",
         cancel: "Cancel",
       },
+      buttons: {
+        weekreport: "Confirm",
+      },
     },
     workplaces: {
       title: "Workplacess",

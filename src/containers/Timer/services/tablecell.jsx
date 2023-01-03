@@ -7,6 +7,10 @@ export const CustomTableCell = styled(TableCell)(({ theme }) => ({
     color: theme.palette.common.white,
   },
   [`&.${tableCellClasses.body}`]: {
-    borderBottomColor: theme.palette.table.cell.border_color
+    borderTopRadius: "1px",
+    borderTopStyle: "solid",
+    borderTopColor: theme.palette.table.cell.border_color,
+    borderBottom: "0px",
+    borderBottomColor: theme.palette.table.cell.border_color,
   },
 }));

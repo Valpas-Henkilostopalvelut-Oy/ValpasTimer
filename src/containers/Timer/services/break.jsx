@@ -44,7 +44,7 @@ const Breakreasonselect = ({ data, item, lang }) => {
     { id: Breakreason.GOING, name: lang.going },
     { id: Breakreason.ACCIDENT, name: lang.accident },
   ];
-  const [reason, setReason] = useState(item.reason);
+  const [reason, setReason] = useState(item.reason ? item.reason : "");
   const isSent = data.isSent;
 
   const handleChange = (event) => {
@@ -281,7 +281,8 @@ export const BreakitemMD = ({ item, data, isEmpty, sx, lang }) => {
       <CustomTableCell>
         <Breakicon item={item} />
       </CustomTableCell>
-      <CustomTableCell colSpan={2}>
+      <CustomTableCell />
+      <CustomTableCell>
         <Breakreasonselect item={item} data={data} lang={lang} />
       </CustomTableCell>
       <CustomTableCell align="right">

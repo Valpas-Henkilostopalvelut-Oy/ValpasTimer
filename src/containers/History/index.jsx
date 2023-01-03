@@ -61,7 +61,8 @@ export const History = () => {
               !a.isActive &&
               a.userId === user.username &&
               (selected !== "" ? a.workspaceId === selected : true) &&
-              (!a.isSent || a.isConfirmed)
+              a.isConfirmed &&
+              a.isSent
           );
           setConfirmedWeeks(groupBy(confirmedweek, works, langValue));
         });
@@ -84,13 +85,13 @@ export const History = () => {
       {works && confirmedWeeks ? (
         <Box
           sx={{
-            backgroundColor: "track.green",
+            backgroundColor: "default.white",
 
             [theme.breakpoints.up("sm")]: {
-              padding: "10px",
+              padding: "3px",
             },
             [theme.breakpoints.down("sm")]: {
-              padding: "10px 0px",
+              padding: "3px 0px",
             },
           }}
         >
@@ -98,10 +99,10 @@ export const History = () => {
             sx={{
               backgroundColor: "background.paper",
               padding: "10px",
-              marginBottom: "10px",
+              marginBottom: "3px",
             }}
           >
-            <Selectwork works={works} setSel={setSelected} sel={selected} lang={lang} />
+            <Selectwork works={works} setSel={setSelected} sel={selected} lang={lang.history} />
           </Box>
 
           <Box
@@ -113,7 +114,7 @@ export const History = () => {
             }}
           >
             <Typography variant="h6" color="text.secondary">
-              History
+              Arkisto
             </Typography>
 
             <MakePDF data={confirmedWeeks} isEmpty={isEmpty} works={works} selected={selected} />

@@ -25,7 +25,12 @@ const continueTime = async (data) => {
     await DataStore.save(
       TimeEntry.copyOf(data, (updated) => {
         updated.isPaused = false;
-        updated.break.push({ start: updated.pauseStart, end: new Date().toISOString() });
+        updated.break.push({
+          start: updated.pauseStart,
+          end: new Date().toISOString(),
+          id: Date.now().toString(),
+          reason: "GOING",
+        });
       })
     );
   } else {

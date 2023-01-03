@@ -13,6 +13,12 @@ import { BreakitemMD, AddBreakMD, AddBreakSM, BreakitemSM } from "./break.jsx";
 import { totaldaytime, totalweektime } from "./totaltime.jsx";
 import { CustomTableCell } from "./tablecell.jsx";
 import { PropTypes } from "prop-types";
+import { MakePDF } from "../../../components/MakePDF/index.jsx";
+import { ReportAll } from "./buttons.jsx";
+import SendIcon from "@mui/icons-material/Send";
+import { DataStore } from "aws-amplify";
+import { TimeEntry } from "../../../models/index.js";
+import HourglassTopIcon from "@mui/icons-material/HourglassTop";
 
 const isSent = (data) => {
   const items = data.arr.length;
@@ -21,36 +27,130 @@ const isSent = (data) => {
   return sent === items;
 };
 
-export const WeekRow = ({ grouped, lang, works, isEmpty }) => {
-  return grouped.map((week) => (
-    <Fragment key={week.week}>
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          padding: 1,
-          marginTop: 1,
-          marginBottom: 1,
-          backgroundColor: "background.paper",
-        }}
-      >
-        <Typography variant="h6" color="text.secondary">
-          {lang.history.week} {week.week}
-        </Typography>
+const sendweek = async (arr, selected) => {
+  for (let i = 0; i < arr.length; i++) {
+    if (selected !== "") {
+      const work = arr[i].arr.filter((item) => item.workId === selected);
 
-        <Typography variant="p" color="text.secondary">
-          {lang.history.total_time} {totalweektime(week).h > 9 ? totalweektime(week).h : "0" + totalweektime(week).h}:
-          {totalweektime(week).min > 9 ? totalweektime(week).min : "0" + totalweektime(week).min}
-        </Typography>
+      for (let ii = 0; ii < work.length; ii++) {
+        const items = work[ii].arr;
 
-        <Typography variant="caption" color="text.secondary">
-          {week.period}
-        </Typography>
-      </Box>
+        for (let iii = 0; iii < items.length; iii++) {
+          const element = items[iii];
+          await DataStore.save(
+            TimeEntry.copyOf(element, (updated) => {
+              updated.isSent = true;
+            })
+          );
+        }
+      }
+    }
+  }
+};
 
-      <Row week={week} lang={lang.history} isEmpty={isEmpty} works={works} />
-    </Fragment>
-  ));
+const weekissent = (arr, selected) => {
+  for (let i = 0; i < arr.length; i++) {
+    if (selected !== "") {
+      const work = arr[i].arr.filter((item) => item.workId === selected);
+
+      for (let ii = 0; ii < work.length; ii++) {
+        const items = work[ii].arr;
+
+        for (let iii = 0; iii < items.length; iii++) {
+          const element = items[iii];
+          if (element.isSent) return true;
+        }
+      }
+    }
+  }
+
+  return false;
+};
+
+export const WeekRow = ({ grouped, lang, works, isEmpty, selected, isThis = false}) => {
+  const theme = useTheme();
+  return grouped.map((week) => {
+    let isSent = weekissent(week.arr, selected);
+    return (
+      <Fragment key={week.week}>
+        <Box
+          sx={{
+            padding: "10px",
+            margin: "30px 0px",
+            border: "3px solid #ff6600",
+          }}
+        >
+          <TableContainer>
+            <Table aria-label="collapsible table" size="small">
+              <TableBody>
+                <TableRow>
+                  <CustomTableCell
+                    width={"9%"}
+                    sx={{
+                      borderTop: "0px",
+                      [theme.breakpoints.down("sm")]: {
+                        display: "none",
+                      },
+                    }}
+                  />
+
+                  <CustomTableCell sx={{ borderTop: "0px" }}>
+                    <Typography variant="h6" color="#ff6600">
+                      {lang.history.week} {week.week}
+                    </Typography>
+                  </CustomTableCell>
+
+                  <CustomTableCell align="center" sx={{ borderTop: "0px" }}>
+                    <Typography variant="caption" color="text.secondary">
+                      {week.period}
+                    </Typography>
+                  </CustomTableCell>
+
+                  <CustomTableCell align="right" sx={{ borderTop: "0px" }}>
+                    <Typography variant="p" color="text.secondary">
+                      {lang.history.total_time}{" "}
+                      {totalweektime(week).h > 9 ? totalweektime(week).h : "0" + totalweektime(week).h}:
+                      {totalweektime(week).min > 9 ? totalweektime(week).min : "0" + totalweektime(week).min}
+                    </Typography>
+                  </CustomTableCell>
+
+                  <CustomTableCell sx={{ borderTop: "0px" }} align="right" width={"9%"}>
+                    {!isSent ? (
+                      <IconButton
+                        size="small"
+                        sx={{
+                          ":focus": {
+                            outline: "0px",
+                          },
+                        }}
+                        disabled={!isEmpty}
+                        onClick={() => sendweek(week.arr, selected)}
+                        hidden={isSent || !selected}
+                      >
+                        <SendIcon
+                          sx={{
+                            color: !isThis ? "error.light" : "default.valpas",
+                          }}
+                        />
+                      </IconButton>
+                    ) : (
+                      <HourglassTopIcon
+                        sx={{
+                          color: "default.valpas",
+                        }}
+                      />
+                    )}
+                  </CustomTableCell>
+                </TableRow>
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </Box>
+
+        <Row week={week} lang={lang.history} isEmpty={isEmpty} works={works} />
+      </Fragment>
+    );
+  });
 };
 
 const Row = ({ week, lang, works, isEmpty }) => {
@@ -69,8 +169,8 @@ const Row = ({ week, lang, works, isEmpty }) => {
             border: "1px solid #e0e0e0",
             borderRadius: "1px",
             backgroundColor: "background.paper",
-            marginTop: "10px",
-            padding: 1,
+            marginTop: "6px",
+            padding: "3px",
           }}
         >
           <TableContainer>
@@ -129,19 +229,19 @@ const DetailsSM = ({ row, workplaces, lang, isEmpty, total, date, sx }) => {
   return (
     <Fragment>
       <TableRow sx={sx}>
-        <CustomTableCell>
+        <CustomTableCell sx={{ borderTop: "0px" }}>
           <IconButton aria-label="expand row" size="small" onClick={() => setOpen(!open)} sx={{ cursor: "pointer" }}>
             {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
           </IconButton>
         </CustomTableCell>
 
-        <CustomTableCell align="center" colSpan={2}>
+        <CustomTableCell align="center" colSpan={2} sx={{ borderTop: "0px" }}>
           <Typography variant="p" fontWeight="800">
             {date}
           </Typography>
         </CustomTableCell>
 
-        <CustomTableCell align="right">
+        <CustomTableCell align="right" sx={{ borderTop: "0px" }}>
           <Moreitemday date={row} lang={lang} isEmpty={isEmpty} />
         </CustomTableCell>
       </TableRow>
@@ -197,20 +297,25 @@ const DetailsMD = ({ row, workplaces, lang, isEmpty, total, date, sx }) => {
 
   return (
     <Fragment>
-      <TableRow sx={sx}>
-        <CustomTableCell>
-          <IconButton aria-label="expand row" size="small" onClick={() => setOpen(!open)} sx={{ cursor: "pointer" }}>
+      <TableRow sx={{ ...sx }}>
+        <CustomTableCell sx={{ borderTop: "0px" }}>
+          <IconButton
+            aria-label="expand row"
+            size="small"
+            onClick={() => setOpen(!open)}
+            sx={{ cursor: "pointer", ":focus": { outline: "0px" } }}
+          >
             {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
           </IconButton>
         </CustomTableCell>
 
-        <CustomTableCell align="left">
+        <CustomTableCell align="left" sx={{ borderTop: "0px" }}>
           <Typography variant="p" fontWeight="800">
             {date}
           </Typography>
         </CustomTableCell>
 
-        <CustomTableCell align="left">
+        <CustomTableCell align="center" width={"30%"} sx={{ borderTop: "0px" }}>
           <Typography variant="p" fontWeight="800">
             {workplaces.find((item) => item.id === row.workId) !== undefined
               ? workplaces.find((item) => item.id === row.workId).name
@@ -218,19 +323,19 @@ const DetailsMD = ({ row, workplaces, lang, isEmpty, total, date, sx }) => {
           </Typography>
         </CustomTableCell>
 
-        <CustomTableCell align="right">
+        <CustomTableCell align="right" sx={{ borderTop: "0px" }}>
           <Typography variant="p" fontWeight="800">
             <Time time={row.arr[row.arr.length - 1].timeInterval.start} /> - <Time time={row.arr[0].timeInterval.end} />
           </Typography>
         </CustomTableCell>
 
-        <CustomTableCell align="right">
+        <CustomTableCell align="right" sx={{ borderTop: "0px" }}>
           <Typography variant="p" fontWeight="800">
             {total}
           </Typography>
         </CustomTableCell>
 
-        <CustomTableCell align="right">
+        <CustomTableCell align="right" sx={{ borderTop: "0" }}>
           <Moreitemday date={row} lang={lang} isEmpty={isEmpty} />
         </CustomTableCell>
       </TableRow>

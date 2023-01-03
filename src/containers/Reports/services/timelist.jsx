@@ -61,7 +61,7 @@ export const Timelist = ({
                 </Typography>
               </Grid>
               <Grid item xs={6} display="flex" justifyContent="flex-end">
-                <WeekReport data={item} isEmpty={isEmpty} />
+                <WeekReport data={item} isEmpty={isEmpty} lang={lang.buttons} />
               </Grid>
               {item.arr.map((day) => {
                 let shTotal = String(totaldaytime(day).h).padStart(2, "0");

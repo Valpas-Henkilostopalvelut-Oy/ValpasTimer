@@ -43,7 +43,7 @@ const isConfirmed = (data) => {
 export const WeekReport = ({
   data,
   lang = {
-    weekreport: "Confirm last week",
+    weekreport: "Confirm",
   },
   isEmpty = true,
 }) => {

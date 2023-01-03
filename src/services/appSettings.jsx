@@ -37,6 +37,7 @@ export const customPalette = {
     default: {
       white: "#ffffff",
       gray: "#707070",
+      valpas: "#00adef",
     },
     navbar: {
       main: "#00adef",

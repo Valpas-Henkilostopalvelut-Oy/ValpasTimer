@@ -160,7 +160,7 @@ export const fin = {
         },
       },
       history: {
-        week: "Viikko",
+        week: "VIIKKO",
         total_time: "Yhteensä",
         none_description: "Ei kuvausta",
         date: "Päivämäärä",
@@ -176,7 +176,7 @@ export const fin = {
           select_workplace: "Valitse toimipiste",
           history: "Historia",
           none_times: "Ei aikoja",
-          not_confirmed: "Ei vahvistettu",
+          not_confirmed: "Odottaa vahvistusta",
           deleteTitle: "Oletko varma että haluat poistaa tämän ajan?",
           deleteAlert: "Tätä toimintoa ei voi perua",
         },
@@ -207,6 +207,8 @@ export const fin = {
       workplace: "Työpaikka",
       worker: "Työntekijä",
       week: "Viikko",
+      sent: "Lähetetty",
+      confirmed: "Vahvistettu",
       total_hours: "Yhteensä",
       none_description: "Ei kuvausta",
       confirm: "Vahvista",
@@ -216,6 +218,9 @@ export const fin = {
         message: "Haluatko vahvistaa raportin?",
         confirm: "Vahvista",
         cancel: "Peruuta",
+      },
+      buttons: {
+        weekreport: "Vahvista",
       },
     },
     workplaces: {
