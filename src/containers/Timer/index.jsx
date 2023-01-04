@@ -132,7 +132,7 @@ const Timer = () => {
 
           setNotConfirmedWeek(groupBy(notconfirmedweek, works, langValue));
           setGrouped(groupBy(currentweek, works, langValue).filter((t) => t.week === thisweek));
-          setNotsent(groupBy(notsentweek, works, langValue));
+          setNotsent(groupBy(notsentweek, works, langValue).filter((t) => t.week !== thisweek));
         });
       });
     };
