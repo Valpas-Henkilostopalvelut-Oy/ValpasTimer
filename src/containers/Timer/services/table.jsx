@@ -14,71 +14,8 @@ import { totaldaytime, totalweektime } from "./totaltime.jsx";
 import { CustomTableCell } from "./tablecell.jsx";
 import { PropTypes } from "prop-types";
 import SendIcon from "@mui/icons-material/Send";
-import { DataStore } from "aws-amplify";
-import { TimeEntry } from "../../../models/index.js";
 import HourglassTopIcon from "@mui/icons-material/HourglassTop";
-
-const isSent = (data) => {
-  const items = data.arr.length;
-  const sent = data.arr.filter((item) => item.isSent === true).length;
-
-  return sent === items;
-};
-
-const sendweek = async (arr) => {
-  for (let i = 0; i < arr.length; i++) {
-    const work = arr[i].arr;
-
-    for (let ii = 0; ii < work.length; ii++) {
-      const items = work[ii].arr;
-
-      for (let iii = 0; iii < items.length; iii++) {
-        const element = items[iii];
-        await DataStore.save(
-          TimeEntry.copyOf(element, (updated) => {
-            updated.isSent = true;
-          })
-        );
-      }
-    }
-  }
-};
-
-const weekissent = (arr) => {
-  for (let i = 0; i < arr.length; i++) {
-    const work = arr[i].arr
-
-    for (let ii = 0; ii < work.length; ii++) {
-      const items = work[ii].arr;
-
-      for (let iii = 0; iii < items.length; iii++) {
-        const element = items[iii];
-        if (element.isSent) return true;
-      }
-    }
-  }
-
-  return false;
-};
-
-const weekisconformed = (arr, selected) => {
-  for (let i = 0; i < arr.length; i++) {
-    if (selected !== "") {
-      const work = arr[i].arr.filter((item) => item.workId === selected);
-
-      for (let ii = 0; ii < work.length; ii++) {
-        const items = work[ii].arr;
-
-        for (let iii = 0; iii < items.length; iii++) {
-          const element = items[iii];
-          if (element.isConfirmed) return true;
-        }
-      }
-    }
-  }
-
-  return false;
-};
+import { weekissent, weekisconformed, sendweek, isSent, maxText } from "./functions.jsx";
 
 const WeekHeadMD = ({ week, selected, lang, isEmpty, isThis, sx }) => {
   const theme = useTheme();
@@ -276,6 +213,7 @@ const Row = ({ week, lang, works, isEmpty }) => {
   return (
     week &&
     week.arr.map((date) => {
+      console.log(date);
       let h = totaldaytime(date).h !== 0 ? totaldaytime(date).h + " h " : "";
       let min = totaldaytime(date).min !== 0 ? totaldaytime(date).min + " min" : "";
 
@@ -390,8 +328,6 @@ const DetailsSM = ({ row, workplaces, lang, isEmpty, total, date, sx }) => {
             {total.h} {total.min}
           </Typography>
         </CustomTableCell>
-
-      
       </TableRow>
 
       {open && (
@@ -427,7 +363,7 @@ const DetailsMD = ({ row, workplaces, lang, isEmpty, total, date, sx }) => {
           </IconButton>
         </CustomTableCell>
 
-        <CustomTableCell align="left" sx={{ borderTop: "0px" }}>
+        <CustomTableCell align="left" sx={{ borderTop: "0px" }} width={"20%"}>
           <Typography variant="p" fontWeight="800">
             {date}
           </Typography>
@@ -437,11 +373,11 @@ const DetailsMD = ({ row, workplaces, lang, isEmpty, total, date, sx }) => {
           <Typography variant="p" fontWeight="800">
             {workplaces.find((item) => item.id === row.workId) !== undefined
               ? workplaces.find((item) => item.id === row.workId).name
-              : "Vaihda työpaikkaa"}
+              : maxText("Vaihda työpaikkaa", 10)}
           </Typography>
         </CustomTableCell>
 
-        <CustomTableCell align="right" sx={{ borderTop: "0px" }}>
+        <CustomTableCell align="right" sx={{ borderTop: "0px" }} width={"30%"}>
           <Typography variant="p" fontWeight="800">
             <Time time={row.arr[0].timeInterval.start} /> - <Time time={row.arr[row.arr.length - 1].timeInterval.end} />
           </Typography>
@@ -577,7 +513,7 @@ DetailsMD.propTypes = {
   workplaces: PropTypes.array,
   lang: PropTypes.object,
   isEmpty: PropTypes.bool,
-  total: PropTypes.string,
+  total: PropTypes.object,
   date: PropTypes.string,
   sx: PropTypes.object,
 };

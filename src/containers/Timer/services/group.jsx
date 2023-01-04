@@ -35,7 +35,7 @@ export function groupBy(array, works = Array(), lang = Object()) {
         res
           .find((w) => w.week === week)
           .arr.push({
-            date: `${days[day - 1]} ${dat.getUTCDate()}.${dat.getMonth() + 1}`,
+            date: `${days[day]} ${dat.getUTCDate()}.${dat.getMonth() + 1}`,
             id: by,
             arr: [{ workId: val.workspaceId, arr: [val] }],
           });
