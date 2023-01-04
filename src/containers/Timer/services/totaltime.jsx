@@ -16,29 +16,27 @@ export const totaldaytime = (array) => {
   var min = 0;
   var sec = 0;
 
-  array.arr.forEach((work) => {
-    work.arr.forEach((day) => {
-      let breaks = calculteBreaks(day.break);
-      let start = new Date(day.timeInterval.start);
-      let end = new Date(day.timeInterval.end);
+  array.forEach((day) => {
+    let breaks = calculteBreaks(day.break);
+    let start = new Date(day.timeInterval.start);
+    let end = new Date(day.timeInterval.end);
 
-      if (Date.parse(end) > Date.parse(start)) {
-        let total = Date.parse(end) - Date.parse(start) - breaks;
+    if (Date.parse(end) > Date.parse(start)) {
+      let total = Date.parse(end) - Date.parse(start) - breaks;
 
-        h = h + Math.floor(total / 1000 / 60 / 60);
-        min = min + Math.floor((total / 1000 / 60) % 60);
-        sec = sec + Math.floor((total / 1000) % 60);
+      h = h + Math.floor(total / 1000 / 60 / 60);
+      min = min + Math.floor((total / 1000 / 60) % 60);
+      sec = sec + Math.floor((total / 1000) % 60);
 
-        if (min >= 60) {
-          h++;
-          min = min % 60;
-        }
-        if (sec >= 60) {
-          min++;
-          sec = sec % 60;
-        }
+      if (min >= 60) {
+        h++;
+        min = min % 60;
       }
-    });
+      if (sec >= 60) {
+        min++;
+        sec = sec % 60;
+      }
+    }
   });
 
   return {

@@ -59,8 +59,11 @@ export const TextToTime = ({ date = new Date(), onChange, isSent = true }) => {
   const [time, setTime] = useState(
     `${String("0" + new Date(date).getHours()).slice(-2)}:${String("0" + new Date(date).getMinutes()).slice(-2)}`
   );
+
+  let h = new Date(date).getHours();
+  let m = new Date(date).getMinutes();
   const [open, setOpen] = useState(false);
-  const [value, setValue] = useState({ h: 0, m: 0 });
+  const [value, setValue] = useState({ h: h, m: m });
   const handleSave = () => {
     onChange({ h: value.h, min: value.m });
     setOpen(false);

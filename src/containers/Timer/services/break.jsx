@@ -12,7 +12,7 @@ import { PropTypes } from "prop-types";
 
 const Breakicon = ({ item }) => {
   if (item.reason === Breakreason.DINNER) {
-    return <RestaurantIcon color="gray" />;
+    return <RestaurantIcon color="default.gray" />;
   } else if (item.reason === Breakreason.LUNCH) {
     return <RestaurantIcon />;
   }

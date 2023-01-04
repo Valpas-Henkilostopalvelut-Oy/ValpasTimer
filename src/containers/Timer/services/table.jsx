@@ -6,9 +6,9 @@ import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import { Time, EditSTime, EditETime } from "./times.jsx";
 import { Moreitem, Moreitemday } from "./buttons.jsx";
 import { TotalTime } from "./edittotaltime.jsx";
-import { EditDescriptionMD } from "./editdescription.jsx";
-import { ChangeWorkplaceMD, ChangeWorkplaceSM } from "./workplacechange.jsx";
-import { EditDateMD, EditDate } from "./editdate.jsx";
+import { EditDescription } from "./editdescription.jsx";
+import { SelectWork } from "./workplacechange.jsx";
+import { EditDate } from "./editdate.jsx";
 import { BreakitemMD, AddBreakMD, AddBreakSM, BreakitemSM } from "./break.jsx";
 import { totaldaytime, totalweektime } from "./totaltime.jsx";
 import { CustomTableCell } from "./tablecell.jsx";
@@ -213,12 +213,8 @@ const Row = ({ week, lang, works, isEmpty }) => {
   return (
     week &&
     week.arr.map((date) => {
-      console.log(date);
-      let h = totaldaytime(date).h !== 0 ? totaldaytime(date).h + " h " : "";
-      let min = totaldaytime(date).min !== 0 ? totaldaytime(date).min + " min" : "";
-
       return (
-        <Box
+        <TableContainer
           key={date.id}
           sx={{
             border: "1px solid #e0e0e0",
@@ -228,51 +224,47 @@ const Row = ({ week, lang, works, isEmpty }) => {
             padding: "3px",
           }}
         >
-          <TableContainer>
-            <Table aria-label="collapsible table" size="small">
-              <TableBody>
-                {date.arr.map((row, index) => (
-                  <Fragment key={index}>
-                    <DetailsMD
-                      sx={{
-                        [theme.breakpoints.down("sm")]: {
-                          display: "none",
-                        },
-                      }}
-                      key={[index, "md"]}
-                      row={row}
-                      workplaces={works}
-                      lang={lang}
-                      isEmpty={isEmpty}
-                      total={{ h: h, min: min }}
-                      date={date.date}
-                    />
-                    <DetailsSM
-                      sx={{
-                        [theme.breakpoints.up("sm")]: {
-                          display: "none",
-                        },
-                      }}
-                      key={[index, "sm"]}
-                      row={row}
-                      workplaces={works}
-                      lang={lang}
-                      isEmpty={isEmpty}
-                      total={{ h: h, min: min }}
-                      date={date.date}
-                    />
-                  </Fragment>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
-        </Box>
+          <Table aria-label="collapsible table" size="small">
+            <TableBody>
+              {date.arr.map((row, index) => (
+                <Fragment key={index}>
+                  <DetailsMD
+                    sx={{
+                      [theme.breakpoints.down("sm")]: {
+                        display: "none",
+                      },
+                    }}
+                    key={[index, "md"]}
+                    row={row}
+                    workplaces={works}
+                    lang={lang}
+                    isEmpty={isEmpty}
+                    date={date.date}
+                  />
+                  <DetailsSM
+                    sx={{
+                      [theme.breakpoints.up("sm")]: {
+                        display: "none",
+                      },
+                    }}
+                    key={[index, "sm"]}
+                    row={row}
+                    workplaces={works}
+                    lang={lang}
+                    isEmpty={isEmpty}
+                    date={date.date}
+                  />
+                </Fragment>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
       );
     })
   );
 };
 
-const DetailsSM = ({ row, workplaces, lang, isEmpty, total, date, sx }) => {
+const DetailsSM = ({ row, workplaces, lang, isEmpty, date, sx }) => {
   const [open, setOpen] = React.useState(false);
   const data = row.arr.sort((a, b) => {
     let sTime = new Date(a.timeInterval.start);
@@ -280,6 +272,11 @@ const DetailsSM = ({ row, workplaces, lang, isEmpty, total, date, sx }) => {
 
     return sTime - eTime;
   });
+
+  let h = totaldaytime(row.arr).h;
+  let hours = h === 0 ? "" : h + "h";
+  let m = totaldaytime(row.arr).min;
+  let minutes = m === 0 ? "" : m + "min";
 
   return (
     <Fragment>
@@ -325,7 +322,7 @@ const DetailsSM = ({ row, workplaces, lang, isEmpty, total, date, sx }) => {
 
         <CustomTableCell align="left" colSpan={2}>
           <Typography variant="p">
-            {total.h} {total.min}
+            {hours} {minutes}
           </Typography>
         </CustomTableCell>
       </TableRow>
@@ -340,7 +337,7 @@ const DetailsSM = ({ row, workplaces, lang, isEmpty, total, date, sx }) => {
   );
 };
 
-const DetailsMD = ({ row, workplaces, lang, isEmpty, total, date, sx }) => {
+const DetailsMD = ({ row, workplaces, lang, isEmpty, date, sx }) => {
   const [open, setOpen] = React.useState(false);
   const data = row.arr.sort((a, b) => {
     let sTime = new Date(a.timeInterval.start);
@@ -348,6 +345,11 @@ const DetailsMD = ({ row, workplaces, lang, isEmpty, total, date, sx }) => {
 
     return sTime - eTime;
   });
+
+  let h = totaldaytime(row.arr).h;
+  let hours = h === 0 ? "" : h + "h";
+  let m = totaldaytime(row.arr).min;
+  let minutes = m === 0 ? "" : m + "min";
 
   return (
     <Fragment>
@@ -363,29 +365,32 @@ const DetailsMD = ({ row, workplaces, lang, isEmpty, total, date, sx }) => {
           </IconButton>
         </CustomTableCell>
 
-        <CustomTableCell align="left" sx={{ borderTop: "0px" }} width={"20%"}>
+        <CustomTableCell align="left" sx={{ borderTop: "0px" }} width={"15%"}>
           <Typography variant="p" fontWeight="800">
             {date}
           </Typography>
         </CustomTableCell>
 
-        <CustomTableCell align="center" width={"30%"} sx={{ borderTop: "0px" }}>
+        <CustomTableCell align="center" sx={{ borderTop: "0px" }}>
           <Typography variant="p" fontWeight="800">
-            {workplaces.find((item) => item.id === row.workId) !== undefined
-              ? workplaces.find((item) => item.id === row.workId).name
-              : maxText("Vaihda työpaikkaa", 10)}
+            {maxText(
+              workplaces.find((item) => item.id === row.workId) !== undefined
+                ? workplaces.find((item) => item.id === row.workId).name
+                : "Vaihda työpaikkaa",
+              10
+            )}
           </Typography>
         </CustomTableCell>
 
-        <CustomTableCell align="right" sx={{ borderTop: "0px" }} width={"30%"}>
+        <CustomTableCell align="right" sx={{ borderTop: "0px" }}>
           <Typography variant="p" fontWeight="800">
             <Time time={row.arr[0].timeInterval.start} /> - <Time time={row.arr[row.arr.length - 1].timeInterval.end} />
           </Typography>
         </CustomTableCell>
 
-        <CustomTableCell align="right" sx={{ borderTop: "0px" }} width="20%">
+        <CustomTableCell align="right" sx={{ borderTop: "0px" }} width={"20%"}>
           <Typography variant="p" fontWeight="800">
-            {total.h} {total.min}
+            {hours} {minutes}
           </Typography>
         </CustomTableCell>
 
@@ -410,14 +415,9 @@ const RowDetailsSM = ({ data, lang, workplaces, isEmpty, sx }) => {
       <Fragment key={i}>
         <TableRow sx={sx}>
           <CustomTableCell />
-          <ChangeWorkplaceSM
-            date={row}
-            workplaces={workplaces}
-            work={row.workspaceId}
-            lang={lang}
-            isEmpty={isEmpty}
-            sx={{ ...sx }}
-          />
+          <CustomTableCell colSpan={3}>
+            <SelectWork date={row} workplaces={workplaces} work={row.workspaceId} lang={lang} isEmpty={isEmpty} />
+          </CustomTableCell>
         </TableRow>
 
         <TableRow>
@@ -461,11 +461,15 @@ const RowDetailsMD = ({ data, lang, workplaces, isEmpty, sx }) => {
     return (
       <Fragment key={i}>
         <TableRow sx={sx}>
-          <EditDescriptionMD date={row} lang={lang} />
+          <CustomTableCell />
 
-          <EditDateMD data={row} lang={lang} />
+          <CustomTableCell align="left">
+            <EditDate data={row} lang={lang} />
+          </CustomTableCell>
 
-          <ChangeWorkplaceMD date={row} workplaces={workplaces} work={row.workspaceId} lang={lang} isEmpty={isEmpty} />
+          <CustomTableCell>
+            <SelectWork date={row} workplaces={workplaces} work={row.workspaceId} lang={lang} isEmpty={isEmpty} />
+          </CustomTableCell>
 
           <CustomTableCell align="right">
             <EditSTime date={row} /> {" - "} <EditETime date={row} />
@@ -477,6 +481,13 @@ const RowDetailsMD = ({ data, lang, workplaces, isEmpty, sx }) => {
 
           <CustomTableCell align="right">
             <Moreitem date={row} lang={lang} isEmpty={isEmpty} />
+          </CustomTableCell>
+        </TableRow>
+
+        <TableRow sx={sx}>
+          <CustomTableCell />
+          <CustomTableCell colSpan={5}>
+            <EditDescription date={row} lang={lang} />
           </CustomTableCell>
         </TableRow>
 

@@ -14,7 +14,7 @@ import { DataStore } from "aws-amplify";
 import { TimeEntry } from "../../../models/index.js";
 import { PropTypes } from "prop-types";
 import DescriptionIcon from "@mui/icons-material/Description";
-import { CustomTableCell } from "./tablecell.jsx";
+import { maxText } from "./functions.jsx";
 
 const updateDescription = async (date, newDescription) => {
   await DataStore.save(
@@ -24,7 +24,7 @@ const updateDescription = async (date, newDescription) => {
   ).catch((e) => console.warn(e));
 };
 
-const EditDescription = ({
+export const EditDescription = ({
   date,
   lang = {
     none_description: "No description",
@@ -36,14 +36,15 @@ const EditDescription = ({
   const isSent = date.isSent;
 
   return (
-    <Box
-      sx={{
-        cursor: !isSent && "pointer",
-        maxWidth: "280px",
-      }}
-    >
-      <Typography variant="p" onClick={() => setOpen(true && !isSent)}>
-        {desc !== "" ? desc : <DescriptionIcon />}
+    <>
+      <Typography
+        variant="p"
+        onClick={() => setOpen(true && !isSent)}
+        sx={{
+          cursor: !isSent && "pointer",
+        }}
+      >
+        {desc !== "" ? maxText(desc, 70) : <DescriptionIcon />}
       </Typography>
       <Dialog open={open && !isSent} onClose={() => setOpen(false)} maxWidth={"xs"} fullWidth={true}>
         <DialogTitle>{lang.add_description}</DialogTitle>
@@ -74,24 +75,11 @@ const EditDescription = ({
           </Button>
         </DialogActions>
       </Dialog>
-    </Box>
-  );
-};
-
-export const EditDescriptionMD = ({ date, lang, sx }) => {
-  return (
-    <CustomTableCell>
-      <EditDescription date={date} lang={lang} />
-    </CustomTableCell>
+    </>
   );
 };
 
 EditDescription.propTypes = {
-  date: PropTypes.object,
-  lang: PropTypes.object,
-};
-
-EditDescriptionMD.propTypes = {
   date: PropTypes.object,
   lang: PropTypes.object,
 };

@@ -19,23 +19,6 @@ import ruLocale from "date-fns/locale/ru";
 import { PropTypes } from "prop-types";
 import { CustomTableCell } from "./tablecell.jsx";
 
-export const EditDateMD = ({ data, lang }) => {
-  const theme = useTheme();
-  return (
-    <Box
-      align="left"
-      component={CustomTableCell}
-      sx={{
-        [theme.breakpoints.down("sm")]: {
-          display: "none",
-        },
-      }}
-    >
-      <EditDate data={data} lang={lang} />
-    </Box>
-  );
-};
-
 const updateDate = async ({ value, data }) => {
   let year = new Date(value).getFullYear();
   let date = new Date(value).getDate();
@@ -99,11 +82,6 @@ export const EditDate = ({ data, lang = { date: "Date" } }) => {
 };
 
 EditDate.propTypes = {
-  data: PropTypes.object.isRequired,
-  lang: PropTypes.object,
-};
-
-EditDateMD.propTypes = {
   data: PropTypes.object.isRequired,
   lang: PropTypes.object,
 };

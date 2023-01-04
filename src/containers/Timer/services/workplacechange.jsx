@@ -17,6 +17,7 @@ import { DataStore } from "aws-amplify";
 import { TimeEntry } from "../../../models/index.js";
 import { PropTypes } from "prop-types";
 import { CustomTableCell } from "./tablecell.jsx";
+import { maxText } from "./functions.jsx";
 
 const updateWorkplace = async (date, newValue, workit) => {
   await DataStore.save(
@@ -27,7 +28,7 @@ const updateWorkplace = async (date, newValue, workit) => {
   ).catch((e) => console.warn(e));
 };
 
-const SelectWork = ({
+export const SelectWork = ({
   date,
   workplaces,
   lang = {
@@ -74,7 +75,7 @@ const SelectWork = ({
           textOverflow={"ellipsis"}
           sx={{ cursor: !isSent && "pointer", color: !work && "default.valpas" }}
         >
-          {work ? workit.name : lang.no_work}
+          {maxText(work ? workit.name : lang.no_work, 10)}
         </Typography>
         <Dialog open={open && !isSent} onClose={handleCancel} maxWidth={"xs"} fullWidth>
           <DialogTitle>{lang.workplace}</DialogTitle>
@@ -137,66 +138,9 @@ const SelectWork = ({
   );
 };
 
-const IsSent = ({ date, lang = { workplace: "Workplace", no_work: "No Work item" } }, isEmpty = false) => {
-  const work = date.work ? date.work.name : lang.no_work;
-
-  return (
-    <Typography variant="p" textOverflow={"ellipsis"}>
-      {work}
-    </Typography>
-  );
-};
-
-export const ChangeWorkplaceMD = ({ date, workplaces = null, work, lang, isEmpty }) => {
-  const theme = useTheme();
-  const isSent = date.isSent;
-
-  return (
-    <CustomTableCell
-      sx={{
-        [theme.breakpoints.down("sm")]: {
-          display: "none",
-        },
-      }}
-    >
-      {!isSent ? (
-        <SelectWork date={date} workplaces={workplaces} work={work} lang={lang} />
-      ) : (
-        <IsSent date={date} lang={lang} isEmpty={isEmpty} />
-      )}
-    </CustomTableCell>
-  );
-};
-
-export const ChangeWorkplaceSM = ({ date, workplaces = null, work, lang, isEmpty, sx }) => {
-  const isSent = date.isSent;
-
-  return (
-    <CustomTableCell sx={sx} colSpan={3} align="left">
-      {!isSent ? (
-        <SelectWork date={date} workplaces={workplaces} work={work} lang={lang} />
-      ) : (
-        <IsSent date={date} lang={lang} isEmpty={isEmpty} />
-      )}
-    </CustomTableCell>
-  );
-};
-
-ChangeWorkplaceMD.propTypes = {
-  date: PropTypes.object,
-  workplaces: PropTypes.array,
-  work: PropTypes.string,
-  lang: PropTypes.object,
-};
-
 SelectWork.propTypes = {
   date: PropTypes.object,
   workplaces: PropTypes.array,
   work: PropTypes.string,
-  lang: PropTypes.object,
-};
-
-IsSent.propTypes = {
-  date: PropTypes.object,
   lang: PropTypes.object,
 };
