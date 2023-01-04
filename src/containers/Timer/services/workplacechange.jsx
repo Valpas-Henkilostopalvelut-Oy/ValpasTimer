@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Dialog,
   DialogTitle,
@@ -19,13 +19,15 @@ import { PropTypes } from "prop-types";
 import { CustomTableCell } from "./tablecell.jsx";
 import { maxText } from "./functions.jsx";
 
-const updateWorkplace = async (date, newValue, workit) => {
+const updateWorkplace = async (date, newValue, work) => {
   await DataStore.save(
     TimeEntry.copyOf(date, (update) => {
       update.workspaceId = newValue;
-      update.work = workit;
+      update.work = work;
     })
-  ).catch((e) => console.warn(e));
+  )
+    .then((e) => console.log(e))
+    .catch((e) => console.warn(e));
 };
 
 export const SelectWork = ({
@@ -41,12 +43,26 @@ export const SelectWork = ({
     },
   },
 }) => {
-  const [workplace, setWorkplace] = useState(date.workspaceId);
-  const [work, setWork] = useState(date.work ? date.work.id : "");
-  const [open, setOpen] = useState(false);
   const isSent = date.isSent;
-  const works = workplaces !== undefined && workplaces.find((item) => item.id === workplace).works;
-  const workit = works ? works.find((item) => item.id === work) : null;
+  const workID = workplaces.filter((item) => item.id === date.workspaceId).length > 0 ? date.workspaceId : "";
+  const w = date.work;
+  const [workplace, setWorkplace] = useState(workID);
+
+  const works = workID ? workplaces.filter((item) => item.id === workID)[0].works : null;
+
+  const workItem = w && works ? works.filter((item) => item.id === w.id)[0] : null;
+  const [work, setWork] = useState(workItem ? workItem.id : "");
+
+  const [open, setOpen] = useState(false);
+  const [name, setName] = useState(workItem ? workItem.name : lang.no_work);
+
+  useEffect(() => {
+    if (workItem) {
+      setName(workItem.name);
+    } else {
+      setName(lang.no_work);
+    }
+  }, [workItem]);
 
   const handleChange = (event) => {
     setWorkplace(event.target.value);
@@ -62,7 +78,7 @@ export const SelectWork = ({
   };
 
   const handleSave = () => {
-    updateWorkplace(date, date.workspaceId, workit);
+    updateWorkplace(date, workplace, works && works.filter((item) => item.id === work)[0]);
     setOpen(false);
   };
 
@@ -75,7 +91,7 @@ export const SelectWork = ({
           textOverflow={"ellipsis"}
           sx={{ cursor: !isSent && "pointer", color: !work && "default.valpas" }}
         >
-          {maxText(work ? workit.name : lang.no_work, 10)}
+          {maxText(name, 10)}
         </Typography>
         <Dialog open={open && !isSent} onClose={handleCancel} maxWidth={"xs"} fullWidth>
           <DialogTitle>{lang.workplace}</DialogTitle>
@@ -112,7 +128,7 @@ export const SelectWork = ({
                   value={work}
                   label={lang.workitem}
                   onChange={handleChangeWork}
-                  disabled={!works}
+                  disabled={!works || workplace === ""}
                 >
                   {works &&
                     works.map((item) => (
