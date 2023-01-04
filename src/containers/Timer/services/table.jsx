@@ -29,10 +29,12 @@ import { weekissent, weekisconformed, sendweek, isSent, maxText } from "./functi
 
 const WeekHeadMD = ({ week, selected, lang, isEmpty, isThis, sx }) => {
   const theme = useTheme();
-  let isSent = weekissent(week.arr, selected);
-  let isConfirmed = weekisconformed(week.arr, selected);
+  let isSent = weekissent(week.arr);
+  let isConfirmed = weekisconformed(week.arr);
   let h = totalweektime(week).h !== 0 ? totalweektime(week).h + " h " : "";
   let min = totalweektime(week).min !== 0 ? totalweektime(week).min + " min" : "";
+
+  console.log(week, isSent ? !isConfirmed : isSent);
 
   return (
     <TableRow sx={sx}>
@@ -65,7 +67,7 @@ const WeekHeadMD = ({ week, selected, lang, isEmpty, isThis, sx }) => {
       </CustomTableCell>
 
       <CustomTableCell sx={{ borderTop: "0px" }} align="right" width={"9%"}>
-        {!isSent ? (
+        {!(isSent || isConfirmed) && (
           <Tooltip title="Lähetä">
             <IconButton
               size="small"
@@ -76,7 +78,6 @@ const WeekHeadMD = ({ week, selected, lang, isEmpty, isThis, sx }) => {
               }}
               disabled={!isEmpty}
               onClick={() => sendweek(week.arr, selected)}
-              hidden={isSent || !selected}
             >
               <SendIcon
                 sx={{
@@ -85,16 +86,15 @@ const WeekHeadMD = ({ week, selected, lang, isEmpty, isThis, sx }) => {
               />
             </IconButton>
           </Tooltip>
-        ) : (
-          !isConfirmed && (
-            <Tooltip title="Odottaa vahvistusta">
-              <PendingIcon
-                sx={{
-                  color: "default.valpas",
-                }}
-              />
-            </Tooltip>
-          )
+        )}
+        {(isSent ? !isConfirmed : isSent) && (
+          <Tooltip title="Odottaa vahvistusta">
+            <PendingIcon
+              sx={{
+                color: "default.valpas",
+              }}
+            />
+          </Tooltip>
         )}
       </CustomTableCell>
     </TableRow>

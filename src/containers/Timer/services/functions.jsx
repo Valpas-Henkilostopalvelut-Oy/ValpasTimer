@@ -48,18 +48,16 @@ export const weekissent = (arr) => {
   return false;
 };
 
-export const weekisconformed = (arr, selected) => {
+export const weekisconformed = (arr) => {
   for (let i = 0; i < arr.length; i++) {
-    if (selected !== "") {
-      const work = arr[i].arr.filter((item) => item.workId === selected);
+    const work = arr[i].arr;
 
-      for (let ii = 0; ii < work.length; ii++) {
-        const items = work[ii].arr;
+    for (let ii = 0; ii < work.length; ii++) {
+      const items = work[ii].arr;
 
-        for (let iii = 0; iii < items.length; iii++) {
-          const element = items[iii];
-          if (element.isConfirmed) return true;
-        }
+      for (let iii = 0; iii < items.length; iii++) {
+        const element = items[iii];
+        if (element.isConfirmed) return true;
       }
     }
   }
