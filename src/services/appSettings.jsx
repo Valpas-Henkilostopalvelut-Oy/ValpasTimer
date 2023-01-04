@@ -84,6 +84,7 @@ export const customPalette = {
       contrastText: "#fff",
     },
     text: {
+      white: "#ffffff",
       primary: "#212121",
       secondary: "#757575",
       disabled: "#bdbdbd",

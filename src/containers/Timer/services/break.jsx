@@ -8,13 +8,35 @@ import AddIcon from "@mui/icons-material/Add";
 import { Breakmenu } from "./buttons.jsx";
 import { CustomTableCell } from "./tablecell.jsx";
 import RestaurantIcon from "@mui/icons-material/Restaurant";
+import FreeBreakfastIcon from "@mui/icons-material/FreeBreakfast";
+import LocalHospitalIcon from "@mui/icons-material/LocalHospital";
 import { PropTypes } from "prop-types";
 
 const Breakicon = ({ item }) => {
   if (item.reason === Breakreason.DINNER) {
-    return <RestaurantIcon color="default.gray" />;
+    return (
+      <RestaurantIcon
+        sx={{
+          color: "default.gray",
+        }}
+      />
+    );
   } else if (item.reason === Breakreason.LUNCH) {
-    return <RestaurantIcon />;
+    return (
+      <RestaurantIcon
+        sx={{
+          color: "default.gray",
+        }}
+      />
+    );
+  } else if (item.reason === Breakreason.SHORT) {
+    return (
+      <FreeBreakfastIcon
+        sx={{
+          color: "default.gray",
+        }}
+      />
+    );
   }
 };
 
@@ -278,10 +300,10 @@ export const BreakitemMD = ({ item, data, isEmpty, sx, lang }) => {
 
   return (
     <TableRow sx={sx}>
+      <CustomTableCell />
       <CustomTableCell>
         <Breakicon item={item} />
       </CustomTableCell>
-      <CustomTableCell />
       <CustomTableCell>
         <Breakreasonselect item={item} data={data} lang={lang} />
       </CustomTableCell>

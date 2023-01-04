@@ -31,7 +31,7 @@ export const Timer = ({
   const [open, setOpen] = useState(false);
 
   return (
-    <Grid container spacing={2} alignItems="center">
+    <Grid container spacing={1} alignItems="center">
       <Grid item xs={6} md={4}>
         <EditWorkplaceTimer
           sel={sel}
@@ -55,7 +55,33 @@ export const Timer = ({
         />
       </Grid>
 
-      <Grid item xs={12} md={2}>
+      <Grid item xs={3} md={1} textAlign="center">
+        <StartTimer
+          workitem={workitem}
+          workitems={workitems}
+          description={description}
+          workplace={sel}
+          isStarted={isStarted}
+          setStarted={setStarted}
+          setTimer={setTimer}
+          setTime={setTime}
+          lang={lang}
+          setIsPaused={setIsPaused}
+        />
+      </Grid>
+
+      <Grid item xs={3} md={1} textAlign="center">
+        <Timerbreak
+          data={timerTime}
+          isEmpty={isEmpty}
+          disabled={!(timerTime && isStarted)}
+          setTimer={setTimer}
+          isPaused={isPaused}
+          setIsPaused={setIsPaused}
+        />
+      </Grid>
+
+      <Grid item xs={6} md={2}>
         <Typography
           variant="h5"
           align="center"
@@ -73,30 +99,6 @@ export const Timer = ({
           {time.seconds < 10 ? "0" + time.seconds : time.seconds}
         </Typography>
         {timerTime && isStarted && <EditStartTime open={open} setOpen={setOpen} timerTime={timerTime} lang={lang} />}
-      </Grid>
-      <Grid item xs={6} md={1}>
-        <Timerbreak
-          data={timerTime}
-          isEmpty={isEmpty}
-          disabled={!(timerTime && isStarted)}
-          setTimer={setTimer}
-          isPaused={isPaused}
-          setIsPaused={setIsPaused}
-        />
-      </Grid>
-      <Grid item xs={6} md={1}>
-        <StartTimer
-          workitem={workitem}
-          workitems={workitems}
-          description={description}
-          workplace={sel}
-          isStarted={isStarted}
-          setStarted={setStarted}
-          setTimer={setTimer}
-          setTime={setTime}
-          lang={lang}
-          setIsPaused={setIsPaused}
-        />
       </Grid>
 
       <Grid item xs={12}>

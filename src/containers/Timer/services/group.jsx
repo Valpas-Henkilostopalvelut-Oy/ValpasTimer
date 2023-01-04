@@ -20,7 +20,7 @@ export function groupBy(array, works = Array(), lang = Object()) {
       if (res.filter((w) => w.week === week).length === 0) {
         res.push({
           week: week,
-          period: `${startOfWeek.getDay()}.${startOfWeek.getMonth() + 1} - ${endOfWeek.getDate()}.${
+          period: `${startOfWeek.getDate()}.${startOfWeek.getMonth() + 1} - ${endOfWeek.getDate()}.${
             endOfWeek.getMonth() + 1
           }.${endOfWeek.getFullYear()}`,
           arr: [

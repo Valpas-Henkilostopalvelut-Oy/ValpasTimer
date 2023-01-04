@@ -1,6 +1,16 @@
 import React, { Fragment } from "react";
 
-import { Table, TableBody, TableRow, IconButton, Box, TableContainer, useTheme, Typography } from "@mui/material";
+import {
+  Table,
+  TableBody,
+  TableRow,
+  IconButton,
+  Box,
+  TableContainer,
+  useTheme,
+  Typography,
+  Tooltip,
+} from "@mui/material";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import { Time, EditSTime, EditETime } from "./times.jsx";
@@ -14,7 +24,7 @@ import { totaldaytime, totalweektime } from "./totaltime.jsx";
 import { CustomTableCell } from "./tablecell.jsx";
 import { PropTypes } from "prop-types";
 import SendIcon from "@mui/icons-material/Send";
-import HourglassTopIcon from "@mui/icons-material/HourglassTop";
+import PendingIcon from "@mui/icons-material/Pending";
 import { weekissent, weekisconformed, sendweek, isSent, maxText } from "./functions.jsx";
 
 const WeekHeadMD = ({ week, selected, lang, isEmpty, isThis, sx }) => {
@@ -56,30 +66,34 @@ const WeekHeadMD = ({ week, selected, lang, isEmpty, isThis, sx }) => {
 
       <CustomTableCell sx={{ borderTop: "0px" }} align="right" width={"9%"}>
         {!isSent ? (
-          <IconButton
-            size="small"
-            sx={{
-              ":focus": {
-                outline: "0px",
-              },
-            }}
-            disabled={!isEmpty}
-            onClick={() => sendweek(week.arr, selected)}
-            hidden={isSent || !selected}
-          >
-            <SendIcon
+          <Tooltip title="Lähetä">
+            <IconButton
+              size="small"
               sx={{
-                color: !isThis ? "error.light" : "default.valpas",
+                ":focus": {
+                  outline: "0px",
+                },
               }}
-            />
-          </IconButton>
+              disabled={!isEmpty}
+              onClick={() => sendweek(week.arr, selected)}
+              hidden={isSent || !selected}
+            >
+              <SendIcon
+                sx={{
+                  color: !isThis ? "error.light" : "default.valpas",
+                }}
+              />
+            </IconButton>
+          </Tooltip>
         ) : (
           !isConfirmed && (
-            <HourglassTopIcon
-              sx={{
-                color: "default.valpas",
-              }}
-            />
+            <Tooltip title="Odottaa vahvistusta">
+              <PendingIcon
+                sx={{
+                  color: "default.valpas",
+                }}
+              />
+            </Tooltip>
           )
         )}
       </CustomTableCell>
@@ -144,11 +158,13 @@ const WeekHeadSM = ({ week, selected, lang, isEmpty, isThis, sx }) => {
           </IconButton>
         ) : (
           !isConfirmed && (
-            <HourglassTopIcon
-              sx={{
-                color: "default.valpas",
-              }}
-            />
+            <Tooltip title="Odottaa vahvistusta">
+              <PendingIcon
+                sx={{
+                  color: "default.valpas",
+                }}
+              />
+            </Tooltip>
           )
         )}
       </CustomTableCell>
