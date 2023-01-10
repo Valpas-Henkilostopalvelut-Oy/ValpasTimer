@@ -31,11 +31,12 @@ const getWorkName = (workplace, works) => {
   return work.name;
 };
 
-const getTotal = (start, end, breaks) => {
+const getTotal = (start, end, data) => {
   var h = 0;
   var m = 0;
+  let breakstotal = getTotalBreaks(data);
 
-  let total = Date.parse(end) - Date.parse(start) - breaks;
+  let total = Date.parse(end) - Date.parse(start) - breakstotal;
   h = h + Math.floor(total / (1000 * 60 * 60));
   m = m + Math.floor((total / (1000 * 60)) % 60);
   if (m > 59) {
@@ -141,6 +142,34 @@ const getTotalWeek = (arr, workplace) => {
   return (h + m / 60).toFixed(2);
 };
 
+const convertBreaks = (breaks) => {
+  if (breaks === null) return "";
+  let b = new Date(getTotalBreaks(breaks));
+  let h = b.getUTCHours();
+  let m = b.getUTCMinutes();
+
+  h = parseInt(h, 10);
+  m = m ? parseInt(m, 10) : 0;
+
+  return ` - ${(h + m / 60).toFixed(2)}`;
+};
+
+const convertArrBreaks = (arr) => {
+  let h = 0;
+  let m = 0;
+
+  arr.forEach((a) => {
+    let b = new Date(getTotalBreaks(a.break));
+    h += b.getUTCHours();
+    m += b.getUTCMinutes();
+  });
+
+  h = parseInt(h, 10);
+  m = m ? parseInt(m, 10) : 0;
+
+  return ` - ${(h + m / 60).toFixed(2)}`;
+};
+
 const setToPDF = async (form, data, workplace, works, page = "") => {
   const days = data.arr;
 
@@ -161,15 +190,6 @@ const setToPDF = async (form, data, workplace, works, page = "") => {
     if (arr.length === 1) {
       let start = new Date(arr[0].timeInterval.start);
       let end = new Date(arr[0].timeInterval.end);
-      let breaks = arr[0].break;
-      let totalbreaks = 0;
-      if (breaks !== null) {
-        breaks.forEach((b) => {
-          let start = new Date(b.start);
-          let end = new Date(b.end);
-          totalbreaks = totalbreaks + (end - start);
-        });
-      }
 
       let startTime = `${
         String(start.getHours()).length > 1 ? String(start.getHours()) : "0" + String(start.getHours())
@@ -183,7 +203,9 @@ const setToPDF = async (form, data, workplace, works, page = "") => {
       form.getField(values.dayName + "-end-time" + page).setText(endTime);
       form
         .getField(values.dayName + "-total" + page)
-        .setText(String(getTotal(arr[0].timeInterval.start, arr[0].timeInterval.end, totalbreaks)));
+        .setText(String(getTotal(arr[0].timeInterval.start, arr[0].timeInterval.end, arr[0].break)));
+
+      form.getField(values.dayName + "-description" + page).setText(convertBreaks(arr[0].break));
     } else {
       var sTimes = arr.map((a) => Date.parse(a.timeInterval.start));
       var sTime = sTimes.sort((a, b) => a - b)[0];
@@ -215,6 +237,7 @@ const setToPDF = async (form, data, workplace, works, page = "") => {
       form.getField(values.dayName + "-end-time" + page).setText(endTime);
       form.getField(values.dayName + "-total" + page).setText(String(getArrTotal(arr)));
       form.getField(values.dayName + "-description" + page).setText(check(arr, sTime, eTime));
+      form.getField(values.dayName + "-description" + page).setText(convertArrBreaks(arr));
     }
   });
 };
