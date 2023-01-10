@@ -1,14 +1,40 @@
 import React, { useState } from "react";
-import { Typography, Button, Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
+import {
+  Typography,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  FormControl,
+  InputLabel,
+  Select,
+  TextField,
+  Checkbox,
+  MenuItem,
+  ListItemText,
+} from "@mui/material";
 
 import { fillWeek } from "./services/pdf.jsx";
 import { PropTypes } from "prop-types";
 
-export const MakePDF = ({ data, isEmpty, selected = "", works }) => {
+const MenuProps = {
+  PaperProps: {
+    style: {
+      maxHeight: 48 * 4.5 + 8,
+      width: 250,
+    },
+  },
+};
+
+export const MakePDF = ({ data, isEmpty, works }) => {
+  /* one week item is {week: 52, period: '26.12 - 1.1.2023', arr: Array(2)}*/
   const [open, setOpen] = useState(false);
+  const [selected, setSelected] = useState([]);
+  const [selectedWork, setSelectedWork] = useState("");
 
   const handleSave = () => {
-    //fillWeek(data, selected, works);
+    fillWeek(selected, selectedWork, works);
   };
   const handleOpen = () => {
     setOpen(true);
@@ -16,6 +42,17 @@ export const MakePDF = ({ data, isEmpty, selected = "", works }) => {
 
   const handleClose = () => {
     setOpen(false);
+  };
+  const handleChangeWork = (event) => {
+    const { value } = event.target;
+    console.log(value);
+    setSelectedWork(value);
+  };
+
+  const handleChange = (event) => {
+    //max selected is 2
+    const { value } = event.target;
+    setSelected(value.length > 2 ? value.slice(0, 2) : value);
   };
 
   return (
@@ -25,6 +62,65 @@ export const MakePDF = ({ data, isEmpty, selected = "", works }) => {
       </Button>
       <Dialog open={open} onClose={handleClose} maxWidth="xs" fullWidth>
         <DialogTitle>PDF</DialogTitle>
+        <DialogContent>
+          <FormControl fullWidth margin="dense">
+            <InputLabel id="works-select" aria-label="works-select">
+              Works
+            </InputLabel>
+            <Select
+              labelId="works-select"
+              id="works-select"
+              label="Works"
+              value={selectedWork}
+              onChange={handleChangeWork}
+            >
+              {works.map((item) => {
+                return (
+                  <MenuItem key={item.id} value={item.id}>
+                    {item.name}
+                  </MenuItem>
+                );
+              })}
+            </Select>
+          </FormControl>
+
+          <FormControl fullWidth margin="dense" disabled={selectedWork === ""}>
+            <InputLabel id="weeks-select" aria-label="weeks-select">
+              Weeks
+            </InputLabel>
+            <Select
+              labelId="weeks-select"
+              id="weeks-select"
+              label="Weeks"
+              multiple
+              value={selected}
+              onChange={handleChange}
+              renderValue={(selected) => selected.map((item) => item.week).join(", ")}
+              MenuProps={MenuProps}
+            >
+              {data.map((item) => {
+                let isSelected = selected.indexOf(item) > -1;
+                let isFull = selected.length > 1 && !isSelected;
+                return (
+                  <MenuItem key={item.period} value={item} disabled={isFull}>
+                    <Checkbox checked={selected.indexOf(item) > -1} />
+                    <ListItemText secondary={item.period} primary={`${item.week} työviikko`} />
+                  </MenuItem>
+                );
+              })}
+            </Select>
+          </FormControl>
+        </DialogContent>
+
+        <DialogActions>
+          <Button onClick={handleClose} color="error">
+            Cancel
+          </Button>
+
+          <Button onClick={handleSave} color="primary" disabled={selected.length < 2}>
+            Download
+          </Button>
+        </DialogActions>
       </Dialog>
     </>
   );

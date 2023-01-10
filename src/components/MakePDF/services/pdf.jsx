@@ -51,7 +51,7 @@ const getArrTotal = (arr) => {
   let breakstotal = 0;
 
   arr.forEach((a) => {
-    let breaks = a.breaks;
+    let breaks = a.break;
     if (breaks !== null) {
       breaks.forEach((b) => {
         breakstotal = breakstotal + (Date.parse(b.end) - Date.parse(b.start));
@@ -110,6 +110,7 @@ const getTotalWeek = (arr, workplace) => {
   var m = 0;
 
   arr.forEach((day) => {
+    console.log(day.arr.find((a) => a.workId === workplace));
     let arr = day.arr.find((a) => a.workId === workplace).arr.filter((a) => a.isSent && a.isConfirmed);
     if (arr.length === 0) return;
     arr.forEach((a) => {
@@ -127,14 +128,6 @@ const getTotalWeek = (arr, workplace) => {
   m = m ? parseInt(m, 10) : 0;
 
   return (h + m / 60).toFixed(2);
-};
-
-const getWeekRN = () => {
-  var d = new Date();
-  var dayNum = d.getDay() || 7;
-  d.setDate(d.getDate() + 4 - dayNum);
-  var yearStart = new Date(d.getFullYear(), 0, 1);
-  return Math.ceil(((d - yearStart) / 86400000 + 1) / 7);
 };
 
 const setToPDF = async (form, data, workplace, works, page = "") => {
@@ -218,12 +211,6 @@ const setToPDF = async (form, data, workplace, works, page = "") => {
 export const fillWeek = async (data, workplace, works) => {
   if (data === undefined) return;
 
-  const weekrn = getWeekRN();
-  var reportWeek;
-
-  if (weekrn % 2 !== 0) reportWeek = data.filter((d) => d.week === weekrn || d.week === weekrn - 1);
-  else reportWeek = data.filter((d) => d.week === weekrn - 1 || d.week === weekrn - 2);
-
   var client = await contentful.createClient({
     space: "pqh23768z4fv",
     accessToken: "P58WCeZ_VJ2LViEsyZ0JoFPe6lMnNy66ZUXhEeV41e4",
@@ -233,12 +220,12 @@ export const fillWeek = async (data, workplace, works) => {
   const pdfDoc = await PDFDocument.load(existingPdfBytes);
   const form = pdfDoc.getForm();
 
-  if (reportWeek.length >= !0) {
-    for (let i = 0; i < reportWeek.length; i++) {
+  if (data.length >= !0) {
+    for (let i = 0; i < data.length; i++) {
       if (i === 0) {
-        await setToPDF(form, reportWeek[i], workplace, works);
+        await setToPDF(form, data[i], workplace, works);
       } else {
-        await setToPDF(form, reportWeek[i], workplace, works, "-2");
+        await setToPDF(form, data[i], workplace, works, "-2");
       }
     }
   }
