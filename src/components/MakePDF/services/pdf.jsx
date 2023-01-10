@@ -21,8 +21,6 @@ const getDay = (d) => {
   let day = String(date.getDate()).padStart(2, "0");
   let month = String(date.getMonth() + 1).padStart(2, "0");
 
-  console.log(day, month);
-
   let value = `${day}.${month}`;
 
   return { dayName, value };
@@ -50,18 +48,25 @@ const getTotal = (start, end, breaks) => {
   return (h + m / 60).toFixed(2);
 };
 
+const getTotalBreaks = (breaks) => {
+  let total = 0;
+  if (breaks === null) return total;
+  breaks.forEach((b) => {
+    let start = new Date(b.start);
+    let end = new Date(b.end);
+    total += Date.parse(end) - Date.parse(start);
+  });
+
+  return total;
+};
+
 const getArrTotal = (arr) => {
   var h = 0;
   var m = 0;
   let breakstotal = 0;
 
   arr.forEach((a) => {
-    let breaks = a.break;
-    if (breaks !== null) {
-      breaks.forEach((b) => {
-        breakstotal = breakstotal + (Date.parse(b.end) - Date.parse(b.start));
-      });
-    }
+    breakstotal = getTotalBreaks(a.break);
 
     let total = Date.parse(a.timeInterval.end) - Date.parse(a.timeInterval.start) - breakstotal;
 
@@ -113,12 +118,14 @@ const check = (arr, sTime, eTime) => {
 const getTotalWeek = (arr, workplace) => {
   var h = 0;
   var m = 0;
+  var breakstotal = 0;
 
   arr.forEach((day) => {
     let arr = day.arr.find((a) => a.workId === workplace).arr.filter((a) => a.isSent && a.isConfirmed);
     if (arr.length === 0) return;
     arr.forEach((a) => {
-      let total = Date.parse(a.timeInterval.end) - Date.parse(a.timeInterval.start);
+      breakstotal = getTotalBreaks(a.break);
+      let total = Date.parse(a.timeInterval.end) - Date.parse(a.timeInterval.start) - breakstotal;
       h = h + Math.floor(total / (1000 * 60 * 60));
       m = m + Math.floor((total / (1000 * 60)) % 60);
       if (m > 59) {
