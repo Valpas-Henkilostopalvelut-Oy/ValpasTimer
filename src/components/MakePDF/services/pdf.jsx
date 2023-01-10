@@ -11,14 +11,19 @@ const getWorkerName = async () => {
 };
 
 const getYear = (d) => {
-  return d.getFullYear();
+  let year = new Date(d[0].arr[0].arr[0].timeInterval.start).getFullYear();
+  return year;
 };
 
 const getDay = (d) => {
   const date = new Date(d);
-  const day = date.getDay() - 1;
-  const dayName = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"][day];
-  const value = `${date.getDate()}.${date.getMonth()}`;
+  const dayName = ["sun", "mon", "tue", "wed", "thu", "fri", "sat"][date.getDay()];
+  let day = String(date.getDate()).padStart(2, "0");
+  let month = String(date.getMonth() + 1).padStart(2, "0");
+
+  console.log(day, month);
+
+  let value = `${day}.${month}`;
 
   return { dayName, value };
 };
@@ -110,7 +115,6 @@ const getTotalWeek = (arr, workplace) => {
   var m = 0;
 
   arr.forEach((day) => {
-    console.log(day.arr.find((a) => a.workId === workplace));
     let arr = day.arr.find((a) => a.workId === workplace).arr.filter((a) => a.isSent && a.isConfirmed);
     if (arr.length === 0) return;
     arr.forEach((a) => {
@@ -133,7 +137,7 @@ const getTotalWeek = (arr, workplace) => {
 const setToPDF = async (form, data, workplace, works, page = "") => {
   const days = data.arr;
 
-  form.getField("year" + page).setText(String(getYear(new Date())));
+  form.getField("year" + page).setText(String(getYear(days)));
   form.getField("client" + page).setText(getWorkName(workplace, works));
   form.getField("worker" + page).setText((await getWorkerName()).last_name + " " + (await getWorkerName()).first_name);
   form.getField("total" + page).setText(String(getTotalWeek(days, workplace)));

@@ -45,7 +45,6 @@ export const MakePDF = ({ data, isEmpty, works }) => {
   };
   const handleChangeWork = (event) => {
     const { value } = event.target;
-    console.log(value);
     setSelectedWork(value);
   };
 
