@@ -151,7 +151,7 @@ const convertBreaks = (breaks) => {
   h = parseInt(h, 10);
   m = m ? parseInt(m, 10) : 0;
 
-  return ` - ${(h + m / 60).toFixed(2)}`;
+  return h !== 0 || m !== 0 ? ` - ${(h + m / 60).toFixed(2)}` : "";
 };
 
 const convertArrBreaks = (arr) => {
@@ -167,7 +167,7 @@ const convertArrBreaks = (arr) => {
   h = parseInt(h, 10);
   m = m ? parseInt(m, 10) : 0;
 
-  return ` - ${(h + m / 60).toFixed(2)}`;
+  return h !== 0 || m !== 0 ? ` - ${(h + m / 60).toFixed(2)}` : "";
 };
 
 const setToPDF = async (form, data, workplace, works, page = "") => {
