@@ -11,6 +11,7 @@ import { TimePicker } from "@mui/x-date-pickers/TimePicker";
 import fi from "date-fns/locale/fi";
 import { timeMaker } from "../../../../services/time.jsx";
 import { PropTypes } from "prop-types";
+import { SnackSuccess } from "../../../../components/Alert/index.jsx";
 
 export const Editdate = ({ date = null, setDate, sTime, eTime, setSTime, setETime, lang = { date: "Date" } }) => {
   return (
@@ -54,6 +55,14 @@ export const Edittime = ({ date, time, setTime, label = "Time" }) => {
   let minutes = String(new Date(time).getMinutes()).padStart(2, "0");
 
   const [value, setValue] = useState(`${hours}:${minutes}`);
+
+  useEffect(() => {
+    let isActive = false;
+
+    !isActive && setValue(`${hours}:${minutes}`);
+
+    return () => (isActive = true);
+  }, [time]);
 
   return (
     <TextField
@@ -193,6 +202,11 @@ const createTimeentry = async ({ description = "", sel = "", sTime, eTime, worki
 };
 
 export const Createtimeentry = ({
+  setDescription,
+  setETime,
+  setSTime,
+  setWorkit,
+  setSel,
   description = "",
   sel = "",
   sTime,
@@ -203,19 +217,29 @@ export const Createtimeentry = ({
   },
 }) => {
   const disabled = sel === "" || eTime.getTime() - sTime.getTime() <= 0;
+  const [open, setOpen] = useState(false);
 
   return (
-    <Button
-      fullWidth
-      variant="contained"
-      color="primary"
-      disabled={disabled}
-      onClick={() => {
-        createTimeentry({ description, sel, sTime, eTime, workit });
-      }}
-    >
-      {lang.create}
-    </Button>
+    <>
+      <Button
+        fullWidth
+        variant="contained"
+        color="primary"
+        disabled={disabled}
+        onClick={() => {
+          createTimeentry({ description, sel, sTime, eTime, workit }).then(() => {
+            setDescription("");
+            setETime(new Date());
+            setSTime(new Date());
+            setOpen(true);
+          });
+        }}
+      >
+        {lang.create}
+      </Button>
+
+      <SnackSuccess open={open} setOpen={setOpen} message="Success" />
+    </>
   );
 };
 Editdate.propTypes = {

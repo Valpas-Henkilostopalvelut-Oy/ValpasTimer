@@ -11,11 +11,12 @@ import {
   Button,
   Box,
   useTheme,
+  InputBase,
 } from "@mui/material";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import ruLocale from "date-fns/locale/ru";
+import fiLocale from "date-fns/locale/fi";
 import { PropTypes } from "prop-types";
 import { CustomTableCell } from "./tablecell.jsx";
 
@@ -37,47 +38,27 @@ const updateDate = async ({ value, data }) => {
 
 export const EditDate = ({ data, lang = { date: "Date" } }) => {
   const [value, setValue] = React.useState(new Date(data.timeInterval.start));
-  const [open, setOpen] = React.useState(false);
+  let sentDate = String(`${value.getDate()}.${value.getMonth()}.${value.getFullYear()}`);
   const isSent = data.isSent;
-  const handleClose = () => {
-    updateDate({ value: value, data: data });
-    setOpen(false);
-  };
 
-  return (
-    <>
-      <Typography
-        variant="p"
-        onClick={() => setOpen(true)}
-        sx={{
-          cursor: !isSent ? "pointer" : "default",
+  return isSent ? (
+    <Typography variant="p">{sentDate}</Typography>
+  ) : (
+    <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={fiLocale}>
+      <DatePicker
+        disabled={isSent}
+        disableFuture
+        disableMaskedInput
+        label={lang.date}
+        value={value}
+        onChange={setValue}
+        onAccept={(e) => updateDate({ value: e, data: data })}
+        renderInput={(params) => {
+          const { InputProps, ...otherProps } = params;
+          return <InputBase {...otherProps} fullWidth />;
         }}
-      >
-        {new Date(data.timeInterval.start).getDate()}.{new Date(data.timeInterval.start).getMonth() + 1}.
-        {new Date(data.timeInterval.start).getFullYear()}
-      </Typography>
-      <Dialog open={open && !isSent} onClose={() => setOpen(false)} maxWidth={"xs"} fullWidth={true}>
-        <DialogTitle>{lang.date}</DialogTitle>
-        <DialogContent>
-          <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={ruLocale}>
-            <DatePicker
-              label={lang.date}
-              value={value}
-              onChange={(newValue) => setValue(newValue)}
-              renderInput={(params) => <TextField {...params} fullWidth margin="normal" />}
-            />
-          </LocalizationProvider>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setOpen(false)} color="primary">
-            Cancel
-          </Button>
-          <Button onClick={handleClose} color="primary">
-            Save
-          </Button>
-        </DialogActions>
-      </Dialog>
-    </>
+      />
+    </LocalizationProvider>
   );
 };
 

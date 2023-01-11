@@ -1,14 +1,5 @@
 import React, { useState } from "react";
-import {
-  TextField,
-  Typography,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  Button,
-  InputBase,
-} from "@mui/material";
+import { InputBase, Typography } from "@mui/material";
 import { PropTypes } from "prop-types";
 
 export const timeMaker = (event, time) => {
@@ -56,54 +47,31 @@ export const timeMaker = (event, time) => {
 };
 
 export const TextToTime = ({ date = new Date(), onChange, isSent = true }) => {
-  const [time, setTime] = useState(
-    `${String("0" + new Date(date).getHours()).slice(-2)}:${String("0" + new Date(date).getMinutes()).slice(-2)}`
-  );
-
-  let h = new Date(date).getHours();
+  const h = new Date(date).getHours();
   let m = new Date(date).getMinutes();
-  const [open, setOpen] = useState(false);
-  const [value, setValue] = useState({ h: h, m: m });
-  const handleSave = () => {
-    onChange({ h: value.h, min: value.m });
-    setOpen(false);
-  };
 
-  return (
-    <>
-      <Typography
-        onClick={() => setOpen(true)}
-        variant="p"
-        sx={{
-          cursor: !isSent ? "pointer" : "default",
-        }}
-      >
-        {time}
-      </Typography>
-      <Dialog open={open && !isSent} onClose={() => setOpen(false)} maxWidth="xs" fullWidth={true}>
-        <DialogTitle>Time</DialogTitle>
-        <DialogContent>
-          <TextField
-            fullWidth
-            label="Time"
-            margin="normal"
-            value={time}
-            onChange={(e) => setTime(e.target.value)}
-            onBlur={(e) => {
-              if (e.target.value !== "") {
-                let val = timeMaker(e, time);
-                setTime(`${String("0" + val.h).slice(-2)}:${String("0" + val.m).slice(-2)}`);
-                setValue(val);
-              }
-            }}
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setOpen(false)}>Cancel</Button>
-          <Button onClick={handleSave}>Ok</Button>
-        </DialogActions>
-      </Dialog>
-    </>
+  const [time, setTime] = useState(`${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}`);
+
+  return isSent ? (
+    <Typography variant="p">{time}</Typography>
+  ) : (
+    <InputBase
+      label="Time"
+      value={time}
+      disabled={isSent}
+      sx={{
+        maxWidth: "36px",
+      }}
+      onChange={(e) => setTime(e.target.value)}
+      onBlur={(e) => {
+        const { value } = e.target;
+        if (value !== "") {
+          let val = timeMaker(e, time);
+          setTime(`${String(val.h).padStart(2, "0")}:${String(val.m).padStart(2, "0")}`);
+          onChange({ h: val.h, min: val.m });
+        }
+      }}
+    />
   );
 };
 

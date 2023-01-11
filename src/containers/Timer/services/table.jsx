@@ -26,6 +26,7 @@ import { PropTypes } from "prop-types";
 import SendIcon from "@mui/icons-material/Send";
 import PendingIcon from "@mui/icons-material/Pending";
 import { weekissent, weekisconformed, sendweek, isSent, maxText } from "./functions.jsx";
+import { SnackSuccess } from "../../../components/Alert/index.jsx";
 
 const WeekHeadMD = ({ week, selected, lang, isEmpty, isThis, sx }) => {
   const theme = useTheme();
@@ -33,8 +34,6 @@ const WeekHeadMD = ({ week, selected, lang, isEmpty, isThis, sx }) => {
   let isConfirmed = weekisconformed(week.arr);
   let h = totalweektime(week).h !== 0 ? totalweektime(week).h + " h " : "";
   let min = totalweektime(week).min !== 0 ? totalweektime(week).min + " min" : "";
-
-  console.log(week, isSent ? !isConfirmed : isSent);
 
   return (
     <TableRow sx={sx}>
@@ -500,12 +499,13 @@ const RowDetailsMD = ({ data, lang, workplaces, isEmpty, sx }) => {
           </CustomTableCell>
         </TableRow>
 
-        <TableRow sx={sx}>
-          <CustomTableCell />
-          <CustomTableCell colSpan={5}>
-            <EditDescription date={row} lang={lang} />
-          </CustomTableCell>
-        </TableRow>
+        {row.description && (
+          <TableRow sx={sx}>
+            <CustomTableCell />
+            <CustomTableCell />
+            <CustomTableCell colSpan={4}>{row.description}</CustomTableCell>
+          </TableRow>
+        )}
 
         {row.break &&
           row.break.map((item, i) => (

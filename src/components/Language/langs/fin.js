@@ -167,7 +167,7 @@ export const fin = {
         workplace: "Näytä",
         all: "Kaikki",
         workitem: "Työkohde",
-        no_work: "Valitse työkohde",
+        no_work: "Lisää",
         sent: "Lähetetty",
         confirmed: "Vahvistettu",
         add_description: "Lisää kuvaus",

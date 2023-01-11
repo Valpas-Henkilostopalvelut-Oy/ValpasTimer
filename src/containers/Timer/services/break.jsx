@@ -37,6 +37,22 @@ const Breakicon = ({ item }) => {
         }}
       />
     );
+  } else if (item.reason === Breakreason.LUNCH_L) {
+    return (
+      <RestaurantIcon
+        sx={{
+          color: "default.gray",
+        }}
+      />
+    );
+  } else if (item.reason === Breakreason.LONG) {
+    return (
+      <FreeBreakfastIcon
+        sx={{
+          color: "default.gray",
+        }}
+      />
+    );
   }
 };
 
@@ -74,7 +90,7 @@ const Breakreasonselect = ({ data, item, lang }) => {
     updateBreak(data, item, event.target.value);
   };
   return (
-    <FormControl fullWidth unde>
+    <FormControl fullWidth >
       <Select
         labelId="breakreason-select-label"
         id="breakreason-select"

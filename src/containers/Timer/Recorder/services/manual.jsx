@@ -52,7 +52,19 @@ export const Manual = ({ description, sel, setDescription, setSel, works, lang, 
         <Totaltime sTime={sTime} eTime={eTime} />
       </Grid>
       <Grid item xs={12} md={2.4}>
-        <Createtimeentry description={description} sel={sel} sTime={sTime} eTime={eTime} workit={workit} lang={lang} />
+        <Createtimeentry
+          description={description}
+          sel={sel}
+          sTime={sTime}
+          eTime={eTime}
+          workit={workit}
+          lang={lang}
+          setWorkit={setWorkitem}
+          setDescription={setDescription}
+          setSel={setSel}
+          setSTime={setSTime}
+          setETime={setETime}
+        />
       </Grid>
     </Grid>
   );

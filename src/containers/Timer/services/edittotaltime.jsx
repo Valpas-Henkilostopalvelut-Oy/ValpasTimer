@@ -1,5 +1,14 @@
 import React, { useState } from "react";
-import { TextField, Typography, Dialog, DialogTitle, DialogContent, DialogActions, Button } from "@mui/material";
+import {
+  TextField,
+  Typography,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Button,
+  InputBase,
+} from "@mui/material";
 import { DataStore } from "aws-amplify";
 import { TimeEntry } from "../../../models/index.js";
 
@@ -121,47 +130,35 @@ export const TotalTime = ({ date }) => {
   let hours = Math.floor(total / (1000 * 60 * 60));
   let minutes = Math.floor((total / (1000 * 60)) % 60);
 
-  const [totalTime, setTotalTime] = useState(
-    `${hours > 9 ? hours : "0" + hours}:${minutes > 9 ? minutes : "0" + minutes}`
-  );
+  const [totalTime, setTotalTime] = useState(`${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}`);
 
-  const [open, setOpen] = React.useState(false);
-
-  return (
-    <>
-      <Typography
-        sx={{
-          cursor: !isSent ? "pointer" : "default",
-        }}
-        variant="p"
-        onClick={() => setOpen(!open)}
-      >
-        {totalTime}
-      </Typography>
-      <Dialog open={open && !isSent} onClose={() => setOpen(false)} fullWidth maxWidth="xs">
-        <DialogTitle>Edit Total Time</DialogTitle>
-        <DialogContent>
-          <TextField
-            margin="normal"
-            fullWidth
-            label="Total Time"
-            value={totalTime}
-            onChange={(e) => {
-              setTotalTime(e.target.value);
-            }}
-            onBlur={(e) => {
-              let t = time(e);
-              setTotalTime(`${t.h > 9 ? t.h : "0" + t.h}:${t.min > 9 ? t.min : "0" + t.min}`);
-
-              calculateEndtime(start, t, date);
-              setOpen(false);
-            }}
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setOpen(false)}>Cancel</Button>
-        </DialogActions>
-      </Dialog>
-    </>
+  return isSent ? (
+    <Typography variant="p">{totalTime}</Typography>
+  ) : (
+    <InputBase
+      label="Total Time"
+      value={totalTime}
+      disabled={isSent}
+      sx={{
+        width: "35px",
+        /*height: "36px",
+        fontSize: "14px",
+        textAlign: "center",
+        border: "1px solid #ccc",
+        borderRadius: "4px",
+        padding: "0 4px",
+        color: "#000",
+        backgroundColor: "#fff",
+        "&:hover": { border: "1px solid #000" },*/
+      }}
+      onChange={(e) => {
+        setTotalTime(e.target.value);
+      }}
+      onBlur={(e) => {
+        let t = time(e);
+        setTotalTime(`${String(t.h).padStart(2, "0")}:${String(t.min).padStart(2, "0")}`);
+        calculateEndtime(start, t, date);
+      }}
+    />
   );
 };
