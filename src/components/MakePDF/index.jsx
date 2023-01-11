@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Typography,
   Button,
@@ -9,14 +9,14 @@ import {
   FormControl,
   InputLabel,
   Select,
-  TextField,
   Checkbox,
   MenuItem,
   ListItemText,
 } from "@mui/material";
-
+import { Auth } from "aws-amplify";
 import { fillWeek } from "./services/pdf.jsx";
 import { PropTypes } from "prop-types";
+import { groupBy } from "../../containers/Timer/services/group.jsx";
 
 const MenuProps = {
   PaperProps: {
@@ -32,6 +32,21 @@ export const MakePDF = ({ data, isEmpty, works }) => {
   const [open, setOpen] = useState(false);
   const [selected, setSelected] = useState([]);
   const [selectedWork, setSelectedWork] = useState("");
+  const [newData, setNewData] = useState(null);
+
+  useEffect(() => {
+    let isMounted = true;
+    const load = async () => {
+      Auth.currentAuthenticatedUser().then((user) => {
+        const toPdf = data.filter((a) => !a.isActive && a.workspaceId === selectedWork && a.isConfirmed && a.isSent);
+        setNewData(groupBy(toPdf));
+        console.log(groupBy(toPdf));
+      });
+    };
+    if (isMounted) load();
+
+    return () => (isMounted = false);
+  }, [selectedWork]);
 
   const handleSave = () => {
     fillWeek(selected, selectedWork, works);
@@ -83,7 +98,7 @@ export const MakePDF = ({ data, isEmpty, works }) => {
             </Select>
           </FormControl>
 
-          <FormControl fullWidth margin="dense" disabled={selectedWork === ""}>
+          <FormControl fullWidth margin="dense" disabled={selectedWork === "" && newData}>
             <InputLabel id="weeks-select" aria-label="weeks-select">
               Weeks
             </InputLabel>
@@ -97,16 +112,17 @@ export const MakePDF = ({ data, isEmpty, works }) => {
               renderValue={(selected) => selected.map((item) => item.week).join(", ")}
               MenuProps={MenuProps}
             >
-              {data.map((item) => {
-                let isSelected = selected.indexOf(item) > -1;
-                let isFull = selected.length > 1 && !isSelected;
-                return (
-                  <MenuItem key={item.period} value={item} disabled={isFull}>
-                    <Checkbox checked={selected.indexOf(item) > -1} />
-                    <ListItemText secondary={item.period} primary={`${item.week} työviikko`} />
-                  </MenuItem>
-                );
-              })}
+              {newData &&
+                newData.map((item) => {
+                  let isSelected = selected.indexOf(item) > -1;
+                  let isFull = selected.length > 1 && !isSelected;
+                  return (
+                    <MenuItem key={item.period} value={item} disabled={isFull}>
+                      <Checkbox checked={selected.indexOf(item) > -1} />
+                      <ListItemText secondary={item.period} primary={`${item.week} työviikko`} />
+                    </MenuItem>
+                  );
+                })}
             </Select>
           </FormControl>
         </DialogContent>
@@ -116,7 +132,7 @@ export const MakePDF = ({ data, isEmpty, works }) => {
             Cancel
           </Button>
 
-          <Button onClick={handleSave} color="primary" disabled={selected.length < 2}>
+          <Button onClick={handleSave} color="primary" disabled={selected.length < 1}>
             Download
           </Button>
         </DialogActions>

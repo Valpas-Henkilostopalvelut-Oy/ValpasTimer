@@ -122,7 +122,13 @@ const getTotalWeek = (arr, workplace) => {
   var breakstotal = 0;
 
   arr.forEach((day) => {
-    let arr = day.arr.find((a) => a.workId === workplace).arr.filter((a) => a.isSent && a.isConfirmed);
+    let arr =
+      day.arr.filter((a) => a.workId === workplace).length > 0
+        ? day.arr.filter((a) => a.workId === workplace)[0].arr
+        : [];
+    console.log(arr);
+    arr = arr.filter((a) => a.isSent && a.isConfirmed);
+
     if (arr.length === 0) return;
     arr.forEach((a) => {
       breakstotal = getTotalBreaks(a.break);
@@ -180,7 +186,12 @@ const setToPDF = async (form, data, workplace, works, page = "") => {
   form.getField("week" + page).setText(String(data.week));
 
   days.forEach((day) => {
-    let arr = day.arr.find((a) => a.workId === workplace).arr.filter((a) => a.isSent && a.isConfirmed);
+    let arr =
+      day.arr.filter((a) => a.workId === workplace).length > 0
+        ? day.arr.filter((a) => a.workId === workplace)[0].arr
+        : [];
+
+    arr = arr.filter((a) => a.isSent && a.isConfirmed);
 
     if (arr.length === 0) return;
     let values = getDay(arr[0].timeInterval.start);

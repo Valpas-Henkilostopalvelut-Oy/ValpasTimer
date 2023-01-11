@@ -16,6 +16,7 @@ export const History = () => {
   const [confirmedWeeks, setConfirmedWeeks] = useState(null);
   const [selected, setSelected] = useState("");
   const lang = langValue.track;
+  const [notFilterd, setNotFilterd] = useState(null);
 
   useEffect(() => {
     Hub.listen("datastore", (hubData) => {
@@ -56,6 +57,7 @@ export const History = () => {
     const loadlist = async () => {
       await Auth.currentAuthenticatedUser().then(async (user) => {
         await DataStore.query(TimeEntry).then((data) => {
+          setNotFilterd(data);
           const confirmedweek = data.filter(
             (a) =>
               !a.isActive &&
@@ -117,7 +119,7 @@ export const History = () => {
               Arkisto
             </Typography>
 
-            <MakePDF data={confirmedWeeks} isEmpty={isEmpty} works={works} selected={selected} />
+            <MakePDF data={notFilterd} isEmpty={isEmpty} works={works} />
           </Box>
 
           {confirmedWeeks.length > 0 ? (
