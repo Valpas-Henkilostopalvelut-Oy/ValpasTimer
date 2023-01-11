@@ -24,14 +24,18 @@ export const EditDescription = ({
   const [desc, setDesc] = useState(date.description);
   return (
     <TextField
-      id="outlined-multiline-static"
-      variant="standard"
+      id="description edit"
       fullWidth
       multiline
       rows={3}
       value={desc}
+      margin="dense"
       onChange={(e) => setDesc(e.target.value)}
       placeholder={lang.add_description}
+      onBlur={(e) => {
+        const { value } = e.target;
+        updateDescription(date, value);
+      }}
     />
   );
 };

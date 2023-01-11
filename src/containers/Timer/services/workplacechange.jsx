@@ -18,6 +18,7 @@ import { TimeEntry } from "../../../models/index.js";
 import { PropTypes } from "prop-types";
 import { CustomTableCell } from "./tablecell.jsx";
 import { maxText } from "./functions.jsx";
+import { EditDescription } from "./editdescription.jsx";
 
 const updateWorkplace = async (date, newValue, work) => {
   await DataStore.save(
@@ -96,49 +97,43 @@ export const SelectWork = ({
         <Dialog open={open && !isSent} onClose={handleCancel} maxWidth={"xs"} fullWidth>
           <DialogTitle>{lang.workplace}</DialogTitle>
           <DialogContent>
-            <Box
-              sx={{
-                padding: "1rem",
-              }}
-            >
-              <FormControl fullWidth>
-                <InputLabel id="workplace-select">{lang.workplace}</InputLabel>
-                <Select
-                  labelId="workplace-select"
-                  id="workplace-select"
-                  value={workplace}
-                  label={lang.workplace}
-                  onChange={handleChange}
-                >
-                  {workplaces.map((item, i) => (
-                    <MenuItem key={i} value={item.id}>
+            <FormControl fullWidth margin="dense">
+              <InputLabel id="workplace-select">{lang.workplace}</InputLabel>
+              <Select
+                labelId="workplace-select"
+                id="workplace-select"
+                value={workplace}
+                label={lang.workplace}
+                onChange={handleChange}
+              >
+                {workplaces.map((item, i) => (
+                  <MenuItem key={i} value={item.id}>
+                    {item.name}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+
+            <FormControl fullWidth margin="dense">
+              <InputLabel id="workplace-select">{lang.workitem}</InputLabel>
+              <Select
+                labelId="workplace-select"
+                id="workplace-select"
+                value={work}
+                label={lang.workitem}
+                onChange={handleChangeWork}
+                disabled={!works || workplace === ""}
+              >
+                {works &&
+                  works.map((item) => (
+                    <MenuItem key={item.id} value={item.id}>
                       {item.name}
                     </MenuItem>
                   ))}
-                </Select>
-              </FormControl>
-            </Box>
+              </Select>
+            </FormControl>
 
-            <Box padding="1rem">
-              <FormControl fullWidth>
-                <InputLabel id="workplace-select">{lang.workitem}</InputLabel>
-                <Select
-                  labelId="workplace-select"
-                  id="workplace-select"
-                  value={work}
-                  label={lang.workitem}
-                  onChange={handleChangeWork}
-                  disabled={!works || workplace === ""}
-                >
-                  {works &&
-                    works.map((item) => (
-                      <MenuItem key={item.id} value={item.id}>
-                        {item.name}
-                      </MenuItem>
-                    ))}
-                </Select>
-              </FormControl>
-            </Box>
+            <EditDescription date={date} />
           </DialogContent>
           <DialogActions>
             <Button onClick={handleCancel} color="primary">
