@@ -24,11 +24,13 @@ import { totaldaytime, totalweektime } from "./totaltime.jsx";
 import { CustomTableCell } from "./tablecell.jsx";
 import { PropTypes } from "prop-types";
 import SendIcon from "@mui/icons-material/Send";
-import PendingIcon from "@mui/icons-material/Pending";
 import { weekissent, weekisconformed, sendweek, isSent, maxText } from "./functions.jsx";
 import { SnackSuccess } from "../../../components/Alert/index.jsx";
+import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
+import EventAvailableIcon from '@mui/icons-material/EventAvailable';
 
-const WeekHeadMD = ({ week, selected, lang, isEmpty, isThis, sx }) => {
+
+const WeekHeadMD = ({ week, selected, lang, isEmpty, isThis, sx, isNotSent = false }) => {
   const theme = useTheme();
   let isSent = weekissent(week.arr);
   let isConfirmed = weekisconformed(week.arr);
@@ -45,7 +47,19 @@ const WeekHeadMD = ({ week, selected, lang, isEmpty, isThis, sx }) => {
             display: "none",
           },
         }}
-      />
+      >
+        {isNotSent && <ErrorOutlineIcon sx={{ color: "error.light" }} />}
+        
+        {(isSent ? !isConfirmed : isSent) && (
+          <Tooltip title="Odottaa vahvistusta">
+            <EventAvailableIcon
+              sx={{
+                color: "default.green",
+              }}
+            />
+          </Tooltip>
+        )}
+      </CustomTableCell>
 
       <CustomTableCell sx={{ borderTop: "0px" }}>
         <Typography variant="h6" color="#ff6600">
@@ -78,21 +92,8 @@ const WeekHeadMD = ({ week, selected, lang, isEmpty, isThis, sx }) => {
               disabled={!isEmpty}
               onClick={() => sendweek(week.arr, selected)}
             >
-              <SendIcon
-                sx={{
-                  color: !isThis ? "error.light" : "default.valpas",
-                }}
-              />
+              <SendIcon sx={{ color: "default.valpas" }} />
             </IconButton>
-          </Tooltip>
-        )}
-        {(isSent ? !isConfirmed : isSent) && (
-          <Tooltip title="Odottaa vahvistusta">
-            <PendingIcon
-              sx={{
-                color: "default.valpas",
-              }}
-            />
           </Tooltip>
         )}
       </CustomTableCell>
@@ -158,9 +159,9 @@ const WeekHeadSM = ({ week, selected, lang, isEmpty, isThis, sx }) => {
         ) : (
           !isConfirmed && (
             <Tooltip title="Odottaa vahvistusta">
-              <PendingIcon
+              <EventAvailableIcon
                 sx={{
-                  color: "default.valpas",
+                  color: "default.green",
                 }}
               />
             </Tooltip>
@@ -171,7 +172,17 @@ const WeekHeadSM = ({ week, selected, lang, isEmpty, isThis, sx }) => {
   );
 };
 
-export const WeekRow = ({ grouped, lang, works, isEmpty, selected, isThis = false }) => {
+export const WeekRow = ({
+  grouped,
+  lang,
+  works,
+  isEmpty,
+  selected,
+  isThis = false,
+  sx,
+  isNotSent = false,
+  isWaiting = false,
+}) => {
   const theme = useTheme();
   return grouped.map((week) => {
     return (
@@ -197,6 +208,7 @@ export const WeekRow = ({ grouped, lang, works, isEmpty, selected, isThis = fals
                       display: "none",
                     },
                   }}
+                  isNotSent={isNotSent}
                 />
 
                 <WeekHeadSM

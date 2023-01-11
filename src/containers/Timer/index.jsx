@@ -9,7 +9,6 @@ import { useAppContext } from "../../services/contextLib.jsx";
 import { getWeekNumber } from "./services/group.jsx";
 import { WeekRow } from "./services/table.jsx";
 import { checkActive, advanceTime } from "./services/loadtimer.jsx";
-import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 
 const Timer = () => {
   const [grouped, setGrouped] = useState(null);
@@ -158,7 +157,7 @@ const Timer = () => {
             });
           }
           setWorks(w);
-          setSelected("all")
+          setSelected("all");
         })
         .catch((error) => console.warn(error));
     };
@@ -214,6 +213,7 @@ const Timer = () => {
         <Grid container spacing={2}>
           <Grid item xs={12}>
             <Recorder
+              thisweek={grouped}
               works={works}
               isEmpty={isEmpty}
               lang={lang.recorder}
@@ -276,12 +276,10 @@ const Timer = () => {
               <Typography variant="h6" color="text.secondary">
                 Ei lähetetty
               </Typography>
-
-              <ErrorOutlineIcon sx={{ color: "error.light" }} />
             </Box>
 
             {notsent.length > 0 && (
-              <WeekRow grouped={notsent} lang={lang} isEmpty={isEmpty} works={works} selected={selected} />
+              <WeekRow grouped={notsent} lang={lang} isEmpty={isEmpty} works={works} selected={selected} isNotSent={true} />
             )}
           </Grid>
 

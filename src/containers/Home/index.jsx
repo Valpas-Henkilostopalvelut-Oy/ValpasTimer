@@ -17,11 +17,13 @@ const Home = () => {
 
   return (
     <Container>
-      {currentUser ? (
-        <Typography>Welcome {currentUser.attributes.email}</Typography>
-      ) : (
-        <Typography>Loading...</Typography>
-      )}
+      <iframe
+        src="https://www.recright.com/careers/fi/valpas"
+        allow="camera;microphone"
+        id="recright"
+        scrolling="no"
+        style={{ width: "100%", height: "100vh", border: "none" }}
+      ></iframe>
     </Container>
   );
 };
