@@ -1,16 +1,8 @@
-import React, { useState } from "react";
-import {
-  TextField,
-  Typography,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  Button,
-  InputBase,
-} from "@mui/material";
+import React, { useState, useEffect } from "react";
+import { Typography, InputBase } from "@mui/material";
 import { DataStore } from "aws-amplify";
 import { TimeEntry } from "../../../models/index.js";
+import { PropTypes } from "prop-types";
 
 const time = (e) => {
   let t = e.target.value;
@@ -132,6 +124,10 @@ export const TotalTime = ({ date }) => {
 
   const [totalTime, setTotalTime] = useState(`${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}`);
 
+  useEffect(() => {
+    setTotalTime(`${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}`);
+  }, [date]);
+
   return isSent ? (
     <Typography variant="p">{totalTime}</Typography>
   ) : (
@@ -161,4 +157,8 @@ export const TotalTime = ({ date }) => {
       }}
     />
   );
+};
+
+TotalTime.propTypes = {
+  date: PropTypes.object,
 };

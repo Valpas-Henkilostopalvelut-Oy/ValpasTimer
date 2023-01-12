@@ -27,8 +27,7 @@ const updateWorkplace = async (date, newValue, work) => {
       update.work = work;
     })
   )
-    .then((e) => console.log(e))
-    .catch((e) => console.warn(e));
+  .catch((e) => console.warn(e));
 };
 
 export const SelectWork = ({

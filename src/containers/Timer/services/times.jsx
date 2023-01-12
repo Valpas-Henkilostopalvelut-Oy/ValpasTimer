@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 import { TextToTime } from "../../../services/time.jsx";
 import { DataStore } from "aws-amplify";
 import { TimeEntry } from "../../../models/index.js";
 import { PropTypes } from "prop-types";
+import { SnackSuccess } from "../../../components/Alert/index.jsx";
 
 export const Time = ({ time }) => {
   let t = new Date(time);
@@ -27,9 +28,9 @@ export const EditSTime = ({ date }) => {
   );
 };
 
-const updateETime = async (data, time) => {
+const updateETime = async (data, time, setSnack) => {
   let eTime = new Date(data.timeInterval.end).setHours(time.h, time.min, 0, 0);
-  await DataStore.save(
+  return await DataStore.save(
     TimeEntry.copyOf(data, (update) => {
       update.timeInterval.end = new Date(eTime).toISOString();
     })
@@ -37,8 +38,21 @@ const updateETime = async (data, time) => {
 };
 
 export const EditETime = ({ date }) => {
+  const [snack, setSnack] = useState(false);
   return (
-    <TextToTime date={new Date(date.timeInterval.end)} onChange={(t) => updateETime(date, t)} isSent={date.isSent} />
+    <>
+      <TextToTime
+        date={new Date(date.timeInterval.end)}
+        onChange={async (t) =>
+          await updateETime(date, t, setSnack).then((e) => {
+            console.log(e);
+            setSnack(true);
+          })
+        }
+        isSent={date.isSent}
+      />
+      <SnackSuccess message="Time updated" open={snack} setOpen={setSnack} />
+    </>
   );
 };
 

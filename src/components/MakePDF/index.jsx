@@ -40,7 +40,6 @@ export const MakePDF = ({ data, isEmpty, works }) => {
       Auth.currentAuthenticatedUser().then((user) => {
         const toPdf = data.filter((a) => !a.isActive && a.workspaceId === selectedWork && a.isConfirmed && a.isSent);
         setNewData(groupBy(toPdf));
-        console.log(groupBy(toPdf));
       });
     };
     if (isMounted) load();

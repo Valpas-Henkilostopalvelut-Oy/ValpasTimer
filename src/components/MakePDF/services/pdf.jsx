@@ -126,7 +126,6 @@ const getTotalWeek = (arr, workplace) => {
       day.arr.filter((a) => a.workId === workplace).length > 0
         ? day.arr.filter((a) => a.workId === workplace)[0].arr
         : [];
-    console.log(arr);
     arr = arr.filter((a) => a.isSent && a.isConfirmed);
 
     if (arr.length === 0) return;

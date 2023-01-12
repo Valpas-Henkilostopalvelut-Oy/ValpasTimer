@@ -6,6 +6,7 @@ import { Manual } from "./services/manual.jsx";
 import { PropTypes } from "prop-types";
 
 export const Recorder = ({
+  thisweek,
   works = null,
   lang,
   isEmpty = false,
@@ -35,7 +36,7 @@ export const Recorder = ({
   return (
     <Box>
       <TabContext value={value}>
-        <TabList onChange={handleChangeTab} aria-label="Manual and Timer Tabs">
+        <TabList onChange={handleChangeTab} aria-label="Manual and Timer Tabs" variant="fullWidth">
           <Tab label={lang.tabs.timer} value="1" />
           <Tab label={lang.tabs.manual} value="2" />
         </TabList>
@@ -64,6 +65,7 @@ export const Recorder = ({
         </TabPanel>
         <TabPanel value="2" sx={{ paddingLeft: 0, paddingRight: 0 }}>
           <Manual
+            thisweek={thisweek}
             isEmpty={isEmpty}
             description={description}
             setDescription={setDescription}

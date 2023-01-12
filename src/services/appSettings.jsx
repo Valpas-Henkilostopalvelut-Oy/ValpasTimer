@@ -12,6 +12,11 @@ export const customPalette = {
       fontWeight: 400,
       color: "#707070",
     },
+    h1: {
+      fontSize: "36px",
+      fontWeight: 400,
+      color: "#707070",
+    },
     h4: {
       fontSize: "24px",
       fontWeight: 400,

@@ -81,7 +81,7 @@ const Profile = () => {
         <MenuItem>
           <Language setLang={setLanguage} lang={language} />
         </MenuItem>
-        <MenuItem disabled>
+        <MenuItem>
           {loadedUser != null ? loadedUser.attributes.name + " " + loadedUser.attributes.family_name : "Loading"}
         </MenuItem>
         <MenuItem disabled>{loadedUser != null ? loadedUser.attributes.email : "Loading"}</MenuItem>

@@ -50,18 +50,39 @@ export const Editdate = ({ date = null, setDate, sTime, eTime, setSTime, setETim
   );
 };
 
-export const Edittime = ({ date, time, setTime, label = "Time" }) => {
+const isInvalid = (timeStart, timeEnd, minRage, maxRange) => {
+  if (timeStart.getTime() >= minRage.getTime() && timeStart.getTime() <= maxRange.getTime()) {
+    return true;
+  }
+  return false;
+};
+
+export const Edittime = ({
+  date,
+  time,
+  time2,
+  setTime,
+  label = "Time",
+  maxTime = null,
+  minTime = null,
+  error,
+  setError,
+}) => {
   let hours = String(new Date(time).getHours()).padStart(2, "0");
   let minutes = String(new Date(time).getMinutes()).padStart(2, "0");
-
   const [value, setValue] = useState(`${hours}:${minutes}`);
+  const [lastValidTime, setLastValidTime] = useState(time);
 
   useEffect(() => {
-    let isActive = false;
+    if (isInvalid(new Date(time),  time2, minTime, maxTime)) {
+      setTime(lastValidTime);
+    } else {
+      setLastValidTime(time);
+    }
+  }, [time, minTime, maxTime]);
 
-    !isActive && setValue(`${hours}:${minutes}`);
-
-    return () => (isActive = true);
+  useEffect(() => {
+    setValue(`${hours}:${minutes}`);
   }, [time]);
 
   return (
@@ -69,56 +90,24 @@ export const Edittime = ({ date, time, setTime, label = "Time" }) => {
       label={label}
       variant="outlined"
       value={value}
+      error={error}
       onChange={(e) => {
-        setValue(e.target.value);
+        const { value } = e.target;
+        setValue(value);
       }}
       onBlur={(e) => {
         let hours = String(timeMaker(e, time).h).padStart(2, "0");
         let minutes = String(timeMaker(e, time).m).padStart(2, "0");
-        setTime(new Date(date.getFullYear(), date.getMonth(), date.getDate(), hours, minutes, 0));
+        const selectedTime = new Date(date.getFullYear(), date.getMonth(), date.getDate(), hours, minutes, 0);
+        if (isInvalid(selectedTime, time2, minTime, maxTime)) {
+          setError(true);
+          return;
+        }
+        setError(false);
+        setTime(selectedTime);
         setValue(`${hours}:${minutes}`);
       }}
     />
-  );
-};
-
-export const Edetime = ({ date, eTime, setETime, lang = { end_time: "End time" } }) => {
-  const [value, setValue] = useState(new Date(eTime));
-
-  useEffect(() => {
-    let isActive = false;
-
-    const updateETime = () => {
-      setETime(
-        new Date(
-          date.getFullYear(),
-          date.getMonth(),
-          date.getDate(),
-          value.getHours(),
-          value.getMinutes(),
-          value.getSeconds()
-        )
-      );
-    };
-    if (!isNaN(value) && value && !isActive) {
-      updateETime();
-    }
-
-    return () => (isActive = true);
-  }, [date, setETime, value]);
-
-  return (
-    <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={fi}>
-      <TimePicker
-        disableOpenPicker
-        label={lang.end_time}
-        value={value}
-        onChange={(newValue) => {
-          setValue(newValue);
-        }}
-        renderInput={(params) => <TextField variant="outlined" {...params} />}
-      />
-    </LocalizationProvider>
   );
 };
 
@@ -202,6 +191,7 @@ const createTimeentry = async ({ description = "", sel = "", sTime, eTime, worki
 };
 
 export const Createtimeentry = ({
+  error,
   setDescription,
   setETime,
   setSTime,
@@ -225,7 +215,7 @@ export const Createtimeentry = ({
         fullWidth
         variant="contained"
         color="primary"
-        disabled={disabled}
+        disabled={disabled || error}
         onClick={() => {
           createTimeentry({ description, sel, sTime, eTime, workit }).then(() => {
             setDescription("");
@@ -254,16 +244,14 @@ Editdate.propTypes = {
 
 Edittime.propTypes = {
   date: PropTypes.instanceOf(Date),
-  sTime: PropTypes.instanceOf(Date),
-  setSTime: PropTypes.func,
-  lang: PropTypes.object,
-};
-
-Edetime.propTypes = {
-  date: PropTypes.instanceOf(Date),
-  eTime: PropTypes.instanceOf(Date),
-  setETime: PropTypes.func,
-  lang: PropTypes.object,
+  time: PropTypes.instanceOf(Date),
+  time2: PropTypes.instanceOf(Date),
+  setTime: PropTypes.func,
+  label: PropTypes.string,
+  maxTime: PropTypes.instanceOf(Date),
+  minTime: PropTypes.instanceOf(Date),
+  error: PropTypes.bool,
+  setError: PropTypes.func,
 };
 
 Totaltime.propTypes = {
@@ -272,9 +260,16 @@ Totaltime.propTypes = {
 };
 
 Createtimeentry.propTypes = {
+  error: PropTypes.bool,
+  setDescription: PropTypes.func,
+  setETime: PropTypes.func,
+  setSTime: PropTypes.func,
+  setWorkit: PropTypes.func,
+  setSel: PropTypes.func,
   description: PropTypes.string,
   sel: PropTypes.string,
   sTime: PropTypes.instanceOf(Date),
   eTime: PropTypes.instanceOf(Date),
+  workit: PropTypes.object,
   lang: PropTypes.object,
 };

@@ -27,8 +27,7 @@ import SendIcon from "@mui/icons-material/Send";
 import { weekissent, weekisconformed, sendweek, isSent, maxText } from "./functions.jsx";
 import { SnackSuccess } from "../../../components/Alert/index.jsx";
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
-import EventAvailableIcon from '@mui/icons-material/EventAvailable';
-
+import EventAvailableIcon from "@mui/icons-material/EventAvailable";
 
 const WeekHeadMD = ({ week, selected, lang, isEmpty, isThis, sx, isNotSent = false }) => {
   const theme = useTheme();
@@ -49,7 +48,7 @@ const WeekHeadMD = ({ week, selected, lang, isEmpty, isThis, sx, isNotSent = fal
         }}
       >
         {isNotSent && <ErrorOutlineIcon sx={{ color: "error.light" }} />}
-        
+
         {(isSent ? !isConfirmed : isSent) && (
           <Tooltip title="Odottaa vahvistusta">
             <EventAvailableIcon
@@ -253,36 +252,38 @@ const Row = ({ week, lang, works, isEmpty }) => {
         >
           <Table aria-label="collapsible table" size="small">
             <TableBody>
-              {date.arr.map((row, index) => (
-                <Fragment key={index}>
-                  <DetailsMD
-                    sx={{
-                      [theme.breakpoints.down("sm")]: {
-                        display: "none",
-                      },
-                    }}
-                    key={[index, "md"]}
-                    row={row}
-                    workplaces={works}
-                    lang={lang}
-                    isEmpty={isEmpty}
-                    date={date.date}
-                  />
-                  <DetailsSM
-                    sx={{
-                      [theme.breakpoints.up("sm")]: {
-                        display: "none",
-                      },
-                    }}
-                    key={[index, "sm"]}
-                    row={row}
-                    workplaces={works}
-                    lang={lang}
-                    isEmpty={isEmpty}
-                    date={date.date}
-                  />
-                </Fragment>
-              ))}
+              {date.arr.map((row, index) => {
+                return (
+                  <Fragment key={index}>
+                    <DetailsMD
+                      sx={{
+                        [theme.breakpoints.down("sm")]: {
+                          display: "none",
+                        },
+                      }}
+                      key={`${index}md-${date.date}`}
+                      row={row}
+                      workplaces={works}
+                      lang={lang}
+                      isEmpty={isEmpty}
+                      date={date.date}
+                    />
+                    <DetailsSM
+                      sx={{
+                        [theme.breakpoints.up("sm")]: {
+                          display: "none",
+                        },
+                      }}
+                      key={`${index}sm-${date.date}`}
+                      row={row}
+                      workplaces={works}
+                      lang={lang}
+                      isEmpty={isEmpty}
+                      date={date.date}
+                    />
+                  </Fragment>
+                );
+              })}
             </TableBody>
           </Table>
         </TableContainer>
@@ -437,9 +438,9 @@ const DetailsMD = ({ row, workplaces, lang, isEmpty, date, sx }) => {
 };
 
 const RowDetailsSM = ({ data, lang, workplaces, isEmpty, sx }) => {
-  return data.map((row, i) => {
+  return data.map((row) => {
     return (
-      <Fragment key={i}>
+      <Fragment key={row.id}>
         <TableRow sx={sx}>
           <CustomTableCell />
           <CustomTableCell colSpan={3}>
@@ -466,27 +467,29 @@ const RowDetailsSM = ({ data, lang, workplaces, isEmpty, sx }) => {
         </TableRow>
 
         {row.break &&
-          row.break.map((item, i) => (
-            <BreakitemSM
-              sx={sx}
-              key={i}
-              item={item}
-              data={row}
-              index={i}
-              isEmpty={isEmpty}
-              isSent={data.isSent}
-              lang={lang.breaks}
-            />
-          ))}
+          row.break.map((item, i) => {
+            return (
+              <BreakitemSM
+                sx={sx}
+                key={item.id}
+                item={item}
+                data={row}
+                index={i}
+                isEmpty={isEmpty}
+                isSent={data.isSent}
+                lang={lang.breaks}
+              />
+            );
+          })}
       </Fragment>
     );
   });
 };
 
 const RowDetailsMD = ({ data, lang, workplaces, isEmpty, sx }) => {
-  return data.map((row, i) => {
+  return data.map((row) => {
     return (
-      <Fragment key={i}>
+      <Fragment key={row.id}>
         <TableRow sx={sx}>
           <CustomTableCell />
 
@@ -520,18 +523,20 @@ const RowDetailsMD = ({ data, lang, workplaces, isEmpty, sx }) => {
         )}
 
         {row.break &&
-          row.break.map((item, i) => (
-            <BreakitemMD
-              sx={sx}
-              key={i}
-              item={item}
-              data={row}
-              index={i}
-              isEmpty={isEmpty}
-              isSent={data.isSent}
-              lang={lang.breaks}
-            />
-          ))}
+          row.break.map((item, i) => {
+            return (
+              <BreakitemMD
+                sx={sx}
+                key={item.id}
+                item={item}
+                data={row}
+                index={i}
+                isEmpty={isEmpty}
+                isSent={data.isSent}
+                lang={lang.breaks}
+              />
+            );
+          })}
       </Fragment>
     );
   });
