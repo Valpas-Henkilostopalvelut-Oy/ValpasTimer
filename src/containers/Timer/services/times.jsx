@@ -23,8 +23,16 @@ const updateSTime = async (data, time) => {
 };
 
 export const EditSTime = ({ date }) => {
+  const [snack, setSnack] = useState(false);
   return (
-    <TextToTime date={new Date(date.timeInterval.start)} onChange={(t) => updateSTime(date, t)} isSent={date.isSent} />
+    <>
+      <TextToTime
+        date={new Date(date.timeInterval.start)}
+        onChange={async (t) => await updateSTime(date, t)}
+        isSent={date.isSent}
+      />
+      <SnackSuccess message="Time updated" open={snack} setOpen={setSnack} />
+    </>
   );
 };
 

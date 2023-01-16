@@ -74,7 +74,7 @@ export const Edittime = ({
   const [lastValidTime, setLastValidTime] = useState(time);
 
   useEffect(() => {
-    if (isInvalid(new Date(time),  time2, minTime, maxTime)) {
+    if (isInvalid(new Date(time), time2, minTime, maxTime)) {
       setTime(lastValidTime);
     } else {
       setLastValidTime(time);

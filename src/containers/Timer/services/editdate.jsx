@@ -38,7 +38,7 @@ const updateDate = async ({ value, data }) => {
 
 export const EditDate = ({ data, lang = { date: "Date" } }) => {
   const [value, setValue] = React.useState(new Date(data.timeInterval.start));
-  let sentDate = String(`${value.getDate()}.${value.getMonth()}.${value.getFullYear()}`);
+  let sentDate = String(`${value.getDate()}.${value.getMonth() + 1}.${value.getFullYear()}`);
   const isSent = data.isSent;
 
   return isSent ? (
