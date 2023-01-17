@@ -6,9 +6,6 @@
 
 /* eslint-disable */
 import * as React from "react";
-import { fetchByPath, validateField } from "./utils";
-import { Agreement } from "../models";
-import { getOverrideProps } from "@aws-amplify/ui-react/internal";
 import {
   Badge,
   Button,
@@ -21,6 +18,9 @@ import {
   TextField,
   useTheme,
 } from "@aws-amplify/ui-react";
+import { getOverrideProps } from "@aws-amplify/ui-react/internal";
+import { Agreement } from "../models";
+import { fetchByPath, validateField } from "./utils";
 import { DataStore } from "aws-amplify";
 function ArrayField({
   items = [],
@@ -32,7 +32,10 @@ function ArrayField({
   setFieldValue,
   currentFieldValue,
   defaultFieldValue,
+  lengthLimit,
+  getBadgeText,
 }) {
+  const labelElement = <Text>{label}</Text>;
   const { tokens } = useTheme();
   const [selectedBadgeIndex, setSelectedBadgeIndex] = React.useState();
   const [isEditing, setIsEditing] = React.useState();
@@ -48,9 +51,9 @@ function ArrayField({
   };
   const addItem = async () => {
     if (
-      (currentFieldValue !== undefined ||
-        currentFieldValue !== null ||
-        currentFieldValue !== "") &&
+      currentFieldValue !== undefined &&
+      currentFieldValue !== null &&
+      currentFieldValue !== "" &&
       !hasError
     ) {
       const newItems = [...items];
@@ -64,12 +67,71 @@ function ArrayField({
       setIsEditing(false);
     }
   };
+  const arraySection = (
+    <React.Fragment>
+      {!!items?.length && (
+        <ScrollView height="inherit" width="inherit" maxHeight={"7rem"}>
+          {items.map((value, index) => {
+            return (
+              <Badge
+                key={index}
+                style={{
+                  cursor: "pointer",
+                  alignItems: "center",
+                  marginRight: 3,
+                  marginTop: 3,
+                  backgroundColor:
+                    index === selectedBadgeIndex ? "#B8CEF9" : "",
+                }}
+                onClick={() => {
+                  setSelectedBadgeIndex(index);
+                  setFieldValue(items[index]);
+                  setIsEditing(true);
+                }}
+              >
+                {getBadgeText ? getBadgeText(value) : value.toString()}
+                <Icon
+                  style={{
+                    cursor: "pointer",
+                    paddingLeft: 3,
+                    width: 20,
+                    height: 20,
+                  }}
+                  viewBox={{ width: 20, height: 20 }}
+                  paths={[
+                    {
+                      d: "M10 10l5.09-5.09L10 10l5.09 5.09L10 10zm0 0L4.91 4.91 10 10l-5.09 5.09L10 10z",
+                      stroke: "black",
+                    },
+                  ]}
+                  ariaLabel="button"
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    removeItem(index);
+                  }}
+                />
+              </Badge>
+            );
+          })}
+        </ScrollView>
+      )}
+      <Divider orientation="horizontal" marginTop={5} />
+    </React.Fragment>
+  );
+  if (lengthLimit !== undefined && items.length >= lengthLimit && !isEditing) {
+    return (
+      <React.Fragment>
+        {labelElement}
+        {arraySection}
+      </React.Fragment>
+    );
+  }
   return (
     <React.Fragment>
+      {labelElement}
       {isEditing && children}
       {!isEditing ? (
         <>
-          <Text>{label}</Text>
           <Button
             onClick={() => {
               setIsEditing(true);
@@ -103,75 +165,28 @@ function ArrayField({
           </Button>
         </Flex>
       )}
-      {!!items?.length && (
-        <ScrollView height="inherit" width="inherit" maxHeight={"7rem"}>
-          {items.map((value, index) => {
-            return (
-              <Badge
-                key={index}
-                style={{
-                  cursor: "pointer",
-                  alignItems: "center",
-                  marginRight: 3,
-                  marginTop: 3,
-                  backgroundColor:
-                    index === selectedBadgeIndex ? "#B8CEF9" : "",
-                }}
-                onClick={() => {
-                  setSelectedBadgeIndex(index);
-                  setFieldValue(items[index]);
-                  setIsEditing(true);
-                }}
-              >
-                {value.toString()}
-                <Icon
-                  style={{
-                    cursor: "pointer",
-                    paddingLeft: 3,
-                    width: 20,
-                    height: 20,
-                  }}
-                  viewBox={{ width: 20, height: 20 }}
-                  paths={[
-                    {
-                      d: "M10 10l5.09-5.09L10 10l5.09 5.09L10 10zm0 0L4.91 4.91 10 10l-5.09 5.09L10 10z",
-                      stroke: "black",
-                    },
-                  ]}
-                  ariaLabel="button"
-                  onClick={(event) => {
-                    event.stopPropagation();
-                    removeItem(index);
-                  }}
-                />
-              </Badge>
-            );
-          })}
-        </ScrollView>
-      )}
-      <Divider orientation="horizontal" marginTop={5} />
+      {arraySection}
     </React.Fragment>
   );
 }
 export default function AgreementUpdateForm(props) {
   const {
-    id,
+    id: idProp,
     agreement,
     onSuccess,
     onError,
     onSubmit,
-    onCancel,
     onValidate,
     onChange,
     overrides,
     ...rest
   } = props;
   const initialValues = {
-    name: undefined,
+    name: "",
     workers: [],
     client: [],
-    createdAt: undefined,
-    userId: undefined,
+    createdAt: "",
+    userId: "",
     workspaceId: [],
   };
   const [name, setName] = React.useState(initialValues.name);
@@ -184,34 +199,37 @@ export default function AgreementUpdateForm(props) {
   );
   const [errors, setErrors] = React.useState({});
   const resetStateValues = () => {
-    const cleanValues = { ...initialValues, ...agreementRecord };
+    const cleanValues = agreementRecord
+      ? { ...initialValues, ...agreementRecord }
+      : initialValues;
     setName(cleanValues.name);
     setWorkers(cleanValues.workers ?? []);
-    setCurrentWorkersValue(undefined);
+    setCurrentWorkersValue("");
     setClient(cleanValues.client ?? []);
-    setCurrentClientValue(undefined);
+    setCurrentClientValue("");
     setCreatedAt(cleanValues.createdAt);
     setUserId(cleanValues.userId);
     setWorkspaceId(cleanValues.workspaceId ?? []);
-    setCurrentWorkspaceIdValue(undefined);
+    setCurrentWorkspaceIdValue("");
     setErrors({});
   };
   const [agreementRecord, setAgreementRecord] = React.useState(agreement);
   React.useEffect(() => {
     const queryData = async () => {
-      const record = id ? await DataStore.query(Agreement, id) : agreement;
+      const record = idProp
+        ? await DataStore.query(Agreement, idProp)
+        : agreement;
       setAgreementRecord(record);
     };
     queryData();
-  }, [id, agreement]);
+  }, [idProp, agreement]);
   React.useEffect(resetStateValues, [agreementRecord]);
-  const [currentWorkersValue, setCurrentWorkersValue] =
-    React.useState(undefined);
+  const [currentWorkersValue, setCurrentWorkersValue] = React.useState("");
   const workersRef = React.createRef();
-  const [currentClientValue, setCurrentClientValue] = React.useState(undefined);
+  const [currentClientValue, setCurrentClientValue] = React.useState("");
   const clientRef = React.createRef();
   const [currentWorkspaceIdValue, setCurrentWorkspaceIdValue] =
-    React.useState(undefined);
+    React.useState("");
   const workspaceIdRef = React.createRef();
   const validations = {
     name: [],
@@ -221,7 +239,14 @@ export default function AgreementUpdateForm(props) {
     userId: [],
     workspaceId: [],
   };
-  const runValidationTasks = async (fieldName, value) => {
+  const runValidationTasks = async (
+    fieldName,
+    currentValue,
+    getDisplayValue
+  ) => {
+    const value = getDisplayValue
+      ? getDisplayValue(currentValue)
+      : currentValue;
     let validationResponse = validateField(value, validations[fieldName]);
     const customValidator = fetchByPath(onValidate, fieldName);
     if (customValidator) {
@@ -286,6 +311,11 @@ export default function AgreementUpdateForm(props) {
           modelFields = onSubmit(modelFields);
         }
         try {
+          Object.entries(modelFields).forEach(([key, value]) => {
+            if (typeof value === "string" && value.trim() === "") {
+              modelFields[key] = undefined;
+            }
+          });
           await DataStore.save(
             Agreement.copyOf(agreementRecord, (updated) => {
               Object.assign(updated, modelFields);
@@ -300,14 +330,14 @@ export default function AgreementUpdateForm(props) {
           }
         }
       }}
-      {...rest}
       {...getOverrideProps(overrides, "AgreementUpdateForm")}
+      {...rest}
     >
       <TextField
         label="Name"
         isRequired={false}
         isReadOnly={false}
-        defaultValue={name}
+        value={name}
         onChange={(e) => {
           let { value } = e.target;
           if (onChange) {
@@ -348,7 +378,7 @@ export default function AgreementUpdateForm(props) {
             values = result?.workers ?? values;
           }
           setWorkers(values);
-          setCurrentWorkersValue(undefined);
+          setCurrentWorkersValue("");
         }}
         currentFieldValue={currentWorkersValue}
         label={"Workers"}
@@ -356,7 +386,7 @@ export default function AgreementUpdateForm(props) {
         hasError={errors.workers?.hasError}
         setFieldValue={setCurrentWorkersValue}
         inputFieldRef={workersRef}
-        defaultFieldValue={undefined}
+        defaultFieldValue={""}
       >
         <TextField
           label="Workers"
@@ -374,6 +404,7 @@ export default function AgreementUpdateForm(props) {
           errorMessage={errors.workers?.errorMessage}
           hasError={errors.workers?.hasError}
           ref={workersRef}
+          labelHidden={true}
           {...getOverrideProps(overrides, "workers")}
         ></TextField>
       </ArrayField>
@@ -393,7 +424,7 @@ export default function AgreementUpdateForm(props) {
             values = result?.client ?? values;
           }
           setClient(values);
-          setCurrentClientValue(undefined);
+          setCurrentClientValue("");
         }}
         currentFieldValue={currentClientValue}
         label={"Client"}
@@ -401,7 +432,7 @@ export default function AgreementUpdateForm(props) {
         hasError={errors.client?.hasError}
         setFieldValue={setCurrentClientValue}
         inputFieldRef={clientRef}
-        defaultFieldValue={undefined}
+        defaultFieldValue={""}
       >
         <TextField
           label="Client"
@@ -419,6 +450,7 @@ export default function AgreementUpdateForm(props) {
           errorMessage={errors.client?.errorMessage}
           hasError={errors.client?.hasError}
           ref={clientRef}
+          labelHidden={true}
           {...getOverrideProps(overrides, "client")}
         ></TextField>
       </ArrayField>
@@ -427,9 +459,10 @@ export default function AgreementUpdateForm(props) {
         isRequired={false}
         isReadOnly={false}
         type="datetime-local"
-        defaultValue={createdAt && convertToLocal(new Date(createdAt))}
+        value={createdAt && convertToLocal(new Date(createdAt))}
         onChange={(e) => {
-          let { value } = e.target;
+          let value =
+            e.target.value === "" ? "" : new Date(e.target.value).toISOString();
           if (onChange) {
             const modelFields = {
               name,
@@ -445,7 +478,7 @@ export default function AgreementUpdateForm(props) {
           if (errors.createdAt?.hasError) {
             runValidationTasks("createdAt", value);
           }
-          setCreatedAt(new Date(value).toISOString());
+          setCreatedAt(value);
         }}
         onBlur={() => runValidationTasks("createdAt", createdAt)}
         errorMessage={errors.createdAt?.errorMessage}
@@ -456,7 +489,7 @@ export default function AgreementUpdateForm(props) {
         label="User id"
         isRequired={false}
         isReadOnly={false}
-        defaultValue={userId}
+        value={userId}
         onChange={(e) => {
           let { value } = e.target;
           if (onChange) {
@@ -497,7 +530,7 @@ export default function AgreementUpdateForm(props) {
             values = result?.workspaceId ?? values;
           }
           setWorkspaceId(values);
-          setCurrentWorkspaceIdValue(undefined);
+          setCurrentWorkspaceIdValue("");
         }}
         currentFieldValue={currentWorkspaceIdValue}
         label={"Workspace id"}
@@ -505,7 +538,7 @@ export default function AgreementUpdateForm(props) {
         hasError={errors.workspaceId?.hasError}
         setFieldValue={setCurrentWorkspaceIdValue}
         inputFieldRef={workspaceIdRef}
-        defaultFieldValue={undefined}
+        defaultFieldValue={""}
       >
         <TextField
           label="Workspace id"
@@ -525,6 +558,7 @@ export default function AgreementUpdateForm(props) {
           errorMessage={errors.workspaceId?.errorMessage}
           hasError={errors.workspaceId?.hasError}
           ref={workspaceIdRef}
+          labelHidden={true}
           {...getOverrideProps(overrides, "workspaceId")}
         ></TextField>
       </ArrayField>
@@ -535,7 +569,11 @@ export default function AgreementUpdateForm(props) {
         <Button
           children="Reset"
           type="reset"
-          onClick={resetStateValues}
+          onClick={(event) => {
+            event.preventDefault();
+            resetStateValues();
+          }}
+          isDisabled={!(idProp || agreement)}
           {...getOverrideProps(overrides, "ResetButton")}
         ></Button>
         <Flex
@@ -543,18 +581,13 @@ export default function AgreementUpdateForm(props) {
           {...getOverrideProps(overrides, "RightAlignCTASubFlex")}
         >
           <Button
-            children="Cancel"
-            type="button"
-            onClick={() => {
-              onCancel && onCancel();
-            }}
-            {...getOverrideProps(overrides, "CancelButton")}
-          ></Button>
-          <Button
             children="Submit"
             type="submit"
             variation="primary"
-            isDisabled={Object.values(errors).some((e) => e?.hasError)}
+            isDisabled={
+              !(idProp || agreement) ||
+              Object.values(errors).some((e) => e?.hasError)
+            }
             {...getOverrideProps(overrides, "SubmitButton")}
           ></Button>
         </Flex>

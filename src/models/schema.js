@@ -692,6 +692,16 @@ export const schema = {
                     "isRequired": false,
                     "attributes": []
                 },
+                "workcards": {
+                    "name": "workcards",
+                    "isArray": true,
+                    "type": {
+                        "nonModel": "WorkCard"
+                    },
+                    "isRequired": false,
+                    "attributes": [],
+                    "isArrayNullable": true
+                },
                 "createdAt": {
                     "name": "createdAt",
                     "isArray": false,
@@ -781,6 +791,40 @@ export const schema = {
                 "LONG",
                 "GOING",
                 "ACCIDENT"
+            ]
+        },
+        "Cardtype": {
+            "name": "Cardtype",
+            "values": [
+                "ID",
+                "PASSPORT",
+                "WORKCARD",
+                "DRIVING",
+                "OTHER"
+            ]
+        },
+        "Drivingtype": {
+            "name": "Drivingtype",
+            "values": [
+                "A",
+                "A1",
+                "A2",
+                "B",
+                "B1",
+                "C",
+                "C1",
+                "CE",
+                "D",
+                "D1"
+            ]
+        },
+        "Workcardtype": {
+            "name": "Workcardtype",
+            "values": [
+                "HYGIENEPASS",
+                "WORKSAFETYPASS",
+                "FIREWORKCARD",
+                "ELECTRICALSAFETYPASS"
             ]
         }
     },
@@ -949,6 +993,41 @@ export const schema = {
                     "name": "email",
                     "isArray": false,
                     "type": "AWSEmail",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "email_verified": {
+                    "name": "email_verified",
+                    "isArray": false,
+                    "type": "Boolean",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "phone_number": {
+                    "name": "phone_number",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "birthdate": {
+                    "name": "birthdate",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "locale": {
+                    "name": "locale",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "nationality": {
+                    "name": "nationality",
+                    "isArray": false,
+                    "type": "String",
                     "isRequired": false,
                     "attributes": []
                 }
@@ -1223,8 +1302,62 @@ export const schema = {
                     "attributes": []
                 }
             }
+        },
+        "WorkCard": {
+            "name": "WorkCard",
+            "fields": {
+                "id": {
+                    "name": "id",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "cardend": {
+                    "name": "cardend",
+                    "isArray": false,
+                    "type": "AWSDateTime",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "type": {
+                    "name": "type",
+                    "isArray": false,
+                    "type": {
+                        "enum": "Cardtype"
+                    },
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "drivinglicense": {
+                    "name": "drivinglicense",
+                    "isArray": true,
+                    "type": {
+                        "enum": "Drivingtype"
+                    },
+                    "isRequired": false,
+                    "attributes": [],
+                    "isArrayNullable": true
+                },
+                "owncar": {
+                    "name": "owncar",
+                    "isArray": false,
+                    "type": "Boolean",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "workcard": {
+                    "name": "workcard",
+                    "isArray": false,
+                    "type": {
+                        "enum": "Workcardtype"
+                    },
+                    "isRequired": false,
+                    "attributes": []
+                }
+            }
         }
     },
-    "codegenVersion": "3.3.2",
-    "version": "258c25acc68c44c79318443dfed5dcfb"
+    "codegenVersion": "3.3.4",
+    "version": "6df551d87beeb243a4109a472b5b2080"
 };

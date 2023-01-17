@@ -5,8 +5,8 @@
  **************************************************************************/
 
 import * as React from "react";
-import { EscapeHatchProps } from "@aws-amplify/ui-react/internal";
 import { GridProps, SelectFieldProps, TextFieldProps } from "@aws-amplify/ui-react";
+import { EscapeHatchProps } from "@aws-amplify/ui-react/internal";
 export declare type ValidationResponse = {
     hasError: boolean;
     errorMessage?: string;
@@ -26,14 +26,14 @@ export declare type TasksCreateFormValidationValues = {
     time?: ValidationFunction<string>;
     status?: ValidationFunction<string>;
 };
-export declare type FormProps<T> = Partial<T> & React.DOMAttributes<HTMLDivElement>;
+export declare type PrimitiveOverrideProps<T> = Partial<T> & React.DOMAttributes<HTMLDivElement>;
 export declare type TasksCreateFormOverridesProps = {
-    TasksCreateFormGrid?: FormProps<GridProps>;
-    title?: FormProps<TextFieldProps>;
-    description?: FormProps<TextFieldProps>;
-    username?: FormProps<TextFieldProps>;
-    time?: FormProps<TextFieldProps>;
-    status?: FormProps<SelectFieldProps>;
+    TasksCreateFormGrid?: PrimitiveOverrideProps<GridProps>;
+    title?: PrimitiveOverrideProps<TextFieldProps>;
+    description?: PrimitiveOverrideProps<TextFieldProps>;
+    username?: PrimitiveOverrideProps<TextFieldProps>;
+    time?: PrimitiveOverrideProps<TextFieldProps>;
+    status?: PrimitiveOverrideProps<SelectFieldProps>;
 } & EscapeHatchProps;
 export declare type TasksCreateFormProps = React.PropsWithChildren<{
     overrides?: TasksCreateFormOverridesProps | undefined | null;
@@ -42,7 +42,6 @@ export declare type TasksCreateFormProps = React.PropsWithChildren<{
     onSubmit?: (fields: TasksCreateFormInputValues) => TasksCreateFormInputValues;
     onSuccess?: (fields: TasksCreateFormInputValues) => void;
     onError?: (fields: TasksCreateFormInputValues, errorMessage: string) => void;
-    onCancel?: () => void;
     onChange?: (fields: TasksCreateFormInputValues) => TasksCreateFormInputValues;
     onValidate?: TasksCreateFormValidationValues;
 } & React.CSSProperties>;

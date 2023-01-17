@@ -17,6 +17,34 @@ export enum Breakreason {
   ACCIDENT = "ACCIDENT"
 }
 
+export enum Cardtype {
+  ID = "ID",
+  PASSPORT = "PASSPORT",
+  WORKCARD = "WORKCARD",
+  DRIVING = "DRIVING",
+  OTHER = "OTHER"
+}
+
+export enum Drivingtype {
+  A = "A",
+  A1 = "A1",
+  A2 = "A2",
+  B = "B",
+  B1 = "B1",
+  C = "C",
+  C1 = "C1",
+  CE = "CE",
+  D = "D",
+  D1 = "D1"
+}
+
+export enum Workcardtype {
+  HYGIENEPASS = "HYGIENEPASS",
+  WORKSAFETYPASS = "WORKSAFETYPASS",
+  FIREWORKCARD = "FIREWORKCARD",
+  ELECTRICALSAFETYPASS = "ELECTRICALSAFETYPASS"
+}
+
 type EagerUserAgreement = {
   readonly id?: string | null;
   readonly status?: Status | keyof typeof Status | null;
@@ -102,6 +130,11 @@ type EagerProfile = {
   readonly first_name?: string | null;
   readonly last_name?: string | null;
   readonly email?: string | null;
+  readonly email_verified?: boolean | null;
+  readonly phone_number?: string | null;
+  readonly birthdate?: string | null;
+  readonly locale?: string | null;
+  readonly nationality?: string | null;
 }
 
 type LazyProfile = {
@@ -109,6 +142,11 @@ type LazyProfile = {
   readonly first_name?: string | null;
   readonly last_name?: string | null;
   readonly email?: string | null;
+  readonly email_verified?: boolean | null;
+  readonly phone_number?: string | null;
+  readonly birthdate?: string | null;
+  readonly locale?: string | null;
+  readonly nationality?: string | null;
 }
 
 export declare type Profile = LazyLoading extends LazyLoadingDisabled ? EagerProfile : LazyProfile
@@ -266,6 +304,28 @@ type LazyWork = {
 export declare type Work = LazyLoading extends LazyLoadingDisabled ? EagerWork : LazyWork
 
 export declare const Work: (new (init: ModelInit<Work>) => Work)
+
+type EagerWorkCard = {
+  readonly id?: string | null;
+  readonly cardend?: string | null;
+  readonly type?: Cardtype | keyof typeof Cardtype | null;
+  readonly drivinglicense?: (Drivingtype | null)[] | keyof typeof Drivingtype | null;
+  readonly owncar?: boolean | null;
+  readonly workcard?: Workcardtype | keyof typeof Workcardtype | null;
+}
+
+type LazyWorkCard = {
+  readonly id?: string | null;
+  readonly cardend?: string | null;
+  readonly type?: Cardtype | keyof typeof Cardtype | null;
+  readonly drivinglicense?: (Drivingtype | null)[] | keyof typeof Drivingtype | null;
+  readonly owncar?: boolean | null;
+  readonly workcard?: Workcardtype | keyof typeof Workcardtype | null;
+}
+
+export declare type WorkCard = LazyLoading extends LazyLoadingDisabled ? EagerWorkCard : LazyWorkCard
+
+export declare const WorkCard: (new (init: ModelInit<WorkCard>) => WorkCard)
 
 type AgreementMetaData = {
   readOnlyFields: 'updatedAt';
@@ -443,6 +503,7 @@ type EagerUserCredentials = {
   readonly profile?: Profile | null;
   readonly formChecked?: (string | null)[] | null;
   readonly settings?: UserSettings | null;
+  readonly workcards?: (WorkCard | null)[] | null;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
 }
@@ -457,6 +518,7 @@ type LazyUserCredentials = {
   readonly profile?: Profile | null;
   readonly formChecked?: (string | null)[] | null;
   readonly settings?: UserSettings | null;
+  readonly workcards?: (WorkCard | null)[] | null;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
 }

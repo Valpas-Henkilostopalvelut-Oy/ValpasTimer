@@ -6,9 +6,6 @@
 
 /* eslint-disable */
 import * as React from "react";
-import { fetchByPath, validateField } from "./utils";
-import { TimeEntry } from "../models";
-import { getOverrideProps } from "@aws-amplify/ui-react/internal";
 import {
   Button,
   Flex,
@@ -16,6 +13,9 @@ import {
   SwitchField,
   TextField,
 } from "@aws-amplify/ui-react";
+import { getOverrideProps } from "@aws-amplify/ui-react/internal";
+import { TimeEntry } from "../models";
+import { fetchByPath, validateField } from "./utils";
 import { DataStore } from "aws-amplify";
 export default function TimeEntryCreateForm(props) {
   const {
@@ -23,25 +23,21 @@ export default function TimeEntryCreateForm(props) {
     onSuccess,
     onError,
     onSubmit,
-    onCancel,
     onValidate,
     onChange,
     overrides,
     ...rest
   } = props;
   const initialValues = {
-    description: undefined,
-    userId: undefined,
-    workspaceId: undefined,
+    description: "",
+    userId: "",
+    workspaceId: "",
     isActive: false,
     isLocked: false,
     isSent: false,
     isConfirmed: false,
     isPaused: false,
-    pauseStart: undefined,
-    nextEntry: undefined,
-    lastEntry: undefined,
-    work: undefined,
+    pauseStart: "",
   };
   const [description, setDescription] = React.useState(
     initialValues.description
@@ -58,9 +54,6 @@ export default function TimeEntryCreateForm(props) {
   );
   const [isPaused, setIsPaused] = React.useState(initialValues.isPaused);
   const [pauseStart, setPauseStart] = React.useState(initialValues.pauseStart);
-  const [nextEntry, setNextEntry] = React.useState(initialValues.nextEntry);
-  const [lastEntry, setLastEntry] = React.useState(initialValues.lastEntry);
-  const [work, setWork] = React.useState(initialValues.work);
   const [errors, setErrors] = React.useState({});
   const resetStateValues = () => {
     setDescription(initialValues.description);
@@ -72,9 +65,6 @@ export default function TimeEntryCreateForm(props) {
     setIsConfirmed(initialValues.isConfirmed);
     setIsPaused(initialValues.isPaused);
     setPauseStart(initialValues.pauseStart);
-    setNextEntry(initialValues.nextEntry);
-    setLastEntry(initialValues.lastEntry);
-    setWork(initialValues.work);
     setErrors({});
   };
   const validations = {
@@ -87,11 +77,15 @@ export default function TimeEntryCreateForm(props) {
     isConfirmed: [],
     isPaused: [],
     pauseStart: [],
-    nextEntry: [],
-    lastEntry: [],
-    work: [],
   };
-  const runValidationTasks = async (fieldName, value) => {
+  const runValidationTasks = async (
+    fieldName,
+    currentValue,
+    getDisplayValue
+  ) => {
+    const value = getDisplayValue
+      ? getDisplayValue(currentValue)
+      : currentValue;
     let validationResponse = validateField(value, validations[fieldName]);
     const customValidator = fetchByPath(onValidate, fieldName);
     if (customValidator) {
@@ -99,6 +93,23 @@ export default function TimeEntryCreateForm(props) {
     }
     setErrors((errors) => ({ ...errors, [fieldName]: validationResponse }));
     return validationResponse;
+  };
+  const convertToLocal = (date) => {
+    const df = new Intl.DateTimeFormat("default", {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
+      calendar: "iso8601",
+      numberingSystem: "latn",
+      hour12: false,
+    });
+    const parts = df.formatToParts(date).reduce((acc, part) => {
+      acc[part.type] = part.value;
+      return acc;
+    }, {});
+    return `${parts.year}-${parts.month}-${parts.day}T${parts.hour}:${parts.minute}`;
   };
   return (
     <Grid
@@ -118,9 +129,6 @@ export default function TimeEntryCreateForm(props) {
           isConfirmed,
           isPaused,
           pauseStart,
-          nextEntry,
-          lastEntry,
-          work,
         };
         const validationResponses = await Promise.all(
           Object.keys(validations).reduce((promises, fieldName) => {
@@ -145,6 +153,11 @@ export default function TimeEntryCreateForm(props) {
           modelFields = onSubmit(modelFields);
         }
         try {
+          Object.entries(modelFields).forEach(([key, value]) => {
+            if (typeof value === "string" && value.trim() === "") {
+              modelFields[key] = undefined;
+            }
+          });
           await DataStore.save(new TimeEntry(modelFields));
           if (onSuccess) {
             onSuccess(modelFields);
@@ -158,13 +171,14 @@ export default function TimeEntryCreateForm(props) {
           }
         }
       }}
-      {...rest}
       {...getOverrideProps(overrides, "TimeEntryCreateForm")}
+      {...rest}
     >
       <TextField
         label="Description"
         isRequired={false}
         isReadOnly={false}
+        value={description}
         onChange={(e) => {
           let { value } = e.target;
           if (onChange) {
@@ -178,9 +192,6 @@ export default function TimeEntryCreateForm(props) {
               isConfirmed,
               isPaused,
               pauseStart,
-              nextEntry,
-              lastEntry,
-              work,
             };
             const result = onChange(modelFields);
             value = result?.description ?? value;
@@ -199,6 +210,7 @@ export default function TimeEntryCreateForm(props) {
         label="User id"
         isRequired={false}
         isReadOnly={false}
+        value={userId}
         onChange={(e) => {
           let { value } = e.target;
           if (onChange) {
@@ -212,9 +224,6 @@ export default function TimeEntryCreateForm(props) {
               isConfirmed,
               isPaused,
               pauseStart,
-              nextEntry,
-              lastEntry,
-              work,
             };
             const result = onChange(modelFields);
             value = result?.userId ?? value;
@@ -233,6 +242,7 @@ export default function TimeEntryCreateForm(props) {
         label="Workspace id"
         isRequired={false}
         isReadOnly={false}
+        value={workspaceId}
         onChange={(e) => {
           let { value } = e.target;
           if (onChange) {
@@ -246,9 +256,6 @@ export default function TimeEntryCreateForm(props) {
               isConfirmed,
               isPaused,
               pauseStart,
-              nextEntry,
-              lastEntry,
-              work,
             };
             const result = onChange(modelFields);
             value = result?.workspaceId ?? value;
@@ -281,9 +288,6 @@ export default function TimeEntryCreateForm(props) {
               isConfirmed,
               isPaused,
               pauseStart,
-              nextEntry,
-              lastEntry,
-              work,
             };
             const result = onChange(modelFields);
             value = result?.isActive ?? value;
@@ -316,9 +320,6 @@ export default function TimeEntryCreateForm(props) {
               isConfirmed,
               isPaused,
               pauseStart,
-              nextEntry,
-              lastEntry,
-              work,
             };
             const result = onChange(modelFields);
             value = result?.isLocked ?? value;
@@ -351,9 +352,6 @@ export default function TimeEntryCreateForm(props) {
               isConfirmed,
               isPaused,
               pauseStart,
-              nextEntry,
-              lastEntry,
-              work,
             };
             const result = onChange(modelFields);
             value = result?.isSent ?? value;
@@ -386,9 +384,6 @@ export default function TimeEntryCreateForm(props) {
               isConfirmed: value,
               isPaused,
               pauseStart,
-              nextEntry,
-              lastEntry,
-              work,
             };
             const result = onChange(modelFields);
             value = result?.isConfirmed ?? value;
@@ -421,9 +416,6 @@ export default function TimeEntryCreateForm(props) {
               isConfirmed,
               isPaused: value,
               pauseStart,
-              nextEntry,
-              lastEntry,
-              work,
             };
             const result = onChange(modelFields);
             value = result?.isPaused ?? value;
@@ -443,8 +435,10 @@ export default function TimeEntryCreateForm(props) {
         isRequired={false}
         isReadOnly={false}
         type="datetime-local"
+        value={pauseStart && convertToLocal(new Date(pauseStart))}
         onChange={(e) => {
-          let { value } = e.target;
+          let value =
+            e.target.value === "" ? "" : new Date(e.target.value).toISOString();
           if (onChange) {
             const modelFields = {
               description,
@@ -456,9 +450,6 @@ export default function TimeEntryCreateForm(props) {
               isConfirmed,
               isPaused,
               pauseStart: value,
-              nextEntry,
-              lastEntry,
-              work,
             };
             const result = onChange(modelFields);
             value = result?.pauseStart ?? value;
@@ -466,114 +457,12 @@ export default function TimeEntryCreateForm(props) {
           if (errors.pauseStart?.hasError) {
             runValidationTasks("pauseStart", value);
           }
-          setPauseStart(new Date(value).toISOString());
+          setPauseStart(value);
         }}
         onBlur={() => runValidationTasks("pauseStart", pauseStart)}
         errorMessage={errors.pauseStart?.errorMessage}
         hasError={errors.pauseStart?.hasError}
         {...getOverrideProps(overrides, "pauseStart")}
-      ></TextField>
-      <TextField
-        label="Next entry"
-        isRequired={false}
-        isReadOnly={false}
-        onChange={(e) => {
-          let { value } = e.target;
-          if (onChange) {
-            const modelFields = {
-              description,
-              userId,
-              workspaceId,
-              isActive,
-              isLocked,
-              isSent,
-              isConfirmed,
-              isPaused,
-              pauseStart,
-              nextEntry: value,
-              lastEntry,
-              work,
-            };
-            const result = onChange(modelFields);
-            value = result?.nextEntry ?? value;
-          }
-          if (errors.nextEntry?.hasError) {
-            runValidationTasks("nextEntry", value);
-          }
-          setNextEntry(value);
-        }}
-        onBlur={() => runValidationTasks("nextEntry", nextEntry)}
-        errorMessage={errors.nextEntry?.errorMessage}
-        hasError={errors.nextEntry?.hasError}
-        {...getOverrideProps(overrides, "nextEntry")}
-      ></TextField>
-      <TextField
-        label="Last entry"
-        isRequired={false}
-        isReadOnly={false}
-        onChange={(e) => {
-          let { value } = e.target;
-          if (onChange) {
-            const modelFields = {
-              description,
-              userId,
-              workspaceId,
-              isActive,
-              isLocked,
-              isSent,
-              isConfirmed,
-              isPaused,
-              pauseStart,
-              nextEntry,
-              lastEntry: value,
-              work,
-            };
-            const result = onChange(modelFields);
-            value = result?.lastEntry ?? value;
-          }
-          if (errors.lastEntry?.hasError) {
-            runValidationTasks("lastEntry", value);
-          }
-          setLastEntry(value);
-        }}
-        onBlur={() => runValidationTasks("lastEntry", lastEntry)}
-        errorMessage={errors.lastEntry?.errorMessage}
-        hasError={errors.lastEntry?.hasError}
-        {...getOverrideProps(overrides, "lastEntry")}
-      ></TextField>
-      <TextField
-        label="Work"
-        isRequired={false}
-        isReadOnly={false}
-        onChange={(e) => {
-          let { value } = e.target;
-          if (onChange) {
-            const modelFields = {
-              description,
-              userId,
-              workspaceId,
-              isActive,
-              isLocked,
-              isSent,
-              isConfirmed,
-              isPaused,
-              pauseStart,
-              nextEntry,
-              lastEntry,
-              work: value,
-            };
-            const result = onChange(modelFields);
-            value = result?.work ?? value;
-          }
-          if (errors.work?.hasError) {
-            runValidationTasks("work", value);
-          }
-          setWork(value);
-        }}
-        onBlur={() => runValidationTasks("work", work)}
-        errorMessage={errors.work?.errorMessage}
-        hasError={errors.work?.hasError}
-        {...getOverrideProps(overrides, "work")}
       ></TextField>
       <Flex
         justifyContent="space-between"
@@ -582,21 +471,16 @@ export default function TimeEntryCreateForm(props) {
         <Button
           children="Clear"
           type="reset"
-          onClick={resetStateValues}
+          onClick={(event) => {
+            event.preventDefault();
+            resetStateValues();
+          }}
           {...getOverrideProps(overrides, "ClearButton")}
         ></Button>
         <Flex
           gap="15px"
           {...getOverrideProps(overrides, "RightAlignCTASubFlex")}
         >
-          <Button
-            children="Cancel"
-            type="button"
-            onClick={() => {
-              onCancel && onCancel();
-            }}
-            {...getOverrideProps(overrides, "CancelButton")}
-          ></Button>
           <Button
             children="Submit"
             type="submit"

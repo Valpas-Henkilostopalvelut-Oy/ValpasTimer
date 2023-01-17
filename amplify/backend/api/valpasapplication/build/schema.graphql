@@ -34,6 +34,11 @@ type Profile @aws_iam @aws_cognito_user_pools {
   first_name: String
   last_name: String
   email: AWSEmail
+  email_verified: Boolean
+  phone_number: String
+  birthdate: String
+  locale: String
+  nationality: String
 }
 
 type UserSettings @aws_iam @aws_cognito_user_pools {
@@ -92,6 +97,43 @@ type Work @aws_iam @aws_cognito_user_pools {
   name: String
   description: String
   id: ID
+}
+
+type WorkCard @aws_iam @aws_cognito_user_pools {
+  id: String
+  cardend: AWSDateTime
+  type: Cardtype
+  drivinglicense: [Drivingtype]
+  owncar: Boolean
+  workcard: Workcardtype
+}
+
+enum Workcardtype {
+  HYGIENEPASS
+  WORKSAFETYPASS
+  FIREWORKCARD
+  ELECTRICALSAFETYPASS
+}
+
+enum Drivingtype {
+  A
+  A1
+  A2
+  B
+  B1
+  C
+  C1
+  CE
+  D
+  D1
+}
+
+enum Cardtype {
+  ID
+  PASSPORT
+  WORKCARD
+  DRIVING
+  OTHER
 }
 
 enum Status {
@@ -192,6 +234,7 @@ type UserCredentials @aws_iam @aws_cognito_user_pools {
   profile: Profile
   formChecked: [String]
   settings: UserSettings
+  workcards: [WorkCard]
   createdAt: AWSDateTime!
   updatedAt: AWSDateTime!
   _version: Int!
@@ -796,6 +839,11 @@ input ProfileInput {
   first_name: String
   last_name: String
   email: AWSEmail
+  email_verified: Boolean
+  phone_number: String
+  birthdate: String
+  locale: String
+  nationality: String
 }
 
 input UserSettingsInput {
@@ -804,6 +852,15 @@ input UserSettingsInput {
   dateFormat: String
   modalSendConfirm: Boolean
   modalConfirmConfirm: Boolean
+}
+
+input WorkCardInput {
+  id: String
+  cardend: AWSDateTime
+  type: Cardtype
+  drivinglicense: [Drivingtype]
+  owncar: Boolean
+  workcard: Workcardtype
 }
 
 type ModelUserCredentialsConnection @aws_iam @aws_cognito_user_pools {
@@ -845,6 +902,7 @@ input CreateUserCredentialsInput {
   profile: ProfileInput
   formChecked: [String]
   settings: UserSettingsInput
+  workcards: [WorkCardInput]
   _version: Int
 }
 
@@ -858,6 +916,7 @@ input UpdateUserCredentialsInput {
   profile: ProfileInput
   formChecked: [String]
   settings: UserSettingsInput
+  workcards: [WorkCardInput]
   _version: Int
 }
 

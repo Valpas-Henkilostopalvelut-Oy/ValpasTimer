@@ -33,6 +33,11 @@ type Profile {
   first_name: String
   last_name: String
   email: AWSEmail
+  email_verified: Boolean
+  phone_number: String
+  birthdate: String
+  locale: String
+  nationality: String
 }
 
 type UserSettings {
@@ -91,6 +96,42 @@ type Work {
   name: String
   description: String
   id: ID
+}
+
+type WorkCard {
+  id: String
+  cardend: AWSDateTime
+  type: Cardtype
+  drivinglicense: [Drivingtype]
+  owncar: Boolean
+  workcard: Workcardtype
+}
+enum Workcardtype {
+  HYGIENEPASS
+  WORKSAFETYPASS
+  FIREWORKCARD
+  ELECTRICALSAFETYPASS
+}
+
+enum Drivingtype {
+  A
+  A1
+  A2
+  B
+  B1
+  C
+  C1
+  CE
+  D
+  D1
+}
+
+enum Cardtype {
+  ID
+  PASSPORT
+  WORKCARD
+  DRIVING
+  OTHER
 }
 
 enum Status {
@@ -211,4 +252,5 @@ type UserCredentials
   profile: Profile
   formChecked: [String]
   settings: UserSettings
+  workcards: [WorkCard]
 }

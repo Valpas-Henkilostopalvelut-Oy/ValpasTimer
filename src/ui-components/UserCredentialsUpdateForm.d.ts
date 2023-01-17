@@ -5,9 +5,9 @@
  **************************************************************************/
 
 import * as React from "react";
-import { UserCredentials } from "../models";
-import { EscapeHatchProps } from "@aws-amplify/ui-react/internal";
 import { GridProps, TextFieldProps } from "@aws-amplify/ui-react";
+import { EscapeHatchProps } from "@aws-amplify/ui-react/internal";
+import { UserCredentials } from "../models";
 export declare type ValidationResponse = {
     hasError: boolean;
     errorMessage?: string;
@@ -27,14 +27,14 @@ export declare type UserCredentialsUpdateFormValidationValues = {
     defaultWorkspace?: ValidationFunction<string>;
     formChecked?: ValidationFunction<string>;
 };
-export declare type FormProps<T> = Partial<T> & React.DOMAttributes<HTMLDivElement>;
+export declare type PrimitiveOverrideProps<T> = Partial<T> & React.DOMAttributes<HTMLDivElement>;
 export declare type UserCredentialsUpdateFormOverridesProps = {
-    UserCredentialsUpdateFormGrid?: FormProps<GridProps>;
-    userId?: FormProps<TextFieldProps>;
-    activeTimeEntry?: FormProps<TextFieldProps>;
-    status?: FormProps<TextFieldProps>;
-    defaultWorkspace?: FormProps<TextFieldProps>;
-    formChecked?: FormProps<TextFieldProps>;
+    UserCredentialsUpdateFormGrid?: PrimitiveOverrideProps<GridProps>;
+    userId?: PrimitiveOverrideProps<TextFieldProps>;
+    activeTimeEntry?: PrimitiveOverrideProps<TextFieldProps>;
+    status?: PrimitiveOverrideProps<TextFieldProps>;
+    defaultWorkspace?: PrimitiveOverrideProps<TextFieldProps>;
+    formChecked?: PrimitiveOverrideProps<TextFieldProps>;
 } & EscapeHatchProps;
 export declare type UserCredentialsUpdateFormProps = React.PropsWithChildren<{
     overrides?: UserCredentialsUpdateFormOverridesProps | undefined | null;
@@ -44,7 +44,6 @@ export declare type UserCredentialsUpdateFormProps = React.PropsWithChildren<{
     onSubmit?: (fields: UserCredentialsUpdateFormInputValues) => UserCredentialsUpdateFormInputValues;
     onSuccess?: (fields: UserCredentialsUpdateFormInputValues) => void;
     onError?: (fields: UserCredentialsUpdateFormInputValues, errorMessage: string) => void;
-    onCancel?: () => void;
     onChange?: (fields: UserCredentialsUpdateFormInputValues) => UserCredentialsUpdateFormInputValues;
     onValidate?: UserCredentialsUpdateFormValidationValues;
 } & React.CSSProperties>;

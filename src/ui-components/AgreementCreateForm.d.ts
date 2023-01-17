@@ -5,8 +5,8 @@
  **************************************************************************/
 
 import * as React from "react";
-import { EscapeHatchProps } from "@aws-amplify/ui-react/internal";
 import { GridProps, TextFieldProps } from "@aws-amplify/ui-react";
+import { EscapeHatchProps } from "@aws-amplify/ui-react/internal";
 export declare type ValidationResponse = {
     hasError: boolean;
     errorMessage?: string;
@@ -28,15 +28,15 @@ export declare type AgreementCreateFormValidationValues = {
     userId?: ValidationFunction<string>;
     workspaceId?: ValidationFunction<string>;
 };
-export declare type FormProps<T> = Partial<T> & React.DOMAttributes<HTMLDivElement>;
+export declare type PrimitiveOverrideProps<T> = Partial<T> & React.DOMAttributes<HTMLDivElement>;
 export declare type AgreementCreateFormOverridesProps = {
-    AgreementCreateFormGrid?: FormProps<GridProps>;
-    name?: FormProps<TextFieldProps>;
-    workers?: FormProps<TextFieldProps>;
-    client?: FormProps<TextFieldProps>;
-    createdAt?: FormProps<TextFieldProps>;
-    userId?: FormProps<TextFieldProps>;
-    workspaceId?: FormProps<TextFieldProps>;
+    AgreementCreateFormGrid?: PrimitiveOverrideProps<GridProps>;
+    name?: PrimitiveOverrideProps<TextFieldProps>;
+    workers?: PrimitiveOverrideProps<TextFieldProps>;
+    client?: PrimitiveOverrideProps<TextFieldProps>;
+    createdAt?: PrimitiveOverrideProps<TextFieldProps>;
+    userId?: PrimitiveOverrideProps<TextFieldProps>;
+    workspaceId?: PrimitiveOverrideProps<TextFieldProps>;
 } & EscapeHatchProps;
 export declare type AgreementCreateFormProps = React.PropsWithChildren<{
     overrides?: AgreementCreateFormOverridesProps | undefined | null;
@@ -45,7 +45,6 @@ export declare type AgreementCreateFormProps = React.PropsWithChildren<{
     onSubmit?: (fields: AgreementCreateFormInputValues) => AgreementCreateFormInputValues;
     onSuccess?: (fields: AgreementCreateFormInputValues) => void;
     onError?: (fields: AgreementCreateFormInputValues, errorMessage: string) => void;
-    onCancel?: () => void;
     onChange?: (fields: AgreementCreateFormInputValues) => AgreementCreateFormInputValues;
     onValidate?: AgreementCreateFormValidationValues;
 } & React.CSSProperties>;

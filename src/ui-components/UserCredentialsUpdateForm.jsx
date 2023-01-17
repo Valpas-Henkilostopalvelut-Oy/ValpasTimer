@@ -6,9 +6,6 @@
 
 /* eslint-disable */
 import * as React from "react";
-import { fetchByPath, validateField } from "./utils";
-import { UserCredentials } from "../models";
-import { getOverrideProps } from "@aws-amplify/ui-react/internal";
 import {
   Badge,
   Button,
@@ -21,6 +18,9 @@ import {
   TextField,
   useTheme,
 } from "@aws-amplify/ui-react";
+import { getOverrideProps } from "@aws-amplify/ui-react/internal";
+import { UserCredentials } from "../models";
+import { fetchByPath, validateField } from "./utils";
 import { DataStore } from "aws-amplify";
 function ArrayField({
   items = [],
@@ -32,7 +32,10 @@ function ArrayField({
   setFieldValue,
   currentFieldValue,
   defaultFieldValue,
+  lengthLimit,
+  getBadgeText,
 }) {
+  const labelElement = <Text>{label}</Text>;
   const { tokens } = useTheme();
   const [selectedBadgeIndex, setSelectedBadgeIndex] = React.useState();
   const [isEditing, setIsEditing] = React.useState();
@@ -48,9 +51,9 @@ function ArrayField({
   };
   const addItem = async () => {
     if (
-      (currentFieldValue !== undefined ||
-        currentFieldValue !== null ||
-        currentFieldValue !== "") &&
+      currentFieldValue !== undefined &&
+      currentFieldValue !== null &&
+      currentFieldValue !== "" &&
       !hasError
     ) {
       const newItems = [...items];
@@ -64,12 +67,71 @@ function ArrayField({
       setIsEditing(false);
     }
   };
+  const arraySection = (
+    <React.Fragment>
+      {!!items?.length && (
+        <ScrollView height="inherit" width="inherit" maxHeight={"7rem"}>
+          {items.map((value, index) => {
+            return (
+              <Badge
+                key={index}
+                style={{
+                  cursor: "pointer",
+                  alignItems: "center",
+                  marginRight: 3,
+                  marginTop: 3,
+                  backgroundColor:
+                    index === selectedBadgeIndex ? "#B8CEF9" : "",
+                }}
+                onClick={() => {
+                  setSelectedBadgeIndex(index);
+                  setFieldValue(items[index]);
+                  setIsEditing(true);
+                }}
+              >
+                {getBadgeText ? getBadgeText(value) : value.toString()}
+                <Icon
+                  style={{
+                    cursor: "pointer",
+                    paddingLeft: 3,
+                    width: 20,
+                    height: 20,
+                  }}
+                  viewBox={{ width: 20, height: 20 }}
+                  paths={[
+                    {
+                      d: "M10 10l5.09-5.09L10 10l5.09 5.09L10 10zm0 0L4.91 4.91 10 10l-5.09 5.09L10 10z",
+                      stroke: "black",
+                    },
+                  ]}
+                  ariaLabel="button"
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    removeItem(index);
+                  }}
+                />
+              </Badge>
+            );
+          })}
+        </ScrollView>
+      )}
+      <Divider orientation="horizontal" marginTop={5} />
+    </React.Fragment>
+  );
+  if (lengthLimit !== undefined && items.length >= lengthLimit && !isEditing) {
+    return (
+      <React.Fragment>
+        {labelElement}
+        {arraySection}
+      </React.Fragment>
+    );
+  }
   return (
     <React.Fragment>
+      {labelElement}
       {isEditing && children}
       {!isEditing ? (
         <>
-          <Text>{label}</Text>
           <Button
             onClick={() => {
               setIsEditing(true);
@@ -103,74 +165,27 @@ function ArrayField({
           </Button>
         </Flex>
       )}
-      {!!items?.length && (
-        <ScrollView height="inherit" width="inherit" maxHeight={"7rem"}>
-          {items.map((value, index) => {
-            return (
-              <Badge
-                key={index}
-                style={{
-                  cursor: "pointer",
-                  alignItems: "center",
-                  marginRight: 3,
-                  marginTop: 3,
-                  backgroundColor:
-                    index === selectedBadgeIndex ? "#B8CEF9" : "",
-                }}
-                onClick={() => {
-                  setSelectedBadgeIndex(index);
-                  setFieldValue(items[index]);
-                  setIsEditing(true);
-                }}
-              >
-                {value.toString()}
-                <Icon
-                  style={{
-                    cursor: "pointer",
-                    paddingLeft: 3,
-                    width: 20,
-                    height: 20,
-                  }}
-                  viewBox={{ width: 20, height: 20 }}
-                  paths={[
-                    {
-                      d: "M10 10l5.09-5.09L10 10l5.09 5.09L10 10zm0 0L4.91 4.91 10 10l-5.09 5.09L10 10z",
-                      stroke: "black",
-                    },
-                  ]}
-                  ariaLabel="button"
-                  onClick={(event) => {
-                    event.stopPropagation();
-                    removeItem(index);
-                  }}
-                />
-              </Badge>
-            );
-          })}
-        </ScrollView>
-      )}
-      <Divider orientation="horizontal" marginTop={5} />
+      {arraySection}
     </React.Fragment>
   );
 }
 export default function UserCredentialsUpdateForm(props) {
   const {
-    id,
+    id: idProp,
     userCredentials,
     onSuccess,
     onError,
     onSubmit,
-    onCancel,
     onValidate,
     onChange,
     overrides,
     ...rest
   } = props;
   const initialValues = {
-    userId: undefined,
-    activeTimeEntry: undefined,
-    status: undefined,
-    defaultWorkspace: undefined,
+    userId: "",
+    activeTimeEntry: "",
+    status: "",
+    defaultWorkspace: "",
     formChecked: [],
   };
   const [userId, setUserId] = React.useState(initialValues.userId);
@@ -186,29 +201,31 @@ export default function UserCredentialsUpdateForm(props) {
   );
   const [errors, setErrors] = React.useState({});
   const resetStateValues = () => {
-    const cleanValues = { ...initialValues, ...userCredentialsRecord };
+    const cleanValues = userCredentialsRecord
+      ? { ...initialValues, ...userCredentialsRecord }
+      : initialValues;
     setUserId(cleanValues.userId);
     setActiveTimeEntry(cleanValues.activeTimeEntry);
     setStatus(cleanValues.status);
     setDefaultWorkspace(cleanValues.defaultWorkspace);
     setFormChecked(cleanValues.formChecked ?? []);
-    setCurrentFormCheckedValue(undefined);
+    setCurrentFormCheckedValue("");
     setErrors({});
   };
   const [userCredentialsRecord, setUserCredentialsRecord] =
     React.useState(userCredentials);
   React.useEffect(() => {
     const queryData = async () => {
-      const record = id
-        ? await DataStore.query(UserCredentials, id)
+      const record = idProp
+        ? await DataStore.query(UserCredentials, idProp)
         : userCredentials;
       setUserCredentialsRecord(record);
     };
     queryData();
-  }, [id, userCredentials]);
+  }, [idProp, userCredentials]);
   React.useEffect(resetStateValues, [userCredentialsRecord]);
   const [currentFormCheckedValue, setCurrentFormCheckedValue] =
-    React.useState(undefined);
+    React.useState("");
   const formCheckedRef = React.createRef();
   const validations = {
     userId: [],
@@ -217,7 +234,14 @@ export default function UserCredentialsUpdateForm(props) {
     defaultWorkspace: [],
     formChecked: [],
   };
-  const runValidationTasks = async (fieldName, value) => {
+  const runValidationTasks = async (
+    fieldName,
+    currentValue,
+    getDisplayValue
+  ) => {
+    const value = getDisplayValue
+      ? getDisplayValue(currentValue)
+      : currentValue;
     let validationResponse = validateField(value, validations[fieldName]);
     const customValidator = fetchByPath(onValidate, fieldName);
     if (customValidator) {
@@ -264,6 +288,11 @@ export default function UserCredentialsUpdateForm(props) {
           modelFields = onSubmit(modelFields);
         }
         try {
+          Object.entries(modelFields).forEach(([key, value]) => {
+            if (typeof value === "string" && value.trim() === "") {
+              modelFields[key] = undefined;
+            }
+          });
           await DataStore.save(
             UserCredentials.copyOf(userCredentialsRecord, (updated) => {
               Object.assign(updated, modelFields);
@@ -278,14 +307,14 @@ export default function UserCredentialsUpdateForm(props) {
           }
         }
       }}
-      {...rest}
       {...getOverrideProps(overrides, "UserCredentialsUpdateForm")}
+      {...rest}
     >
       <TextField
         label="User id"
         isRequired={false}
         isReadOnly={false}
-        defaultValue={userId}
+        value={userId}
         onChange={(e) => {
           let { value } = e.target;
           if (onChange) {
@@ -313,7 +342,7 @@ export default function UserCredentialsUpdateForm(props) {
         label="Active time entry"
         isRequired={false}
         isReadOnly={false}
-        defaultValue={activeTimeEntry}
+        value={activeTimeEntry}
         onChange={(e) => {
           let { value } = e.target;
           if (onChange) {
@@ -341,7 +370,7 @@ export default function UserCredentialsUpdateForm(props) {
         label="Status"
         isRequired={false}
         isReadOnly={false}
-        defaultValue={status}
+        value={status}
         onChange={(e) => {
           let { value } = e.target;
           if (onChange) {
@@ -369,7 +398,7 @@ export default function UserCredentialsUpdateForm(props) {
         label="Default workspace"
         isRequired={false}
         isReadOnly={false}
-        defaultValue={defaultWorkspace}
+        value={defaultWorkspace}
         onChange={(e) => {
           let { value } = e.target;
           if (onChange) {
@@ -408,7 +437,7 @@ export default function UserCredentialsUpdateForm(props) {
             values = result?.formChecked ?? values;
           }
           setFormChecked(values);
-          setCurrentFormCheckedValue(undefined);
+          setCurrentFormCheckedValue("");
         }}
         currentFieldValue={currentFormCheckedValue}
         label={"Form checked"}
@@ -416,7 +445,7 @@ export default function UserCredentialsUpdateForm(props) {
         hasError={errors.formChecked?.hasError}
         setFieldValue={setCurrentFormCheckedValue}
         inputFieldRef={formCheckedRef}
-        defaultFieldValue={undefined}
+        defaultFieldValue={""}
       >
         <TextField
           label="Form checked"
@@ -436,6 +465,7 @@ export default function UserCredentialsUpdateForm(props) {
           errorMessage={errors.formChecked?.errorMessage}
           hasError={errors.formChecked?.hasError}
           ref={formCheckedRef}
+          labelHidden={true}
           {...getOverrideProps(overrides, "formChecked")}
         ></TextField>
       </ArrayField>
@@ -446,7 +476,11 @@ export default function UserCredentialsUpdateForm(props) {
         <Button
           children="Reset"
           type="reset"
-          onClick={resetStateValues}
+          onClick={(event) => {
+            event.preventDefault();
+            resetStateValues();
+          }}
+          isDisabled={!(idProp || userCredentials)}
           {...getOverrideProps(overrides, "ResetButton")}
         ></Button>
         <Flex
@@ -454,18 +488,13 @@ export default function UserCredentialsUpdateForm(props) {
           {...getOverrideProps(overrides, "RightAlignCTASubFlex")}
         >
           <Button
-            children="Cancel"
-            type="button"
-            onClick={() => {
-              onCancel && onCancel();
-            }}
-            {...getOverrideProps(overrides, "CancelButton")}
-          ></Button>
-          <Button
             children="Submit"
             type="submit"
             variation="primary"
-            isDisabled={Object.values(errors).some((e) => e?.hasError)}
+            isDisabled={
+              !(idProp || userCredentials) ||
+              Object.values(errors).some((e) => e?.hasError)
+            }
             {...getOverrideProps(overrides, "SubmitButton")}
           ></Button>
         </Flex>

@@ -317,7 +317,64 @@
             "Ref": "UnauthRoleName"
           },
           "S3DeploymentBucket": "amplify-valpasapplication-staging-64726-deployment",
-          "S3DeploymentRootKey": "amplify-appsync-files/db3b5548f5b236a3eb7257fb8c02a6ccee21330c",
+          "S3DeploymentRootKey": "amplify-appsync-files/28070c0192ded4e951d709aaf12a6a65727ed50a",
+          "env": "staging"
+        }
+      }
+    },
+    "storages3b5f43598": {
+      "Type": "AWS::CloudFormation::Stack",
+      "Properties": {
+        "TemplateURL": "https://s3.amazonaws.com/amplify-valpasapplication-staging-64726-deployment/amplify-cfn-templates/storage/cloudformation-template.json",
+        "Parameters": {
+          "bucketName": "valpasapplication3eb56cf10686453fad941f1eded6ce",
+          "selectedGuestPermissions": "",
+          "selectedAuthenticatedPermissions": "s3:PutObject,s3:GetObject,s3:ListBucket,s3:DeleteObject",
+          "unauthRoleName": {
+            "Ref": "UnauthRoleName"
+          },
+          "authRoleName": {
+            "Ref": "AuthRoleName"
+          },
+          "s3PrivatePolicy": "Private_policy_b5f43598",
+          "s3ProtectedPolicy": "Protected_policy_b5f43598",
+          "s3PublicPolicy": "Public_policy_b5f43598",
+          "s3ReadPolicy": "read_policy_b5f43598",
+          "s3UploadsPolicy": "Uploads_policy_b5f43598",
+          "authPolicyName": "s3_amplify_b5f43598",
+          "unauthPolicyName": "s3_amplify_b5f43598",
+          "AuthenticatedAllowList": "ALLOW",
+          "GuestAllowList": "DISALLOW",
+          "s3PermissionsAuthenticatedPrivate": "s3:PutObject,s3:GetObject,s3:DeleteObject",
+          "s3PermissionsAuthenticatedProtected": "s3:PutObject,s3:GetObject,s3:DeleteObject",
+          "s3PermissionsAuthenticatedPublic": "s3:PutObject,s3:GetObject,s3:DeleteObject",
+          "s3PermissionsAuthenticatedUploads": "s3:PutObject",
+          "s3PermissionsGuestPublic": "DISALLOW",
+          "s3PermissionsGuestUploads": "DISALLOW",
+          "authvalpasapplicationd66e1b4fUserPoolId": {
+            "Fn::GetAtt": [
+              "authvalpasapplicationd66e1b4f",
+              "Outputs.UserPoolId"
+            ]
+          },
+          "authuserPoolGroupsAdminsGroupRole": {
+            "Fn::GetAtt": [
+              "authuserPoolGroups",
+              "Outputs.AdminsGroupRole"
+            ]
+          },
+          "authuserPoolGroupsClientsGroupRole": {
+            "Fn::GetAtt": [
+              "authuserPoolGroups",
+              "Outputs.ClientsGroupRole"
+            ]
+          },
+          "authuserPoolGroupsWorkersGroupRole": {
+            "Fn::GetAtt": [
+              "authuserPoolGroups",
+              "Outputs.WorkersGroupRole"
+            ]
+          },
           "env": "staging"
         }
       }

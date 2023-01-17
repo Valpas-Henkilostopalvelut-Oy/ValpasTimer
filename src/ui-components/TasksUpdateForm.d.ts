@@ -5,9 +5,9 @@
  **************************************************************************/
 
 import * as React from "react";
-import { Tasks } from "../models";
-import { EscapeHatchProps } from "@aws-amplify/ui-react/internal";
 import { GridProps, SelectFieldProps, TextFieldProps } from "@aws-amplify/ui-react";
+import { EscapeHatchProps } from "@aws-amplify/ui-react/internal";
+import { Tasks } from "../models";
 export declare type ValidationResponse = {
     hasError: boolean;
     errorMessage?: string;
@@ -27,14 +27,14 @@ export declare type TasksUpdateFormValidationValues = {
     time?: ValidationFunction<string>;
     status?: ValidationFunction<string>;
 };
-export declare type FormProps<T> = Partial<T> & React.DOMAttributes<HTMLDivElement>;
+export declare type PrimitiveOverrideProps<T> = Partial<T> & React.DOMAttributes<HTMLDivElement>;
 export declare type TasksUpdateFormOverridesProps = {
-    TasksUpdateFormGrid?: FormProps<GridProps>;
-    title?: FormProps<TextFieldProps>;
-    description?: FormProps<TextFieldProps>;
-    username?: FormProps<TextFieldProps>;
-    time?: FormProps<TextFieldProps>;
-    status?: FormProps<SelectFieldProps>;
+    TasksUpdateFormGrid?: PrimitiveOverrideProps<GridProps>;
+    title?: PrimitiveOverrideProps<TextFieldProps>;
+    description?: PrimitiveOverrideProps<TextFieldProps>;
+    username?: PrimitiveOverrideProps<TextFieldProps>;
+    time?: PrimitiveOverrideProps<TextFieldProps>;
+    status?: PrimitiveOverrideProps<SelectFieldProps>;
 } & EscapeHatchProps;
 export declare type TasksUpdateFormProps = React.PropsWithChildren<{
     overrides?: TasksUpdateFormOverridesProps | undefined | null;
@@ -44,7 +44,6 @@ export declare type TasksUpdateFormProps = React.PropsWithChildren<{
     onSubmit?: (fields: TasksUpdateFormInputValues) => TasksUpdateFormInputValues;
     onSuccess?: (fields: TasksUpdateFormInputValues) => void;
     onError?: (fields: TasksUpdateFormInputValues, errorMessage: string) => void;
-    onCancel?: () => void;
     onChange?: (fields: TasksUpdateFormInputValues) => TasksUpdateFormInputValues;
     onValidate?: TasksUpdateFormValidationValues;
 } & React.CSSProperties>;

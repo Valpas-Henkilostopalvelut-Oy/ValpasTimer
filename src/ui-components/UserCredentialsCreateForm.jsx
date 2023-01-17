@@ -6,9 +6,6 @@
 
 /* eslint-disable */
 import * as React from "react";
-import { fetchByPath, validateField } from "./utils";
-import { UserCredentials } from "../models";
-import { getOverrideProps } from "@aws-amplify/ui-react/internal";
 import {
   Badge,
   Button,
@@ -21,6 +18,9 @@ import {
   TextField,
   useTheme,
 } from "@aws-amplify/ui-react";
+import { getOverrideProps } from "@aws-amplify/ui-react/internal";
+import { UserCredentials } from "../models";
+import { fetchByPath, validateField } from "./utils";
 import { DataStore } from "aws-amplify";
 function ArrayField({
   items = [],
@@ -32,7 +32,10 @@ function ArrayField({
   setFieldValue,
   currentFieldValue,
   defaultFieldValue,
+  lengthLimit,
+  getBadgeText,
 }) {
+  const labelElement = <Text>{label}</Text>;
   const { tokens } = useTheme();
   const [selectedBadgeIndex, setSelectedBadgeIndex] = React.useState();
   const [isEditing, setIsEditing] = React.useState();
@@ -48,9 +51,9 @@ function ArrayField({
   };
   const addItem = async () => {
     if (
-      (currentFieldValue !== undefined ||
-        currentFieldValue !== null ||
-        currentFieldValue !== "") &&
+      currentFieldValue !== undefined &&
+      currentFieldValue !== null &&
+      currentFieldValue !== "" &&
       !hasError
     ) {
       const newItems = [...items];
@@ -64,12 +67,71 @@ function ArrayField({
       setIsEditing(false);
     }
   };
+  const arraySection = (
+    <React.Fragment>
+      {!!items?.length && (
+        <ScrollView height="inherit" width="inherit" maxHeight={"7rem"}>
+          {items.map((value, index) => {
+            return (
+              <Badge
+                key={index}
+                style={{
+                  cursor: "pointer",
+                  alignItems: "center",
+                  marginRight: 3,
+                  marginTop: 3,
+                  backgroundColor:
+                    index === selectedBadgeIndex ? "#B8CEF9" : "",
+                }}
+                onClick={() => {
+                  setSelectedBadgeIndex(index);
+                  setFieldValue(items[index]);
+                  setIsEditing(true);
+                }}
+              >
+                {getBadgeText ? getBadgeText(value) : value.toString()}
+                <Icon
+                  style={{
+                    cursor: "pointer",
+                    paddingLeft: 3,
+                    width: 20,
+                    height: 20,
+                  }}
+                  viewBox={{ width: 20, height: 20 }}
+                  paths={[
+                    {
+                      d: "M10 10l5.09-5.09L10 10l5.09 5.09L10 10zm0 0L4.91 4.91 10 10l-5.09 5.09L10 10z",
+                      stroke: "black",
+                    },
+                  ]}
+                  ariaLabel="button"
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    removeItem(index);
+                  }}
+                />
+              </Badge>
+            );
+          })}
+        </ScrollView>
+      )}
+      <Divider orientation="horizontal" marginTop={5} />
+    </React.Fragment>
+  );
+  if (lengthLimit !== undefined && items.length >= lengthLimit && !isEditing) {
+    return (
+      <React.Fragment>
+        {labelElement}
+        {arraySection}
+      </React.Fragment>
+    );
+  }
   return (
     <React.Fragment>
+      {labelElement}
       {isEditing && children}
       {!isEditing ? (
         <>
-          <Text>{label}</Text>
           <Button
             onClick={() => {
               setIsEditing(true);
@@ -103,53 +165,7 @@ function ArrayField({
           </Button>
         </Flex>
       )}
-      {!!items?.length && (
-        <ScrollView height="inherit" width="inherit" maxHeight={"7rem"}>
-          {items.map((value, index) => {
-            return (
-              <Badge
-                key={index}
-                style={{
-                  cursor: "pointer",
-                  alignItems: "center",
-                  marginRight: 3,
-                  marginTop: 3,
-                  backgroundColor:
-                    index === selectedBadgeIndex ? "#B8CEF9" : "",
-                }}
-                onClick={() => {
-                  setSelectedBadgeIndex(index);
-                  setFieldValue(items[index]);
-                  setIsEditing(true);
-                }}
-              >
-                {value.toString()}
-                <Icon
-                  style={{
-                    cursor: "pointer",
-                    paddingLeft: 3,
-                    width: 20,
-                    height: 20,
-                  }}
-                  viewBox={{ width: 20, height: 20 }}
-                  paths={[
-                    {
-                      d: "M10 10l5.09-5.09L10 10l5.09 5.09L10 10zm0 0L4.91 4.91 10 10l-5.09 5.09L10 10z",
-                      stroke: "black",
-                    },
-                  ]}
-                  ariaLabel="button"
-                  onClick={(event) => {
-                    event.stopPropagation();
-                    removeItem(index);
-                  }}
-                />
-              </Badge>
-            );
-          })}
-        </ScrollView>
-      )}
-      <Divider orientation="horizontal" marginTop={5} />
+      {arraySection}
     </React.Fragment>
   );
 }
@@ -159,17 +175,16 @@ export default function UserCredentialsCreateForm(props) {
     onSuccess,
     onError,
     onSubmit,
-    onCancel,
     onValidate,
     onChange,
     overrides,
     ...rest
   } = props;
   const initialValues = {
-    userId: undefined,
-    activeTimeEntry: undefined,
-    status: undefined,
-    defaultWorkspace: undefined,
+    userId: "",
+    activeTimeEntry: "",
+    status: "",
+    defaultWorkspace: "",
     formChecked: [],
   };
   const [userId, setUserId] = React.useState(initialValues.userId);
@@ -190,11 +205,11 @@ export default function UserCredentialsCreateForm(props) {
     setStatus(initialValues.status);
     setDefaultWorkspace(initialValues.defaultWorkspace);
     setFormChecked(initialValues.formChecked);
-    setCurrentFormCheckedValue(undefined);
+    setCurrentFormCheckedValue("");
     setErrors({});
   };
   const [currentFormCheckedValue, setCurrentFormCheckedValue] =
-    React.useState(undefined);
+    React.useState("");
   const formCheckedRef = React.createRef();
   const validations = {
     userId: [],
@@ -203,7 +218,14 @@ export default function UserCredentialsCreateForm(props) {
     defaultWorkspace: [],
     formChecked: [],
   };
-  const runValidationTasks = async (fieldName, value) => {
+  const runValidationTasks = async (
+    fieldName,
+    currentValue,
+    getDisplayValue
+  ) => {
+    const value = getDisplayValue
+      ? getDisplayValue(currentValue)
+      : currentValue;
     let validationResponse = validateField(value, validations[fieldName]);
     const customValidator = fetchByPath(onValidate, fieldName);
     if (customValidator) {
@@ -250,6 +272,11 @@ export default function UserCredentialsCreateForm(props) {
           modelFields = onSubmit(modelFields);
         }
         try {
+          Object.entries(modelFields).forEach(([key, value]) => {
+            if (typeof value === "string" && value.trim() === "") {
+              modelFields[key] = undefined;
+            }
+          });
           await DataStore.save(new UserCredentials(modelFields));
           if (onSuccess) {
             onSuccess(modelFields);
@@ -263,13 +290,14 @@ export default function UserCredentialsCreateForm(props) {
           }
         }
       }}
-      {...rest}
       {...getOverrideProps(overrides, "UserCredentialsCreateForm")}
+      {...rest}
     >
       <TextField
         label="User id"
         isRequired={false}
         isReadOnly={false}
+        value={userId}
         onChange={(e) => {
           let { value } = e.target;
           if (onChange) {
@@ -297,6 +325,7 @@ export default function UserCredentialsCreateForm(props) {
         label="Active time entry"
         isRequired={false}
         isReadOnly={false}
+        value={activeTimeEntry}
         onChange={(e) => {
           let { value } = e.target;
           if (onChange) {
@@ -324,6 +353,7 @@ export default function UserCredentialsCreateForm(props) {
         label="Status"
         isRequired={false}
         isReadOnly={false}
+        value={status}
         onChange={(e) => {
           let { value } = e.target;
           if (onChange) {
@@ -351,6 +381,7 @@ export default function UserCredentialsCreateForm(props) {
         label="Default workspace"
         isRequired={false}
         isReadOnly={false}
+        value={defaultWorkspace}
         onChange={(e) => {
           let { value } = e.target;
           if (onChange) {
@@ -389,7 +420,7 @@ export default function UserCredentialsCreateForm(props) {
             values = result?.formChecked ?? values;
           }
           setFormChecked(values);
-          setCurrentFormCheckedValue(undefined);
+          setCurrentFormCheckedValue("");
         }}
         currentFieldValue={currentFormCheckedValue}
         label={"Form checked"}
@@ -397,7 +428,7 @@ export default function UserCredentialsCreateForm(props) {
         hasError={errors.formChecked?.hasError}
         setFieldValue={setCurrentFormCheckedValue}
         inputFieldRef={formCheckedRef}
-        defaultFieldValue={undefined}
+        defaultFieldValue={""}
       >
         <TextField
           label="Form checked"
@@ -417,6 +448,7 @@ export default function UserCredentialsCreateForm(props) {
           errorMessage={errors.formChecked?.errorMessage}
           hasError={errors.formChecked?.hasError}
           ref={formCheckedRef}
+          labelHidden={true}
           {...getOverrideProps(overrides, "formChecked")}
         ></TextField>
       </ArrayField>
@@ -427,21 +459,16 @@ export default function UserCredentialsCreateForm(props) {
         <Button
           children="Clear"
           type="reset"
-          onClick={resetStateValues}
+          onClick={(event) => {
+            event.preventDefault();
+            resetStateValues();
+          }}
           {...getOverrideProps(overrides, "ClearButton")}
         ></Button>
         <Flex
           gap="15px"
           {...getOverrideProps(overrides, "RightAlignCTASubFlex")}
         >
-          <Button
-            children="Cancel"
-            type="button"
-            onClick={() => {
-              onCancel && onCancel();
-            }}
-            {...getOverrideProps(overrides, "CancelButton")}
-          ></Button>
           <Button
             children="Submit"
             type="submit"

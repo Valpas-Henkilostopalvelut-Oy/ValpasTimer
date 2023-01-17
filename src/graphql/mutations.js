@@ -473,6 +473,11 @@ export const createUserCredentials = /* GraphQL */ `
         first_name
         last_name
         email
+        email_verified
+        phone_number
+        birthdate
+        locale
+        nationality
       }
       formChecked
       settings {
@@ -481,6 +486,14 @@ export const createUserCredentials = /* GraphQL */ `
         dateFormat
         modalSendConfirm
         modalConfirmConfirm
+      }
+      workcards {
+        id
+        cardend
+        type
+        drivinglicense
+        owncar
+        workcard
       }
       createdAt
       updatedAt
@@ -512,6 +525,11 @@ export const updateUserCredentials = /* GraphQL */ `
         first_name
         last_name
         email
+        email_verified
+        phone_number
+        birthdate
+        locale
+        nationality
       }
       formChecked
       settings {
@@ -520,6 +538,14 @@ export const updateUserCredentials = /* GraphQL */ `
         dateFormat
         modalSendConfirm
         modalConfirmConfirm
+      }
+      workcards {
+        id
+        cardend
+        type
+        drivinglicense
+        owncar
+        workcard
       }
       createdAt
       updatedAt
@@ -551,6 +577,11 @@ export const deleteUserCredentials = /* GraphQL */ `
         first_name
         last_name
         email
+        email_verified
+        phone_number
+        birthdate
+        locale
+        nationality
       }
       formChecked
       settings {
@@ -559,6 +590,14 @@ export const deleteUserCredentials = /* GraphQL */ `
         dateFormat
         modalSendConfirm
         modalConfirmConfirm
+      }
+      workcards {
+        id
+        cardend
+        type
+        drivinglicense
+        owncar
+        workcard
       }
       createdAt
       updatedAt

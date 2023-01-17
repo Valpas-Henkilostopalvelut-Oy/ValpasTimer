@@ -5,8 +5,8 @@
  **************************************************************************/
 
 import * as React from "react";
-import { EscapeHatchProps } from "@aws-amplify/ui-react/internal";
 import { GridProps, TextFieldProps } from "@aws-amplify/ui-react";
+import { EscapeHatchProps } from "@aws-amplify/ui-react/internal";
 export declare type ValidationResponse = {
     hasError: boolean;
     errorMessage?: string;
@@ -24,13 +24,13 @@ export declare type AllWorkSpacesCreateFormValidationValues = {
     workers?: ValidationFunction<string>;
     adminId?: ValidationFunction<string>;
 };
-export declare type FormProps<T> = Partial<T> & React.DOMAttributes<HTMLDivElement>;
+export declare type PrimitiveOverrideProps<T> = Partial<T> & React.DOMAttributes<HTMLDivElement>;
 export declare type AllWorkSpacesCreateFormOverridesProps = {
-    AllWorkSpacesCreateFormGrid?: FormProps<GridProps>;
-    imageUrl?: FormProps<TextFieldProps>;
-    name?: FormProps<TextFieldProps>;
-    workers?: FormProps<TextFieldProps>;
-    adminId?: FormProps<TextFieldProps>;
+    AllWorkSpacesCreateFormGrid?: PrimitiveOverrideProps<GridProps>;
+    imageUrl?: PrimitiveOverrideProps<TextFieldProps>;
+    name?: PrimitiveOverrideProps<TextFieldProps>;
+    workers?: PrimitiveOverrideProps<TextFieldProps>;
+    adminId?: PrimitiveOverrideProps<TextFieldProps>;
 } & EscapeHatchProps;
 export declare type AllWorkSpacesCreateFormProps = React.PropsWithChildren<{
     overrides?: AllWorkSpacesCreateFormOverridesProps | undefined | null;
@@ -39,7 +39,6 @@ export declare type AllWorkSpacesCreateFormProps = React.PropsWithChildren<{
     onSubmit?: (fields: AllWorkSpacesCreateFormInputValues) => AllWorkSpacesCreateFormInputValues;
     onSuccess?: (fields: AllWorkSpacesCreateFormInputValues) => void;
     onError?: (fields: AllWorkSpacesCreateFormInputValues, errorMessage: string) => void;
-    onCancel?: () => void;
     onChange?: (fields: AllWorkSpacesCreateFormInputValues) => AllWorkSpacesCreateFormInputValues;
     onValidate?: AllWorkSpacesCreateFormValidationValues;
 } & React.CSSProperties>;

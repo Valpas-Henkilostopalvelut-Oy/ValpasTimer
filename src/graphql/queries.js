@@ -388,6 +388,11 @@ export const getUserCredentials = /* GraphQL */ `
         first_name
         last_name
         email
+        email_verified
+        phone_number
+        birthdate
+        locale
+        nationality
       }
       formChecked
       settings {
@@ -396,6 +401,14 @@ export const getUserCredentials = /* GraphQL */ `
         dateFormat
         modalSendConfirm
         modalConfirmConfirm
+      }
+      workcards {
+        id
+        cardend
+        type
+        drivinglicense
+        owncar
+        workcard
       }
       createdAt
       updatedAt

@@ -17,7 +17,35 @@ const Breakreason = {
   "ACCIDENT": "ACCIDENT"
 };
 
-const { Agreement, Tasks, TimeEntry, AllWorkSpaces, UserCredentials, UserAgreement, User, AditionalInfo, Comment, Workplace, Profile, UserSettings, CostRate, UserMemberships, HourlyRate, TimeInterval, Break, WorkspaceSettings, Membership, Work } = initSchema(schema);
+const Cardtype = {
+  "ID": "ID",
+  "PASSPORT": "PASSPORT",
+  "WORKCARD": "WORKCARD",
+  "DRIVING": "DRIVING",
+  "OTHER": "OTHER"
+};
+
+const Drivingtype = {
+  "A": "A",
+  "A1": "A1",
+  "A2": "A2",
+  "B": "B",
+  "B1": "B1",
+  "C": "C",
+  "C1": "C1",
+  "CE": "CE",
+  "D": "D",
+  "D1": "D1"
+};
+
+const Workcardtype = {
+  "HYGIENEPASS": "HYGIENEPASS",
+  "WORKSAFETYPASS": "WORKSAFETYPASS",
+  "FIREWORKCARD": "FIREWORKCARD",
+  "ELECTRICALSAFETYPASS": "ELECTRICALSAFETYPASS"
+};
+
+const { Agreement, Tasks, TimeEntry, AllWorkSpaces, UserCredentials, UserAgreement, User, AditionalInfo, Comment, Workplace, Profile, UserSettings, CostRate, UserMemberships, HourlyRate, TimeInterval, Break, WorkspaceSettings, Membership, Work, WorkCard } = initSchema(schema);
 
 export {
   Agreement,
@@ -27,6 +55,9 @@ export {
   UserCredentials,
   Status,
   Breakreason,
+  Cardtype,
+  Drivingtype,
+  Workcardtype,
   UserAgreement,
   User,
   AditionalInfo,
@@ -41,5 +72,6 @@ export {
   Break,
   WorkspaceSettings,
   Membership,
-  Work
+  Work,
+  WorkCard
 };

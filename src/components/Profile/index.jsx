@@ -81,9 +81,11 @@ const Profile = () => {
         <MenuItem>
           <Language setLang={setLanguage} lang={language} />
         </MenuItem>
-        <MenuItem>
-          {loadedUser != null ? loadedUser.attributes.name + " " + loadedUser.attributes.family_name : "Loading"}
-        </MenuItem>
+        <LinkContainer to={"profile"}>
+          <MenuItem>
+            {loadedUser != null ? loadedUser.attributes.name + " " + loadedUser.attributes.family_name : "Loading"}
+          </MenuItem>
+        </LinkContainer>
         <MenuItem disabled>{loadedUser != null ? loadedUser.attributes.email : "Loading"}</MenuItem>
         <LinkContainer to={"settings"}>
           <MenuItem onClick={handleClose}>Profile settings</MenuItem>

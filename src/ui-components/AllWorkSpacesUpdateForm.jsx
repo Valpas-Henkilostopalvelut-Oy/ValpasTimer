@@ -6,9 +6,6 @@
 
 /* eslint-disable */
 import * as React from "react";
-import { fetchByPath, validateField } from "./utils";
-import { AllWorkSpaces } from "../models";
-import { getOverrideProps } from "@aws-amplify/ui-react/internal";
 import {
   Badge,
   Button,
@@ -21,6 +18,9 @@ import {
   TextField,
   useTheme,
 } from "@aws-amplify/ui-react";
+import { getOverrideProps } from "@aws-amplify/ui-react/internal";
+import { AllWorkSpaces } from "../models";
+import { fetchByPath, validateField } from "./utils";
 import { DataStore } from "aws-amplify";
 function ArrayField({
   items = [],
@@ -32,7 +32,10 @@ function ArrayField({
   setFieldValue,
   currentFieldValue,
   defaultFieldValue,
+  lengthLimit,
+  getBadgeText,
 }) {
+  const labelElement = <Text>{label}</Text>;
   const { tokens } = useTheme();
   const [selectedBadgeIndex, setSelectedBadgeIndex] = React.useState();
   const [isEditing, setIsEditing] = React.useState();
@@ -48,9 +51,9 @@ function ArrayField({
   };
   const addItem = async () => {
     if (
-      (currentFieldValue !== undefined ||
-        currentFieldValue !== null ||
-        currentFieldValue !== "") &&
+      currentFieldValue !== undefined &&
+      currentFieldValue !== null &&
+      currentFieldValue !== "" &&
       !hasError
     ) {
       const newItems = [...items];
@@ -64,12 +67,71 @@ function ArrayField({
       setIsEditing(false);
     }
   };
+  const arraySection = (
+    <React.Fragment>
+      {!!items?.length && (
+        <ScrollView height="inherit" width="inherit" maxHeight={"7rem"}>
+          {items.map((value, index) => {
+            return (
+              <Badge
+                key={index}
+                style={{
+                  cursor: "pointer",
+                  alignItems: "center",
+                  marginRight: 3,
+                  marginTop: 3,
+                  backgroundColor:
+                    index === selectedBadgeIndex ? "#B8CEF9" : "",
+                }}
+                onClick={() => {
+                  setSelectedBadgeIndex(index);
+                  setFieldValue(items[index]);
+                  setIsEditing(true);
+                }}
+              >
+                {getBadgeText ? getBadgeText(value) : value.toString()}
+                <Icon
+                  style={{
+                    cursor: "pointer",
+                    paddingLeft: 3,
+                    width: 20,
+                    height: 20,
+                  }}
+                  viewBox={{ width: 20, height: 20 }}
+                  paths={[
+                    {
+                      d: "M10 10l5.09-5.09L10 10l5.09 5.09L10 10zm0 0L4.91 4.91 10 10l-5.09 5.09L10 10z",
+                      stroke: "black",
+                    },
+                  ]}
+                  ariaLabel="button"
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    removeItem(index);
+                  }}
+                />
+              </Badge>
+            );
+          })}
+        </ScrollView>
+      )}
+      <Divider orientation="horizontal" marginTop={5} />
+    </React.Fragment>
+  );
+  if (lengthLimit !== undefined && items.length >= lengthLimit && !isEditing) {
+    return (
+      <React.Fragment>
+        {labelElement}
+        {arraySection}
+      </React.Fragment>
+    );
+  }
   return (
     <React.Fragment>
+      {labelElement}
       {isEditing && children}
       {!isEditing ? (
         <>
-          <Text>{label}</Text>
           <Button
             onClick={() => {
               setIsEditing(true);
@@ -103,72 +165,25 @@ function ArrayField({
           </Button>
         </Flex>
       )}
-      {!!items?.length && (
-        <ScrollView height="inherit" width="inherit" maxHeight={"7rem"}>
-          {items.map((value, index) => {
-            return (
-              <Badge
-                key={index}
-                style={{
-                  cursor: "pointer",
-                  alignItems: "center",
-                  marginRight: 3,
-                  marginTop: 3,
-                  backgroundColor:
-                    index === selectedBadgeIndex ? "#B8CEF9" : "",
-                }}
-                onClick={() => {
-                  setSelectedBadgeIndex(index);
-                  setFieldValue(items[index]);
-                  setIsEditing(true);
-                }}
-              >
-                {value.toString()}
-                <Icon
-                  style={{
-                    cursor: "pointer",
-                    paddingLeft: 3,
-                    width: 20,
-                    height: 20,
-                  }}
-                  viewBox={{ width: 20, height: 20 }}
-                  paths={[
-                    {
-                      d: "M10 10l5.09-5.09L10 10l5.09 5.09L10 10zm0 0L4.91 4.91 10 10l-5.09 5.09L10 10z",
-                      stroke: "black",
-                    },
-                  ]}
-                  ariaLabel="button"
-                  onClick={(event) => {
-                    event.stopPropagation();
-                    removeItem(index);
-                  }}
-                />
-              </Badge>
-            );
-          })}
-        </ScrollView>
-      )}
-      <Divider orientation="horizontal" marginTop={5} />
+      {arraySection}
     </React.Fragment>
   );
 }
 export default function AllWorkSpacesUpdateForm(props) {
   const {
-    id,
+    id: idProp,
     allWorkSpaces,
     onSuccess,
     onError,
     onSubmit,
-    onCancel,
     onValidate,
     onChange,
     overrides,
     ...rest
   } = props;
   const initialValues = {
-    imageUrl: undefined,
-    name: undefined,
+    imageUrl: "",
+    name: "",
     workers: [],
     adminId: [],
   };
@@ -178,32 +193,32 @@ export default function AllWorkSpacesUpdateForm(props) {
   const [adminId, setAdminId] = React.useState(initialValues.adminId);
   const [errors, setErrors] = React.useState({});
   const resetStateValues = () => {
-    const cleanValues = { ...initialValues, ...allWorkSpacesRecord };
+    const cleanValues = allWorkSpacesRecord
+      ? { ...initialValues, ...allWorkSpacesRecord }
+      : initialValues;
     setImageUrl(cleanValues.imageUrl);
     setName(cleanValues.name);
     setWorkers(cleanValues.workers ?? []);
-    setCurrentWorkersValue(undefined);
+    setCurrentWorkersValue("");
     setAdminId(cleanValues.adminId ?? []);
-    setCurrentAdminIdValue(undefined);
+    setCurrentAdminIdValue("");
     setErrors({});
   };
   const [allWorkSpacesRecord, setAllWorkSpacesRecord] =
     React.useState(allWorkSpaces);
   React.useEffect(() => {
     const queryData = async () => {
-      const record = id
-        ? await DataStore.query(AllWorkSpaces, id)
+      const record = idProp
+        ? await DataStore.query(AllWorkSpaces, idProp)
         : allWorkSpaces;
       setAllWorkSpacesRecord(record);
     };
     queryData();
-  }, [id, allWorkSpaces]);
+  }, [idProp, allWorkSpaces]);
   React.useEffect(resetStateValues, [allWorkSpacesRecord]);
-  const [currentWorkersValue, setCurrentWorkersValue] =
-    React.useState(undefined);
+  const [currentWorkersValue, setCurrentWorkersValue] = React.useState("");
   const workersRef = React.createRef();
-  const [currentAdminIdValue, setCurrentAdminIdValue] =
-    React.useState(undefined);
+  const [currentAdminIdValue, setCurrentAdminIdValue] = React.useState("");
   const adminIdRef = React.createRef();
   const validations = {
     imageUrl: [{ type: "URL" }],
@@ -211,7 +226,14 @@ export default function AllWorkSpacesUpdateForm(props) {
     workers: [],
     adminId: [],
   };
-  const runValidationTasks = async (fieldName, value) => {
+  const runValidationTasks = async (
+    fieldName,
+    currentValue,
+    getDisplayValue
+  ) => {
+    const value = getDisplayValue
+      ? getDisplayValue(currentValue)
+      : currentValue;
     let validationResponse = validateField(value, validations[fieldName]);
     const customValidator = fetchByPath(onValidate, fieldName);
     if (customValidator) {
@@ -229,7 +251,7 @@ export default function AllWorkSpacesUpdateForm(props) {
       onSubmit={async (event) => {
         event.preventDefault();
         let modelFields = {
-          imageUrl: imageUrl || undefined,
+          imageUrl,
           name,
           workers,
           adminId,
@@ -257,6 +279,11 @@ export default function AllWorkSpacesUpdateForm(props) {
           modelFields = onSubmit(modelFields);
         }
         try {
+          Object.entries(modelFields).forEach(([key, value]) => {
+            if (typeof value === "string" && value.trim() === "") {
+              modelFields[key] = undefined;
+            }
+          });
           await DataStore.save(
             AllWorkSpaces.copyOf(allWorkSpacesRecord, (updated) => {
               Object.assign(updated, modelFields);
@@ -271,14 +298,14 @@ export default function AllWorkSpacesUpdateForm(props) {
           }
         }
       }}
-      {...rest}
       {...getOverrideProps(overrides, "AllWorkSpacesUpdateForm")}
+      {...rest}
     >
       <TextField
         label="Image url"
         isRequired={false}
         isReadOnly={false}
-        defaultValue={imageUrl}
+        value={imageUrl}
         onChange={(e) => {
           let { value } = e.target;
           if (onChange) {
@@ -305,7 +332,7 @@ export default function AllWorkSpacesUpdateForm(props) {
         label="Name"
         isRequired={false}
         isReadOnly={false}
-        defaultValue={name}
+        value={name}
         onChange={(e) => {
           let { value } = e.target;
           if (onChange) {
@@ -342,7 +369,7 @@ export default function AllWorkSpacesUpdateForm(props) {
             values = result?.workers ?? values;
           }
           setWorkers(values);
-          setCurrentWorkersValue(undefined);
+          setCurrentWorkersValue("");
         }}
         currentFieldValue={currentWorkersValue}
         label={"Workers"}
@@ -350,7 +377,7 @@ export default function AllWorkSpacesUpdateForm(props) {
         hasError={errors.workers?.hasError}
         setFieldValue={setCurrentWorkersValue}
         inputFieldRef={workersRef}
-        defaultFieldValue={undefined}
+        defaultFieldValue={""}
       >
         <TextField
           label="Workers"
@@ -368,6 +395,7 @@ export default function AllWorkSpacesUpdateForm(props) {
           errorMessage={errors.workers?.errorMessage}
           hasError={errors.workers?.hasError}
           ref={workersRef}
+          labelHidden={true}
           {...getOverrideProps(overrides, "workers")}
         ></TextField>
       </ArrayField>
@@ -385,7 +413,7 @@ export default function AllWorkSpacesUpdateForm(props) {
             values = result?.adminId ?? values;
           }
           setAdminId(values);
-          setCurrentAdminIdValue(undefined);
+          setCurrentAdminIdValue("");
         }}
         currentFieldValue={currentAdminIdValue}
         label={"Admin id"}
@@ -393,7 +421,7 @@ export default function AllWorkSpacesUpdateForm(props) {
         hasError={errors.adminId?.hasError}
         setFieldValue={setCurrentAdminIdValue}
         inputFieldRef={adminIdRef}
-        defaultFieldValue={undefined}
+        defaultFieldValue={""}
       >
         <TextField
           label="Admin id"
@@ -411,6 +439,7 @@ export default function AllWorkSpacesUpdateForm(props) {
           errorMessage={errors.adminId?.errorMessage}
           hasError={errors.adminId?.hasError}
           ref={adminIdRef}
+          labelHidden={true}
           {...getOverrideProps(overrides, "adminId")}
         ></TextField>
       </ArrayField>
@@ -421,7 +450,11 @@ export default function AllWorkSpacesUpdateForm(props) {
         <Button
           children="Reset"
           type="reset"
-          onClick={resetStateValues}
+          onClick={(event) => {
+            event.preventDefault();
+            resetStateValues();
+          }}
+          isDisabled={!(idProp || allWorkSpaces)}
           {...getOverrideProps(overrides, "ResetButton")}
         ></Button>
         <Flex
@@ -429,18 +462,13 @@ export default function AllWorkSpacesUpdateForm(props) {
           {...getOverrideProps(overrides, "RightAlignCTASubFlex")}
         >
           <Button
-            children="Cancel"
-            type="button"
-            onClick={() => {
-              onCancel && onCancel();
-            }}
-            {...getOverrideProps(overrides, "CancelButton")}
-          ></Button>
-          <Button
             children="Submit"
             type="submit"
             variation="primary"
-            isDisabled={Object.values(errors).some((e) => e?.hasError)}
+            isDisabled={
+              !(idProp || allWorkSpaces) ||
+              Object.values(errors).some((e) => e?.hasError)
+            }
             {...getOverrideProps(overrides, "SubmitButton")}
           ></Button>
         </Flex>

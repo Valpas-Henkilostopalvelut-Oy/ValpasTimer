@@ -5,8 +5,8 @@
  **************************************************************************/
 
 import * as React from "react";
-import { EscapeHatchProps } from "@aws-amplify/ui-react/internal";
 import { GridProps, SwitchFieldProps, TextFieldProps } from "@aws-amplify/ui-react";
+import { EscapeHatchProps } from "@aws-amplify/ui-react/internal";
 export declare type ValidationResponse = {
     hasError: boolean;
     errorMessage?: string;
@@ -22,9 +22,6 @@ export declare type TimeEntryCreateFormInputValues = {
     isConfirmed?: boolean;
     isPaused?: boolean;
     pauseStart?: string;
-    nextEntry?: string;
-    lastEntry?: string;
-    work?: string;
 };
 export declare type TimeEntryCreateFormValidationValues = {
     description?: ValidationFunction<string>;
@@ -36,25 +33,19 @@ export declare type TimeEntryCreateFormValidationValues = {
     isConfirmed?: ValidationFunction<boolean>;
     isPaused?: ValidationFunction<boolean>;
     pauseStart?: ValidationFunction<string>;
-    nextEntry?: ValidationFunction<string>;
-    lastEntry?: ValidationFunction<string>;
-    work?: ValidationFunction<string>;
 };
-export declare type FormProps<T> = Partial<T> & React.DOMAttributes<HTMLDivElement>;
+export declare type PrimitiveOverrideProps<T> = Partial<T> & React.DOMAttributes<HTMLDivElement>;
 export declare type TimeEntryCreateFormOverridesProps = {
-    TimeEntryCreateFormGrid?: FormProps<GridProps>;
-    description?: FormProps<TextFieldProps>;
-    userId?: FormProps<TextFieldProps>;
-    workspaceId?: FormProps<TextFieldProps>;
-    isActive?: FormProps<SwitchFieldProps>;
-    isLocked?: FormProps<SwitchFieldProps>;
-    isSent?: FormProps<SwitchFieldProps>;
-    isConfirmed?: FormProps<SwitchFieldProps>;
-    isPaused?: FormProps<SwitchFieldProps>;
-    pauseStart?: FormProps<TextFieldProps>;
-    nextEntry?: FormProps<TextFieldProps>;
-    lastEntry?: FormProps<TextFieldProps>;
-    work?: FormProps<TextFieldProps>;
+    TimeEntryCreateFormGrid?: PrimitiveOverrideProps<GridProps>;
+    description?: PrimitiveOverrideProps<TextFieldProps>;
+    userId?: PrimitiveOverrideProps<TextFieldProps>;
+    workspaceId?: PrimitiveOverrideProps<TextFieldProps>;
+    isActive?: PrimitiveOverrideProps<SwitchFieldProps>;
+    isLocked?: PrimitiveOverrideProps<SwitchFieldProps>;
+    isSent?: PrimitiveOverrideProps<SwitchFieldProps>;
+    isConfirmed?: PrimitiveOverrideProps<SwitchFieldProps>;
+    isPaused?: PrimitiveOverrideProps<SwitchFieldProps>;
+    pauseStart?: PrimitiveOverrideProps<TextFieldProps>;
 } & EscapeHatchProps;
 export declare type TimeEntryCreateFormProps = React.PropsWithChildren<{
     overrides?: TimeEntryCreateFormOverridesProps | undefined | null;
@@ -63,7 +54,6 @@ export declare type TimeEntryCreateFormProps = React.PropsWithChildren<{
     onSubmit?: (fields: TimeEntryCreateFormInputValues) => TimeEntryCreateFormInputValues;
     onSuccess?: (fields: TimeEntryCreateFormInputValues) => void;
     onError?: (fields: TimeEntryCreateFormInputValues, errorMessage: string) => void;
-    onCancel?: () => void;
     onChange?: (fields: TimeEntryCreateFormInputValues) => TimeEntryCreateFormInputValues;
     onValidate?: TimeEntryCreateFormValidationValues;
 } & React.CSSProperties>;

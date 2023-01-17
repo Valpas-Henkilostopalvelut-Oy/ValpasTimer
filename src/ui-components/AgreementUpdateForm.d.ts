@@ -5,9 +5,9 @@
  **************************************************************************/
 
 import * as React from "react";
-import { Agreement } from "../models";
-import { EscapeHatchProps } from "@aws-amplify/ui-react/internal";
 import { GridProps, TextFieldProps } from "@aws-amplify/ui-react";
+import { EscapeHatchProps } from "@aws-amplify/ui-react/internal";
+import { Agreement } from "../models";
 export declare type ValidationResponse = {
     hasError: boolean;
     errorMessage?: string;
@@ -29,15 +29,15 @@ export declare type AgreementUpdateFormValidationValues = {
     userId?: ValidationFunction<string>;
     workspaceId?: ValidationFunction<string>;
 };
-export declare type FormProps<T> = Partial<T> & React.DOMAttributes<HTMLDivElement>;
+export declare type PrimitiveOverrideProps<T> = Partial<T> & React.DOMAttributes<HTMLDivElement>;
 export declare type AgreementUpdateFormOverridesProps = {
-    AgreementUpdateFormGrid?: FormProps<GridProps>;
-    name?: FormProps<TextFieldProps>;
-    workers?: FormProps<TextFieldProps>;
-    client?: FormProps<TextFieldProps>;
-    createdAt?: FormProps<TextFieldProps>;
-    userId?: FormProps<TextFieldProps>;
-    workspaceId?: FormProps<TextFieldProps>;
+    AgreementUpdateFormGrid?: PrimitiveOverrideProps<GridProps>;
+    name?: PrimitiveOverrideProps<TextFieldProps>;
+    workers?: PrimitiveOverrideProps<TextFieldProps>;
+    client?: PrimitiveOverrideProps<TextFieldProps>;
+    createdAt?: PrimitiveOverrideProps<TextFieldProps>;
+    userId?: PrimitiveOverrideProps<TextFieldProps>;
+    workspaceId?: PrimitiveOverrideProps<TextFieldProps>;
 } & EscapeHatchProps;
 export declare type AgreementUpdateFormProps = React.PropsWithChildren<{
     overrides?: AgreementUpdateFormOverridesProps | undefined | null;
@@ -47,7 +47,6 @@ export declare type AgreementUpdateFormProps = React.PropsWithChildren<{
     onSubmit?: (fields: AgreementUpdateFormInputValues) => AgreementUpdateFormInputValues;
     onSuccess?: (fields: AgreementUpdateFormInputValues) => void;
     onError?: (fields: AgreementUpdateFormInputValues, errorMessage: string) => void;
-    onCancel?: () => void;
     onChange?: (fields: AgreementUpdateFormInputValues) => AgreementUpdateFormInputValues;
     onValidate?: AgreementUpdateFormValidationValues;
 } & React.CSSProperties>;

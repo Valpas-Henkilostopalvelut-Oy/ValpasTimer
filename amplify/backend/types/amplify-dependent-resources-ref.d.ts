@@ -1,37 +1,44 @@
 export type AmplifyDependentResourcesAttributes = {
-    "auth": {
-        "valpasapplicationd66e1b4f": {
-            "IdentityPoolId": "string",
-            "IdentityPoolName": "string",
-            "UserPoolId": "string",
-            "UserPoolArn": "string",
-            "UserPoolName": "string",
-            "AppClientIDWeb": "string",
-            "AppClientID": "string"
-        },
-        "userPoolGroups": {
-            "AdminsGroupRole": "string",
-            "ClientsGroupRole": "string",
-            "WorkersGroupRole": "string"
-        }
+  "api": {
+    "AdminQueries": {
+      "ApiId": "string",
+      "ApiName": "string",
+      "RootUrl": "string"
     },
-    "function": {
-        "AdminQueries2c95f1df": {
-            "Name": "string",
-            "Arn": "string",
-            "Region": "string",
-            "LambdaExecutionRole": "string"
-        }
-    },
-    "api": {
-        "AdminQueries": {
-            "RootUrl": "string",
-            "ApiName": "string",
-            "ApiId": "string"
-        },
-        "valpasapplication": {
-            "GraphQLAPIIdOutput": "string",
-            "GraphQLAPIEndpointOutput": "string"
-        }
+    "valpasapplication": {
+      "GraphQLAPIEndpointOutput": "string",
+      "GraphQLAPIIdOutput": "string"
     }
+  },
+  "auth": {
+    "userPoolGroups": {
+      "AdminsGroupRole": "string",
+      "ClientsGroupRole": "string",
+      "WorkersGroupRole": "string"
+    },
+    "valpasapplicationd66e1b4f": {
+      "AppClientID": "string",
+      "AppClientIDWeb": "string",
+      "IdentityPoolId": "string",
+      "IdentityPoolName": "string",
+      "UserPoolArn": "string",
+      "UserPoolId": "string",
+      "UserPoolName": "string"
+    }
+  },
+  "function": {
+    "AdminQueries2c95f1df": {
+      "Arn": "string",
+      "LambdaExecutionRole": "string",
+      "LambdaExecutionRoleArn": "string",
+      "Name": "string",
+      "Region": "string"
+    }
+  },
+  "storage": {
+    "s3b5f43598": {
+      "BucketName": "string",
+      "Region": "string"
+    }
+  }
 }

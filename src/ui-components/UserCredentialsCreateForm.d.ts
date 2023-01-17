@@ -5,8 +5,8 @@
  **************************************************************************/
 
 import * as React from "react";
-import { EscapeHatchProps } from "@aws-amplify/ui-react/internal";
 import { GridProps, TextFieldProps } from "@aws-amplify/ui-react";
+import { EscapeHatchProps } from "@aws-amplify/ui-react/internal";
 export declare type ValidationResponse = {
     hasError: boolean;
     errorMessage?: string;
@@ -26,14 +26,14 @@ export declare type UserCredentialsCreateFormValidationValues = {
     defaultWorkspace?: ValidationFunction<string>;
     formChecked?: ValidationFunction<string>;
 };
-export declare type FormProps<T> = Partial<T> & React.DOMAttributes<HTMLDivElement>;
+export declare type PrimitiveOverrideProps<T> = Partial<T> & React.DOMAttributes<HTMLDivElement>;
 export declare type UserCredentialsCreateFormOverridesProps = {
-    UserCredentialsCreateFormGrid?: FormProps<GridProps>;
-    userId?: FormProps<TextFieldProps>;
-    activeTimeEntry?: FormProps<TextFieldProps>;
-    status?: FormProps<TextFieldProps>;
-    defaultWorkspace?: FormProps<TextFieldProps>;
-    formChecked?: FormProps<TextFieldProps>;
+    UserCredentialsCreateFormGrid?: PrimitiveOverrideProps<GridProps>;
+    userId?: PrimitiveOverrideProps<TextFieldProps>;
+    activeTimeEntry?: PrimitiveOverrideProps<TextFieldProps>;
+    status?: PrimitiveOverrideProps<TextFieldProps>;
+    defaultWorkspace?: PrimitiveOverrideProps<TextFieldProps>;
+    formChecked?: PrimitiveOverrideProps<TextFieldProps>;
 } & EscapeHatchProps;
 export declare type UserCredentialsCreateFormProps = React.PropsWithChildren<{
     overrides?: UserCredentialsCreateFormOverridesProps | undefined | null;
@@ -42,7 +42,6 @@ export declare type UserCredentialsCreateFormProps = React.PropsWithChildren<{
     onSubmit?: (fields: UserCredentialsCreateFormInputValues) => UserCredentialsCreateFormInputValues;
     onSuccess?: (fields: UserCredentialsCreateFormInputValues) => void;
     onError?: (fields: UserCredentialsCreateFormInputValues, errorMessage: string) => void;
-    onCancel?: () => void;
     onChange?: (fields: UserCredentialsCreateFormInputValues) => UserCredentialsCreateFormInputValues;
     onValidate?: UserCredentialsCreateFormValidationValues;
 } & React.CSSProperties>;

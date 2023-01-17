@@ -1,6 +1,16 @@
 import React, { useState } from "react";
 import { useAppContext } from "../../services/contextLib.jsx";
-import { Container, CssBaseline, Box, Typography, Grid, TextField, Checkbox, FormControlLabel, Autocomplete } from "@mui/material";
+import {
+  Container,
+  CssBaseline,
+  Box,
+  Typography,
+  Grid,
+  TextField,
+  Checkbox,
+  FormControlLabel,
+  Autocomplete,
+} from "@mui/material";
 import { Formik } from "formik";
 import { useTheme } from "@mui/material/styles";
 import LoaderButton from "../../components/LoaderButton/index.jsx";
@@ -142,7 +152,8 @@ const Signup = () => {
   const [message, setMessage] = useState("");
   const [citizenship, setCitizenship] = useState("");
   const { langValue } = useAppContext();
-  const phoneRegExp = /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
+  const phoneRegExp =
+    /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
 
   const SignupSchema = yup.object().shape({
     phoneNumber: yup
@@ -151,14 +162,25 @@ const Signup = () => {
       .max(12, langValue.register.errors.phone_number.is_too_long)
       .matches(phoneRegExp, langValue.register.errors.phone_number.is_invalid)
       .required(langValue.register.errors.phone_number.is_required),
-    email: yup.string().email(langValue.register.errors.invalid_email).required(langValue.register.errors.email_is_required),
-    lastName: yup.string().min(2, langValue.register.errors.last_name.is_too_short).max(50, langValue.register.errors.last_name.is_too_long).required(langValue.register.errors.last_name.is_required),
+    email: yup
+      .string()
+      .email(langValue.register.errors.invalid_email)
+      .required(langValue.register.errors.email_is_required),
+    lastName: yup
+      .string()
+      .min(2, langValue.register.errors.last_name.is_too_short)
+      .max(50, langValue.register.errors.last_name.is_too_long)
+      .required(langValue.register.errors.last_name.is_required),
     firstName: yup
       .string()
       .min(2, langValue.register.errors.first_name.is_too_short)
       .max(50, langValue.register.errors.first_name.is_too_long)
       .required(langValue.register.errors.first_name.is_required),
-    password: yup.string().min(8, langValue.register.errors.password.is_too_short).max(50, langValue.register.errors.password.is_too_long).required(langValue.register.errors.password.is_required),
+    password: yup
+      .string()
+      .min(8, langValue.register.errors.password.is_too_short)
+      .max(50, langValue.register.errors.password.is_too_long)
+      .required(langValue.register.errors.password.is_required),
     confirmPassword: yup
       .string()
       .min(8, langValue.register.errors.password_confirmation.is_too_short)
@@ -187,10 +209,11 @@ const Signup = () => {
             username: val.email,
             password: val.password,
             attributes: {
-              //birthdate: new Date(dateOfBirth).toLocaleDateString(),
-              locale: citizenship,
+              birthdate: new Date(dateOfBirth).toLocaleDateString(),
+              locale: null,
               "custom:UserCreditails": "null",
               "custom:RuningTimeEntry": "null",
+              "custom:nationality": citizenship,
               name: val.firstName,
               family_name: val.lastName,
               phone_number: phone(val.phoneNumber),
@@ -275,7 +298,16 @@ const Signup = () => {
                       onChange={(date) => setDateOfBirth(date)}
                       value={dateOfBirth}
                       renderInput={(params) => (
-                        <TextField {...params} variant="outlined" required fullWidth id="dateOfBirth" label={langValue.register.date_of_birth} name="dateOfBirth" autoComplete="dateOfBirth" />
+                        <TextField
+                          {...params}
+                          variant="outlined"
+                          required
+                          fullWidth
+                          id="dateOfBirth"
+                          label={langValue.register.date_of_birth}
+                          name="dateOfBirth"
+                          autoComplete="dateOfBirth"
+                        />
                       )}
                     />
                   </LocalizationProvider>
@@ -382,7 +414,7 @@ const Signup = () => {
                 isLoading={isSubmitting}
                 text={langValue.register.register}
                 loadingText="Creating…"
-                disabled={!isValid || !dirty || isSubmitting || !terms}
+                disabled={!isValid || !dirty || isSubmitting || !terms || !dateOfBirth}
                 fullWidth
               />
             </Box>

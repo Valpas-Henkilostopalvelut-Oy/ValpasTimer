@@ -1,38 +1,19 @@
 import React, { useState, useEffect } from "react";
-import { Container, Typography, Box, Divider, Tabs, Tab, useTheme } from "@mui/material";
-import { Auth, DataStore } from "aws-amplify";
+import { Container, Typography, Box, Divider, Tab, CircularProgress } from "@mui/material";
+import { TabContext, TabPanel, TabList } from "@mui/lab";
+import { Auth, DataStore, Hub } from "aws-amplify";
 import { UserCredentials } from "../../models";
-
-const TabPanel = (props) => {
-  const { children, value, index, ...other } = props;
-
-  return (
-    <div
-      role="tabpanel"
-      hidden={value !== index}
-      id={`simple-tabpanel-${index}`}
-      aria-labelledby={`simple-tab-${index}`}
-      {...other}
-    >
-      {value === index && <Box sx={{ pl: 3 }}>{children}</Box>}
-    </div>
-  );
-};
-
-const a11yProps = (index) => {
-  return {
-    id: `simple-tab-${index}`,
-    "aria-controls": `simple-tabpanel-${index}`,
-  };
-};
+import { Details } from "./services/details.jsx";
+import { Cards } from "./services/cards.jsx";
 
 export const Profile = () => {
-  const [value, setValue] = useState(0);
+  const [value, setValue] = useState("1");
+  const [isEmpty, setEmpty] = useState(true);
   const [user, setUser] = useState({
     cognito: null,
     datastore: null,
+    workcards: null,
   });
-  const theme = useTheme();
 
   useEffect(() => {
     let isMounted = true;
@@ -44,6 +25,7 @@ export const Profile = () => {
               setUser({
                 cognito: user.attributes,
                 datastore: data,
+                workcards: data.workcards,
               });
             })
             .catch((err) => {
@@ -56,6 +38,16 @@ export const Profile = () => {
     };
     isMounted && loaduser();
     return () => (isMounted = false);
+  }, [isEmpty]);
+
+  useEffect(() => {
+    Hub.listen("datastore", async (hubData) => {
+      const { event, data } = hubData.payload;
+      if (event === "outboxStatus") {
+        console.log(data);
+        setEmpty(data.isEmpty);
+      }
+    });
   }, []);
 
   const handleChange = (event, newValue) => {
@@ -65,49 +57,71 @@ export const Profile = () => {
   //line under Profile text
   return (
     <Container>
-      <Box>
-        <Typography
-          variant="h4"
-          color="text.secondary"
+      {user.cognito && user.datastore ? (
+        <>
+          <Box>
+            <Typography
+              variant="h4"
+              color="text.secondary"
+              sx={{
+                marginBottom: "20px",
+                marginTop: "40px",
+              }}
+            >
+              Profile
+            </Typography>
+            <Divider
+              sx={{
+                marginBottom: "20px",
+                opacity: "0.3",
+              }}
+            />
+          </Box>
+          <Box
+            sx={{
+              width: "100%",
+            }}
+          >
+            <TabContext value={value}>
+              <Box
+                sx={{
+                  borderBottom: 1,
+                  borderColor: "divider",
+                }}
+              >
+                <TabList onChange={handleChange} aria-label="Profile tabs">
+                  <Tab label="Details" value="1" />
+                  <Tab label="Cards" value="3" />
+                  <Tab label="Settings" value="2" />
+                </TabList>
+              </Box>
+              <TabPanel value="1">
+                <Details cognito={user.cognito} data={user.datastore} />
+              </TabPanel>
+              <TabPanel value="3">
+                <Cards
+                  data={user.datastore}
+                  workcards={user.workcards}
+                  id={user.cognito["custom:UserCreditails"]}
+                  isEmpty={isEmpty}
+                />
+              </TabPanel>
+              <TabPanel value="2">Settings</TabPanel>
+            </TabContext>
+          </Box>
+        </>
+      ) : (
+        <Box
           sx={{
-            marginBottom: "20px",
-            marginTop: "40px",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            height: "100vh",
           }}
         >
-          Profile
-        </Typography>
-        <Divider
-          sx={{
-            marginBottom: "20px",
-            opacity: "0.3",
-          }}
-        />
-      </Box>
-
-      <Box
-        sx={{
-          display: "flex",
-          flexGrow: 1,
-        }}
-      >
-        <Tabs
-          orientation={"vertical"}
-          value={value}
-          onChange={handleChange}
-          aria-label="Profile Tabs"
-          indicatorColor="primary"
-          textColor="primary"
-        >
-          <Tab label="Profile" {...a11yProps(0)} />
-          <Tab label="Settings" {...a11yProps(1)} />
-        </Tabs>
-        <TabPanel value={value} index={0}>
-          <Typography>dd</Typography>
-        </TabPanel>
-        <TabPanel value={value} index={1}>
-          Item Two
-        </TabPanel>
-      </Box>
+          <CircularProgress />
+        </Box>
+      )}
     </Container>
   );
 };

@@ -6,9 +6,6 @@
 
 /* eslint-disable */
 import * as React from "react";
-import { fetchByPath, validateField } from "./utils";
-import { Tasks } from "../models";
-import { getOverrideProps } from "@aws-amplify/ui-react/internal";
 import {
   Button,
   Flex,
@@ -16,25 +13,27 @@ import {
   SelectField,
   TextField,
 } from "@aws-amplify/ui-react";
+import { getOverrideProps } from "@aws-amplify/ui-react/internal";
+import { Tasks } from "../models";
+import { fetchByPath, validateField } from "./utils";
 import { DataStore } from "aws-amplify";
 export default function TasksUpdateForm(props) {
   const {
-    id,
+    id: idProp,
     tasks,
     onSuccess,
     onError,
     onSubmit,
-    onCancel,
     onValidate,
     onChange,
     overrides,
     ...rest
   } = props;
   const initialValues = {
-    title: undefined,
-    description: undefined,
-    username: undefined,
-    time: undefined,
+    title: "",
+    description: "",
+    username: "",
+    time: "",
     status: undefined,
   };
   const [title, setTitle] = React.useState(initialValues.title);
@@ -46,7 +45,9 @@ export default function TasksUpdateForm(props) {
   const [status, setStatus] = React.useState(initialValues.status);
   const [errors, setErrors] = React.useState({});
   const resetStateValues = () => {
-    const cleanValues = { ...initialValues, ...tasksRecord };
+    const cleanValues = tasksRecord
+      ? { ...initialValues, ...tasksRecord }
+      : initialValues;
     setTitle(cleanValues.title);
     setDescription(cleanValues.description);
     setUsername(cleanValues.username);
@@ -57,11 +58,11 @@ export default function TasksUpdateForm(props) {
   const [tasksRecord, setTasksRecord] = React.useState(tasks);
   React.useEffect(() => {
     const queryData = async () => {
-      const record = id ? await DataStore.query(Tasks, id) : tasks;
+      const record = idProp ? await DataStore.query(Tasks, idProp) : tasks;
       setTasksRecord(record);
     };
     queryData();
-  }, [id, tasks]);
+  }, [idProp, tasks]);
   React.useEffect(resetStateValues, [tasksRecord]);
   const validations = {
     title: [],
@@ -70,7 +71,14 @@ export default function TasksUpdateForm(props) {
     time: [],
     status: [],
   };
-  const runValidationTasks = async (fieldName, value) => {
+  const runValidationTasks = async (
+    fieldName,
+    currentValue,
+    getDisplayValue
+  ) => {
+    const value = getDisplayValue
+      ? getDisplayValue(currentValue)
+      : currentValue;
     let validationResponse = validateField(value, validations[fieldName]);
     const customValidator = fetchByPath(onValidate, fieldName);
     if (customValidator) {
@@ -117,6 +125,11 @@ export default function TasksUpdateForm(props) {
           modelFields = onSubmit(modelFields);
         }
         try {
+          Object.entries(modelFields).forEach(([key, value]) => {
+            if (typeof value === "string" && value.trim() === "") {
+              modelFields[key] = undefined;
+            }
+          });
           await DataStore.save(
             Tasks.copyOf(tasksRecord, (updated) => {
               Object.assign(updated, modelFields);
@@ -131,14 +144,14 @@ export default function TasksUpdateForm(props) {
           }
         }
       }}
-      {...rest}
       {...getOverrideProps(overrides, "TasksUpdateForm")}
+      {...rest}
     >
       <TextField
         label="Title"
         isRequired={false}
         isReadOnly={false}
-        defaultValue={title}
+        value={title}
         onChange={(e) => {
           let { value } = e.target;
           if (onChange) {
@@ -166,7 +179,7 @@ export default function TasksUpdateForm(props) {
         label="Description"
         isRequired={false}
         isReadOnly={false}
-        defaultValue={description}
+        value={description}
         onChange={(e) => {
           let { value } = e.target;
           if (onChange) {
@@ -194,7 +207,7 @@ export default function TasksUpdateForm(props) {
         label="Username"
         isRequired={false}
         isReadOnly={false}
-        defaultValue={username}
+        value={username}
         onChange={(e) => {
           let { value } = e.target;
           if (onChange) {
@@ -223,7 +236,7 @@ export default function TasksUpdateForm(props) {
         isRequired={false}
         isReadOnly={false}
         type="time"
-        defaultValue={time}
+        value={time}
         onChange={(e) => {
           let { value } = e.target;
           if (onChange) {
@@ -298,7 +311,11 @@ export default function TasksUpdateForm(props) {
         <Button
           children="Reset"
           type="reset"
-          onClick={resetStateValues}
+          onClick={(event) => {
+            event.preventDefault();
+            resetStateValues();
+          }}
+          isDisabled={!(idProp || tasks)}
           {...getOverrideProps(overrides, "ResetButton")}
         ></Button>
         <Flex
@@ -306,18 +323,13 @@ export default function TasksUpdateForm(props) {
           {...getOverrideProps(overrides, "RightAlignCTASubFlex")}
         >
           <Button
-            children="Cancel"
-            type="button"
-            onClick={() => {
-              onCancel && onCancel();
-            }}
-            {...getOverrideProps(overrides, "CancelButton")}
-          ></Button>
-          <Button
             children="Submit"
             type="submit"
             variation="primary"
-            isDisabled={Object.values(errors).some((e) => e?.hasError)}
+            isDisabled={
+              !(idProp || tasks) ||
+              Object.values(errors).some((e) => e?.hasError)
+            }
             {...getOverrideProps(overrides, "SubmitButton")}
           ></Button>
         </Flex>

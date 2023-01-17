@@ -32,6 +32,9 @@
           "Id": "90be0a16c15649f783976575df0cdbe4",
           "Region": "eu-west-1"
         }
+      },
+      "storage": {
+        "s3b5f43598": {}
       }
     }
   }
