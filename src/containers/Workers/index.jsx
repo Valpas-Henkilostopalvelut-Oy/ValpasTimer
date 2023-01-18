@@ -22,6 +22,7 @@ import {
 } from "@mui/material";
 import { Auth, API } from "aws-amplify";
 import ListToolbar from "./ListToolbar/index.jsx";
+import { PropTypes } from "prop-types";
 
 const IBAN = ({ row }) => {
   const iban = row.Attributes.find((a) => a.Name === "custom:iban");
@@ -294,6 +295,12 @@ const Workers = () => {
                     </TableCell>
 
                     <TableCell align="right">
+                      <Typography variant="body2" color="textSecondary">
+                        {row.Attributes.find((a) => a.Name === "phone_number").Value}
+                      </Typography>
+                    </TableCell>
+
+                    <TableCell align="right">
                       {row.Enabled ? (
                         <Typography variant="body2" color="primary">
                           Yes
@@ -382,3 +389,20 @@ const Workers = () => {
 };
 
 export default Workers;
+
+Workers.propTypes = {
+  users: PropTypes.array,
+  loadUsers: PropTypes.func,
+};
+
+IBAN.propTypes = {
+  row: PropTypes.object,
+};
+
+CurrentGroup.propTypes = {
+  row: PropTypes.object,
+};
+
+CreateDate.propTypes = {
+  date: PropTypes.string,
+};

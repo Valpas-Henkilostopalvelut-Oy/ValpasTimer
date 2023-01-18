@@ -15,7 +15,11 @@ export async function createUser() {
           status: "ACTIVE",
           defaultWorkspace: null,
           memberships: [],
+
           profile: {
+            iban: userAuth.attributes["custom:iban"] !== undefined ? userAuth.attributes["custom:iban"] : null,
+            id_number:
+              userAuth.attributes["custom:id_number"] !== undefined ? userAuth.attributes["custom:id_number"] : null,
             profile_picture: null,
             first_name: userAuth.attributes.name,
             last_name: userAuth.attributes.family_name,

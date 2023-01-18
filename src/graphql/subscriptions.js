@@ -466,6 +466,8 @@ export const onCreateUserCredentials = /* GraphQL */ `
         targetId
       }
       profile {
+        iban
+        id_number
         profile_picture
         first_name
         last_name
@@ -491,6 +493,7 @@ export const onCreateUserCredentials = /* GraphQL */ `
         drivinglicense
         owncar
         workcard
+        othercard
       }
       createdAt
       updatedAt
@@ -518,6 +521,8 @@ export const onUpdateUserCredentials = /* GraphQL */ `
         targetId
       }
       profile {
+        iban
+        id_number
         profile_picture
         first_name
         last_name
@@ -543,6 +548,7 @@ export const onUpdateUserCredentials = /* GraphQL */ `
         drivinglicense
         owncar
         workcard
+        othercard
       }
       createdAt
       updatedAt
@@ -570,6 +576,8 @@ export const onDeleteUserCredentials = /* GraphQL */ `
         targetId
       }
       profile {
+        iban
+        id_number
         profile_picture
         first_name
         last_name
@@ -595,6 +603,7 @@ export const onDeleteUserCredentials = /* GraphQL */ `
         drivinglicense
         owncar
         workcard
+        othercard
       }
       createdAt
       updatedAt

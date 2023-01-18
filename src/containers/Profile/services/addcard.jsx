@@ -7,13 +7,13 @@ import {
   InputLabel,
   Select,
   MenuItem,
-  InputBase,
   Grid,
-  Button,
   ListSubheader,
-  TextField,
   Tooltip,
   Badge,
+  Button,
+  TableRow,
+  TableCell,
 } from "@mui/material";
 import { Storage, DataStore } from "aws-amplify";
 import { UserCredentials, Cardtype, Workcardtype } from "../../../models";
@@ -21,6 +21,7 @@ import AttachFileIcon from "@mui/icons-material/AttachFile";
 import { Driverlicense } from "./driverlicense.jsx";
 import { SelectEnd } from "./date.jsx";
 import FileUploadIcon from "@mui/icons-material/FileUpload";
+import { PropTypes } from "prop-types";
 
 const Input = styled("input")({
   display: "none",
@@ -42,22 +43,24 @@ const upload = async (file, id) => {
   }
 };
 
-const cardtypes = [
-  { id: Cardtype.ID, name: "ID Card", disabled: false },
-  { id: Cardtype.PASSPORT, name: "Passport", disabled: false },
-  { id: Cardtype.DRIVING, name: "Driving License", disabled: false },
-  { id: "workcard", name: "Work Card", disabled: true },
-  { id: Workcardtype.HYGIENEPASS, name: "Hygieniapassi" },
-  { id: Workcardtype.WORKSAFETYPASS, name: "Työturvallisuuskortti" },
-  { id: Workcardtype.FIREWORKCARD, name: "Tulityökortti" },
-  { id: Workcardtype.ELECTRICALSAFETYPASS, name: "Sähköturvallisuuskortti" },
-  { id: Cardtype.OTHER, name: "Other", disabled: false },
-];
+export const cardtypes = (lang) => {
+  return [
+    { id: Cardtype.ID, name: lang.id, disabled: false },
+    { id: Cardtype.PASSPORT, name: lang.passport, disabled: false },
+    { id: Cardtype.DRIVING, name: lang.driving, disabled: false },
+    { id: "workcard", name: lang.workcard, disabled: true },
+    { id: Workcardtype.HYGIENEPASS, name: lang.hygienepass },
+    { id: Workcardtype.WORKSAFETYPASS, name: lang.worksafetypass },
+    { id: Workcardtype.FIREWORKCARD, name: lang.fireworkcard },
+    { id: Workcardtype.ELECTRICALSAFETYPASS, name: lang.electricalsafetypass },
+    { id: Cardtype.OTHER, name: lang.other, disabled: false },
+  ];
+};
 
-const SelectCardType = ({ selected, setSelect }) => {
+const SelectCardType = ({ selected, setSelect, lang }) => {
   return (
     <FormControl fullWidth>
-      <InputLabel id="card-type-label">Card Type</InputLabel>
+      <InputLabel id="card-type-label">{lang.cardtype}</InputLabel>
       <Select
         labelId="card-type-label"
         id="card-type"
@@ -66,7 +69,7 @@ const SelectCardType = ({ selected, setSelect }) => {
         onChange={(e) => setSelect(e.target.value)}
         variant="standard"
       >
-        {cardtypes.map((type) =>
+        {cardtypes(lang.types).map((type) =>
           type.disabled ? (
             <ListSubheader key={type.id}>{type.name}</ListSubheader>
           ) : (
@@ -80,7 +83,7 @@ const SelectCardType = ({ selected, setSelect }) => {
   );
 };
 
-export const AddCard = ({ data, workcards, id, open, isEmpty }) => {
+export const AddCard = ({ data, workcards, open, isEmpty, lang }) => {
   const [selected, setSelected] = useState(Cardtype.ID);
   const [card, setCard] = useState(null);
   const [cardEnd, setCardEnd] = useState(new Date());
@@ -141,53 +144,81 @@ export const AddCard = ({ data, workcards, id, open, isEmpty }) => {
   };
 
   return (
-    <Collapse in={open} timeout="auto" unmountOnExit>
-      <Grid container spacing={2} alignItems="center">
-        <Grid item xs={3}>
-          <SelectEnd date={cardEnd} setDate={setCardEnd} setError={setError} />
-        </Grid>
-
-        <Grid item xs={7}>
-          <SelectCardType selected={selected} setSelect={setSelected} />
-        </Grid>
-
-        <Grid item xs={1} component="label" htmlFor="contained-button-file">
-          <Input
-            accept="image/*"
-            id="contained-button-file"
-            multiple
-            type="file"
-            onChange={(e) => {
-              setCard(e.target.files[0]);
-            }}
-          />
-          <IconButton
-            color="primary"
-            aria-label="upload picture"
-            component="span"
-            sx={{
-              color: !card ? "grey" : "primary.main",
-            }}
-          >
-            <Tooltip title="Upload Card">
-              <Badge badgeContent={card ? 1 : 0} color="primary">
-                <AttachFileIcon />
-              </Badge>
-            </Tooltip>
-          </IconButton>
-        </Grid>
-
-        <Grid item xs={1}>
-          <IconButton onClick={onUpload} disabled={isDisabled()}>
-            <Tooltip title="Add Card">
-              <FileUploadIcon />
-            </Tooltip>
-          </IconButton>
-        </Grid>
-      </Grid>
-      <Collapse in={selected === Cardtype.DRIVING} timeout="auto" unmountOnExit>
-        <Driverlicense data={data} checked={checked} setChecked={setChecked} ownCar={ownCar} setOwnCar={setOwnCar} />
-      </Collapse>
-    </Collapse>
+    open && (
+      <>
+        <TableRow>
+          <TableCell>
+            <SelectCardType selected={selected} setSelect={setSelected} lang={lang} />
+          </TableCell>
+          <TableCell>
+            <SelectEnd date={cardEnd} setDate={setCardEnd} setError={setError} lang={lang} />
+          </TableCell>
+          <TableCell align="right">
+            <Input
+              accept="image/*"
+              id="contained-button-file"
+              multiple
+              type="file"
+              onChange={(e) => {
+                setCard(e.target.files[0]);
+              }}
+            />
+            <IconButton
+              color="primary"
+              aria-label="upload picture"
+              component="span"
+              sx={{
+                color: !card ? "grey" : "primary.main",
+              }}
+            >
+              <Tooltip title={lang.uploadcardinfo}>
+                <Badge badgeContent={card ? 1 : 0} color="primary">
+                  <AttachFileIcon />
+                </Badge>
+              </Tooltip>
+            </IconButton>
+          </TableCell>
+          <TableCell>
+            <Button
+              onClick={onUpload}
+              disabled={isDisabled()}
+              variant="contained"
+              color="primary"
+              size="small"
+              fullWidth
+            >
+              {lang.uploadcard}
+            </Button>
+          </TableCell>
+        </TableRow>
+        <TableRow>
+          <TableCell colSpan={4}>
+            <Collapse in={selected === Cardtype.DRIVING} timeout="auto" unmountOnExit>
+              <Driverlicense
+                data={data}
+                checked={checked}
+                setChecked={setChecked}
+                ownCar={ownCar}
+                setOwnCar={setOwnCar}
+                lang={lang}
+              />
+            </Collapse>
+          </TableCell>
+        </TableRow>
+      </>
+    )
   );
+};
+
+SelectCardType.propTypes = {
+  selected: PropTypes.string.isRequired,
+  setSelect: PropTypes.func.isRequired,
+};
+
+AddCard.propTypes = {
+  data: PropTypes.object.isRequired,
+  workcards: PropTypes.array,
+  id: PropTypes.string.isRequired,
+  open: PropTypes.bool.isRequired,
+  isEmpty: PropTypes.bool.isRequired,
 };

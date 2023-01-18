@@ -30,6 +30,8 @@ type User @aws_iam @aws_cognito_user_pools {
 }
 
 type Profile @aws_iam @aws_cognito_user_pools {
+  iban: String
+  id_number: String
   profile_picture: AWSURL
   first_name: String
   last_name: String
@@ -106,6 +108,7 @@ type WorkCard @aws_iam @aws_cognito_user_pools {
   drivinglicense: [Drivingtype]
   owncar: Boolean
   workcard: Workcardtype
+  othercard: String
 }
 
 enum Workcardtype {
@@ -835,6 +838,8 @@ input CostRateInput {
 }
 
 input ProfileInput {
+  iban: String
+  id_number: String
   profile_picture: AWSURL
   first_name: String
   last_name: String
@@ -861,6 +866,7 @@ input WorkCardInput {
   drivinglicense: [Drivingtype]
   owncar: Boolean
   workcard: Workcardtype
+  othercard: String
 }
 
 type ModelUserCredentialsConnection @aws_iam @aws_cognito_user_pools {

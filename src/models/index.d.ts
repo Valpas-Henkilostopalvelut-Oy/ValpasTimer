@@ -126,6 +126,8 @@ export declare type Workplace = LazyLoading extends LazyLoadingDisabled ? EagerW
 export declare const Workplace: (new (init: ModelInit<Workplace>) => Workplace)
 
 type EagerProfile = {
+  readonly iban?: string | null;
+  readonly id_number?: string | null;
   readonly profile_picture?: string | null;
   readonly first_name?: string | null;
   readonly last_name?: string | null;
@@ -138,6 +140,8 @@ type EagerProfile = {
 }
 
 type LazyProfile = {
+  readonly iban?: string | null;
+  readonly id_number?: string | null;
   readonly profile_picture?: string | null;
   readonly first_name?: string | null;
   readonly last_name?: string | null;
@@ -312,6 +316,7 @@ type EagerWorkCard = {
   readonly drivinglicense?: (Drivingtype | null)[] | keyof typeof Drivingtype | null;
   readonly owncar?: boolean | null;
   readonly workcard?: Workcardtype | keyof typeof Workcardtype | null;
+  readonly othercard?: string | null;
 }
 
 type LazyWorkCard = {
@@ -321,6 +326,7 @@ type LazyWorkCard = {
   readonly drivinglicense?: (Drivingtype | null)[] | keyof typeof Drivingtype | null;
   readonly owncar?: boolean | null;
   readonly workcard?: Workcardtype | keyof typeof Workcardtype | null;
+  readonly othercard?: string | null;
 }
 
 export declare type WorkCard = LazyLoading extends LazyLoadingDisabled ? EagerWorkCard : LazyWorkCard

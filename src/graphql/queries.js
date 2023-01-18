@@ -384,6 +384,8 @@ export const getUserCredentials = /* GraphQL */ `
         targetId
       }
       profile {
+        iban
+        id_number
         profile_picture
         first_name
         last_name
@@ -409,6 +411,7 @@ export const getUserCredentials = /* GraphQL */ `
         drivinglicense
         owncar
         workcard
+        othercard
       }
       createdAt
       updatedAt

@@ -5,6 +5,7 @@ import { Auth, DataStore, Hub } from "aws-amplify";
 import { UserCredentials } from "../../models";
 import { Details } from "./services/details.jsx";
 import { Cards } from "./services/cards.jsx";
+import { profilelang } from "./services/lang.jsx";
 
 export const Profile = () => {
   const [value, setValue] = useState("1");
@@ -68,7 +69,7 @@ export const Profile = () => {
                 marginTop: "40px",
               }}
             >
-              Profile
+              {profilelang.title}
             </Typography>
             <Divider
               sx={{
@@ -90,13 +91,12 @@ export const Profile = () => {
                 }}
               >
                 <TabList onChange={handleChange} aria-label="Profile tabs">
-                  <Tab label="Details" value="1" />
-                  <Tab label="Cards" value="3" />
-                  <Tab label="Settings" value="2" />
+                  <Tab label={profilelang.details.details} value="1" />
+                  <Tab label={profilelang.cards.cards} value="3" />
                 </TabList>
               </Box>
               <TabPanel value="1">
-                <Details cognito={user.cognito} data={user.datastore} />
+                <Details cognito={user.cognito} data={user.datastore} lang={profilelang.details} />
               </TabPanel>
               <TabPanel value="3">
                 <Cards
@@ -104,9 +104,9 @@ export const Profile = () => {
                   workcards={user.workcards}
                   id={user.cognito["custom:UserCreditails"]}
                   isEmpty={isEmpty}
+                  lang={profilelang.cards}
                 />
               </TabPanel>
-              <TabPanel value="2">Settings</TabPanel>
             </TabContext>
           </Box>
         </>

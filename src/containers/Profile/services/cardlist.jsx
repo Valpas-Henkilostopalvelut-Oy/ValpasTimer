@@ -1,11 +1,13 @@
-import React, { useState } from "react";
-import { Box, Table, TableCell, TableContainer, TableRow, Tooltip, Typography, IconButton } from "@mui/material";
+import React from "react";
+import { TableCell, TableRow, Tooltip, Typography, IconButton } from "@mui/material";
 import { Cardtype } from "../../../models";
 import { Enddate } from "./date.jsx";
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import { Storage, DataStore } from "aws-amplify";
 import { UserCredentials } from "../../../models";
+import { PropTypes } from "prop-types";
+import DirectionsCarIcon from "@mui/icons-material/DirectionsCar";
 
 const deleteimage = async (card, data) => {
   const workcards = data.workcards.filter((e) => e.id !== card.id);
@@ -14,7 +16,7 @@ const deleteimage = async (card, data) => {
       updated.workcards = workcards;
     })
   )
-    .then(async (e) => {
+    .then(async () => {
       await Storage.remove(card.id, { level: "private" }).catch((err) => {
         console.warn(err);
       });
@@ -51,7 +53,7 @@ const downloadimage = async (card) => {
     });
 };
 
-export const Carditem = ({ user, data, card, id, isEmpty = false }) => {
+export const Carditem = ({ data, card, isEmpty = false, lang }) => {
   return (
     <>
       <TableRow>
@@ -61,7 +63,7 @@ export const Carditem = ({ user, data, card, id, isEmpty = false }) => {
         </TableCell>
         <TableCell align="right">
           <IconButton aria-label="download card" disabled={!isEmpty} onClick={() => downloadimage(card)}>
-            <Tooltip title="Download">
+            <Tooltip title={lang.uploadcardinfo}>
               <FileDownloadIcon
                 sx={{
                   color: "gray",
@@ -72,7 +74,7 @@ export const Carditem = ({ user, data, card, id, isEmpty = false }) => {
         </TableCell>
         <TableCell align="right">
           <IconButton aria-label="delete card" disabled={!isEmpty} onClick={() => deleteimage(card, data)}>
-            <Tooltip title="Delete">
+            <Tooltip title={lang.delete}>
               <DeleteForeverIcon
                 sx={{
                   color: "gray",
@@ -86,14 +88,22 @@ export const Carditem = ({ user, data, card, id, isEmpty = false }) => {
         <TableRow>
           <TableCell colSpan={4}>
             <Typography variant="body2" color="text.secondary" component="p">
-              Category: {card.drivinglicense.toString()}
+              {lang.category}: {card.drivinglicense.toString()}
             </Typography>
             <Typography variant="body2" color="text.secondary" component="p">
-              Own vehicle: {card.owncar.toString()}
+              {lang.owncar}: {card.owncar ? "Kyllä" : "Ei"}
             </Typography>
           </TableCell>
         </TableRow>
       )}
     </>
   );
+};
+
+Carditem.propTypes = {
+  user: PropTypes.object,
+  data: PropTypes.object,
+  card: PropTypes.object,
+  id: PropTypes.string,
+  isEmpty: PropTypes.bool,
 };

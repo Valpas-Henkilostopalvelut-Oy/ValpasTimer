@@ -29,6 +29,8 @@ type User {
 }
 
 type Profile {
+  iban: String
+  id_number: String
   profile_picture: AWSURL
   first_name: String
   last_name: String
@@ -105,6 +107,7 @@ type WorkCard {
   drivinglicense: [Drivingtype]
   owncar: Boolean
   workcard: Workcardtype
+  othercard: String
 }
 enum Workcardtype {
   HYGIENEPASS

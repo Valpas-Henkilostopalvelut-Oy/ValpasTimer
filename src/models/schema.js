@@ -968,6 +968,20 @@ export const schema = {
         "Profile": {
             "name": "Profile",
             "fields": {
+                "iban": {
+                    "name": "iban",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "id_number": {
+                    "name": "id_number",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
                 "profile_picture": {
                     "name": "profile_picture",
                     "isArray": false,
@@ -1354,10 +1368,17 @@ export const schema = {
                     },
                     "isRequired": false,
                     "attributes": []
+                },
+                "othercard": {
+                    "name": "othercard",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
                 }
             }
         }
     },
     "codegenVersion": "3.3.4",
-    "version": "6df551d87beeb243a4109a472b5b2080"
+    "version": "43f7b251a31bc4d440190ad9b01ef318"
 };

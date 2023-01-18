@@ -1,22 +1,23 @@
-import React, { useState } from "react";
-import { List, ListItem, ListItemButton, ListItemIcon, IconButton, ListItemText } from "@mui/material";
+import React from "react";
+import { List, ListItem, ListItemButton, ListItemIcon, ListItemText } from "@mui/material";
 import Checkbox from "@mui/material/Checkbox";
-import { Drivingtype, Cardtype, Workcardtype } from "../../../models";
+import { Drivingtype } from "../../../models";
+import { PropTypes } from "prop-types";
 
-const OwnCar = ({ ownCar, setOwnCar }) => {
+const OwnCar = ({ ownCar, setOwnCar, lang }) => {
   return (
     <ListItem key="owncar" disablePadding>
       <ListItemButton role={undefined} onClick={() => setOwnCar(!ownCar)} dense>
         <ListItemIcon>
           <Checkbox edge="start" checked={ownCar} tabIndex={-1} disableRipple />
         </ListItemIcon>
-        <ListItemText id="owncar" primary="Own car" />
+        <ListItemText id="owncar" primary={lang.owncar} />
       </ListItemButton>
     </ListItem>
   );
 };
 
-export const Driverlicense = ({ data, checked, setChecked, ownCar, setOwnCar }) => {
+export const Driverlicense = ({ checked, setChecked, ownCar = false, setOwnCar, lang }) => {
   const handleToggle = (value) => {
     const currentIndex = checked.indexOf(value);
     const newChecked = [...checked];
@@ -32,7 +33,7 @@ export const Driverlicense = ({ data, checked, setChecked, ownCar, setOwnCar }) 
 
   return (
     <List>
-      <OwnCar ownCar={ownCar} setOwnCar={setOwnCar} />
+      <OwnCar ownCar={ownCar} setOwnCar={setOwnCar} lang={lang} />
       {Object.keys(Drivingtype).map((type) => {
         const labelId = `checkbox-list-label-${type}`;
         return (
@@ -54,4 +55,17 @@ export const Driverlicense = ({ data, checked, setChecked, ownCar, setOwnCar }) 
       })}
     </List>
   );
+};
+
+Driverlicense.propTypes = {
+  data: PropTypes.object,
+  checked: PropTypes.array,
+  setChecked: PropTypes.func,
+  ownCar: PropTypes.bool,
+  setOwnCar: PropTypes.func,
+};
+
+OwnCar.propTypes = {
+  ownCar: PropTypes.bool,
+  setOwnCar: PropTypes.func,
 };

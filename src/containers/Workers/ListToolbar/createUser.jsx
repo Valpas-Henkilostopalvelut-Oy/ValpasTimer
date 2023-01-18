@@ -1,5 +1,15 @@
 /* eslint-disable no-undef */
-import { Dialog, DialogActions, DialogContent, DialogTitle, Button, DialogContentText, TextField, Box, Grid } from "@mui/material";
+import {
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Button,
+  DialogContentText,
+  TextField,
+  Box,
+  Grid,
+} from "@mui/material";
 import React, { Fragment, useState } from "react";
 import { Formik } from "formik";
 import AWS from "aws-sdk";
@@ -8,10 +18,12 @@ const config = {
   region: "eu-west-1",
   accessKeyId: process.env.AWS_ACCESS_KEY_ID,
   accessSecretKey: process.env.AWS_SECRET_ACCESS_KEY,
+  AWS_SDK_LOAD_CONFIG: 1,
 };
-
+console.log((process.env.AWS_SDK_LOAD_CONFIG = 1));
 const createUser = async (values) => {
-  var cognitoidentityserviceprovider = new AWS.CognitoIdentityServiceProvider(config);
+  AWS.config.update(config);
+  var cognitoidentityserviceprovider = new AWS.CognitoIdentityServiceProvider();
   var data = {
     UserPoolId: "eu-west-1_tYXLeogj0",
     Username: values.email,
@@ -47,7 +59,7 @@ const createUser = async (values) => {
     ],
   };
 
-  cognitoidentityserviceprovider.adminCreateUser(data, function (err, data) {
+  cognitoidentityserviceprovider.adminCreateUser(data, (err, data) => {
     if (err) {
       console.warn(err, err.stack);
     } else {
@@ -111,10 +123,30 @@ export const CreateNewUser = () => {
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <TextField variant="outlined" required fullWidth id="last_name" label="Last Name" name="last_name" autoComplete="lname" value={values.last_name} onChange={handleChange} />
+                    <TextField
+                      variant="outlined"
+                      required
+                      fullWidth
+                      id="last_name"
+                      label="Last Name"
+                      name="last_name"
+                      autoComplete="lname"
+                      value={values.last_name}
+                      onChange={handleChange}
+                    />
                   </Grid>
                   <Grid item xs={12}>
-                    <TextField variant="outlined" required fullWidth id="email" label="Email Address" name="email" autoComplete="email" value={values.email} onChange={handleChange} />
+                    <TextField
+                      variant="outlined"
+                      required
+                      fullWidth
+                      id="email"
+                      label="Email Address"
+                      name="email"
+                      autoComplete="email"
+                      value={values.email}
+                      onChange={handleChange}
+                    />
                   </Grid>
                   <Grid item xs={12}>
                     <TextField
