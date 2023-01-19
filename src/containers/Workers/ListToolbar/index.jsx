@@ -134,7 +134,7 @@ const ListToolbar = ({ numSelected, selected, setSelected, reload }) => {
           </Tooltip>
         </Fragment>
       ) : (
-        <CreateNewUser />
+        <CreateNewUser reload={reload} />
       )}
     </Toolbar>
   );

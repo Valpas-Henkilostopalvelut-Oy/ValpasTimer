@@ -9,6 +9,7 @@ import {
   TextField,
   Box,
   Grid,
+  Collapse,
 } from "@mui/material";
 import React, { Fragment, useState } from "react";
 import { Formik } from "formik";
@@ -16,15 +17,26 @@ import AWS from "aws-sdk";
 
 AWS.config.update({
   region: "eu-west-1",
+  accessKeyId: process.env.REACT_APP_ACCESS_KEY_ID,
+  secretAccessKey: process.env.REACT_APP_SECRET_ACCESS_KEY,
 });
 
 const cognitoIdentityServiceProvider = new AWS.CognitoIdentityServiceProvider();
-console.log(process.env);
 
-const createUser = async (values) => {
+const temporarypassword = () => {
+  var text = "";
+  var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+  for (var i = 0; i < 10; i++) text += possible.charAt(Math.floor(Math.random() * possible.length));
+
+  return text;
+};
+
+const createUser = async (values, close, reload, setOpen, password) => {
   var data = {
-    UserPoolId: "eu-west-1_lD9Hhh4Ri",
+    UserPoolId: process.env.REACT_APP_USER_POOL_ID,
     Username: values.email,
+    TemporaryPassword: password,
     UserAttributes: [
       {
         Name: "locale",
@@ -60,12 +72,21 @@ const createUser = async (values) => {
   cognitoIdentityServiceProvider.adminCreateUser(data, function (err, data) {
     if (err) console.warn(err);
     // an error occurred
-    else console.log(data);
+    else {
+      console.log(data); // successful response
+      setOpen(true);
+      reload();
+    }
   });
 };
 
-export const CreateNewUser = () => {
+export const CreateNewUser = ({ reload }) => {
   const [open, setOpen] = useState(false);
+  const [created, setCreated] = useState(false);
+  const [password, setPassword] = useState(temporarypassword());
+  const [email, setEmail] = useState("");
+
+  console.log("password", password);
 
   const handleClose = () => {
     setOpen(false);
@@ -90,11 +111,10 @@ export const CreateNewUser = () => {
               email: "",
               first_name: "",
               last_name: "",
-              phone_number: "",
             }}
             onSubmit={async (values) => {
               try {
-                await createUser(values);
+                await createUser(values, handleClose, reload, setCreated, password);
                 //setCreated(true);
               } catch (error) {
                 console.warn(error);
@@ -141,20 +161,19 @@ export const CreateNewUser = () => {
                       name="email"
                       autoComplete="email"
                       value={values.email}
-                      onChange={handleChange}
+                      onChange={(e) => {
+                        handleChange(e);
+                        setEmail(e.target.value);
+                      }}
                     />
                   </Grid>
                   <Grid item xs={12}>
-                    <TextField
-                      variant="outlined"
-                      fullWidth
-                      id="phone_number"
-                      label="Phone Number"
-                      name="phone_number"
-                      autoComplete="phone_number"
-                      value={values.phone_number}
-                      onChange={handleChange}
-                    />
+                    <Collapse in={created}>
+                      <DialogContentText>User created successfully.</DialogContentText>
+                      <DialogContentText>
+                        User login: {email} and password: {password}
+                      </DialogContentText>
+                    </Collapse>
                   </Grid>
                 </Grid>
                 <DialogActions>
