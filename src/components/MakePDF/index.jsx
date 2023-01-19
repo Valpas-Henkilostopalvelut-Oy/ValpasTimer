@@ -97,7 +97,7 @@ export const MakePDF = ({ data, isEmpty, works }) => {
             </Select>
           </FormControl>
 
-          <FormControl fullWidth margin="dense" disabled={selectedWork === "" && newData}>
+          <FormControl fullWidth margin="dense" disabled={selectedWork === "" && !!newData}>
             <InputLabel id="weeks-select" aria-label="weeks-select">
               Weeks
             </InputLabel>

@@ -7,32 +7,26 @@ import { DataStore, Auth, API } from "aws-amplify";
 import { UserCredentials } from "../../../models/index.js";
 import { CreateNewUser } from "./createUser.jsx";
 import { PropTypes } from "prop-types";
+import { CognitoIdentityServiceProvider } from "aws-sdk";
 
 const ListToolbar = ({ numSelected, selected, setSelected, reload }) => {
   const deleteUser = async () => {
     try {
       for (let i = 0; i < selected.length; i++) {
-        let credentialsId = selected[i].Attributes.find((a) => a.Name === "custom:UserCreditails").Value;
-        if (credentialsId !== null) {
-          await DataStore.delete(UserCredentials, credentialsId);
+        try {
+          // Create the CognitoIdentityServiceProvider object
+          const cognito = new CognitoIdentityServiceProvider();
+          // Set the parameters for the AdminDeleteUser method
+          const params = {
+            UserPoolId: "eu-west-1_tYXLeogj0",
+            Username: selected[i].Username,
+          };
+          // Call the AdminDeleteUser method
+          await cognito.adminDeleteUser(params).promise();
+          console.log(`User ${selected[i].Username} deleted.`);
+        } catch (error) {
+          console.error(`Error deleting user: ${error}`);
         }
-
-        //delete another user from cognito
-        let apiName = "AdminQueries";
-        let path = "/deleteUser";
-        let myInit = {
-          body: {
-            username: selected[i].Username,
-          },
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `${(await Auth.currentSession()).getAccessToken().getJwtToken()}`,
-          },
-        };
-
-        await API.del(apiName, path, myInit).catch((error) => {
-          console.warn(error);
-        });
       }
       setSelected([]);
       reload();

@@ -14,18 +14,16 @@ import React, { Fragment, useState } from "react";
 import { Formik } from "formik";
 import AWS from "aws-sdk";
 
-const config = {
+AWS.config.update({
   region: "eu-west-1",
-  accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-  accessSecretKey: process.env.AWS_SECRET_ACCESS_KEY,
-  AWS_SDK_LOAD_CONFIG: 1,
-};
-console.log((process.env.AWS_SDK_LOAD_CONFIG = 1));
+});
+
+const cognitoIdentityServiceProvider = new AWS.CognitoIdentityServiceProvider();
+console.log(process.env);
+
 const createUser = async (values) => {
-  AWS.config.update(config);
-  var cognitoidentityserviceprovider = new AWS.CognitoIdentityServiceProvider();
   var data = {
-    UserPoolId: "eu-west-1_tYXLeogj0",
+    UserPoolId: "eu-west-1_lD9Hhh4Ri",
     Username: values.email,
     UserAttributes: [
       {
@@ -59,12 +57,10 @@ const createUser = async (values) => {
     ],
   };
 
-  cognitoidentityserviceprovider.adminCreateUser(data, (err, data) => {
-    if (err) {
-      console.warn(err, err.stack);
-    } else {
-      console.warn(data);
-    }
+  cognitoIdentityServiceProvider.adminCreateUser(data, function (err, data) {
+    if (err) console.warn(err);
+    // an error occurred
+    else console.log(data);
   });
 };
 
