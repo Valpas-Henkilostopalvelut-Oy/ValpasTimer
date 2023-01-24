@@ -45,6 +45,12 @@ const Workcardtype = {
   "ELECTRICALSAFETYPASS": "ELECTRICALSAFETYPASS"
 };
 
+const UserAgreementStatus = {
+  "ACTIVE": "ACTIVE",
+  "DISABLED": "DISABLED",
+  "DELETED": "DELETED"
+};
+
 const { Agreement, Tasks, TimeEntry, AllWorkSpaces, UserCredentials, UserAgreement, User, AditionalInfo, Comment, Workplace, Profile, UserSettings, CostRate, UserMemberships, HourlyRate, TimeInterval, Break, WorkspaceSettings, Membership, Work, WorkCard } = initSchema(schema);
 
 export {
@@ -58,6 +64,7 @@ export {
   Cardtype,
   Drivingtype,
   Workcardtype,
+  UserAgreementStatus,
   UserAgreement,
   User,
   AditionalInfo,

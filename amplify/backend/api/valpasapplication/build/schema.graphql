@@ -154,6 +154,12 @@ enum Breakreason {
   ACCIDENT
 }
 
+enum UserAgreementStatus {
+  ACTIVE
+  DISABLED
+  DELETED
+}
+
 type Agreement @aws_iam @aws_cognito_user_pools {
   id: ID!
   name: String
@@ -231,7 +237,7 @@ type UserCredentials @aws_iam @aws_cognito_user_pools {
   id: ID!
   userId: String
   activeTimeEntry: ID
-  status: String
+  status: UserAgreementStatus
   defaultWorkspace: ID
   memberships: [UserMemberships]
   profile: Profile
@@ -875,11 +881,16 @@ type ModelUserCredentialsConnection @aws_iam @aws_cognito_user_pools {
   startedAt: AWSTimestamp
 }
 
+input ModelUserAgreementStatusInput {
+  eq: UserAgreementStatus
+  ne: UserAgreementStatus
+}
+
 input ModelUserCredentialsFilterInput {
   id: ModelIDInput
   userId: ModelStringInput
   activeTimeEntry: ModelIDInput
-  status: ModelStringInput
+  status: ModelUserAgreementStatusInput
   defaultWorkspace: ModelIDInput
   formChecked: ModelStringInput
   and: [ModelUserCredentialsFilterInput]
@@ -890,7 +901,7 @@ input ModelUserCredentialsFilterInput {
 input ModelUserCredentialsConditionInput {
   userId: ModelStringInput
   activeTimeEntry: ModelIDInput
-  status: ModelStringInput
+  status: ModelUserAgreementStatusInput
   defaultWorkspace: ModelIDInput
   formChecked: ModelStringInput
   and: [ModelUserCredentialsConditionInput]
@@ -902,7 +913,7 @@ input CreateUserCredentialsInput {
   id: ID
   userId: String
   activeTimeEntry: ID
-  status: String
+  status: UserAgreementStatus
   defaultWorkspace: ID
   memberships: [UserMembershipsInput]
   profile: ProfileInput
@@ -916,7 +927,7 @@ input UpdateUserCredentialsInput {
   id: ID!
   userId: String
   activeTimeEntry: ID
-  status: String
+  status: UserAgreementStatus
   defaultWorkspace: ID
   memberships: [UserMembershipsInput]
   profile: ProfileInput

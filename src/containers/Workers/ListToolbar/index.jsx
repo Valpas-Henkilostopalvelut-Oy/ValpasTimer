@@ -18,11 +18,23 @@ const ListToolbar = ({ numSelected, selected, setSelected, reload }) => {
           const cognito = new CognitoIdentityServiceProvider();
           // Set the parameters for the AdminDeleteUser method
           const params = {
-            UserPoolId: "eu-west-1_tYXLeogj0",
+            UserPoolId: process.env.REACT_APP_USER_POOL_ID,
             Username: selected[i].Username,
           };
           // Call the AdminDeleteUser method
-          await cognito.adminDeleteUser(params).promise();
+          await cognito
+            .adminDeleteUser(params)
+            .promise()
+            .then(async () => {
+              const dataid = selected[0].Attributes.find((item) => item.Name === "custom:UserCreditails").Value;
+              await DataStore.query(UserCredentials, dataid).then(async (data) => {
+                await DataStore.save(
+                  UserCredentials.copyOf(data, (updated) => {
+                    updated.status = "DELETED";
+                  })
+                );
+              });
+            });
           console.log(`User ${selected[i].Username} deleted.`);
         } catch (error) {
           console.error(`Error deleting user: ${error}`);
@@ -52,7 +64,16 @@ const ListToolbar = ({ numSelected, selected, setSelected, reload }) => {
             },
           };
 
-          return await API.post(apiName, path, myInit);
+          return await API.post(apiName, path, myInit).then(async () => {
+            const dataid = selected[0].Attributes.find((item) => item.Name === "custom:UserCreditails").Value;
+            await DataStore.query(UserCredentials, dataid).then(async (data) => {
+              await DataStore.save(
+                UserCredentials.copyOf(data, (updated) => {
+                  updated.status = "DISABLED";
+                })
+              );
+            });
+          });
         }
       } catch (error) {
         console.warn(error);
@@ -75,7 +96,16 @@ const ListToolbar = ({ numSelected, selected, setSelected, reload }) => {
             },
           };
 
-          return await API.post(apiName, path, myInit);
+          return await API.post(apiName, path, myInit).then(async () => {
+            const dataid = selected[0].Attributes.find((item) => item.Name === "custom:UserCreditails").Value;
+            await DataStore.query(UserCredentials, dataid).then(async (data) => {
+              await DataStore.save(
+                UserCredentials.copyOf(data, (updated) => {
+                  updated.status = "ACTIVE";
+                })
+              );
+            });
+          });
         }
       } catch (error) {
         console.warn(error);

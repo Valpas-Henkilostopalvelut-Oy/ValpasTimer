@@ -152,6 +152,12 @@ enum Breakreason {
   ACCIDENT
 }
 
+enum UserAgreementStatus {
+  ACTIVE
+  DISABLED
+  DELETED
+}
+
 type Agreement
   @model
   @auth(
@@ -249,7 +255,7 @@ type UserCredentials
   id: ID!
   userId: String
   activeTimeEntry: ID
-  status: String
+  status: UserAgreementStatus
   defaultWorkspace: ID
   memberships: [UserMemberships]
   profile: Profile

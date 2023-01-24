@@ -142,7 +142,8 @@ function getWeekRN() {
 
 export function filterWeeks(weekArray) {
   let filteredWeeks = weekArray.filter((week) => {
-    return week >= getWeekRN() - 2 && week <= getWeekRN() + 2;
+    if (getWeekRN() % 2 === 0) return week.week === getWeekRN() - 1;
+    else return week.week === getWeekRN();
   });
   return filteredWeeks;
 }

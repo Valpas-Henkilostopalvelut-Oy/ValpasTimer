@@ -645,7 +645,9 @@ export const schema = {
                 "status": {
                     "name": "status",
                     "isArray": false,
-                    "type": "String",
+                    "type": {
+                        "enum": "UserAgreementStatus"
+                    },
                     "isRequired": false,
                     "attributes": []
                 },
@@ -825,6 +827,14 @@ export const schema = {
                 "WORKSAFETYPASS",
                 "FIREWORKCARD",
                 "ELECTRICALSAFETYPASS"
+            ]
+        },
+        "UserAgreementStatus": {
+            "name": "UserAgreementStatus",
+            "values": [
+                "ACTIVE",
+                "DISABLED",
+                "DELETED"
             ]
         }
     },
@@ -1380,5 +1390,5 @@ export const schema = {
         }
     },
     "codegenVersion": "3.3.4",
-    "version": "43f7b251a31bc4d440190ad9b01ef318"
+    "version": "34b811d8ac570b8b7294622ea2d95f4e"
 };

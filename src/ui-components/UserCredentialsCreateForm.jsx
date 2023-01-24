@@ -14,6 +14,7 @@ import {
   Grid,
   Icon,
   ScrollView,
+  SelectField,
   Text,
   TextField,
   useTheme,
@@ -183,7 +184,7 @@ export default function UserCredentialsCreateForm(props) {
   const initialValues = {
     userId: "",
     activeTimeEntry: "",
-    status: "",
+    status: undefined,
     defaultWorkspace: "",
     formChecked: [],
   };
@@ -349,10 +350,10 @@ export default function UserCredentialsCreateForm(props) {
         hasError={errors.activeTimeEntry?.hasError}
         {...getOverrideProps(overrides, "activeTimeEntry")}
       ></TextField>
-      <TextField
+      <SelectField
         label="Status"
-        isRequired={false}
-        isReadOnly={false}
+        placeholder="Please select an option"
+        isDisabled={false}
         value={status}
         onChange={(e) => {
           let { value } = e.target;
@@ -376,7 +377,23 @@ export default function UserCredentialsCreateForm(props) {
         errorMessage={errors.status?.errorMessage}
         hasError={errors.status?.hasError}
         {...getOverrideProps(overrides, "status")}
-      ></TextField>
+      >
+        <option
+          children="Active"
+          value="ACTIVE"
+          {...getOverrideProps(overrides, "statusoption0")}
+        ></option>
+        <option
+          children="Disabled"
+          value="DISABLED"
+          {...getOverrideProps(overrides, "statusoption1")}
+        ></option>
+        <option
+          children="Deleted"
+          value="DELETED"
+          {...getOverrideProps(overrides, "statusoption2")}
+        ></option>
+      </SelectField>
       <TextField
         label="Default workspace"
         isRequired={false}

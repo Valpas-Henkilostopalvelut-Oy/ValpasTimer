@@ -1,11 +1,16 @@
 import React, { useState, useEffect } from "react";
 import { Container, Typography, Box, Grid, Checkbox, CircularProgress } from "@mui/material";
 import { sortData } from "./services/datasort.jsx";
-import { DataStore } from "aws-amplify";
+import { DataStore, Hub } from "aws-amplify";
 import { TimeEntry, AllWorkSpaces } from "../../models/index.js";
 import { Row } from "./services/row.jsx";
 import { totalworkplacetime } from "./services/timecalc";
 import { Filter } from "./services/morebuttons.jsx";
+import { AddTimeShift } from "./services/addtimeshit.jsx";
+
+/**
+
+ */
 
 export const Library = () => {
   const [data, setData] = useState(null);
@@ -16,7 +21,7 @@ export const Library = () => {
     start: new Date(),
     end: new Date(),
   });
-  const [workers, setWorkers] = useState(null);
+  const [isEmpty, setEmpty] = useState(true);
 
   useEffect(() => {
     let isActive = true;
@@ -38,14 +43,24 @@ export const Library = () => {
 
     isActive && fetchData();
     return () => (isActive = false);
-  }, [filter.paid, filter.start, filter.end, filter.all]);
+  }, [filter.paid, filter.start, filter.end, filter.all, isEmpty]);
+
+  useEffect(() => {
+    Hub.listen("datastore", async (hubData) => {
+      const { event, data } = hubData.payload;
+      if (event === "outboxStatus") {
+        console.log(data);
+        setEmpty(data.isEmpty);
+      }
+    });
+  }, []);
 
   return (
     <Container>
       {data && works ? (
         <Box sx={{ height: "100vh" }}>
           <Grid container spacing={2} alignItems="center">
-            <Grid item xs={11}>
+            <Grid item xs={8}>
               <Typography
                 variant="h1"
                 sx={{
@@ -55,7 +70,10 @@ export const Library = () => {
                 Maksua odottavat
               </Typography>
             </Grid>
-            <Grid item xs={1} align="right">
+            <Grid item xs={2} align="right">
+              <AddTimeShift />
+            </Grid>
+            <Grid item xs={2} align="right">
               <Filter filter={filter} setFilter={setFilter} />
             </Grid>
           </Grid>

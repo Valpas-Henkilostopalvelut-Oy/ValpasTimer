@@ -45,6 +45,12 @@ export enum Workcardtype {
   ELECTRICALSAFETYPASS = "ELECTRICALSAFETYPASS"
 }
 
+export enum UserAgreementStatus {
+  ACTIVE = "ACTIVE",
+  DISABLED = "DISABLED",
+  DELETED = "DELETED"
+}
+
 type EagerUserAgreement = {
   readonly id?: string | null;
   readonly status?: Status | keyof typeof Status | null;
@@ -503,7 +509,7 @@ type EagerUserCredentials = {
   readonly id: string;
   readonly userId?: string | null;
   readonly activeTimeEntry?: string | null;
-  readonly status?: string | null;
+  readonly status?: UserAgreementStatus | keyof typeof UserAgreementStatus | null;
   readonly defaultWorkspace?: string | null;
   readonly memberships?: (UserMemberships | null)[] | null;
   readonly profile?: Profile | null;
@@ -518,7 +524,7 @@ type LazyUserCredentials = {
   readonly id: string;
   readonly userId?: string | null;
   readonly activeTimeEntry?: string | null;
-  readonly status?: string | null;
+  readonly status?: UserAgreementStatus | keyof typeof UserAgreementStatus | null;
   readonly defaultWorkspace?: string | null;
   readonly memberships?: (UserMemberships | null)[] | null;
   readonly profile?: Profile | null;

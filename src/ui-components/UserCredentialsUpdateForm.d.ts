@@ -5,7 +5,7 @@
  **************************************************************************/
 
 import * as React from "react";
-import { GridProps, TextFieldProps } from "@aws-amplify/ui-react";
+import { GridProps, SelectFieldProps, TextFieldProps } from "@aws-amplify/ui-react";
 import { EscapeHatchProps } from "@aws-amplify/ui-react/internal";
 import { UserCredentials } from "../models";
 export declare type ValidationResponse = {
@@ -32,7 +32,7 @@ export declare type UserCredentialsUpdateFormOverridesProps = {
     UserCredentialsUpdateFormGrid?: PrimitiveOverrideProps<GridProps>;
     userId?: PrimitiveOverrideProps<TextFieldProps>;
     activeTimeEntry?: PrimitiveOverrideProps<TextFieldProps>;
-    status?: PrimitiveOverrideProps<TextFieldProps>;
+    status?: PrimitiveOverrideProps<SelectFieldProps>;
     defaultWorkspace?: PrimitiveOverrideProps<TextFieldProps>;
     formChecked?: PrimitiveOverrideProps<TextFieldProps>;
 } & EscapeHatchProps;
