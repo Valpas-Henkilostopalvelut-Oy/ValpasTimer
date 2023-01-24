@@ -94,6 +94,14 @@ export const SidebarList = ({
       access: ["Admins"],
     },
     {
+      title: "Kirjasto",
+      type: "page",
+      icon: <WorkHistoryIcon />,
+      link: "/dashboard",
+      default: false,
+      access: ["Admins"],
+    },
+    {
       title: lang.projects,
       type: "page",
       icon: <WorkHistoryIcon />,

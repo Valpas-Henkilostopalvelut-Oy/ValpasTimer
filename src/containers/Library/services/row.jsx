@@ -25,8 +25,6 @@ export const Row = ({ item, all = true }) => {
     return () => (isActive = false);
   }, []);
 
-  console.log(filterWeeks(item.arr));
-
   const data = all ? item.arr : filterWeeks(item.arr);
   return data.map((workeritem, key) => <RowWeek key={key} item={workeritem} worker={worker} />);
 };
