@@ -21,7 +21,7 @@ import { ConfirmPage } from "./containers/ConfirmPage/index.jsx";
 import { AgreementAdminPanel } from "./containers/Agreement/AdminPanel/index.jsx";
 import { AgreementPage } from "./containers/Agreement/index.jsx";
 import { LandingPage } from "./containers/Landing/index.jsx";
-import { ApplicantLogin } from "./containers/Applicant/index.jsx";
+import { Library } from "./containers/Library/index.jsx";
 
 const Navigation = ({ isAuthenticated, groups }) => {
   const Redirect = () => <Navigate replace to="/login" />;
@@ -29,7 +29,6 @@ const Navigation = ({ isAuthenticated, groups }) => {
     <Routes>
       <Route path="*" element={<NotFound />} />
       <Route exact path="login" element={!isAuthenticated ? <Login /> : <Navigate replace to="/home" />} />
-      <Route exact path="login-applicant" element={!isAuthenticated ? <ApplicantLogin /> : <Navigate replace to="/home" />} />
       <Route exact path="signup" element={!isAuthenticated ? <Signup /> : <Navigate replace to="/home" />} />
       <Route exact path="confirm" element={!isAuthenticated ? <ConfirmPage /> : <Navigate replace to="/home" />} />
       <Route
@@ -48,6 +47,11 @@ const Navigation = ({ isAuthenticated, groups }) => {
         exact
         path="works"
         element={isAuthenticated ? groups.includes("Admins") ? <Works /> : <NoAccessPage /> : <Redirect />}
+      />
+      <Route
+        exact
+        path="dashboard"
+        element={isAuthenticated ? groups.includes("Admins") ? <Library /> : <NoAccessPage /> : <Redirect />}
       />
       <Route
         exact

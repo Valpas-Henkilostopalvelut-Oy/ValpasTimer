@@ -16,7 +16,6 @@ import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import { Time, EditSTime, EditETime } from "./times.jsx";
 import { Moreitem, Moreitemday } from "./buttons.jsx";
 import { TotalTime } from "./edittotaltime.jsx";
-import { EditDescription } from "./editdescription.jsx";
 import { SelectWork } from "./workplacechange.jsx";
 import { EditDate } from "./editdate.jsx";
 import { BreakitemMD, AddBreakMD, AddBreakSM, BreakitemSM } from "./break.jsx";

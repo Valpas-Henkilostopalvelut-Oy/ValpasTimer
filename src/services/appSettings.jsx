@@ -44,6 +44,7 @@ export const customPalette = {
       gray: "#707070",
       valpas: "#00adef",
       green: "#50c878",
+      orange: "#ff6600",
     },
     navbar: {
       main: "#00adef",
