@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Box, Table, TableCell, TableContainer, TableRow, Button, TableHead, TableBody } from "@mui/material";
+import { Box, Grid, Button } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import { AddCard } from "./addcard.jsx";
 import { Carditem } from "./cardlist.jsx";
@@ -41,39 +41,29 @@ import { PropTypes } from "prop-types";
 export const Cards = ({ data, workcards, id, isEmpty = false, lang }) => {
   const [open, setOpen] = useState(false);
   const handleClick = () => setOpen(!open);
-  console.log(workcards);
 
   return (
     <Box>
-      <TableContainer>
-        <Table aria-label="Card details table">
-          <TableHead>
-            <TableRow>
-              <TableCell width={"35%"}>{lang.cardtype}</TableCell>
-              <TableCell width={"35%"}>{lang.cardend}</TableCell>
-              <TableCell align="right">{lang.cardimage}</TableCell>
-              <TableCell align="right">
-                <Button variant="contained" color="primary" size="small" onClick={handleClick} fullWidth>
-                  Lisää
-                </Button>
-              </TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            <AddCard
-              open={open}
-              setOpen={setOpen}
-              id={id}
-              workcards={workcards}
-              data={data}
-              isEmpty={isEmpty}
-              lang={lang}
-            />
-            {workcards &&
-              workcards.map((card) => <Carditem key={card.id} card={card} data={data} isEmpty={isEmpty} lang={lang} />)}
-          </TableBody>
-        </Table>
-      </TableContainer>
+      <Grid container alignItems="center" spacing={2}>
+        <Grid item xs={12} align="right">
+          <Button variant="contained" color="primary" size="small" onClick={handleClick} fullWidth>
+            Lisää
+          </Button>
+        </Grid>
+        <Grid item xs={12}>
+          <AddCard
+            open={open}
+            setOpen={setOpen}
+            id={id}
+            workcards={workcards}
+            data={data}
+            isEmpty={isEmpty}
+            lang={lang}
+          />
+        </Grid>
+        {workcards &&
+          workcards.map((card) => <Carditem key={card.id} card={card} data={data} isEmpty={isEmpty} lang={lang} />)}
+      </Grid>
     </Box>
   );
 };

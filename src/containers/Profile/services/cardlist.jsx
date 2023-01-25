@@ -1,5 +1,5 @@
 import React from "react";
-import { TableCell, TableRow, Tooltip, Typography, IconButton } from "@mui/material";
+import { Tooltip, Typography, IconButton, Card, CardMedia, CardContent, CardActions, Grid } from "@mui/material";
 import { Cardtype } from "../../../models";
 import { Enddate } from "./date.jsx";
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
@@ -33,6 +33,7 @@ const downloadimage = async (card) => {
       let filename = card.id;
 
       const url = URL.createObjectURL(blod);
+      console.log(url);
       const a = document.createElement("a");
       a.href = url;
       a.download = filename;
@@ -45,7 +46,6 @@ const downloadimage = async (card) => {
       };
       a.addEventListener("click", clickHandler, false);
       a.click();
-      console.log(a);
       return a;
     })
     .catch((err) => {
@@ -55,13 +55,24 @@ const downloadimage = async (card) => {
 
 export const Carditem = ({ data, card, isEmpty = false, lang }) => {
   return (
-    <>
-      <TableRow>
-        <TableCell>{card.type === Cardtype.WORKCARD ? card.workcard : card.type}</TableCell>
-        <TableCell>
-          <Enddate card={card} />
-        </TableCell>
-        <TableCell align="right">
+    <Grid item xs={4}>
+      <Card sx={{ maxWidth: 345 }}>
+        <CardMedia component="img" />
+        <CardContent>
+          <Typography gutterBottom variant="p">
+            {card.type === Cardtype.WORKCARD ? card.workcard : card.type}
+          </Typography>
+          <Typography variant="body2" color="text.secondary">
+            {card.type === Cardtype.DRIVING ? (
+              card.drivinglicense.map((e) => {
+                return <DirectionsCarIcon key={e} />;
+              })
+            ) : (
+              <Enddate card={card} />
+            )}
+          </Typography>
+        </CardContent>
+        <CardActions>
           <IconButton aria-label="download card" disabled={!isEmpty} onClick={() => downloadimage(card)}>
             <Tooltip title={lang.uploadcardinfo}>
               <FileDownloadIcon
@@ -71,8 +82,6 @@ export const Carditem = ({ data, card, isEmpty = false, lang }) => {
               />
             </Tooltip>
           </IconButton>
-        </TableCell>
-        <TableCell align="right">
           <IconButton aria-label="delete card" disabled={!isEmpty} onClick={() => deleteimage(card, data)}>
             <Tooltip title={lang.delete}>
               <DeleteForeverIcon
@@ -82,21 +91,9 @@ export const Carditem = ({ data, card, isEmpty = false, lang }) => {
               />
             </Tooltip>
           </IconButton>
-        </TableCell>
-      </TableRow>
-      {card.type === Cardtype.DRIVING && (
-        <TableRow>
-          <TableCell colSpan={4}>
-            <Typography variant="body2" color="text.secondary" component="p">
-              {lang.category}: {card.drivinglicense.toString()}
-            </Typography>
-            <Typography variant="body2" color="text.secondary" component="p">
-              {lang.owncar}: {card.owncar ? "Kyllä" : "Ei"}
-            </Typography>
-          </TableCell>
-        </TableRow>
-      )}
-    </>
+        </CardActions>
+      </Card>
+    </Grid>
   );
 };
 

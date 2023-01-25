@@ -12,8 +12,6 @@ import {
   Tooltip,
   Badge,
   Button,
-  TableRow,
-  TableCell,
 } from "@mui/material";
 import { Storage, DataStore } from "aws-amplify";
 import { UserCredentials, Cardtype, Workcardtype } from "../../../models";
@@ -144,69 +142,61 @@ export const AddCard = ({ data, workcards, open, isEmpty, lang }) => {
   };
 
   return (
-    open && (
-      <>
-        <TableRow>
-          <TableCell>
-            <SelectCardType selected={selected} setSelect={setSelected} lang={lang} />
-          </TableCell>
-          <TableCell>
-            <SelectEnd date={cardEnd} setDate={setCardEnd} setError={setError} lang={lang} />
-          </TableCell>
-          <TableCell align="right">
-            <Input
+    <Collapse in={open}>
+      <Grid container spacing={2} sx={{ mt: 2 }} alignItems="center">
+        <Grid item xs={5}>
+          <SelectCardType selected={selected} setSelect={setSelected} lang={lang} />
+        </Grid>
+
+        <Grid item xs={3}>
+          <SelectEnd date={cardEnd} setDate={setCardEnd} setError={setError} lang={lang} />
+        </Grid>
+
+        <Grid item xs={1}>
+          <IconButton
+            color="primary"
+            aria-label="upload picture"
+            component="label"
+            sx={{
+              color: !card ? "grey" : "primary.main",
+            }}
+          >
+            <input
               accept="image/*"
-              id="contained-button-file"
-              multiple
               type="file"
               onChange={(e) => {
                 setCard(e.target.files[0]);
               }}
+              hidden
             />
-            <IconButton
-              color="primary"
-              aria-label="upload picture"
-              component="span"
-              sx={{
-                color: !card ? "grey" : "primary.main",
-              }}
-            >
-              <Tooltip title={lang.uploadcardinfo}>
-                <Badge badgeContent={card ? 1 : 0} color="primary">
-                  <AttachFileIcon />
-                </Badge>
-              </Tooltip>
-            </IconButton>
-          </TableCell>
-          <TableCell>
-            <Button
-              onClick={onUpload}
-              disabled={isDisabled()}
-              variant="contained"
-              color="primary"
-              size="small"
-              fullWidth
-            >
-              {lang.uploadcard}
-            </Button>
-          </TableCell>
-        </TableRow>
-        <TableRow>
-          <TableCell colSpan={4}>
-            <Collapse in={selected === Cardtype.DRIVING} timeout="auto" unmountOnExit>
-              <Driverlicense
-                data={data}
-                checked={checked}
-                setChecked={setChecked}
-                ownCar={ownCar}
-                setOwnCar={setOwnCar}
-                lang={lang}
-              />
-            </Collapse>
-          </TableCell>
-        </TableRow>
-      </>
-    )
+            <Tooltip title={lang.uploadcardinfo}>
+              <Badge badgeContent={card ? 1 : 0} color="primary">
+                <AttachFileIcon />
+              </Badge>
+            </Tooltip>
+          </IconButton>
+        </Grid>
+
+        <Grid item xs={3}>
+          <Button onClick={onUpload} disabled={isDisabled()} variant="contained" color="primary" size="small" fullWidth>
+            {lang.uploadcard}
+          </Button>
+        </Grid>
+
+        <Grid item xs={12}>
+          <Collapse in={selected === Cardtype.DRIVING} timeout="auto" unmountOnExit>
+            <Driverlicense
+              data={data}
+              checked={checked}
+              setChecked={setChecked}
+              ownCar={ownCar}
+              setOwnCar={setOwnCar}
+              lang={lang}
+            />
+          </Collapse>
+        </Grid>
+      </Grid>
+    </Collapse>
   );
 };
 

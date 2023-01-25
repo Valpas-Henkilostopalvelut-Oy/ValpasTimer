@@ -3,6 +3,7 @@ import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { Typography, Box, TextField } from "@mui/material";
+import fi from "date-fns/locale/fi";
 
 export const shiftdate = (date) => {
   let d = new Date(date);
@@ -61,10 +62,11 @@ export const Daterangestart = ({
   setFilter,
 }) => {
   return (
-    <LocalizationProvider dateAdapter={AdapterDateFns}>
+    <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={fi}>
       <DatePicker
         label="Start"
         value={filter.start}
+        disableMaskedInput
         onChange={(newValue) => {
           setFilter({ ...filter, start: newValue });
         }}
@@ -84,10 +86,11 @@ export const Daterangeend = ({
   setFilter,
 }) => {
   return (
-    <LocalizationProvider dateAdapter={AdapterDateFns}>
+    <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={fi}>
       <DatePicker
         label="End"
         value={filter.end}
+        disableMaskedInput
         onChange={(newValue) => {
           setFilter({ ...filter, end: newValue });
         }}
