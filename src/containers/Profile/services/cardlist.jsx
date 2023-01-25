@@ -66,10 +66,9 @@ export const Carditem = ({ data, card, isEmpty = false, lang }) => {
     });
   }, [card]);
 
-  console.log(url);
   return (
-    <Grid item xs={4}>
-      <Card sx={{ maxWidth: 345 }}>
+    <Grid item xs={12} sm={6} md={4}>
+      <Card sx={{ maxWidth: 600 }}>
         <CardMedia component="img" height="140" image={url} alt="card" />
         <CardContent>
           <Typography gutterBottom variant="p">

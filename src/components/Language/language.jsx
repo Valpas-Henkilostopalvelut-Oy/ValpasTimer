@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Select, MenuItem, InputLabel, FormControl } from "@mui/material";
 import { eng } from "./langs/eng.js";
 import { fin } from "./langs/fin.js";
+import { ukr } from "./langs/ukr.js";
 import { useAppContext } from "../../services/contextLib.jsx";
 import { PropTypes } from "prop-types";
 
@@ -20,6 +21,7 @@ export const Language = ({ lang, setLang }) => {
       let l = [];
       l.push(eng);
       l.push(fin);
+      l.push(ukr);
 
       const lang = localStorage.getItem("lang");
 

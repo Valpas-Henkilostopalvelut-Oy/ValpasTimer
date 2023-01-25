@@ -41,6 +41,8 @@ export const fin = {
         nationality: "Kansalaisuus",
       },
       cards: {
+        add: "Lisää kortti",
+        close: "Sulje",
         cards: "Kortit",
         cardtype: "Tyyppi",
         cardend: "Voimassaolo",

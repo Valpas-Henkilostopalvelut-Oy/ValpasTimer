@@ -18,8 +18,8 @@ import { UserCredentials, Cardtype, Workcardtype } from "../../../models";
 import AttachFileIcon from "@mui/icons-material/AttachFile";
 import { Driverlicense } from "./driverlicense.jsx";
 import { SelectEnd } from "./date.jsx";
-import FileUploadIcon from "@mui/icons-material/FileUpload";
 import { PropTypes } from "prop-types";
+import { Nosatefycard } from "./nosatefycard.jsx";
 
 const upload = async (file, id) => {
   let type = String(file.name).split(".").pop();
@@ -191,6 +191,12 @@ export const AddCard = ({ data, workcards, open, isEmpty, lang }) => {
             />
           </Collapse>
         </Grid>
+
+        {workcards.filter((card) => card.workcard === Workcardtype.WORKSAFETYPASS).length === 0 && (
+          <Grid item xs={12} sm={6} md={4}>
+            <Nosatefycard data={data} workcards={workcards} />
+          </Grid>
+        )}
       </Grid>
     </Collapse>
   );
