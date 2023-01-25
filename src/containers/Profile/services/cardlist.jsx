@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Tooltip, Typography, IconButton, Card, CardMedia, CardContent, CardActions, Grid } from "@mui/material";
 import { Cardtype } from "../../../models";
 import { Enddate } from "./date.jsx";
@@ -53,11 +53,24 @@ const downloadimage = async (card) => {
     });
 };
 
+const loadimg = async (card) => {
+  return await Storage.get(card.id, { level: "private" });
+};
+
 export const Carditem = ({ data, card, isEmpty = false, lang }) => {
+  const [url, setUrl] = useState("");
+
+  useEffect(() => {
+    loadimg(card).then((e) => {
+      setUrl(e);
+    });
+  }, [card]);
+
+  console.log(url);
   return (
     <Grid item xs={4}>
       <Card sx={{ maxWidth: 345 }}>
-        <CardMedia component="img" />
+        <CardMedia component="img" height="140" image={url} alt="card" />
         <CardContent>
           <Typography gutterBottom variant="p">
             {card.type === Cardtype.WORKCARD ? card.workcard : card.type}

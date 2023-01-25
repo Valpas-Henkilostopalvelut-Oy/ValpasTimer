@@ -21,10 +21,6 @@ import { SelectEnd } from "./date.jsx";
 import FileUploadIcon from "@mui/icons-material/FileUpload";
 import { PropTypes } from "prop-types";
 
-const Input = styled("input")({
-  display: "none",
-});
-
 const upload = async (file, id) => {
   let type = String(file.name).split(".").pop();
 
@@ -148,7 +144,7 @@ export const AddCard = ({ data, workcards, open, isEmpty, lang }) => {
           <SelectCardType selected={selected} setSelect={setSelected} lang={lang} />
         </Grid>
 
-        <Grid item xs={3}>
+        <Grid item xs={4}>
           <SelectEnd date={cardEnd} setDate={setCardEnd} setError={setError} lang={lang} />
         </Grid>
 
@@ -177,7 +173,7 @@ export const AddCard = ({ data, workcards, open, isEmpty, lang }) => {
           </IconButton>
         </Grid>
 
-        <Grid item xs={3}>
+        <Grid item xs={2}>
           <Button onClick={onUpload} disabled={isDisabled()} variant="contained" color="primary" size="small" fullWidth>
             {lang.uploadcard}
           </Button>

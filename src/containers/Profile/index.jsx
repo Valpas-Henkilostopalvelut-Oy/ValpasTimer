@@ -5,7 +5,7 @@ import { Auth, DataStore, Hub } from "aws-amplify";
 import { UserCredentials } from "../../models";
 import { Details } from "./services/details.jsx";
 import { Cards } from "./services/cards.jsx";
-import { profilelang } from "./services/lang.jsx";
+import { useAppContext } from "../../services/contextLib";
 
 export const Profile = () => {
   const [value, setValue] = useState("1");
@@ -15,6 +15,8 @@ export const Profile = () => {
     datastore: null,
     workcards: null,
   });
+  const { langValue } = useAppContext();
+  const profilelang = langValue.profile;
 
   useEffect(() => {
     let isMounted = true;
