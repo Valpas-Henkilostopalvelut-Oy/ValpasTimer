@@ -8,6 +8,7 @@ import { UserCredentials } from "../../../models";
 import { PropTypes } from "prop-types";
 import DirectionsCarIcon from "@mui/icons-material/DirectionsCar";
 import { Swiper } from "swiper";
+import { cardtypes } from "./cards";
 
 const deleteimage = async (card, data) => {
   const workcards = data.workcards.filter((e) => e.id !== card.id);
@@ -62,8 +63,19 @@ const loadimg = async (card) => {
   });
 };
 
+const Enddate = ({ date }) => {
+  date = new Date(date);
+  return (
+    <Typography variant="body2" color="text.secondary">
+      {date.toLocaleDateString("fi-FI")}
+    </Typography>
+  );
+};
+
 export const Carditem = ({ data, card, isEmpty = false, lang }) => {
   const [imgs, setImgs] = useState([]);
+
+  console.log();
 
   useEffect(() => {
     let isActive = true;
@@ -86,13 +98,14 @@ export const Carditem = ({ data, card, isEmpty = false, lang }) => {
         <CardMedia component="img" height="140" image={imgs[0]} alt="card" />
         <CardContent>
           <Typography gutterBottom variant="p">
-            {card.type === Cardtype.WORKCARD ? card.workcard : card.type}
+            {cardtypes(lang.types).find((e) => e.id === card.type).name}
+          </Typography>
+          <Typography variant="body2" color="text.secondary" sx={{ display: "flex", alignItems: "center" }}>
+            {card.owncar && card.type === Cardtype.DRIVING && <DirectionsCarIcon />}{" "}
+            {card.type === Cardtype.DRIVING && card.drivinglicense.join(", ")}
           </Typography>
           <Typography variant="body2" color="text.secondary">
-            {card.type === Cardtype.DRIVING &&
-              card.drivinglicense.map((e) => {
-                return <DirectionsCarIcon key={e} />;
-              })}
+            <Enddate date={card.cardend} />
           </Typography>
         </CardContent>
         <CardActions>

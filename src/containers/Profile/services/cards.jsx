@@ -1,9 +1,24 @@
 import React, { useState } from "react";
 import { Box, Grid, Button, Typography, Collapse, Divider } from "@mui/material";
+import { Cardtype } from "../../../models";
 import AddIcon from "@mui/icons-material/Add";
 import { AddCard } from "./addcard.jsx";
 import { Carditem } from "./cardlist.jsx";
 import { PropTypes } from "prop-types";
+import img from "../assets/tyoturvallisuuskortti-2022.png";
+
+export const cardtypes = (lang) => {
+  return [
+    { id: Cardtype.ID, name: lang.id, disabled: false, img: "" },
+    { id: Cardtype.PASSPORT, name: lang.passport, disabled: false, img: "" },
+    { id: Cardtype.DRIVING, name: lang.driving, disabled: false, img: "" },
+    { id: Cardtype.HYGIENEPASS, name: lang.hygienepass, disabled: false, img: "" },
+    { id: Cardtype.WORKSAFETYPASS, name: lang.worksafetypass, disabled: false, img: img },
+    { id: Cardtype.FIREWORKCARD, name: lang.fireworkcard, disabled: false, img: "" },
+    { id: Cardtype.ELECTRICALSAFETYPASS, name: lang.electricalsafetypass, disabled: false, img: "" },
+    { id: Cardtype.OTHER, name: lang.other, disabled: false },
+  ];
+};
 
 export const Cards = ({ data, workcards, id, isEmpty = false, lang }) => {
   const [open, setOpen] = useState(false);

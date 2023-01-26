@@ -9,6 +9,7 @@ import {
   CardActions,
   InputBase,
   Box,
+  Collapse,
 } from "@mui/material";
 import { Cardtype } from "../../../models";
 import SaveIcon from "@mui/icons-material/Save";
@@ -18,6 +19,7 @@ import { UserCredentials } from "../../../models";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import fi from "date-fns/locale/fi";
+import { Driverlicense } from "./driverlicense";
 
 const upload = async (file) => {
   let type = String(file.name).split(".").pop();
@@ -55,7 +57,7 @@ const Selectend = ({ date, setDate }) => {
   );
 };
 
-const onUpload = async (images, date, workcards, card, data) => {
+const onUpload = async (images, date, workcards, card, data, drivinglicense, owncar) => {
   if (!images) return;
   let id = Date.now();
   let filenames = [];
@@ -66,15 +68,13 @@ const onUpload = async (images, date, workcards, card, data) => {
     });
   }
 
-  console.log(filenames);
-
   if (filenames.length === images.length) {
     const carddata = {
       id: String(id),
       type: card.id,
       cardend: new Date(date).toISOString(),
-      drivinglicense: null,
-      owncar: null,
+      drivinglicense: card.id === Cardtype.DRIVING ? drivinglicense : null,
+      owncar: card.id === Cardtype.DRIVING ? owncar : null,
       files: filenames,
     };
     const user = await DataStore.query(UserCredentials, data.id);
@@ -92,10 +92,14 @@ export const Notaddedcard = ({ lang, data, workcards, card, isEmpty }) => {
   const [date, setDate] = useState(new Date());
   const [image, setImage] = useState(null);
   const img = card.img;
+  const [checked, setChecked] = useState([]);
+  const [ownCar, setOwnCar] = useState(false);
 
   const handleUpload = async () => {
-    onUpload(image, date, workcards, card, data);
+    onUpload(image, date, workcards, card, data, checked, ownCar);
   };
+
+  console.log(lang);
 
   return (
     <Card
@@ -131,6 +135,19 @@ export const Notaddedcard = ({ lang, data, workcards, card, isEmpty }) => {
       <CardContent sx={{ display: "flex", flexDirection: "column" }}>
         <Typography variant="p">{card.name}</Typography>
         <Selectend date={date} setDate={setDate} />
+        {card.id === Cardtype.DRIVING && (
+          <Collapse in={image !== null}>
+            <Box height={150} sx={{ overflow: "auto" }}>
+              <Driverlicense
+                checked={checked}
+                setChecked={setChecked}
+                ownCar={ownCar}
+                setOwnCar={setOwnCar}
+                lang={lang}
+              />
+            </Box>
+          </Collapse>
+        )}
       </CardContent>
       <CardActions>
         <IconButton aria-label="Save" onClick={handleUpload} disabled={!image}>
