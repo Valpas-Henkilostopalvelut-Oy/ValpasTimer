@@ -23,7 +23,6 @@ import { Driverlicense } from "./driverlicense";
 
 const upload = async (file) => {
   let type = String(file.name).split(".").pop();
-  console.log(file.name);
 
   try {
     return await Storage.put(file.name, file, {
@@ -82,9 +81,7 @@ const onUpload = async (images, date, workcards, card, data, drivinglicense, own
       UserCredentials.copyOf(user, (updated) => {
         workcards !== null ? (updated.workcards = [...workcards, carddata]) : (updated.workcards = [carddata]);
       })
-    ).then((e) => {
-      console.log(e);
-    });
+    );
   }
 };
 
@@ -98,8 +95,6 @@ export const Notaddedcard = ({ lang, data, workcards, card, isEmpty }) => {
   const handleUpload = async () => {
     onUpload(image, date, workcards, card, data, checked, ownCar);
   };
-
-  console.log(lang);
 
   return (
     <Card

@@ -26,11 +26,10 @@ const onSave = async (idnumber, phone, IBAN, locale, birthdate, nationality, clo
         birthdate: birthdate,
         "custom:nationality": nationality,
       }).then((e) => {
-        console.log(e);
         close();
       });
     })
-    .catch((err) => console.log(err));
+    .catch((err) => console.warn(err));
 };
 
 export const Details = ({ cognito, data, lang }) => {

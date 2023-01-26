@@ -7,7 +7,7 @@ import { Storage, DataStore } from "aws-amplify";
 import { UserCredentials } from "../../../models";
 import { PropTypes } from "prop-types";
 import DirectionsCarIcon from "@mui/icons-material/DirectionsCar";
-import { Swiper } from "swiper";
+import Carousel from "react-material-ui-carousel";
 import { cardtypes } from "./cards";
 
 const deleteimage = async (card, data) => {
@@ -34,7 +34,6 @@ const downloadimage = async (card) => {
       let filename = card.id;
 
       const url = URL.createObjectURL(blod);
-      console.log(url);
       const a = document.createElement("a");
       a.href = url;
       a.download = filename;
@@ -75,8 +74,6 @@ const Enddate = ({ date }) => {
 export const Carditem = ({ data, card, isEmpty = false, lang }) => {
   const [imgs, setImgs] = useState([]);
 
-  console.log();
-
   useEffect(() => {
     let isActive = true;
 
@@ -95,7 +92,16 @@ export const Carditem = ({ data, card, isEmpty = false, lang }) => {
   return (
     <Grid item xs={12} sm={6} md={4} lg={3}>
       <Card sx={{ maxWidth: 600 }}>
-        <CardMedia component="img" height="140" image={imgs[0]} alt="card" />
+        {imgs.length > 1 ? (
+          <Carousel autoPlay={false} animation="slide" indicators={false} navButtonsAlwaysVisible={false} swipe={true}>
+            {imgs.map((img, i) => (
+              <CardMedia key={i} component="img" height="140" image={img} alt="card" />
+            ))}
+          </Carousel>
+        ) : (
+          <CardMedia component="img" height="140" image={imgs[0]} alt="card" />
+        )}
+
         <CardContent>
           <Typography gutterBottom variant="p">
             {cardtypes(lang.types).find((e) => e.id === card.type).name}

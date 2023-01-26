@@ -53,7 +53,6 @@ export const EditETime = ({ date }) => {
         date={new Date(date.timeInterval.end)}
         onChange={async (t) =>
           await updateETime(date, t, setSnack).then((e) => {
-            console.log(e);
             setSnack(true);
           })
         }
