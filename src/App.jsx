@@ -12,6 +12,7 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { customPalette } from "./services/appSettings.jsx";
 import { eng } from "./components/Language/langs/eng.js";
 import { fin } from "./components/Language/langs/fin.js";
+import { ukr } from "./components/Language/langs/ukr.js";
 
 function App() {
   const [isAuthenticated, userHasAuthenticated] = useState(false);
@@ -19,10 +20,8 @@ function App() {
   const [appLoading, setAppLoading] = useState(true);
   const [language, setLanguage] = useState("");
   const [langValue, setLangValue] = useState({});
-
   const [groups, setGroups] = useState([]);
   const [openDrawer, setOpenDrawer] = useState(false);
-
   const theme = createTheme(customPalette);
 
   useEffect(() => {
@@ -77,6 +76,9 @@ function App() {
           setLangValue(eng.main);
         } else if (lang === "Finnish") {
           setLangValue(fin.main);
+        }
+        if (lang === "Українська") {
+          setLangValue(ukr.main);
         }
       } else {
         setLangValue(eng.main);
