@@ -1,15 +1,15 @@
 import React, { useState } from "react";
 import { Box, Grid, Button, Typography, Collapse, Divider } from "@mui/material";
 import { Cardtype } from "../../../models";
-import AddIcon from "@mui/icons-material/Add";
 import { AddCard } from "./addcard.jsx";
 import { Carditem } from "./cardlist.jsx";
 import { PropTypes } from "prop-types";
 import img from "../assets/tyoturvallisuuskortti-2022.png";
+import img2 from "../assets/henkilokortti.jpg";
 
 export const cardtypes = (lang) => {
   return [
-    { id: Cardtype.ID, name: lang.id, disabled: false, img: "" },
+    { id: Cardtype.ID, name: lang.id, disabled: false, img: img2 },
     { id: Cardtype.PASSPORT, name: lang.passport, disabled: false, img: "" },
     { id: Cardtype.DRIVING, name: lang.driving, disabled: false, img: "" },
     { id: Cardtype.HYGIENEPASS, name: lang.hygienepass, disabled: false, img: "" },
@@ -68,8 +68,9 @@ export const Cards = ({ data, workcards, id, isEmpty = false, lang }) => {
 };
 
 Cards.propTypes = {
-  data: PropTypes.object,
-  workcards: PropTypes.array,
-  id: PropTypes.string,
-  isEmpty: PropTypes.bool,
+  data: PropTypes.object.isRequired,
+  workcards: PropTypes.array.isRequired,
+  id: PropTypes.string.isRequired,
+  isEmpty: PropTypes.bool.isRequired,
+  lang: PropTypes.object.isRequired,
 };

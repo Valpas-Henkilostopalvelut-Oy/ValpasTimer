@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   Tooltip,
   Typography,
@@ -7,23 +7,22 @@ import {
   CardMedia,
   CardContent,
   CardActions,
-  InputBase,
   Box,
   Collapse,
+  TextField,
+  Stack,
 } from "@mui/material";
 import { Cardtype } from "../../../models";
 import SaveIcon from "@mui/icons-material/Save";
-import AddIcon from "@mui/icons-material/Add";
 import { Storage, DataStore } from "aws-amplify";
 import { UserCredentials } from "../../../models";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import fi from "date-fns/locale/fi";
 import { Driverlicense } from "./driverlicense";
+import { PropTypes } from "prop-types";
 
 const upload = async (file) => {
-  let type = String(file.name).split(".").pop();
-
   try {
     return await Storage.put(file.name, file, {
       level: "protected",
@@ -48,8 +47,7 @@ const Selectend = ({ date, setDate }) => {
         value={date}
         onChange={(newValue) => setDate(newValue)}
         renderInput={(params) => {
-          const { InputProps, ...otherProps } = params;
-          return <InputBase {...otherProps} />;
+          return <TextField variant="standard" {...params} />;
         }}
       />
     </LocalizationProvider>
@@ -128,21 +126,23 @@ export const Notaddedcard = ({ lang, data, workcards, card, isEmpty }) => {
       </CardMedia>
 
       <CardContent sx={{ display: "flex", flexDirection: "column" }}>
-        <Typography variant="p">{card.name}</Typography>
-        <Selectend date={date} setDate={setDate} />
-        {card.id === Cardtype.DRIVING && (
-          <Collapse in={image !== null}>
-            <Box height={150} sx={{ overflow: "auto" }}>
-              <Driverlicense
-                checked={checked}
-                setChecked={setChecked}
-                ownCar={ownCar}
-                setOwnCar={setOwnCar}
-                lang={lang}
-              />
-            </Box>
-          </Collapse>
-        )}
+        <Stack spacing={2}>
+          <Typography variant="p">{card.name}</Typography>
+          <Selectend date={date} setDate={setDate} />
+          {card.id === Cardtype.DRIVING && (
+            <Collapse in={image !== null}>
+              <Box height={150} sx={{ overflow: "auto" }}>
+                <Driverlicense
+                  checked={checked}
+                  setChecked={setChecked}
+                  ownCar={ownCar}
+                  setOwnCar={setOwnCar}
+                  lang={lang}
+                />
+              </Box>
+            </Collapse>
+          )}
+        </Stack>
       </CardContent>
       <CardActions>
         <IconButton aria-label="Save" onClick={handleUpload} disabled={!image}>
@@ -158,3 +158,17 @@ export const Notaddedcard = ({ lang, data, workcards, card, isEmpty }) => {
     </Card>
   );
 };
+
+Notaddedcard.propTypes = {
+  lang: PropTypes.object,
+  data: PropTypes.object,
+  workcards: PropTypes.array,
+  card: PropTypes.object,
+  isEmpty: PropTypes.bool,
+};
+
+Selectend.propTypes = {
+  date: PropTypes.object,
+  setDate: PropTypes.func,
+};
+

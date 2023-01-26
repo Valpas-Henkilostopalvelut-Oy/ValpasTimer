@@ -58,14 +58,15 @@ export const Driverlicense = ({ checked, setChecked, ownCar = false, setOwnCar, 
 };
 
 Driverlicense.propTypes = {
-  data: PropTypes.object,
-  checked: PropTypes.array,
-  setChecked: PropTypes.func,
+  checked: PropTypes.array.isRequired,
+  setChecked: PropTypes.func.isRequired,
   ownCar: PropTypes.bool,
   setOwnCar: PropTypes.func,
+  lang: PropTypes.object.isRequired,
 };
 
 OwnCar.propTypes = {
-  ownCar: PropTypes.bool,
-  setOwnCar: PropTypes.func,
+  ownCar: PropTypes.bool.isRequired,
+  setOwnCar: PropTypes.func.isRequired,
+  lang: PropTypes.object.isRequired,
 };

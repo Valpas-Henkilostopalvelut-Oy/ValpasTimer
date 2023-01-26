@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Box, Table, TableBody, TableCell, TableContainer, TableRow, TableHead, IconButton } from "@mui/material";
 import { PropTypes } from "prop-types";
 import EditIcon from "@mui/icons-material/Edit";
@@ -9,12 +9,7 @@ import { IBAN } from "./components/iban.jsx";
 import { City } from "./components/city";
 import { Birthdate } from "./components/birthdate";
 import { Nationality } from "./components/nationality";
-import { Auth, DataStore } from "aws-amplify";
-import { UserCredentials } from "../../../models";
-
-const phone = (phone) => {
-  phone = String(phone);
-};
+import { Auth } from "aws-amplify";
 
 const onSave = async (idnumber, phone, IBAN, locale, birthdate, nationality, close) => {
   await Auth.currentAuthenticatedUser()
@@ -25,7 +20,7 @@ const onSave = async (idnumber, phone, IBAN, locale, birthdate, nationality, clo
         locale: locale,
         birthdate: birthdate,
         "custom:nationality": nationality,
-      }).then((e) => {
+      }).then(() => {
         close();
       });
     })
@@ -37,7 +32,7 @@ export const Details = ({ cognito, data, lang }) => {
   const [idnumber, setIdnumber] = useState(
     cognito["custom:id_number"] !== undefined ? cognito["custom:id_number"] : ""
   );
-  const [phone, setPhone] = useState(cognito.phone_number !== undefined ? cognito.phone_number : "");
+  const phone = cognito.phone_number !== undefined ? cognito.phone_number : "";
   const [iban, setIban] = useState(cognito["custom:iban"] !== undefined ? cognito["custom:iban"] : "");
   const [locale, setLocale] = useState(cognito.locale !== undefined ? cognito.locale : "");
   const [birthdate, setBirthdate] = useState(cognito.birthdate !== undefined ? cognito.birthdate : "");
@@ -106,6 +101,7 @@ export const Details = ({ cognito, data, lang }) => {
 };
 
 Details.propTypes = {
-  cognito: PropTypes.object.isRequired,
-  data: PropTypes.object.isRequired,
+  cognito: PropTypes.object,
+  data: PropTypes.object,
+  lang: PropTypes.object,
 };
