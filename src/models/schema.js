@@ -800,8 +800,12 @@ export const schema = {
             "values": [
                 "ID",
                 "PASSPORT",
-                "WORKCARD",
                 "DRIVING",
+                "HYGIENEPASS",
+                "WORKSAFETYPASS",
+                "FIREWORKCARD",
+                "ELECTRICALSAFETYPASS",
+                "VISA",
                 "OTHER"
             ]
         },
@@ -818,15 +822,6 @@ export const schema = {
                 "CE",
                 "D",
                 "D1"
-            ]
-        },
-        "Workcardtype": {
-            "name": "Workcardtype",
-            "values": [
-                "HYGIENEPASS",
-                "WORKSAFETYPASS",
-                "FIREWORKCARD",
-                "ELECTRICALSAFETYPASS"
             ]
         },
         "UserAgreementStatus": {
@@ -1370,25 +1365,24 @@ export const schema = {
                     "isRequired": false,
                     "attributes": []
                 },
-                "workcard": {
-                    "name": "workcard",
-                    "isArray": false,
-                    "type": {
-                        "enum": "Workcardtype"
-                    },
-                    "isRequired": false,
-                    "attributes": []
-                },
                 "othercard": {
                     "name": "othercard",
                     "isArray": false,
                     "type": "String",
                     "isRequired": false,
                     "attributes": []
+                },
+                "files": {
+                    "name": "files",
+                    "isArray": true,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": [],
+                    "isArrayNullable": true
                 }
             }
         }
     },
     "codegenVersion": "3.3.4",
-    "version": "34b811d8ac570b8b7294622ea2d95f4e"
+    "version": "1138e645363f7b0d0fc517f111ed4f40"
 };

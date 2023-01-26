@@ -410,8 +410,8 @@ export const getUserCredentials = /* GraphQL */ `
         type
         drivinglicense
         owncar
-        workcard
         othercard
+        files
       }
       createdAt
       updatedAt

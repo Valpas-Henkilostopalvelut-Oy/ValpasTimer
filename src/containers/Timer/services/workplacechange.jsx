@@ -26,8 +26,7 @@ const updateWorkplace = async (date, newValue, work) => {
       update.workspaceId = newValue;
       update.work = work;
     })
-  )
-  .catch((e) => console.warn(e));
+  ).catch((e) => console.warn(e));
 };
 
 export const SelectWork = ({
@@ -91,7 +90,7 @@ export const SelectWork = ({
           textOverflow={"ellipsis"}
           sx={{ cursor: !isSent && "pointer", color: !work && "default.valpas" }}
         >
-          {maxText(name, 10)}
+          {maxText(String(name), 10)}
         </Typography>
         <Dialog open={open && !isSent} onClose={handleCancel} maxWidth={"xs"} fullWidth>
           <DialogTitle>{lang.workplace}</DialogTitle>

@@ -20,8 +20,12 @@ const Breakreason = {
 const Cardtype = {
   "ID": "ID",
   "PASSPORT": "PASSPORT",
-  "WORKCARD": "WORKCARD",
   "DRIVING": "DRIVING",
+  "HYGIENEPASS": "HYGIENEPASS",
+  "WORKSAFETYPASS": "WORKSAFETYPASS",
+  "FIREWORKCARD": "FIREWORKCARD",
+  "ELECTRICALSAFETYPASS": "ELECTRICALSAFETYPASS",
+  "VISA": "VISA",
   "OTHER": "OTHER"
 };
 
@@ -36,13 +40,6 @@ const Drivingtype = {
   "CE": "CE",
   "D": "D",
   "D1": "D1"
-};
-
-const Workcardtype = {
-  "HYGIENEPASS": "HYGIENEPASS",
-  "WORKSAFETYPASS": "WORKSAFETYPASS",
-  "FIREWORKCARD": "FIREWORKCARD",
-  "ELECTRICALSAFETYPASS": "ELECTRICALSAFETYPASS"
 };
 
 const UserAgreementStatus = {
@@ -63,7 +60,6 @@ export {
   Breakreason,
   Cardtype,
   Drivingtype,
-  Workcardtype,
   UserAgreementStatus,
   UserAgreement,
   User,

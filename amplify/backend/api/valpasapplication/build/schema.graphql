@@ -107,15 +107,8 @@ type WorkCard @aws_iam @aws_cognito_user_pools {
   type: Cardtype
   drivinglicense: [Drivingtype]
   owncar: Boolean
-  workcard: Workcardtype
   othercard: String
-}
-
-enum Workcardtype {
-  HYGIENEPASS
-  WORKSAFETYPASS
-  FIREWORKCARD
-  ELECTRICALSAFETYPASS
+  files: [String]
 }
 
 enum Drivingtype {
@@ -134,8 +127,12 @@ enum Drivingtype {
 enum Cardtype {
   ID
   PASSPORT
-  WORKCARD
   DRIVING
+  HYGIENEPASS
+  WORKSAFETYPASS
+  FIREWORKCARD
+  ELECTRICALSAFETYPASS
+  VISA
   OTHER
 }
 
@@ -871,8 +868,8 @@ input WorkCardInput {
   type: Cardtype
   drivinglicense: [Drivingtype]
   owncar: Boolean
-  workcard: Workcardtype
   othercard: String
+  files: [String]
 }
 
 type ModelUserCredentialsConnection @aws_iam @aws_cognito_user_pools {

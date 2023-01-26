@@ -2,12 +2,11 @@
 import React, { useEffect, useState } from "react";
 import { Auth, DataStore } from "aws-amplify";
 import { TimeEntry } from "../../../../models/index.js";
-import { TextField, Typography, Button, Box } from "@mui/material";
+import { TextField, Typography, Button, Box, InputBase } from "@mui/material";
 
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import { TimePicker } from "@mui/x-date-pickers/TimePicker";
+import { DatePicker, TimePicker, LocalizationProvider } from "@mui/x-date-pickers";
+import {} from "@mui/x-date-pickers";
 import fi from "date-fns/locale/fi";
 import { timeMaker } from "../../../../services/time.jsx";
 import { PropTypes } from "prop-types";
@@ -23,26 +22,6 @@ export const Editdate = ({ date = null, setDate, sTime, eTime, setSTime, setETim
         value={date}
         onChange={(newValue) => {
           setDate(newValue);
-          setSTime(
-            new Date(
-              newValue.getFullYear(),
-              newValue.getMonth(),
-              newValue.getDate(),
-              sTime.getHours(),
-              sTime.getMinutes(),
-              sTime.getSeconds()
-            )
-          );
-          setETime(
-            new Date(
-              newValue.getFullYear(),
-              newValue.getMonth(),
-              newValue.getDate(),
-              eTime.getHours(),
-              eTime.getMinutes(),
-              eTime.getSeconds()
-            )
-          );
         }}
         renderInput={(params) => <TextField variant="outlined" {...params} />}
       />
@@ -68,46 +47,20 @@ export const Edittime = ({
   error,
   setError,
 }) => {
-  let hours = String(new Date(time).getHours()).padStart(2, "0");
-  let minutes = String(new Date(time).getMinutes()).padStart(2, "0");
-  const [value, setValue] = useState(`${hours}:${minutes}`);
-  const [lastValidTime, setLastValidTime] = useState(time);
-
-  useEffect(() => {
-    if (isInvalid(new Date(time), time2, minTime, maxTime)) {
-      setTime(lastValidTime);
-    } else {
-      setLastValidTime(time);
-    }
-  }, [time, minTime, maxTime]);
-
-  useEffect(() => {
-    setValue(`${hours}:${minutes}`);
-  }, [time]);
-
   return (
-    <TextField
-      label={label}
-      variant="outlined"
-      value={value}
-      error={error}
-      onChange={(e) => {
-        const { value } = e.target;
-        setValue(value);
-      }}
-      onBlur={(e) => {
-        let hours = String(timeMaker(e, time).h).padStart(2, "0");
-        let minutes = String(timeMaker(e, time).m).padStart(2, "0");
-        const selectedTime = new Date(date.getFullYear(), date.getMonth(), date.getDate(), hours, minutes, 0);
-        if (isInvalid(selectedTime, time2, minTime, maxTime)) {
-          setError(true);
-          return;
-        }
-        setError(false);
-        setTime(selectedTime);
-        setValue(`${hours}:${minutes}`);
-      }}
-    />
+    <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={fi}>
+      <TimePicker
+        label={label}
+        value={time}
+        disableOpenPicker
+        onChange={(newValue) => {
+          setTime(newValue);
+          if (!(isNaN(newValue) || newValue === null)) setError(false);
+        }}
+        onError={(error) => setError(isNaN(error) || error === null)}
+        renderInput={(params) => <TextField variant="outlined" {...params} />}
+      />
+    </LocalizationProvider>
   );
 };
 
@@ -161,8 +114,11 @@ export const Totaltime = ({ sTime = null, eTime = null }) => {
   );
 };
 
-const createTimeentry = async ({ description = "", sel = "", sTime, eTime, workit }) => {
-  sel !== "" &&
+const createTimeentry = async ({ description = "", sel = "", sTime, eTime, workit, date = new Date() }) => {
+  sTime = new Date(date.getFullYear(), date.getMonth(), date.getDate(), sTime.getHours(), sTime.getMinutes(), 0);
+  eTime = new Date(date.getFullYear(), date.getMonth(), date.getDate(), eTime.getHours(), eTime.getMinutes(), 0);
+  return (
+    sel !== "" &&
     (await Auth.currentAuthenticatedUser()
       .then(async (user) => {
         let userId = user.attributes.sub;
@@ -187,7 +143,8 @@ const createTimeentry = async ({ description = "", sel = "", sTime, eTime, worki
       })
       .catch((err) => {
         console.warn(err);
-      }));
+      }))
+  );
 };
 
 export const Createtimeentry = ({
@@ -205,8 +162,8 @@ export const Createtimeentry = ({
   lang = {
     create: "Create",
   },
+  date,
 }) => {
-  const disabled = sel === "" || eTime.getTime() - sTime.getTime() <= 0;
   const [open, setOpen] = useState(false);
 
   return (
@@ -215,7 +172,7 @@ export const Createtimeentry = ({
         fullWidth
         variant="contained"
         color="primary"
-        disabled={disabled || error}
+        disabled={error}
         onClick={() => {
           createTimeentry({ description, sel, sTime, eTime, workit }).then(() => {
             setDescription("");

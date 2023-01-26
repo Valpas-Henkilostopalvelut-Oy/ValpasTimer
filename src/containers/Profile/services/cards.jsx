@@ -5,39 +5,6 @@ import { AddCard } from "./addcard.jsx";
 import { Carditem } from "./cardlist.jsx";
 import { PropTypes } from "prop-types";
 
-/*[
-    {
-        "id": "1673952638760.jpg",
-        "cardend": "2023-01-17T10:50:31.551Z",
-        "type": "ID",
-        "drivinglicense": [],
-        "owncar": false,
-        "workcard": null
-    },
-    {
-        "id": "1673952668251.png",
-        "cardend": "2023-01-17T10:50:41.723Z",
-        "type": "DRIVING",
-        "drivinglicense": [
-            "A",
-            "A1",
-            "A2",
-            "B",
-            "B1"
-        ],
-        "owncar": false,
-        "workcard": null
-    },
-    {
-        "id": "1673952694107.png",
-        "cardend": "2023-01-17T10:51:11.620Z",
-        "type": "WORKCARD",
-        "drivinglicense": [],
-        "owncar": false,
-        "workcard": "WORKSAFETYPASS"
-    }
-]*/
-
 export const Cards = ({ data, workcards, id, isEmpty = false, lang }) => {
   const [open, setOpen] = useState(false);
   const handleClick = () => setOpen(!open);

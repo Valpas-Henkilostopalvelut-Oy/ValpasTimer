@@ -20,8 +20,12 @@ export enum Breakreason {
 export enum Cardtype {
   ID = "ID",
   PASSPORT = "PASSPORT",
-  WORKCARD = "WORKCARD",
   DRIVING = "DRIVING",
+  HYGIENEPASS = "HYGIENEPASS",
+  WORKSAFETYPASS = "WORKSAFETYPASS",
+  FIREWORKCARD = "FIREWORKCARD",
+  ELECTRICALSAFETYPASS = "ELECTRICALSAFETYPASS",
+  VISA = "VISA",
   OTHER = "OTHER"
 }
 
@@ -36,13 +40,6 @@ export enum Drivingtype {
   CE = "CE",
   D = "D",
   D1 = "D1"
-}
-
-export enum Workcardtype {
-  HYGIENEPASS = "HYGIENEPASS",
-  WORKSAFETYPASS = "WORKSAFETYPASS",
-  FIREWORKCARD = "FIREWORKCARD",
-  ELECTRICALSAFETYPASS = "ELECTRICALSAFETYPASS"
 }
 
 export enum UserAgreementStatus {
@@ -321,8 +318,8 @@ type EagerWorkCard = {
   readonly type?: Cardtype | keyof typeof Cardtype | null;
   readonly drivinglicense?: (Drivingtype | null)[] | keyof typeof Drivingtype | null;
   readonly owncar?: boolean | null;
-  readonly workcard?: Workcardtype | keyof typeof Workcardtype | null;
   readonly othercard?: string | null;
+  readonly files?: (string | null)[] | null;
 }
 
 type LazyWorkCard = {
@@ -331,8 +328,8 @@ type LazyWorkCard = {
   readonly type?: Cardtype | keyof typeof Cardtype | null;
   readonly drivinglicense?: (Drivingtype | null)[] | keyof typeof Drivingtype | null;
   readonly owncar?: boolean | null;
-  readonly workcard?: Workcardtype | keyof typeof Workcardtype | null;
   readonly othercard?: string | null;
+  readonly files?: (string | null)[] | null;
 }
 
 export declare type WorkCard = LazyLoading extends LazyLoadingDisabled ? EagerWorkCard : LazyWorkCard

@@ -10,8 +10,7 @@ import {
   InputBase,
   Box,
 } from "@mui/material";
-import { Cardtype, Workcardtype } from "../../../models";
-import img from "../assets/tyoturvallisuuskortti-2022.png";
+import { Cardtype } from "../../../models";
 import SaveIcon from "@mui/icons-material/Save";
 import AddIcon from "@mui/icons-material/Add";
 import { Storage, DataStore } from "aws-amplify";
@@ -20,12 +19,13 @@ import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import fi from "date-fns/locale/fi";
 
-const upload = async (file, id) => {
+const upload = async (file) => {
   let type = String(file.name).split(".").pop();
+  console.log(file.name);
 
   try {
-    return await Storage.put(`${id}.${type}`, file, {
-      level: "private",
+    return await Storage.put(file.name, file, {
+      level: "protected",
       contentType: file.type,
       progressCallback(progress) {
         console.log(`Uploaded: ${progress.loaded}/${progress.total}`);
@@ -55,32 +55,46 @@ const Selectend = ({ date, setDate }) => {
   );
 };
 
-export const Nosatefycard = ({ lang, data, workcards }) => {
+const onUpload = async (images, date, workcards, card, data) => {
+  if (!images) return;
+  let id = Date.now();
+  let filenames = [];
+  for (let i = 0; i < images.length; i++) {
+    let file = images[i];
+    await upload(file).then((e) => {
+      filenames.push(e.key);
+    });
+  }
+
+  console.log(filenames);
+
+  if (filenames.length === images.length) {
+    const carddata = {
+      id: String(id),
+      type: card.id,
+      cardend: new Date(date).toISOString(),
+      drivinglicense: null,
+      owncar: null,
+      files: filenames,
+    };
+    const user = await DataStore.query(UserCredentials, data.id);
+    await DataStore.save(
+      UserCredentials.copyOf(user, (updated) => {
+        workcards !== null ? (updated.workcards = [...workcards, carddata]) : (updated.workcards = [carddata]);
+      })
+    ).then((e) => {
+      console.log(e);
+    });
+  }
+};
+
+export const Notaddedcard = ({ lang, data, workcards, card, isEmpty }) => {
   const [date, setDate] = useState(new Date());
   const [image, setImage] = useState(null);
+  const img = card.img;
 
-  const handleUpload = async () => onUpload();
-
-  const onUpload = async () => {
-    if (!image) return;
-    let id = Date.now();
-    const cardfield = await upload(image, id);
-    if (cardfield) {
-      const carddata = {
-        id: cardfield.key,
-        type: Cardtype.WORKCARD,
-        cardend: new Date(date).toISOString(),
-        drivinglicense: null,
-        owncar: null,
-        workcard: Workcardtype.WORKSAFETYPASS,
-      };
-      const user = await DataStore.query(UserCredentials, data.id);
-      await DataStore.save(
-        UserCredentials.copyOf(user, (updated) => {
-          workcards !== null ? (updated.workcards = [...workcards, carddata]) : (updated.workcards = [carddata]);
-        })
-      );
-    }
+  const handleUpload = async () => {
+    onUpload(image, date, workcards, card, data);
   };
 
   return (
@@ -89,7 +103,7 @@ export const Nosatefycard = ({ lang, data, workcards }) => {
         maxWidth: 600,
       }}
     >
-      <CardMedia image={image ? URL.createObjectURL(image) : img} alt="card">
+      <CardMedia image={image ? URL.createObjectURL(image[0]) : img} alt="card">
         <Box
           component="label"
           sx={{
@@ -105,8 +119,9 @@ export const Nosatefycard = ({ lang, data, workcards }) => {
           <input
             accept="image/*"
             type="file"
+            multiple
             onChange={(e) => {
-              setImage(e.target.files[0]);
+              setImage(e.target.files);
             }}
             hidden
           />
@@ -114,11 +129,11 @@ export const Nosatefycard = ({ lang, data, workcards }) => {
       </CardMedia>
 
       <CardContent sx={{ display: "flex", flexDirection: "column" }}>
-        <Typography variant="p">{Workcardtype.WORKSAFETYPASS}</Typography>
+        <Typography variant="p">{card.name}</Typography>
         <Selectend date={date} setDate={setDate} />
       </CardContent>
       <CardActions>
-        <IconButton aria-label="Save" onClick={handleUpload}>
+        <IconButton aria-label="Save" onClick={handleUpload} disabled={!image}>
           <Tooltip title="Save">
             <SaveIcon
               sx={{

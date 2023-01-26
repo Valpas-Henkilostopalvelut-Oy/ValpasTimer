@@ -495,8 +495,8 @@ export const createUserCredentials = /* GraphQL */ `
         type
         drivinglicense
         owncar
-        workcard
         othercard
+        files
       }
       createdAt
       updatedAt
@@ -550,8 +550,8 @@ export const updateUserCredentials = /* GraphQL */ `
         type
         drivinglicense
         owncar
-        workcard
         othercard
+        files
       }
       createdAt
       updatedAt
@@ -605,8 +605,8 @@ export const deleteUserCredentials = /* GraphQL */ `
         type
         drivinglicense
         owncar
-        workcard
         othercard
+        files
       }
       createdAt
       updatedAt

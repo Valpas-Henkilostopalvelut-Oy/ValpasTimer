@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { Tooltip, Typography, IconButton, Card, CardMedia, CardContent, CardActions, Grid } from "@mui/material";
 import { Cardtype } from "../../../models";
-import { Enddate } from "./date.jsx";
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import { Storage, DataStore } from "aws-amplify";
 import { UserCredentials } from "../../../models";
 import { PropTypes } from "prop-types";
 import DirectionsCarIcon from "@mui/icons-material/DirectionsCar";
+import { Swiper } from "swiper";
 
 const deleteimage = async (card, data) => {
   const workcards = data.workcards.filter((e) => e.id !== card.id);
@@ -54,34 +54,45 @@ const downloadimage = async (card) => {
 };
 
 const loadimg = async (card) => {
-  return await Storage.get(card.id, { level: "private" });
+  return await Storage.get(card, {
+    level: "protected",
+    progressCallback(progress) {
+      console.log(`Uploaded: ${progress.loaded}/${progress.total}`);
+    },
+  });
 };
 
 export const Carditem = ({ data, card, isEmpty = false, lang }) => {
-  const [url, setUrl] = useState("");
+  const [imgs, setImgs] = useState([]);
 
   useEffect(() => {
-    loadimg(card).then((e) => {
-      setUrl(e);
-    });
+    let isActive = true;
+
+    const load = async () => {
+      let imgs = [];
+      for (let i = 0; i < card.files.length; i++) {
+        imgs.push(await loadimg(card.files[i]));
+      }
+      setImgs(imgs);
+    };
+
+    if (isActive) load();
+    return () => (isActive = false);
   }, [card]);
 
   return (
-    <Grid item xs={12} sm={6} md={4}>
+    <Grid item xs={12} sm={6} md={4} lg={3}>
       <Card sx={{ maxWidth: 600 }}>
-        <CardMedia component="img" height="140" image={url} alt="card" />
+        <CardMedia component="img" height="140" image={imgs[0]} alt="card" />
         <CardContent>
           <Typography gutterBottom variant="p">
             {card.type === Cardtype.WORKCARD ? card.workcard : card.type}
           </Typography>
           <Typography variant="body2" color="text.secondary">
-            {card.type === Cardtype.DRIVING ? (
+            {card.type === Cardtype.DRIVING &&
               card.drivinglicense.map((e) => {
                 return <DirectionsCarIcon key={e} />;
-              })
-            ) : (
-              <Enddate card={card} />
-            )}
+              })}
           </Typography>
         </CardContent>
         <CardActions>

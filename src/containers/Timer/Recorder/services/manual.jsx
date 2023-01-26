@@ -131,6 +131,7 @@ export const Manual = ({
           setSel={setSel}
           setSTime={setSTime}
           setETime={setETime}
+          date={date}
         />
       </Grid>
     </Grid>

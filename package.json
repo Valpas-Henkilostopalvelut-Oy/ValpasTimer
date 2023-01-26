@@ -40,7 +40,8 @@
     "react-router-dom": "^6.6.2",
     "react-scripts": "^5.0.1",
     "react-select": "^5.7.0",
-    "swiper": "^8.4.5",
+    "react-slidez": "^0.0.31",
+    "swiper": "^8.4.6",
     "web-vitals": "^3.1.1",
     "webpack": "^5.75.0",
     "yup": "^0.32.11"

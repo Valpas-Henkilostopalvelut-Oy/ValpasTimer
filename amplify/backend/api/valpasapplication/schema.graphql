@@ -106,14 +106,8 @@ type WorkCard {
   type: Cardtype
   drivinglicense: [Drivingtype]
   owncar: Boolean
-  workcard: Workcardtype
   othercard: String
-}
-enum Workcardtype {
-  HYGIENEPASS
-  WORKSAFETYPASS
-  FIREWORKCARD
-  ELECTRICALSAFETYPASS
+  files: [String]
 }
 
 enum Drivingtype {
@@ -132,8 +126,12 @@ enum Drivingtype {
 enum Cardtype {
   ID
   PASSPORT
-  WORKCARD
   DRIVING
+  HYGIENEPASS
+  WORKSAFETYPASS
+  FIREWORKCARD
+  ELECTRICALSAFETYPASS
+  VISA
   OTHER
 }
 
