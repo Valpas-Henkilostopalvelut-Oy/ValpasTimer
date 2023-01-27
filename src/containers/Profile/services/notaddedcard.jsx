@@ -21,6 +21,7 @@ import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import fi from "date-fns/locale/fi";
 import { Driverlicense } from "./driverlicense";
 import { PropTypes } from "prop-types";
+import teamplate from "../assets/template.jpg";
 
 const upload = async (file) => {
   try {
@@ -41,7 +42,7 @@ const Selectend = ({ date, setDate }) => {
   return (
     <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={fi}>
       <DatePicker
-        label="Select end date"
+        label="Voimassa"
         disablePast
         disableMaskedInput
         value={date}
@@ -86,7 +87,7 @@ const onUpload = async (images, date, workcards, card, data, drivinglicense, own
 export const Notaddedcard = ({ lang, data, workcards, card, isEmpty }) => {
   const [date, setDate] = useState(new Date());
   const [image, setImage] = useState(null);
-  const img = card.img;
+  const img = card.img || teamplate;
   const [checked, setChecked] = useState([]);
   const [ownCar, setOwnCar] = useState(false);
 
@@ -100,30 +101,37 @@ export const Notaddedcard = ({ lang, data, workcards, card, isEmpty }) => {
         maxWidth: 600,
       }}
     >
-      <CardMedia image={image ? URL.createObjectURL(image[0]) : img} alt="card">
-        <Box
-          component="label"
+      <Box
+        component="label"
+        sx={{
+          //when hover, show plus icon
+          "&:hover": {
+            backgroundColor: "rgba(0, 0, 0, 0.1)",
+            cursor: "pointer",
+          },
+          height: "140px",
+          display: "flex",
+        }}
+      >
+        <CardMedia
+          component="img"
+          height="140"
+          image={image ? URL.createObjectURL(image[0]) : img}
+          alt="Paikkamerkki"
           sx={{
-            //when hover, show plus icon
-            "&:hover": {
-              backgroundColor: "rgba(0, 0, 0, 0.1)",
-              cursor: "pointer",
-            },
-            height: "140px",
-            display: "flex",
+            objectFit: "contain",
           }}
-        >
-          <input
-            accept="image/*"
-            type="file"
-            multiple
-            onChange={(e) => {
-              setImage(e.target.files);
-            }}
-            hidden
-          />
-        </Box>
-      </CardMedia>
+        />
+        <input
+          accept="image/*"
+          type="file"
+          multiple
+          onChange={(e) => {
+            setImage(e.target.files);
+          }}
+          hidden
+        />
+      </Box>
 
       <CardContent sx={{ display: "flex", flexDirection: "column" }}>
         <Stack spacing={2}>
@@ -171,4 +179,3 @@ Selectend.propTypes = {
   date: PropTypes.object,
   setDate: PropTypes.func,
 };
-

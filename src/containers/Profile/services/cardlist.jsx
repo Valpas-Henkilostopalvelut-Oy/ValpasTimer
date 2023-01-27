@@ -1,5 +1,16 @@
 import React, { useState, useEffect } from "react";
-import { Tooltip, Typography, IconButton, Card, CardMedia, CardContent, CardActions, Grid, Stack } from "@mui/material";
+import {
+  Tooltip,
+  Typography,
+  IconButton,
+  Card,
+  CardMedia,
+  CardContent,
+  CardActions,
+  Grid,
+  Stack,
+  Collapse,
+} from "@mui/material";
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import { Storage, DataStore } from "aws-amplify";
@@ -9,6 +20,7 @@ import DirectionsCarIcon from "@mui/icons-material/DirectionsCar";
 import Carousel from "react-material-ui-carousel";
 import { cardtypes } from "./cards";
 import EditIcon from "@mui/icons-material/Edit";
+import { Editform } from "./editcard";
 
 const deleteimage = async (card, data) => {
   const workcards = data.workcards.filter((e) => e.id !== card.id);
@@ -74,8 +86,12 @@ const Enddate = ({ date }) => {
   return date.toLocaleDateString("fi-FI");
 };
 
-export const Carditem = ({ data, card, isEmpty = false, lang }) => {
+export const Carditem = ({ data, item, isEmpty = false, lang }) => {
+  const [card, setCard] = useState(item);
   const [imgs, setImgs] = useState([]);
+  const [edit, setEdit] = useState(false);
+
+  const handleEdit = () => setEdit(!edit);
 
   useEffect(() => {
     let isActive = true;
@@ -115,9 +131,12 @@ export const Carditem = ({ data, card, isEmpty = false, lang }) => {
               {card.type === Cardtype.DRIVING && card.drivinglicense.join(", ")}
             </Typography>
             <Typography variant="body2" color="text.secondary">
-              Valid until:
+              Voimassa:
               <Enddate date={card.cardend} />
             </Typography>
+            <Collapse in={edit}>
+              <Editform setCard={setCard} data={data} card={card} lang={lang} setEdit={setEdit} />
+            </Collapse>
           </Stack>
         </CardContent>
         <CardActions>
@@ -131,7 +150,7 @@ export const Carditem = ({ data, card, isEmpty = false, lang }) => {
               <DeleteForeverIcon sx={{ color: "gray" }} />
             </Tooltip>
           </IconButton>
-          <IconButton aria-label="edit card" disabled={!isEmpty} onClick={() => console.log("edit")}>
+          <IconButton aria-label="edit card" disabled={!isEmpty} onClick={handleEdit}>
             <Tooltip title="Edit">
               <EditIcon sx={{ color: "gray" }} />
             </Tooltip>

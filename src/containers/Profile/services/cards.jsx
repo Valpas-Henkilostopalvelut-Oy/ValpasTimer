@@ -5,11 +5,11 @@ import { AddCard } from "./addcard.jsx";
 import { Carditem } from "./cardlist.jsx";
 import { PropTypes } from "prop-types";
 import img from "../assets/tyoturvallisuuskortti-2022.png";
-import img2 from "../assets/henkilokortti.jpg";
+import id from "../assets/id.jpg";
 
 export const cardtypes = (lang) => {
   return [
-    { id: Cardtype.ID, name: lang.id, disabled: false, img: img2 },
+    { id: Cardtype.ID, name: lang.id, disabled: false, img: id },
     { id: Cardtype.PASSPORT, name: lang.passport, disabled: false, img: "" },
     { id: Cardtype.DRIVING, name: lang.driving, disabled: false, img: "" },
     { id: Cardtype.HYGIENEPASS, name: lang.hygienepass, disabled: false, img: "" },
@@ -35,7 +35,7 @@ export const Cards = ({ data, workcards, id, isEmpty = false, lang }) => {
               </Grid>
 
               {workcards.map((card) => (
-                <Carditem key={card.id} card={card} data={data} isEmpty={isEmpty} lang={lang} />
+                <Carditem key={card.id} item={card} data={data} isEmpty={isEmpty} lang={lang} />
               ))}
             </Grid>
           </Collapse>
