@@ -162,6 +162,7 @@ export const fin = {
       project: "Projekti",
       analyze: "Analysoi",
       reports: "Raportit",
+      receipts: "Kuitit",
       team: "Tiimi",
       admin_panel: "Ylläpitäjä",
       projects: "Projektit",

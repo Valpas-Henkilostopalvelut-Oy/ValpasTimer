@@ -30,6 +30,9 @@ export const Receiptlang = {
       transfer: "Tilisiirto",
       other: "Muu",
     },
+    classes: {
+        administrativeservices: "Hallinnolliset palvelut",
+    }
   },
   list: {
     title: "Kuittilista",

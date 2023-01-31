@@ -162,6 +162,7 @@ export const eng = {
       project: "Projects",
       analyze: "Analyze",
       reports: "Reports",
+      receipts: "Receipts",
       team: "Team",
       admin_panel: "Admin Panel",
       projects: "Projects Admin",

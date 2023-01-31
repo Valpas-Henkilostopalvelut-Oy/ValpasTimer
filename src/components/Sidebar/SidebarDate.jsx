@@ -8,6 +8,7 @@ import WorkIcon from "@mui/icons-material/Work";
 import AssignmentIcon from "@mui/icons-material/Assignment";
 import WorkHistoryIcon from "@mui/icons-material/WorkHistory";
 import HistoryIcon from "@mui/icons-material/History";
+import ReceiptIcon from "@mui/icons-material/Receipt";
 import { useAppContext } from "../../services/contextLib.jsx";
 import { LinkContainer } from "react-router-bootstrap";
 import { ListItemText, List, ListItemButton, ListItemIcon, ListItem } from "@mui/material";
@@ -62,6 +63,14 @@ export const SidebarList = ({
       type: "page",
       icon: <AssignmentIcon />,
       link: "/work",
+      default: false,
+      access: ["Workers", "Clients", "Admins"],
+    },
+    {
+      title: lang.receipts,
+      type: "page",
+      icon: <ReceiptIcon />,
+      link: "/receipt",
       default: false,
       access: ["Workers", "Clients", "Admins"],
     },

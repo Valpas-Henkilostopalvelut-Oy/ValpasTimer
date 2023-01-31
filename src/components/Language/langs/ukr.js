@@ -162,6 +162,7 @@ export const ukr = {
       project: "Проект",
       analyze: "Аналіз",
       reports: "Звіти",
+      receipts: "Рахунки",
       team: "Команда",
       admin_panel: "Адмін панель",
       projects: "Проекти",
