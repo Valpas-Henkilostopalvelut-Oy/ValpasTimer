@@ -42,10 +42,37 @@ export enum Drivingtype {
   D1 = "D1"
 }
 
+export enum Classification {
+  ADMINISTRATIVESERVICE = "ADMINISTRATIVESERVICE",
+  ITDEVICEANDSOFTWAREEXPENSES = "ITDEVICEANDSOFTWAREEXPENSES",
+  MARKETINGEXPENSES = "MARKETINGEXPENSES",
+  MEETINGEXPENSES = "MEETINGEXPENSES",
+  PREMISESEXPENSES = "PREMISESEXPENSES",
+  TRAVELEXPENSES = "TRAVELEXPENSES",
+  VEHICLEEXPENSES = "VEHICLEEXPENSES"
+}
+
 export enum UserAgreementStatus {
   ACTIVE = "ACTIVE",
   DISABLED = "DISABLED",
   DELETED = "DELETED"
+}
+
+export enum PaymentMethod {
+  CASH = "CASH",
+  OWNCARD = "OWNCARD",
+  COMPANYCARD = "COMPANYCARD",
+  BANKTRANSFER = "BANKTRANSFER",
+  OTHER = "OTHER"
+}
+
+export enum Currency {
+  EUR = "EUR",
+  USD = "USD",
+  GBP = "GBP",
+  CHF = "CHF",
+  SEK = "SEK",
+  NOK = "NOK"
 }
 
 type EagerUserAgreement = {
@@ -336,6 +363,52 @@ export declare type WorkCard = LazyLoading extends LazyLoadingDisabled ? EagerWo
 
 export declare const WorkCard: (new (init: ModelInit<WorkCard>) => WorkCard)
 
+type EagerOwnCar = {
+  readonly description?: string | null;
+  readonly id?: string | null;
+  readonly plate?: string | null;
+  readonly class?: string | null;
+}
+
+type LazyOwnCar = {
+  readonly description?: string | null;
+  readonly id?: string | null;
+  readonly plate?: string | null;
+  readonly class?: string | null;
+}
+
+export declare type OwnCar = LazyLoading extends LazyLoadingDisabled ? EagerOwnCar : LazyOwnCar
+
+export declare const OwnCar: (new (init: ModelInit<OwnCar>) => OwnCar)
+
+type EagerRoutePoints = {
+  readonly id?: string | null;
+  readonly comment?: string | null;
+  readonly address?: string | null;
+  readonly lat?: number | null;
+  readonly lng?: number | null;
+}
+
+type LazyRoutePoints = {
+  readonly id?: string | null;
+  readonly comment?: string | null;
+  readonly address?: string | null;
+  readonly lat?: number | null;
+  readonly lng?: number | null;
+}
+
+export declare type RoutePoints = LazyLoading extends LazyLoadingDisabled ? EagerRoutePoints : LazyRoutePoints
+
+export declare const RoutePoints: (new (init: ModelInit<RoutePoints>) => RoutePoints)
+
+type WorktravelMetaData = {
+  readOnlyFields: 'createdAt' | 'updatedAt';
+}
+
+type ReceiptMetaData = {
+  readOnlyFields: 'createdAt' | 'updatedAt';
+}
+
 type AgreementMetaData = {
   readOnlyFields: 'updatedAt';
 }
@@ -354,6 +427,88 @@ type AllWorkSpacesMetaData = {
 
 type UserCredentialsMetaData = {
   readOnlyFields: 'createdAt' | 'updatedAt';
+}
+
+type EagerWorktravel = {
+  readonly id: string;
+  readonly userId?: string | null;
+  readonly created?: string | null;
+  readonly updated?: string | null;
+  readonly title?: string | null;
+  readonly comment?: string | null;
+  readonly departureDateTime?: string | null;
+  readonly returnDateTime?: string | null;
+  readonly routeCar?: string | null;
+  readonly routePoints?: (RoutePoints | null)[] | null;
+  readonly attachments?: (string | null)[] | null;
+  readonly createdAt?: string | null;
+  readonly updatedAt?: string | null;
+}
+
+type LazyWorktravel = {
+  readonly id: string;
+  readonly userId?: string | null;
+  readonly created?: string | null;
+  readonly updated?: string | null;
+  readonly title?: string | null;
+  readonly comment?: string | null;
+  readonly departureDateTime?: string | null;
+  readonly returnDateTime?: string | null;
+  readonly routeCar?: string | null;
+  readonly routePoints?: (RoutePoints | null)[] | null;
+  readonly attachments?: (string | null)[] | null;
+  readonly createdAt?: string | null;
+  readonly updatedAt?: string | null;
+}
+
+export declare type Worktravel = LazyLoading extends LazyLoadingDisabled ? EagerWorktravel : LazyWorktravel
+
+export declare const Worktravel: (new (init: ModelInit<Worktravel, WorktravelMetaData>) => Worktravel) & {
+  copyOf(source: Worktravel, mutator: (draft: MutableModel<Worktravel, WorktravelMetaData>) => MutableModel<Worktravel, WorktravelMetaData> | void): Worktravel;
+}
+
+type EagerReceipt = {
+  readonly id: string;
+  readonly userId?: string | null;
+  readonly created?: string | null;
+  readonly updated?: string | null;
+  readonly dateOfPurchase?: string | null;
+  readonly placeOfPurchase?: string | null;
+  readonly receiptNumber?: string | null;
+  readonly class?: Classification | keyof typeof Classification | null;
+  readonly price?: number | null;
+  readonly currency?: Currency | keyof typeof Currency | null;
+  readonly receiptImage?: (string | null)[] | null;
+  readonly tax?: number | null;
+  readonly paymentMethod?: PaymentMethod | keyof typeof PaymentMethod | null;
+  readonly comment?: string | null;
+  readonly createdAt?: string | null;
+  readonly updatedAt?: string | null;
+}
+
+type LazyReceipt = {
+  readonly id: string;
+  readonly userId?: string | null;
+  readonly created?: string | null;
+  readonly updated?: string | null;
+  readonly dateOfPurchase?: string | null;
+  readonly placeOfPurchase?: string | null;
+  readonly receiptNumber?: string | null;
+  readonly class?: Classification | keyof typeof Classification | null;
+  readonly price?: number | null;
+  readonly currency?: Currency | keyof typeof Currency | null;
+  readonly receiptImage?: (string | null)[] | null;
+  readonly tax?: number | null;
+  readonly paymentMethod?: PaymentMethod | keyof typeof PaymentMethod | null;
+  readonly comment?: string | null;
+  readonly createdAt?: string | null;
+  readonly updatedAt?: string | null;
+}
+
+export declare type Receipt = LazyLoading extends LazyLoadingDisabled ? EagerReceipt : LazyReceipt
+
+export declare const Receipt: (new (init: ModelInit<Receipt, ReceiptMetaData>) => Receipt) & {
+  copyOf(source: Receipt, mutator: (draft: MutableModel<Receipt, ReceiptMetaData>) => MutableModel<Receipt, ReceiptMetaData> | void): Receipt;
 }
 
 type EagerAgreement = {
@@ -513,6 +668,7 @@ type EagerUserCredentials = {
   readonly formChecked?: (string | null)[] | null;
   readonly settings?: UserSettings | null;
   readonly workcards?: (WorkCard | null)[] | null;
+  readonly ownCars?: (OwnCar | null)[] | null;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
 }
@@ -528,6 +684,7 @@ type LazyUserCredentials = {
   readonly formChecked?: (string | null)[] | null;
   readonly settings?: UserSettings | null;
   readonly workcards?: (WorkCard | null)[] | null;
+  readonly ownCars?: (OwnCar | null)[] | null;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
 }

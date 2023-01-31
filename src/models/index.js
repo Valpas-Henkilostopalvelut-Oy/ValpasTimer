@@ -42,15 +42,44 @@ const Drivingtype = {
   "D1": "D1"
 };
 
+const Classification = {
+  "ADMINISTRATIVESERVICE": "ADMINISTRATIVESERVICE",
+  "ITDEVICEANDSOFTWAREEXPENSES": "ITDEVICEANDSOFTWAREEXPENSES",
+  "MARKETINGEXPENSES": "MARKETINGEXPENSES",
+  "MEETINGEXPENSES": "MEETINGEXPENSES",
+  "PREMISESEXPENSES": "PREMISESEXPENSES",
+  "TRAVELEXPENSES": "TRAVELEXPENSES",
+  "VEHICLEEXPENSES": "VEHICLEEXPENSES"
+};
+
 const UserAgreementStatus = {
   "ACTIVE": "ACTIVE",
   "DISABLED": "DISABLED",
   "DELETED": "DELETED"
 };
 
-const { Agreement, Tasks, TimeEntry, AllWorkSpaces, UserCredentials, UserAgreement, User, AditionalInfo, Comment, Workplace, Profile, UserSettings, CostRate, UserMemberships, HourlyRate, TimeInterval, Break, WorkspaceSettings, Membership, Work, WorkCard } = initSchema(schema);
+const PaymentMethod = {
+  "CASH": "CASH",
+  "OWNCARD": "OWNCARD",
+  "COMPANYCARD": "COMPANYCARD",
+  "BANKTRANSFER": "BANKTRANSFER",
+  "OTHER": "OTHER"
+};
+
+const Currency = {
+  "EUR": "EUR",
+  "USD": "USD",
+  "GBP": "GBP",
+  "CHF": "CHF",
+  "SEK": "SEK",
+  "NOK": "NOK"
+};
+
+const { Worktravel, Receipt, Agreement, Tasks, TimeEntry, AllWorkSpaces, UserCredentials, UserAgreement, User, AditionalInfo, Comment, Workplace, Profile, UserSettings, CostRate, UserMemberships, HourlyRate, TimeInterval, Break, WorkspaceSettings, Membership, Work, WorkCard, OwnCar, RoutePoints } = initSchema(schema);
 
 export {
+  Worktravel,
+  Receipt,
   Agreement,
   Tasks,
   TimeEntry,
@@ -60,7 +89,10 @@ export {
   Breakreason,
   Cardtype,
   Drivingtype,
+  Classification,
   UserAgreementStatus,
+  PaymentMethod,
+  Currency,
   UserAgreement,
   User,
   AditionalInfo,
@@ -76,5 +108,7 @@ export {
   WorkspaceSettings,
   Membership,
   Work,
-  WorkCard
+  WorkCard,
+  OwnCar,
+  RoutePoints
 };

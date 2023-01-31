@@ -22,6 +22,7 @@ import { AgreementAdminPanel } from "./containers/Agreement/AdminPanel/index.jsx
 import { AgreementPage } from "./containers/Agreement/index.jsx";
 import { LandingPage } from "./containers/Landing/index.jsx";
 import { Library } from "./containers/Library/index.jsx";
+import { Receipt } from "./containers/Receipt/index.jsx";
 
 const Navigation = ({ isAuthenticated, groups }) => {
   const Redirect = () => <Navigate replace to="/login" />;
@@ -43,6 +44,7 @@ const Navigation = ({ isAuthenticated, groups }) => {
       <Route exact path="/" element={!isAuthenticated ? <LandingPage /> : <Navigate replace to="/home" />} />
       <Route exact path="onboarding" element={isAuthenticated ? <AgreementPage /> : <Redirect />} />
       <Route exact path="work" element={isAuthenticated ? <TasksPage /> : <Redirect />} />
+      <Route exact path="receipt" element={isAuthenticated ? <Receipt /> : <Redirect />} />
       <Route
         exact
         path="works"

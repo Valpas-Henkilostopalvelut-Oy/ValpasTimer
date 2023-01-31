@@ -1,6 +1,183 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
+export const createWorktravel = /* GraphQL */ `
+  mutation CreateWorktravel(
+    $input: CreateWorktravelInput!
+    $condition: ModelWorktravelConditionInput
+  ) {
+    createWorktravel(input: $input, condition: $condition) {
+      id
+      userId
+      created
+      updated
+      title
+      comment
+      departureDateTime
+      returnDateTime
+      routeCar
+      routePoints {
+        id
+        comment
+        address
+        lat
+        lng
+      }
+      attachments
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+    }
+  }
+`;
+export const updateWorktravel = /* GraphQL */ `
+  mutation UpdateWorktravel(
+    $input: UpdateWorktravelInput!
+    $condition: ModelWorktravelConditionInput
+  ) {
+    updateWorktravel(input: $input, condition: $condition) {
+      id
+      userId
+      created
+      updated
+      title
+      comment
+      departureDateTime
+      returnDateTime
+      routeCar
+      routePoints {
+        id
+        comment
+        address
+        lat
+        lng
+      }
+      attachments
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+    }
+  }
+`;
+export const deleteWorktravel = /* GraphQL */ `
+  mutation DeleteWorktravel(
+    $input: DeleteWorktravelInput!
+    $condition: ModelWorktravelConditionInput
+  ) {
+    deleteWorktravel(input: $input, condition: $condition) {
+      id
+      userId
+      created
+      updated
+      title
+      comment
+      departureDateTime
+      returnDateTime
+      routeCar
+      routePoints {
+        id
+        comment
+        address
+        lat
+        lng
+      }
+      attachments
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+    }
+  }
+`;
+export const createReceipt = /* GraphQL */ `
+  mutation CreateReceipt(
+    $input: CreateReceiptInput!
+    $condition: ModelReceiptConditionInput
+  ) {
+    createReceipt(input: $input, condition: $condition) {
+      id
+      userId
+      created
+      updated
+      dateOfPurchase
+      placeOfPurchase
+      receiptNumber
+      class
+      price
+      currency
+      receiptImage
+      tax
+      paymentMethod
+      comment
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+    }
+  }
+`;
+export const updateReceipt = /* GraphQL */ `
+  mutation UpdateReceipt(
+    $input: UpdateReceiptInput!
+    $condition: ModelReceiptConditionInput
+  ) {
+    updateReceipt(input: $input, condition: $condition) {
+      id
+      userId
+      created
+      updated
+      dateOfPurchase
+      placeOfPurchase
+      receiptNumber
+      class
+      price
+      currency
+      receiptImage
+      tax
+      paymentMethod
+      comment
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+    }
+  }
+`;
+export const deleteReceipt = /* GraphQL */ `
+  mutation DeleteReceipt(
+    $input: DeleteReceiptInput!
+    $condition: ModelReceiptConditionInput
+  ) {
+    deleteReceipt(input: $input, condition: $condition) {
+      id
+      userId
+      created
+      updated
+      dateOfPurchase
+      placeOfPurchase
+      receiptNumber
+      class
+      price
+      currency
+      receiptImage
+      tax
+      paymentMethod
+      comment
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+    }
+  }
+`;
 export const createAgreement = /* GraphQL */ `
   mutation CreateAgreement(
     $input: CreateAgreementInput!
@@ -498,6 +675,12 @@ export const createUserCredentials = /* GraphQL */ `
         othercard
         files
       }
+      ownCars {
+        description
+        id
+        plate
+        class
+      }
       createdAt
       updatedAt
       _version
@@ -553,6 +736,12 @@ export const updateUserCredentials = /* GraphQL */ `
         othercard
         files
       }
+      ownCars {
+        description
+        id
+        plate
+        class
+      }
       createdAt
       updatedAt
       _version
@@ -607,6 +796,12 @@ export const deleteUserCredentials = /* GraphQL */ `
         owncar
         othercard
         files
+      }
+      ownCars {
+        description
+        id
+        plate
+        class
       }
       createdAt
       updatedAt

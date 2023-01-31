@@ -110,6 +110,31 @@ type WorkCard {
   files: [String]
 }
 
+type OwnCar {
+  description: String
+  id: ID
+  plate: String
+  class: String
+}
+
+type RoutePoints {
+  id: ID
+  comment: String
+  address: String
+  lat: Float
+  lng: Float
+}
+
+enum Classification {
+  ADMINISTRATIVESERVICE
+  ITDEVICEANDSOFTWAREEXPENSES
+  MARKETINGEXPENSES
+  MEETINGEXPENSES
+  PREMISESEXPENSES
+  TRAVELEXPENSES
+  VEHICLEEXPENSES
+}
+
 enum Drivingtype {
   A
   A1
@@ -154,6 +179,70 @@ enum UserAgreementStatus {
   ACTIVE
   DISABLED
   DELETED
+}
+
+enum PaymentMethod {
+  CASH
+  OWNCARD
+  COMPANYCARD
+  BANKTRANSFER
+  OTHER
+}
+
+enum Currency {
+  EUR
+  USD
+  GBP
+  CHF
+  SEK
+  NOK
+}
+
+type Worktravel
+  @model
+  @auth(
+    rules: [
+      { allow: owner, ownerField: "userId" }
+      { allow: groups, groups: ["Admins"], operations: [read, create, update, delete] }
+      { allow: groups, groups: ["Clients"], operations: [read, update] }
+    ]
+  ) {
+  id: ID!
+  userId: String
+  created: AWSDateTime
+  updated: AWSDateTime
+  title: String
+  comment: String
+  departureDateTime: AWSDateTime
+  returnDateTime: AWSDateTime
+  routeCar: String
+  routePoints: [RoutePoints]
+  attachments: [String]
+}
+
+type Receipt
+  @model
+  @auth(
+    rules: [
+      { allow: owner, ownerField: "userId" }
+      { allow: groups, groups: ["Admins"], operations: [read, create, update, delete] }
+      { allow: groups, groups: ["Clients"], operations: [read, update] }
+    ]
+  ) {
+  id: ID!
+  userId: String
+  created: AWSDateTime
+  updated: AWSDateTime
+  dateOfPurchase: AWSDateTime
+  placeOfPurchase: String
+  receiptNumber: String
+  class: Classification
+  price: Float
+  currency: Currency
+  receiptImage: [String]
+  tax: Float
+  paymentMethod: PaymentMethod
+  comment: String
 }
 
 type Agreement
@@ -260,4 +349,5 @@ type UserCredentials
   formChecked: [String]
   settings: UserSettings
   workcards: [WorkCard]
+  ownCars: [OwnCar]
 }

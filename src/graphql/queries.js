@@ -1,6 +1,195 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
+export const getWorktravel = /* GraphQL */ `
+  query GetWorktravel($id: ID!) {
+    getWorktravel(id: $id) {
+      id
+      userId
+      created
+      updated
+      title
+      comment
+      departureDateTime
+      returnDateTime
+      routeCar
+      routePoints {
+        id
+        comment
+        address
+        lat
+        lng
+      }
+      attachments
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+    }
+  }
+`;
+export const listWorktravels = /* GraphQL */ `
+  query ListWorktravels(
+    $filter: ModelWorktravelFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listWorktravels(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        userId
+        created
+        updated
+        title
+        comment
+        departureDateTime
+        returnDateTime
+        routeCar
+        attachments
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+      }
+      nextToken
+      startedAt
+    }
+  }
+`;
+export const syncWorktravels = /* GraphQL */ `
+  query SyncWorktravels(
+    $filter: ModelWorktravelFilterInput
+    $limit: Int
+    $nextToken: String
+    $lastSync: AWSTimestamp
+  ) {
+    syncWorktravels(
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      lastSync: $lastSync
+    ) {
+      items {
+        id
+        userId
+        created
+        updated
+        title
+        comment
+        departureDateTime
+        returnDateTime
+        routeCar
+        attachments
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+      }
+      nextToken
+      startedAt
+    }
+  }
+`;
+export const getReceipt = /* GraphQL */ `
+  query GetReceipt($id: ID!) {
+    getReceipt(id: $id) {
+      id
+      userId
+      created
+      updated
+      dateOfPurchase
+      placeOfPurchase
+      receiptNumber
+      class
+      price
+      currency
+      receiptImage
+      tax
+      paymentMethod
+      comment
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+    }
+  }
+`;
+export const listReceipts = /* GraphQL */ `
+  query ListReceipts(
+    $filter: ModelReceiptFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listReceipts(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        userId
+        created
+        updated
+        dateOfPurchase
+        placeOfPurchase
+        receiptNumber
+        class
+        price
+        currency
+        receiptImage
+        tax
+        paymentMethod
+        comment
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+      }
+      nextToken
+      startedAt
+    }
+  }
+`;
+export const syncReceipts = /* GraphQL */ `
+  query SyncReceipts(
+    $filter: ModelReceiptFilterInput
+    $limit: Int
+    $nextToken: String
+    $lastSync: AWSTimestamp
+  ) {
+    syncReceipts(
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      lastSync: $lastSync
+    ) {
+      items {
+        id
+        userId
+        created
+        updated
+        dateOfPurchase
+        placeOfPurchase
+        receiptNumber
+        class
+        price
+        currency
+        receiptImage
+        tax
+        paymentMethod
+        comment
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+      }
+      nextToken
+      startedAt
+    }
+  }
+`;
 export const getAgreement = /* GraphQL */ `
   query GetAgreement($id: ID!) {
     getAgreement(id: $id) {
@@ -412,6 +601,12 @@ export const getUserCredentials = /* GraphQL */ `
         owncar
         othercard
         files
+      }
+      ownCars {
+        description
+        id
+        plate
+        class
       }
       createdAt
       updatedAt

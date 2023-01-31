@@ -1,6 +1,183 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
+export const onCreateWorktravel = /* GraphQL */ `
+  subscription OnCreateWorktravel(
+    $filter: ModelSubscriptionWorktravelFilterInput
+    $userId: String
+  ) {
+    onCreateWorktravel(filter: $filter, userId: $userId) {
+      id
+      userId
+      created
+      updated
+      title
+      comment
+      departureDateTime
+      returnDateTime
+      routeCar
+      routePoints {
+        id
+        comment
+        address
+        lat
+        lng
+      }
+      attachments
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+    }
+  }
+`;
+export const onUpdateWorktravel = /* GraphQL */ `
+  subscription OnUpdateWorktravel(
+    $filter: ModelSubscriptionWorktravelFilterInput
+    $userId: String
+  ) {
+    onUpdateWorktravel(filter: $filter, userId: $userId) {
+      id
+      userId
+      created
+      updated
+      title
+      comment
+      departureDateTime
+      returnDateTime
+      routeCar
+      routePoints {
+        id
+        comment
+        address
+        lat
+        lng
+      }
+      attachments
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+    }
+  }
+`;
+export const onDeleteWorktravel = /* GraphQL */ `
+  subscription OnDeleteWorktravel(
+    $filter: ModelSubscriptionWorktravelFilterInput
+    $userId: String
+  ) {
+    onDeleteWorktravel(filter: $filter, userId: $userId) {
+      id
+      userId
+      created
+      updated
+      title
+      comment
+      departureDateTime
+      returnDateTime
+      routeCar
+      routePoints {
+        id
+        comment
+        address
+        lat
+        lng
+      }
+      attachments
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+    }
+  }
+`;
+export const onCreateReceipt = /* GraphQL */ `
+  subscription OnCreateReceipt(
+    $filter: ModelSubscriptionReceiptFilterInput
+    $userId: String
+  ) {
+    onCreateReceipt(filter: $filter, userId: $userId) {
+      id
+      userId
+      created
+      updated
+      dateOfPurchase
+      placeOfPurchase
+      receiptNumber
+      class
+      price
+      currency
+      receiptImage
+      tax
+      paymentMethod
+      comment
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+    }
+  }
+`;
+export const onUpdateReceipt = /* GraphQL */ `
+  subscription OnUpdateReceipt(
+    $filter: ModelSubscriptionReceiptFilterInput
+    $userId: String
+  ) {
+    onUpdateReceipt(filter: $filter, userId: $userId) {
+      id
+      userId
+      created
+      updated
+      dateOfPurchase
+      placeOfPurchase
+      receiptNumber
+      class
+      price
+      currency
+      receiptImage
+      tax
+      paymentMethod
+      comment
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+    }
+  }
+`;
+export const onDeleteReceipt = /* GraphQL */ `
+  subscription OnDeleteReceipt(
+    $filter: ModelSubscriptionReceiptFilterInput
+    $userId: String
+  ) {
+    onDeleteReceipt(filter: $filter, userId: $userId) {
+      id
+      userId
+      created
+      updated
+      dateOfPurchase
+      placeOfPurchase
+      receiptNumber
+      class
+      price
+      currency
+      receiptImage
+      tax
+      paymentMethod
+      comment
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+    }
+  }
+`;
 export const onCreateAgreement = /* GraphQL */ `
   subscription OnCreateAgreement(
     $filter: ModelSubscriptionAgreementFilterInput
@@ -495,6 +672,12 @@ export const onCreateUserCredentials = /* GraphQL */ `
         othercard
         files
       }
+      ownCars {
+        description
+        id
+        plate
+        class
+      }
       createdAt
       updatedAt
       _version
@@ -550,6 +733,12 @@ export const onUpdateUserCredentials = /* GraphQL */ `
         othercard
         files
       }
+      ownCars {
+        description
+        id
+        plate
+        class
+      }
       createdAt
       updatedAt
       _version
@@ -604,6 +793,12 @@ export const onDeleteUserCredentials = /* GraphQL */ `
         owncar
         othercard
         files
+      }
+      ownCars {
+        description
+        id
+        plate
+        class
       }
       createdAt
       updatedAt

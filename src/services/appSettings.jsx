@@ -39,6 +39,9 @@ export const customPalette = {
         border_color: "#e6e6ef",
       },
     },
+    carnaval: {
+      gray: "#f2f2f2",
+    },
     default: {
       white: "#ffffff",
       gray: "#707070",

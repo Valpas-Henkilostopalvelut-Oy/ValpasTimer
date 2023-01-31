@@ -52,7 +52,7 @@
     "referencetotransformerrootstackS3DeploymentRootKeyA71EA735Ref": {
       "Type": "String"
     },
-    "referencetotransformerrootstackAgreementNestedStackAgreementNestedStackResource7A79C39DOutputstransformerrootstackAgreementQuerygetAgreementpostAuth0FunctionQuerygetAgreementpostAuth0FunctionAppSyncFunction8CEAF1E9FunctionId": {
+    "referencetotransformerrootstackWorktravelNestedStackWorktravelNestedStackResource342331B2OutputstransformerrootstackWorktravelQuerygetWorktravelpostAuth0FunctionQuerygetWorktravelpostAuth0FunctionAppSyncFunction42AD5842FunctionId": {
       "Type": "String"
     },
     "referencetotransformerrootstackauthRoleNameFB872D50Ref": {
@@ -61,13 +61,13 @@
     "referencetotransformerrootstackunauthRoleName49F3C1FERef": {
       "Type": "String"
     },
-    "referencetotransformerrootstackAgreementNestedStackAgreementNestedStackResource7A79C39DOutputstransformerrootstackAgreementMutationcreateAgreementinit0FunctionMutationcreateAgreementinit0FunctionAppSyncFunction27909C22FunctionId": {
+    "referencetotransformerrootstackWorktravelNestedStackWorktravelNestedStackResource342331B2OutputstransformerrootstackWorktravelMutationcreateWorktravelinit0FunctionMutationcreateWorktravelinit0FunctionAppSyncFunctionAFBCA1EDFunctionId": {
       "Type": "String"
     },
-    "referencetotransformerrootstackAgreementNestedStackAgreementNestedStackResource7A79C39DOutputstransformerrootstackAgreementMutationupdateAgreementinit0FunctionMutationupdateAgreementinit0FunctionAppSyncFunction574F75B7FunctionId": {
+    "referencetotransformerrootstackWorktravelNestedStackWorktravelNestedStackResource342331B2OutputstransformerrootstackWorktravelMutationupdateWorktravelinit0FunctionMutationupdateWorktravelinit0FunctionAppSyncFunctionD9D667AEFunctionId": {
       "Type": "String"
     },
-    "referencetotransformerrootstackAgreementNestedStackAgreementNestedStackResource7A79C39DOutputstransformerrootstackAgreementSubscriptionOnCreateAgreementDataResolverFnSubscriptionOnCreateAgreementDataResolverFnAppSyncFunction0D626DB0FunctionId": {
+    "referencetotransformerrootstackWorktravelNestedStackWorktravelNestedStackResource342331B2OutputstransformerrootstackWorktravelSubscriptionOnCreateWorktravelDataResolverFnSubscriptionOnCreateWorktravelDataResolverFnAppSyncFunction1C0D1A2DFunctionId": {
       "Type": "String"
     }
   },
@@ -541,7 +541,7 @@
               ]
             },
             {
-              "Ref": "referencetotransformerrootstackAgreementNestedStackAgreementNestedStackResource7A79C39DOutputstransformerrootstackAgreementQuerygetAgreementpostAuth0FunctionQuerygetAgreementpostAuth0FunctionAppSyncFunction8CEAF1E9FunctionId"
+              "Ref": "referencetotransformerrootstackWorktravelNestedStackWorktravelNestedStackResource342331B2OutputstransformerrootstackWorktravelQuerygetWorktravelpostAuth0FunctionQuerygetWorktravelpostAuth0FunctionAppSyncFunction42AD5842FunctionId"
             },
             {
               "Fn::GetAtt": [
@@ -659,7 +659,7 @@
               ]
             },
             {
-              "Ref": "referencetotransformerrootstackAgreementNestedStackAgreementNestedStackResource7A79C39DOutputstransformerrootstackAgreementQuerygetAgreementpostAuth0FunctionQuerygetAgreementpostAuth0FunctionAppSyncFunction8CEAF1E9FunctionId"
+              "Ref": "referencetotransformerrootstackWorktravelNestedStackWorktravelNestedStackResource342331B2OutputstransformerrootstackWorktravelQuerygetWorktravelpostAuth0FunctionQuerygetWorktravelpostAuth0FunctionAppSyncFunction42AD5842FunctionId"
             },
             {
               "Fn::GetAtt": [
@@ -777,7 +777,7 @@
               ]
             },
             {
-              "Ref": "referencetotransformerrootstackAgreementNestedStackAgreementNestedStackResource7A79C39DOutputstransformerrootstackAgreementQuerygetAgreementpostAuth0FunctionQuerygetAgreementpostAuth0FunctionAppSyncFunction8CEAF1E9FunctionId"
+              "Ref": "referencetotransformerrootstackWorktravelNestedStackWorktravelNestedStackResource342331B2OutputstransformerrootstackWorktravelQuerygetWorktravelpostAuth0FunctionQuerygetWorktravelpostAuth0FunctionAppSyncFunction42AD5842FunctionId"
             },
             {
               "Fn::GetAtt": [
@@ -919,7 +919,7 @@
         "PipelineConfig": {
           "Functions": [
             {
-              "Ref": "referencetotransformerrootstackAgreementNestedStackAgreementNestedStackResource7A79C39DOutputstransformerrootstackAgreementMutationcreateAgreementinit0FunctionMutationcreateAgreementinit0FunctionAppSyncFunction27909C22FunctionId"
+              "Ref": "referencetotransformerrootstackWorktravelNestedStackWorktravelNestedStackResource342331B2OutputstransformerrootstackWorktravelMutationcreateWorktravelinit0FunctionMutationcreateWorktravelinit0FunctionAppSyncFunctionAFBCA1EDFunctionId"
             },
             {
               "Fn::GetAtt": [
@@ -928,7 +928,7 @@
               ]
             },
             {
-              "Ref": "referencetotransformerrootstackAgreementNestedStackAgreementNestedStackResource7A79C39DOutputstransformerrootstackAgreementQuerygetAgreementpostAuth0FunctionQuerygetAgreementpostAuth0FunctionAppSyncFunction8CEAF1E9FunctionId"
+              "Ref": "referencetotransformerrootstackWorktravelNestedStackWorktravelNestedStackResource342331B2OutputstransformerrootstackWorktravelQuerygetWorktravelpostAuth0FunctionQuerygetWorktravelpostAuth0FunctionAppSyncFunction42AD5842FunctionId"
             },
             {
               "Fn::GetAtt": [
@@ -1091,7 +1091,7 @@
         "PipelineConfig": {
           "Functions": [
             {
-              "Ref": "referencetotransformerrootstackAgreementNestedStackAgreementNestedStackResource7A79C39DOutputstransformerrootstackAgreementMutationupdateAgreementinit0FunctionMutationupdateAgreementinit0FunctionAppSyncFunction574F75B7FunctionId"
+              "Ref": "referencetotransformerrootstackWorktravelNestedStackWorktravelNestedStackResource342331B2OutputstransformerrootstackWorktravelMutationupdateWorktravelinit0FunctionMutationupdateWorktravelinit0FunctionAppSyncFunctionD9D667AEFunctionId"
             },
             {
               "Fn::GetAtt": [
@@ -1100,7 +1100,7 @@
               ]
             },
             {
-              "Ref": "referencetotransformerrootstackAgreementNestedStackAgreementNestedStackResource7A79C39DOutputstransformerrootstackAgreementQuerygetAgreementpostAuth0FunctionQuerygetAgreementpostAuth0FunctionAppSyncFunction8CEAF1E9FunctionId"
+              "Ref": "referencetotransformerrootstackWorktravelNestedStackWorktravelNestedStackResource342331B2OutputstransformerrootstackWorktravelQuerygetWorktravelpostAuth0FunctionQuerygetWorktravelpostAuth0FunctionAppSyncFunction42AD5842FunctionId"
             },
             {
               "Fn::GetAtt": [
@@ -1269,7 +1269,7 @@
               ]
             },
             {
-              "Ref": "referencetotransformerrootstackAgreementNestedStackAgreementNestedStackResource7A79C39DOutputstransformerrootstackAgreementQuerygetAgreementpostAuth0FunctionQuerygetAgreementpostAuth0FunctionAppSyncFunction8CEAF1E9FunctionId"
+              "Ref": "referencetotransformerrootstackWorktravelNestedStackWorktravelNestedStackResource342331B2OutputstransformerrootstackWorktravelQuerygetWorktravelpostAuth0FunctionQuerygetWorktravelpostAuth0FunctionAppSyncFunction42AD5842FunctionId"
             },
             {
               "Fn::GetAtt": [
@@ -1362,10 +1362,10 @@
               ]
             },
             {
-              "Ref": "referencetotransformerrootstackAgreementNestedStackAgreementNestedStackResource7A79C39DOutputstransformerrootstackAgreementQuerygetAgreementpostAuth0FunctionQuerygetAgreementpostAuth0FunctionAppSyncFunction8CEAF1E9FunctionId"
+              "Ref": "referencetotransformerrootstackWorktravelNestedStackWorktravelNestedStackResource342331B2OutputstransformerrootstackWorktravelQuerygetWorktravelpostAuth0FunctionQuerygetWorktravelpostAuth0FunctionAppSyncFunction42AD5842FunctionId"
             },
             {
-              "Ref": "referencetotransformerrootstackAgreementNestedStackAgreementNestedStackResource7A79C39DOutputstransformerrootstackAgreementSubscriptionOnCreateAgreementDataResolverFnSubscriptionOnCreateAgreementDataResolverFnAppSyncFunction0D626DB0FunctionId"
+              "Ref": "referencetotransformerrootstackWorktravelNestedStackWorktravelNestedStackResource342331B2OutputstransformerrootstackWorktravelSubscriptionOnCreateWorktravelDataResolverFnSubscriptionOnCreateWorktravelDataResolverFnAppSyncFunction1C0D1A2DFunctionId"
             }
           ]
         },
@@ -1418,10 +1418,10 @@
               ]
             },
             {
-              "Ref": "referencetotransformerrootstackAgreementNestedStackAgreementNestedStackResource7A79C39DOutputstransformerrootstackAgreementQuerygetAgreementpostAuth0FunctionQuerygetAgreementpostAuth0FunctionAppSyncFunction8CEAF1E9FunctionId"
+              "Ref": "referencetotransformerrootstackWorktravelNestedStackWorktravelNestedStackResource342331B2OutputstransformerrootstackWorktravelQuerygetWorktravelpostAuth0FunctionQuerygetWorktravelpostAuth0FunctionAppSyncFunction42AD5842FunctionId"
             },
             {
-              "Ref": "referencetotransformerrootstackAgreementNestedStackAgreementNestedStackResource7A79C39DOutputstransformerrootstackAgreementSubscriptionOnCreateAgreementDataResolverFnSubscriptionOnCreateAgreementDataResolverFnAppSyncFunction0D626DB0FunctionId"
+              "Ref": "referencetotransformerrootstackWorktravelNestedStackWorktravelNestedStackResource342331B2OutputstransformerrootstackWorktravelSubscriptionOnCreateWorktravelDataResolverFnSubscriptionOnCreateWorktravelDataResolverFnAppSyncFunction1C0D1A2DFunctionId"
             }
           ]
         },
@@ -1474,10 +1474,10 @@
               ]
             },
             {
-              "Ref": "referencetotransformerrootstackAgreementNestedStackAgreementNestedStackResource7A79C39DOutputstransformerrootstackAgreementQuerygetAgreementpostAuth0FunctionQuerygetAgreementpostAuth0FunctionAppSyncFunction8CEAF1E9FunctionId"
+              "Ref": "referencetotransformerrootstackWorktravelNestedStackWorktravelNestedStackResource342331B2OutputstransformerrootstackWorktravelQuerygetWorktravelpostAuth0FunctionQuerygetWorktravelpostAuth0FunctionAppSyncFunction42AD5842FunctionId"
             },
             {
-              "Ref": "referencetotransformerrootstackAgreementNestedStackAgreementNestedStackResource7A79C39DOutputstransformerrootstackAgreementSubscriptionOnCreateAgreementDataResolverFnSubscriptionOnCreateAgreementDataResolverFnAppSyncFunction0D626DB0FunctionId"
+              "Ref": "referencetotransformerrootstackWorktravelNestedStackWorktravelNestedStackResource342331B2OutputstransformerrootstackWorktravelSubscriptionOnCreateWorktravelDataResolverFnSubscriptionOnCreateWorktravelDataResolverFnAppSyncFunction1C0D1A2DFunctionId"
             }
           ]
         },

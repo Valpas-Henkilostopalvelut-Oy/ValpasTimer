@@ -14,21 +14,21 @@
   "private": true,
   "dependencies": {
     "@aws-amplify/ui-react": "^4.3.5",
-    "@aws-sdk/client-cognito-identity": "^3.259.0",
-    "@aws-sdk/client-s3": "^3.259.0",
-    "@aws-sdk/credential-provider-cognito-identity": "^3.259.0",
+    "@aws-sdk/client-cognito-identity": "^3.261.0",
+    "@aws-sdk/client-s3": "^3.261.0",
+    "@aws-sdk/credential-provider-cognito-identity": "^3.261.0",
     "@date-io/date-fns": "^2.16.0",
     "@emotion/styled": "^11.10.5",
     "@mui/icons-material": "^5.11.0",
-    "@mui/lab": "^5.0.0-alpha.117",
-    "@mui/material": "^5.11.6",
-    "@mui/x-date-pickers": "^5.0.13",
-    "@reduxjs/toolkit": "^1.9.1",
+    "@mui/lab": "^5.0.0-alpha.118",
+    "@mui/material": "^5.11.7",
+    "@mui/x-date-pickers": "^5.0.16",
+    "@reduxjs/toolkit": "^1.9.2",
     "@sentry/react": "^7.34.0",
     "@sentry/tracing": "^7.34.0",
-    "aws-amplify": "^5.0.10",
-    "aws-sdk": "^2.1303.0",
-    "contentful": "^9.2.20",
+    "aws-amplify": "^5.0.12",
+    "aws-sdk": "^2.1305.0",
+    "contentful": "^9.3.0",
     "date-fns": "^2.29.3",
     "dotenv": "^16.0.3",
     "formik": "^2.2.9",
@@ -42,7 +42,7 @@
     "react-scripts": "^5.0.1",
     "react-select": "^5.7.0",
     "react-slidez": "^0.0.31",
-    "swiper": "^8.4.6",
+    "swiper": "^8.4.7",
     "web-vitals": "^3.1.1",
     "webpack": "^5.75.0",
     "yup": "^0.32.11"
@@ -70,8 +70,8 @@
     "proseWrap": "never"
   },
   "devDependencies": {
-    "eslint": "^8.32.0",
-    "eslint-plugin-react": "^7.32.0",
+    "eslint": "^8.33.0",
+    "eslint-plugin-react": "^7.32.2",
     "webpack-cli": "^5.0.1"
   }
 }

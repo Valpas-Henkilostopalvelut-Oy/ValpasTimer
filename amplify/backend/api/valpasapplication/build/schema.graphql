@@ -111,6 +111,31 @@ type WorkCard @aws_iam @aws_cognito_user_pools {
   files: [String]
 }
 
+type OwnCar @aws_iam @aws_cognito_user_pools {
+  description: String
+  id: ID
+  plate: String
+  class: String
+}
+
+type RoutePoints @aws_iam @aws_cognito_user_pools {
+  id: ID
+  comment: String
+  address: String
+  lat: Float
+  lng: Float
+}
+
+enum Classification {
+  ADMINISTRATIVESERVICE
+  ITDEVICEANDSOFTWAREEXPENSES
+  MARKETINGEXPENSES
+  MEETINGEXPENSES
+  PREMISESEXPENSES
+  TRAVELEXPENSES
+  VEHICLEEXPENSES
+}
+
 enum Drivingtype {
   A
   A1
@@ -155,6 +180,64 @@ enum UserAgreementStatus {
   ACTIVE
   DISABLED
   DELETED
+}
+
+enum PaymentMethod {
+  CASH
+  OWNCARD
+  COMPANYCARD
+  BANKTRANSFER
+  OTHER
+}
+
+enum Currency {
+  EUR
+  USD
+  GBP
+  CHF
+  SEK
+  NOK
+}
+
+type Worktravel @aws_iam @aws_cognito_user_pools {
+  id: ID!
+  userId: String
+  created: AWSDateTime
+  updated: AWSDateTime
+  title: String
+  comment: String
+  departureDateTime: AWSDateTime
+  returnDateTime: AWSDateTime
+  routeCar: String
+  routePoints: [RoutePoints]
+  attachments: [String]
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+  _version: Int!
+  _deleted: Boolean
+  _lastChangedAt: AWSTimestamp!
+}
+
+type Receipt @aws_iam @aws_cognito_user_pools {
+  id: ID!
+  userId: String
+  created: AWSDateTime
+  updated: AWSDateTime
+  dateOfPurchase: AWSDateTime
+  placeOfPurchase: String
+  receiptNumber: String
+  class: Classification
+  price: Float
+  currency: Currency
+  receiptImage: [String]
+  tax: Float
+  paymentMethod: PaymentMethod
+  comment: String
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+  _version: Int!
+  _deleted: Boolean
+  _lastChangedAt: AWSTimestamp!
 }
 
 type Agreement @aws_iam @aws_cognito_user_pools {
@@ -241,6 +324,7 @@ type UserCredentials @aws_iam @aws_cognito_user_pools {
   formChecked: [String]
   settings: UserSettings
   workcards: [WorkCard]
+  ownCars: [OwnCar]
   createdAt: AWSDateTime!
   updatedAt: AWSDateTime!
   _version: Int!
@@ -398,6 +482,291 @@ enum ModelSortDirection {
   DESC
 }
 
+input RoutePointsInput {
+  id: ID
+  comment: String
+  address: String
+  lat: Float
+  lng: Float
+}
+
+type ModelWorktravelConnection @aws_iam @aws_cognito_user_pools {
+  items: [Worktravel]!
+  nextToken: String
+  startedAt: AWSTimestamp
+}
+
+input ModelWorktravelFilterInput {
+  id: ModelIDInput
+  userId: ModelStringInput
+  created: ModelStringInput
+  updated: ModelStringInput
+  title: ModelStringInput
+  comment: ModelStringInput
+  departureDateTime: ModelStringInput
+  returnDateTime: ModelStringInput
+  routeCar: ModelStringInput
+  attachments: ModelStringInput
+  and: [ModelWorktravelFilterInput]
+  or: [ModelWorktravelFilterInput]
+  not: ModelWorktravelFilterInput
+}
+
+type Query {
+  getWorktravel(id: ID!): Worktravel @aws_iam @aws_cognito_user_pools
+  listWorktravels(filter: ModelWorktravelFilterInput, limit: Int, nextToken: String): ModelWorktravelConnection @aws_iam @aws_cognito_user_pools
+  syncWorktravels(filter: ModelWorktravelFilterInput, limit: Int, nextToken: String, lastSync: AWSTimestamp): ModelWorktravelConnection @aws_iam @aws_cognito_user_pools
+  getReceipt(id: ID!): Receipt @aws_iam @aws_cognito_user_pools
+  listReceipts(filter: ModelReceiptFilterInput, limit: Int, nextToken: String): ModelReceiptConnection @aws_iam @aws_cognito_user_pools
+  syncReceipts(filter: ModelReceiptFilterInput, limit: Int, nextToken: String, lastSync: AWSTimestamp): ModelReceiptConnection @aws_iam @aws_cognito_user_pools
+  getAgreement(id: ID!): Agreement @aws_iam @aws_cognito_user_pools
+  listAgreements(filter: ModelAgreementFilterInput, limit: Int, nextToken: String): ModelAgreementConnection @aws_iam @aws_cognito_user_pools
+  syncAgreements(filter: ModelAgreementFilterInput, limit: Int, nextToken: String, lastSync: AWSTimestamp): ModelAgreementConnection @aws_iam @aws_cognito_user_pools
+  getTasks(id: ID!): Tasks @aws_iam @aws_cognito_user_pools
+  listTasks(filter: ModelTasksFilterInput, limit: Int, nextToken: String): ModelTasksConnection @aws_iam @aws_cognito_user_pools
+  syncTasks(filter: ModelTasksFilterInput, limit: Int, nextToken: String, lastSync: AWSTimestamp): ModelTasksConnection @aws_iam @aws_cognito_user_pools
+  getTimeEntry(id: ID!): TimeEntry @aws_iam @aws_cognito_user_pools
+  listTimeEntries(filter: ModelTimeEntryFilterInput, limit: Int, nextToken: String): ModelTimeEntryConnection @aws_iam @aws_cognito_user_pools
+  syncTimeEntries(filter: ModelTimeEntryFilterInput, limit: Int, nextToken: String, lastSync: AWSTimestamp): ModelTimeEntryConnection @aws_iam @aws_cognito_user_pools
+  getAllWorkSpaces(id: ID!): AllWorkSpaces @aws_iam @aws_cognito_user_pools
+  listAllWorkSpaces(filter: ModelAllWorkSpacesFilterInput, limit: Int, nextToken: String): ModelAllWorkSpacesConnection @aws_iam @aws_cognito_user_pools
+  syncAllWorkSpaces(filter: ModelAllWorkSpacesFilterInput, limit: Int, nextToken: String, lastSync: AWSTimestamp): ModelAllWorkSpacesConnection @aws_iam @aws_cognito_user_pools
+  getUserCredentials(id: ID!): UserCredentials @aws_iam @aws_cognito_user_pools
+  listUserCredentials(filter: ModelUserCredentialsFilterInput, limit: Int, nextToken: String): ModelUserCredentialsConnection @aws_iam @aws_cognito_user_pools
+  syncUserCredentials(filter: ModelUserCredentialsFilterInput, limit: Int, nextToken: String, lastSync: AWSTimestamp): ModelUserCredentialsConnection @aws_iam @aws_cognito_user_pools
+}
+
+input ModelWorktravelConditionInput {
+  userId: ModelStringInput
+  created: ModelStringInput
+  updated: ModelStringInput
+  title: ModelStringInput
+  comment: ModelStringInput
+  departureDateTime: ModelStringInput
+  returnDateTime: ModelStringInput
+  routeCar: ModelStringInput
+  attachments: ModelStringInput
+  and: [ModelWorktravelConditionInput]
+  or: [ModelWorktravelConditionInput]
+  not: ModelWorktravelConditionInput
+}
+
+input CreateWorktravelInput {
+  id: ID
+  userId: String
+  created: AWSDateTime
+  updated: AWSDateTime
+  title: String
+  comment: String
+  departureDateTime: AWSDateTime
+  returnDateTime: AWSDateTime
+  routeCar: String
+  routePoints: [RoutePointsInput]
+  attachments: [String]
+  _version: Int
+}
+
+input UpdateWorktravelInput {
+  id: ID!
+  userId: String
+  created: AWSDateTime
+  updated: AWSDateTime
+  title: String
+  comment: String
+  departureDateTime: AWSDateTime
+  returnDateTime: AWSDateTime
+  routeCar: String
+  routePoints: [RoutePointsInput]
+  attachments: [String]
+  _version: Int
+}
+
+input DeleteWorktravelInput {
+  id: ID!
+  _version: Int
+}
+
+type Mutation {
+  createWorktravel(input: CreateWorktravelInput!, condition: ModelWorktravelConditionInput): Worktravel @aws_iam @aws_cognito_user_pools
+  updateWorktravel(input: UpdateWorktravelInput!, condition: ModelWorktravelConditionInput): Worktravel @aws_iam @aws_cognito_user_pools
+  deleteWorktravel(input: DeleteWorktravelInput!, condition: ModelWorktravelConditionInput): Worktravel @aws_iam @aws_cognito_user_pools
+  createReceipt(input: CreateReceiptInput!, condition: ModelReceiptConditionInput): Receipt @aws_iam @aws_cognito_user_pools
+  updateReceipt(input: UpdateReceiptInput!, condition: ModelReceiptConditionInput): Receipt @aws_iam @aws_cognito_user_pools
+  deleteReceipt(input: DeleteReceiptInput!, condition: ModelReceiptConditionInput): Receipt @aws_iam @aws_cognito_user_pools
+  createAgreement(input: CreateAgreementInput!, condition: ModelAgreementConditionInput): Agreement @aws_iam @aws_cognito_user_pools
+  updateAgreement(input: UpdateAgreementInput!, condition: ModelAgreementConditionInput): Agreement @aws_iam @aws_cognito_user_pools
+  deleteAgreement(input: DeleteAgreementInput!, condition: ModelAgreementConditionInput): Agreement @aws_iam @aws_cognito_user_pools
+  createTasks(input: CreateTasksInput!, condition: ModelTasksConditionInput): Tasks @aws_iam @aws_cognito_user_pools
+  updateTasks(input: UpdateTasksInput!, condition: ModelTasksConditionInput): Tasks @aws_iam @aws_cognito_user_pools
+  deleteTasks(input: DeleteTasksInput!, condition: ModelTasksConditionInput): Tasks @aws_iam @aws_cognito_user_pools
+  createTimeEntry(input: CreateTimeEntryInput!, condition: ModelTimeEntryConditionInput): TimeEntry @aws_iam @aws_cognito_user_pools
+  updateTimeEntry(input: UpdateTimeEntryInput!, condition: ModelTimeEntryConditionInput): TimeEntry @aws_iam @aws_cognito_user_pools
+  deleteTimeEntry(input: DeleteTimeEntryInput!, condition: ModelTimeEntryConditionInput): TimeEntry @aws_iam @aws_cognito_user_pools
+  createAllWorkSpaces(input: CreateAllWorkSpacesInput!, condition: ModelAllWorkSpacesConditionInput): AllWorkSpaces @aws_iam @aws_cognito_user_pools
+  updateAllWorkSpaces(input: UpdateAllWorkSpacesInput!, condition: ModelAllWorkSpacesConditionInput): AllWorkSpaces @aws_iam @aws_cognito_user_pools
+  deleteAllWorkSpaces(input: DeleteAllWorkSpacesInput!, condition: ModelAllWorkSpacesConditionInput): AllWorkSpaces @aws_iam @aws_cognito_user_pools
+  createUserCredentials(input: CreateUserCredentialsInput!, condition: ModelUserCredentialsConditionInput): UserCredentials @aws_iam @aws_cognito_user_pools
+  updateUserCredentials(input: UpdateUserCredentialsInput!, condition: ModelUserCredentialsConditionInput): UserCredentials @aws_iam @aws_cognito_user_pools
+  deleteUserCredentials(input: DeleteUserCredentialsInput!, condition: ModelUserCredentialsConditionInput): UserCredentials @aws_iam @aws_cognito_user_pools
+}
+
+input ModelSubscriptionWorktravelFilterInput {
+  id: ModelSubscriptionIDInput
+  created: ModelSubscriptionStringInput
+  updated: ModelSubscriptionStringInput
+  title: ModelSubscriptionStringInput
+  comment: ModelSubscriptionStringInput
+  departureDateTime: ModelSubscriptionStringInput
+  returnDateTime: ModelSubscriptionStringInput
+  routeCar: ModelSubscriptionStringInput
+  attachments: ModelSubscriptionStringInput
+  and: [ModelSubscriptionWorktravelFilterInput]
+  or: [ModelSubscriptionWorktravelFilterInput]
+}
+
+type Subscription {
+  onCreateWorktravel(filter: ModelSubscriptionWorktravelFilterInput, userId: String): Worktravel @aws_subscribe(mutations: ["createWorktravel"]) @aws_iam @aws_cognito_user_pools
+  onUpdateWorktravel(filter: ModelSubscriptionWorktravelFilterInput, userId: String): Worktravel @aws_subscribe(mutations: ["updateWorktravel"]) @aws_iam @aws_cognito_user_pools
+  onDeleteWorktravel(filter: ModelSubscriptionWorktravelFilterInput, userId: String): Worktravel @aws_subscribe(mutations: ["deleteWorktravel"]) @aws_iam @aws_cognito_user_pools
+  onCreateReceipt(filter: ModelSubscriptionReceiptFilterInput, userId: String): Receipt @aws_subscribe(mutations: ["createReceipt"]) @aws_iam @aws_cognito_user_pools
+  onUpdateReceipt(filter: ModelSubscriptionReceiptFilterInput, userId: String): Receipt @aws_subscribe(mutations: ["updateReceipt"]) @aws_iam @aws_cognito_user_pools
+  onDeleteReceipt(filter: ModelSubscriptionReceiptFilterInput, userId: String): Receipt @aws_subscribe(mutations: ["deleteReceipt"]) @aws_iam @aws_cognito_user_pools
+  onCreateAgreement(filter: ModelSubscriptionAgreementFilterInput, userId: String): Agreement @aws_subscribe(mutations: ["createAgreement"]) @aws_iam @aws_cognito_user_pools
+  onUpdateAgreement(filter: ModelSubscriptionAgreementFilterInput, userId: String): Agreement @aws_subscribe(mutations: ["updateAgreement"]) @aws_iam @aws_cognito_user_pools
+  onDeleteAgreement(filter: ModelSubscriptionAgreementFilterInput, userId: String): Agreement @aws_subscribe(mutations: ["deleteAgreement"]) @aws_iam @aws_cognito_user_pools
+  onCreateTasks(filter: ModelSubscriptionTasksFilterInput, username: String): Tasks @aws_subscribe(mutations: ["createTasks"]) @aws_iam @aws_cognito_user_pools
+  onUpdateTasks(filter: ModelSubscriptionTasksFilterInput, username: String): Tasks @aws_subscribe(mutations: ["updateTasks"]) @aws_iam @aws_cognito_user_pools
+  onDeleteTasks(filter: ModelSubscriptionTasksFilterInput, username: String): Tasks @aws_subscribe(mutations: ["deleteTasks"]) @aws_iam @aws_cognito_user_pools
+  onCreateTimeEntry(filter: ModelSubscriptionTimeEntryFilterInput, userId: String): TimeEntry @aws_subscribe(mutations: ["createTimeEntry"]) @aws_iam @aws_cognito_user_pools
+  onUpdateTimeEntry(filter: ModelSubscriptionTimeEntryFilterInput, userId: String): TimeEntry @aws_subscribe(mutations: ["updateTimeEntry"]) @aws_iam @aws_cognito_user_pools
+  onDeleteTimeEntry(filter: ModelSubscriptionTimeEntryFilterInput, userId: String): TimeEntry @aws_subscribe(mutations: ["deleteTimeEntry"]) @aws_iam @aws_cognito_user_pools
+  onCreateAllWorkSpaces(filter: ModelSubscriptionAllWorkSpacesFilterInput): AllWorkSpaces @aws_subscribe(mutations: ["createAllWorkSpaces"]) @aws_iam @aws_cognito_user_pools
+  onUpdateAllWorkSpaces(filter: ModelSubscriptionAllWorkSpacesFilterInput): AllWorkSpaces @aws_subscribe(mutations: ["updateAllWorkSpaces"]) @aws_iam @aws_cognito_user_pools
+  onDeleteAllWorkSpaces(filter: ModelSubscriptionAllWorkSpacesFilterInput): AllWorkSpaces @aws_subscribe(mutations: ["deleteAllWorkSpaces"]) @aws_iam @aws_cognito_user_pools
+  onCreateUserCredentials(filter: ModelSubscriptionUserCredentialsFilterInput, userId: String): UserCredentials @aws_subscribe(mutations: ["createUserCredentials"]) @aws_iam @aws_cognito_user_pools
+  onUpdateUserCredentials(filter: ModelSubscriptionUserCredentialsFilterInput, userId: String): UserCredentials @aws_subscribe(mutations: ["updateUserCredentials"]) @aws_iam @aws_cognito_user_pools
+  onDeleteUserCredentials(filter: ModelSubscriptionUserCredentialsFilterInput, userId: String): UserCredentials @aws_subscribe(mutations: ["deleteUserCredentials"]) @aws_iam @aws_cognito_user_pools
+}
+
+type ModelReceiptConnection @aws_iam @aws_cognito_user_pools {
+  items: [Receipt]!
+  nextToken: String
+  startedAt: AWSTimestamp
+}
+
+input ModelClassificationInput {
+  eq: Classification
+  ne: Classification
+}
+
+input ModelCurrencyInput {
+  eq: Currency
+  ne: Currency
+}
+
+input ModelPaymentMethodInput {
+  eq: PaymentMethod
+  ne: PaymentMethod
+}
+
+input ModelReceiptFilterInput {
+  id: ModelIDInput
+  userId: ModelStringInput
+  created: ModelStringInput
+  updated: ModelStringInput
+  dateOfPurchase: ModelStringInput
+  placeOfPurchase: ModelStringInput
+  receiptNumber: ModelStringInput
+  class: ModelClassificationInput
+  price: ModelFloatInput
+  currency: ModelCurrencyInput
+  receiptImage: ModelStringInput
+  tax: ModelFloatInput
+  paymentMethod: ModelPaymentMethodInput
+  comment: ModelStringInput
+  and: [ModelReceiptFilterInput]
+  or: [ModelReceiptFilterInput]
+  not: ModelReceiptFilterInput
+}
+
+input ModelReceiptConditionInput {
+  userId: ModelStringInput
+  created: ModelStringInput
+  updated: ModelStringInput
+  dateOfPurchase: ModelStringInput
+  placeOfPurchase: ModelStringInput
+  receiptNumber: ModelStringInput
+  class: ModelClassificationInput
+  price: ModelFloatInput
+  currency: ModelCurrencyInput
+  receiptImage: ModelStringInput
+  tax: ModelFloatInput
+  paymentMethod: ModelPaymentMethodInput
+  comment: ModelStringInput
+  and: [ModelReceiptConditionInput]
+  or: [ModelReceiptConditionInput]
+  not: ModelReceiptConditionInput
+}
+
+input CreateReceiptInput {
+  id: ID
+  userId: String
+  created: AWSDateTime
+  updated: AWSDateTime
+  dateOfPurchase: AWSDateTime
+  placeOfPurchase: String
+  receiptNumber: String
+  class: Classification
+  price: Float
+  currency: Currency
+  receiptImage: [String]
+  tax: Float
+  paymentMethod: PaymentMethod
+  comment: String
+  _version: Int
+}
+
+input UpdateReceiptInput {
+  id: ID!
+  userId: String
+  created: AWSDateTime
+  updated: AWSDateTime
+  dateOfPurchase: AWSDateTime
+  placeOfPurchase: String
+  receiptNumber: String
+  class: Classification
+  price: Float
+  currency: Currency
+  receiptImage: [String]
+  tax: Float
+  paymentMethod: PaymentMethod
+  comment: String
+  _version: Int
+}
+
+input DeleteReceiptInput {
+  id: ID!
+  _version: Int
+}
+
+input ModelSubscriptionReceiptFilterInput {
+  id: ModelSubscriptionIDInput
+  created: ModelSubscriptionStringInput
+  updated: ModelSubscriptionStringInput
+  dateOfPurchase: ModelSubscriptionStringInput
+  placeOfPurchase: ModelSubscriptionStringInput
+  receiptNumber: ModelSubscriptionStringInput
+  class: ModelSubscriptionStringInput
+  price: ModelSubscriptionFloatInput
+  currency: ModelSubscriptionStringInput
+  receiptImage: ModelSubscriptionStringInput
+  tax: ModelSubscriptionFloatInput
+  paymentMethod: ModelSubscriptionStringInput
+  comment: ModelSubscriptionStringInput
+  and: [ModelSubscriptionReceiptFilterInput]
+  or: [ModelSubscriptionReceiptFilterInput]
+}
+
 input UserInput {
   userId: ID
   name: String
@@ -434,24 +803,6 @@ input ModelAgreementFilterInput {
   and: [ModelAgreementFilterInput]
   or: [ModelAgreementFilterInput]
   not: ModelAgreementFilterInput
-}
-
-type Query {
-  getAgreement(id: ID!): Agreement @aws_iam @aws_cognito_user_pools
-  listAgreements(filter: ModelAgreementFilterInput, limit: Int, nextToken: String): ModelAgreementConnection @aws_iam @aws_cognito_user_pools
-  syncAgreements(filter: ModelAgreementFilterInput, limit: Int, nextToken: String, lastSync: AWSTimestamp): ModelAgreementConnection @aws_iam @aws_cognito_user_pools
-  getTasks(id: ID!): Tasks @aws_iam @aws_cognito_user_pools
-  listTasks(filter: ModelTasksFilterInput, limit: Int, nextToken: String): ModelTasksConnection @aws_iam @aws_cognito_user_pools
-  syncTasks(filter: ModelTasksFilterInput, limit: Int, nextToken: String, lastSync: AWSTimestamp): ModelTasksConnection @aws_iam @aws_cognito_user_pools
-  getTimeEntry(id: ID!): TimeEntry @aws_iam @aws_cognito_user_pools
-  listTimeEntries(filter: ModelTimeEntryFilterInput, limit: Int, nextToken: String): ModelTimeEntryConnection @aws_iam @aws_cognito_user_pools
-  syncTimeEntries(filter: ModelTimeEntryFilterInput, limit: Int, nextToken: String, lastSync: AWSTimestamp): ModelTimeEntryConnection @aws_iam @aws_cognito_user_pools
-  getAllWorkSpaces(id: ID!): AllWorkSpaces @aws_iam @aws_cognito_user_pools
-  listAllWorkSpaces(filter: ModelAllWorkSpacesFilterInput, limit: Int, nextToken: String): ModelAllWorkSpacesConnection @aws_iam @aws_cognito_user_pools
-  syncAllWorkSpaces(filter: ModelAllWorkSpacesFilterInput, limit: Int, nextToken: String, lastSync: AWSTimestamp): ModelAllWorkSpacesConnection @aws_iam @aws_cognito_user_pools
-  getUserCredentials(id: ID!): UserCredentials @aws_iam @aws_cognito_user_pools
-  listUserCredentials(filter: ModelUserCredentialsFilterInput, limit: Int, nextToken: String): ModelUserCredentialsConnection @aws_iam @aws_cognito_user_pools
-  syncUserCredentials(filter: ModelUserCredentialsFilterInput, limit: Int, nextToken: String, lastSync: AWSTimestamp): ModelUserCredentialsConnection @aws_iam @aws_cognito_user_pools
 }
 
 input ModelAgreementConditionInput {
@@ -499,24 +850,6 @@ input DeleteAgreementInput {
   _version: Int
 }
 
-type Mutation {
-  createAgreement(input: CreateAgreementInput!, condition: ModelAgreementConditionInput): Agreement @aws_iam @aws_cognito_user_pools
-  updateAgreement(input: UpdateAgreementInput!, condition: ModelAgreementConditionInput): Agreement @aws_iam @aws_cognito_user_pools
-  deleteAgreement(input: DeleteAgreementInput!, condition: ModelAgreementConditionInput): Agreement @aws_iam @aws_cognito_user_pools
-  createTasks(input: CreateTasksInput!, condition: ModelTasksConditionInput): Tasks @aws_iam @aws_cognito_user_pools
-  updateTasks(input: UpdateTasksInput!, condition: ModelTasksConditionInput): Tasks @aws_iam @aws_cognito_user_pools
-  deleteTasks(input: DeleteTasksInput!, condition: ModelTasksConditionInput): Tasks @aws_iam @aws_cognito_user_pools
-  createTimeEntry(input: CreateTimeEntryInput!, condition: ModelTimeEntryConditionInput): TimeEntry @aws_iam @aws_cognito_user_pools
-  updateTimeEntry(input: UpdateTimeEntryInput!, condition: ModelTimeEntryConditionInput): TimeEntry @aws_iam @aws_cognito_user_pools
-  deleteTimeEntry(input: DeleteTimeEntryInput!, condition: ModelTimeEntryConditionInput): TimeEntry @aws_iam @aws_cognito_user_pools
-  createAllWorkSpaces(input: CreateAllWorkSpacesInput!, condition: ModelAllWorkSpacesConditionInput): AllWorkSpaces @aws_iam @aws_cognito_user_pools
-  updateAllWorkSpaces(input: UpdateAllWorkSpacesInput!, condition: ModelAllWorkSpacesConditionInput): AllWorkSpaces @aws_iam @aws_cognito_user_pools
-  deleteAllWorkSpaces(input: DeleteAllWorkSpacesInput!, condition: ModelAllWorkSpacesConditionInput): AllWorkSpaces @aws_iam @aws_cognito_user_pools
-  createUserCredentials(input: CreateUserCredentialsInput!, condition: ModelUserCredentialsConditionInput): UserCredentials @aws_iam @aws_cognito_user_pools
-  updateUserCredentials(input: UpdateUserCredentialsInput!, condition: ModelUserCredentialsConditionInput): UserCredentials @aws_iam @aws_cognito_user_pools
-  deleteUserCredentials(input: DeleteUserCredentialsInput!, condition: ModelUserCredentialsConditionInput): UserCredentials @aws_iam @aws_cognito_user_pools
-}
-
 input ModelSubscriptionAgreementFilterInput {
   id: ModelSubscriptionIDInput
   name: ModelSubscriptionStringInput
@@ -526,24 +859,6 @@ input ModelSubscriptionAgreementFilterInput {
   workspaceId: ModelSubscriptionIDInput
   and: [ModelSubscriptionAgreementFilterInput]
   or: [ModelSubscriptionAgreementFilterInput]
-}
-
-type Subscription {
-  onCreateAgreement(filter: ModelSubscriptionAgreementFilterInput, userId: String): Agreement @aws_subscribe(mutations: ["createAgreement"]) @aws_iam @aws_cognito_user_pools
-  onUpdateAgreement(filter: ModelSubscriptionAgreementFilterInput, userId: String): Agreement @aws_subscribe(mutations: ["updateAgreement"]) @aws_iam @aws_cognito_user_pools
-  onDeleteAgreement(filter: ModelSubscriptionAgreementFilterInput, userId: String): Agreement @aws_subscribe(mutations: ["deleteAgreement"]) @aws_iam @aws_cognito_user_pools
-  onCreateTasks(filter: ModelSubscriptionTasksFilterInput, username: String): Tasks @aws_subscribe(mutations: ["createTasks"]) @aws_iam @aws_cognito_user_pools
-  onUpdateTasks(filter: ModelSubscriptionTasksFilterInput, username: String): Tasks @aws_subscribe(mutations: ["updateTasks"]) @aws_iam @aws_cognito_user_pools
-  onDeleteTasks(filter: ModelSubscriptionTasksFilterInput, username: String): Tasks @aws_subscribe(mutations: ["deleteTasks"]) @aws_iam @aws_cognito_user_pools
-  onCreateTimeEntry(filter: ModelSubscriptionTimeEntryFilterInput, userId: String): TimeEntry @aws_subscribe(mutations: ["createTimeEntry"]) @aws_iam @aws_cognito_user_pools
-  onUpdateTimeEntry(filter: ModelSubscriptionTimeEntryFilterInput, userId: String): TimeEntry @aws_subscribe(mutations: ["updateTimeEntry"]) @aws_iam @aws_cognito_user_pools
-  onDeleteTimeEntry(filter: ModelSubscriptionTimeEntryFilterInput, userId: String): TimeEntry @aws_subscribe(mutations: ["deleteTimeEntry"]) @aws_iam @aws_cognito_user_pools
-  onCreateAllWorkSpaces(filter: ModelSubscriptionAllWorkSpacesFilterInput): AllWorkSpaces @aws_subscribe(mutations: ["createAllWorkSpaces"]) @aws_iam @aws_cognito_user_pools
-  onUpdateAllWorkSpaces(filter: ModelSubscriptionAllWorkSpacesFilterInput): AllWorkSpaces @aws_subscribe(mutations: ["updateAllWorkSpaces"]) @aws_iam @aws_cognito_user_pools
-  onDeleteAllWorkSpaces(filter: ModelSubscriptionAllWorkSpacesFilterInput): AllWorkSpaces @aws_subscribe(mutations: ["deleteAllWorkSpaces"]) @aws_iam @aws_cognito_user_pools
-  onCreateUserCredentials(filter: ModelSubscriptionUserCredentialsFilterInput, userId: String): UserCredentials @aws_subscribe(mutations: ["createUserCredentials"]) @aws_iam @aws_cognito_user_pools
-  onUpdateUserCredentials(filter: ModelSubscriptionUserCredentialsFilterInput, userId: String): UserCredentials @aws_subscribe(mutations: ["updateUserCredentials"]) @aws_iam @aws_cognito_user_pools
-  onDeleteUserCredentials(filter: ModelSubscriptionUserCredentialsFilterInput, userId: String): UserCredentials @aws_subscribe(mutations: ["deleteUserCredentials"]) @aws_iam @aws_cognito_user_pools
 }
 
 input WorkplaceInput {
@@ -872,6 +1187,13 @@ input WorkCardInput {
   files: [String]
 }
 
+input OwnCarInput {
+  description: String
+  id: ID
+  plate: String
+  class: String
+}
+
 type ModelUserCredentialsConnection @aws_iam @aws_cognito_user_pools {
   items: [UserCredentials]!
   nextToken: String
@@ -917,6 +1239,7 @@ input CreateUserCredentialsInput {
   formChecked: [String]
   settings: UserSettingsInput
   workcards: [WorkCardInput]
+  ownCars: [OwnCarInput]
   _version: Int
 }
 
@@ -931,6 +1254,7 @@ input UpdateUserCredentialsInput {
   formChecked: [String]
   settings: UserSettingsInput
   workcards: [WorkCardInput]
+  ownCars: [OwnCarInput]
   _version: Int
 }
 
