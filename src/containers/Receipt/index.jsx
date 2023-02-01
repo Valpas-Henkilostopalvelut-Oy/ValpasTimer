@@ -6,10 +6,12 @@ import { Receiptlist } from "./services/receiptlist.jsx";
 import { Moreadd } from "./services/moremenu.jsx";
 import { Travelform } from "./services/travelform.jsx";
 import { Receiptlang as lang } from "./services/lang.jsx";
+import { useAppContext } from "../../services/contextLib.jsx";
 
 export const Receipt = () => {
-  const [isEmpty, setIsEmpty] = useState(false);
+  const [isEmpty, setIsEmpty] = useState(true);
   const [selectedIndex, setSelectedIndex] = useState(null);
+  const lang = useAppContext().langValue.receipts;
 
   useEffect(() => {
     Hub.listen("datastore", async (hubData) => {
@@ -48,7 +50,7 @@ export const Receipt = () => {
         <Collapse in={selectedIndex === 1}>
           <Travelform isEmpty={isEmpty} setSelectedIndex={setSelectedIndex} />
         </Collapse>
-        <Receiptlist isEmpty={isEmpty} />
+        <Receiptlist isEmpty={isEmpty} lang={lang} />
       </Box>
     </Container>
   );

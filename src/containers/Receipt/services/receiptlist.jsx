@@ -67,7 +67,7 @@ const Image = (props) => {
   );
 };
 
-export const Receiptlist = ({ isEmpty }) => {
+export const Receiptlist = ({ isEmpty, lang }) => {
   const [receipts, setReceipts] = useState([]);
   useEffect(() => {
     const fetchReceipts = async () => {
@@ -80,7 +80,9 @@ export const Receiptlist = ({ isEmpty }) => {
 
   return (
     <Box sx={{ mt: 2 }}>
-      <Typography variant="h4">Receipt list</Typography>
+      <Typography variant="h4">{
+        lang.titlelist
+      }</Typography>
       {receipts.map((receipt) => (
         <Items key={receipt.id} receipt={receipt} />
       ))}

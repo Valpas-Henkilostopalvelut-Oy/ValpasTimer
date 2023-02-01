@@ -16,7 +16,7 @@ import {
   Box,
 } from "@mui/material";
 import { DataStore, Storage, Auth } from "aws-amplify";
-import { Receipt, Currency, PaymentMethod } from "../../../models";
+import { Receipt, Currency, PaymentMethod, Classification } from "../../../models";
 import { LocalizationProvider, DatePicker } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import fi from "date-fns/locale/fi";
@@ -28,6 +28,16 @@ const metodlist = (lang) => [
   { value: PaymentMethod.COMPANYCARD, label: lang.companycard },
   { value: PaymentMethod.BANKTRANSFER, label: lang.transfer },
   { value: PaymentMethod.OTHER, label: lang.other },
+];
+
+const classlist = (lang) => [
+  { value: Classification.ADMINISTRATIVESERVICE, label: lang.administrativeservice },
+  { value: Classification.ITDEVICEANDSOFTWAREEXPENSES, label: lang.itdeviceandsoftwareexpenses },
+  { value: Classification.MARKETINGEXPENSES, label: lang.marketingexpenses },
+  { value: Classification.PREMISESEXPENSES, label: lang.premisesexpenses },
+  { value: Classification.MEETINGEXPENSES, label: lang.meetingexpenses },
+  { value: Classification.TRAVELEXPENSES, label: lang.travelexpenses },
+  { value: Classification.VEHICLEEXPENSES, label: lang.vehicleexpenses },
 ];
 
 const Receiptdate = ({ data, setData, isEmpty, lang }) => {
@@ -169,7 +179,66 @@ const Paymentmethod = ({ data, setData, isEmpty, lang }) => {
   );
 };
 
-const Classification = ({ data, setData, isEmpty, lang }) => {};
+const ClassificationSelect = ({ data, setData, isEmpty, lang }) => {
+  const handleClassificationChange = (value) => setData({ ...data, class: value.target.value });
+
+  return (
+    <FormControl fullWidth>
+      <InputLabel id="class-label">{lang.class}</InputLabel>
+      <Select
+        labelId="class-label"
+        id="class"
+        disabled={!isEmpty}
+        label={lang.class}
+        value={data.class}
+        onChange={handleClassificationChange}
+        input={<InputBase />}
+      >
+        {classlist(lang.classes).map((classi) => {
+          return (
+            <MenuItem key={classi.value} value={classi.value}>
+              {classi.label}
+            </MenuItem>
+          );
+        })}
+      </Select>
+    </FormControl>
+  );
+};
+
+const Taxselect = ({ data, setData, isEmpty, lang }) => {
+  const taxlist = [
+    { value: 0, label: "0%" },
+    { value: 0.06, label: "6%" },
+    { value: 0.1, label: "10%" },
+    { value: 0.24, label: "24%" },
+  ];
+
+  const handleTaxChange = (value) => setData({ ...data, tax: value.target.value });
+
+  return (
+    <FormControl fullWidth>
+      <InputLabel id="tax-label">{lang.tax}</InputLabel>
+      <Select
+        labelId="tax-label"
+        id="tax"
+        disabled={!isEmpty}
+        label={lang.tax}
+        value={data.tax}
+        onChange={handleTaxChange}
+        input={<InputBase />}
+      >
+        {taxlist.map((tax) => {
+          return (
+            <MenuItem key={tax.value} value={tax.value}>
+              {tax.label}
+            </MenuItem>
+          );
+        })}
+      </Select>
+    </FormControl>
+  );
+};
 
 const onUpload = async (file) => {
   try {
@@ -277,8 +346,10 @@ export const ReceiptTable = ({
           </TableRow>
 
           <TableRow>
-            <TableCell>Classification</TableCell>
-            <TableCell colSpan={2}></TableCell>
+            <TableCell>{lang.class}</TableCell>
+            <TableCell colSpan={2}>
+              <ClassificationSelect data={data} setData={setData} lang={lang} isEmpty={isEmpty} />
+            </TableCell>
           </TableRow>
 
           <TableRow>
@@ -288,6 +359,13 @@ export const ReceiptTable = ({
             </TableCell>
             <TableCell>
               <Selectcurrency data={data} setData={setData} lang={lang} isEmpty={isEmpty} />
+            </TableCell>
+          </TableRow>
+
+          <TableRow>
+            <TableCell>{lang.tax}</TableCell>
+            <TableCell colSpan={2}>
+              <Taxselect data={data} setData={setData} lang={lang} isEmpty={isEmpty} />
             </TableCell>
           </TableRow>
 

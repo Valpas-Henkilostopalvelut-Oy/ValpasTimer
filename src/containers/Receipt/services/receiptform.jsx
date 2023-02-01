@@ -1,7 +1,8 @@
 import React, { useState } from "react";
-import { Box, Grid } from "@mui/material";
+import { Box, Grid, Button, Typography } from "@mui/material";
 import Carousel from "react-material-ui-carousel";
 import { ReceiptTable } from "./table.jsx";
+import FileUploadIcon from "@mui/icons-material/FileUpload";
 
 const Image = (props) => {
   const { image } = props;
@@ -26,12 +27,48 @@ const Image = (props) => {
   );
 };
 
+const Imgcarousel = ({ images, setImages, lang }) => {
+  const [index, setIndex] = useState(0);
+  const handleRemove = () => {
+    const newImages = images.filter((image, i) => i !== index);
+    setImages(newImages);
+  };
+
+  const handleAdd = (e) => {
+    const files = Array.from(e.target.files);
+    setImages([...images, ...files]);
+  };
+  return (
+    <Grid container spacing={2}>
+      <Grid item xs={12}>
+        <Carousel autoPlay={false} indicators={false} onChange={setIndex} index={index}>
+          {images.map((image, i) => (
+            <Image key={i} image={image} />
+          ))}
+        </Carousel>
+      </Grid>
+      <Grid item xs={6}>
+        <Button variant="outlined" color="primary" fullWidth onClick={handleRemove}>
+          {lang.buttons.remove}
+        </Button>
+      </Grid>
+
+      <Grid item xs={6}>
+        <Button variant="outlined" color="primary" fullWidth component="label">
+          <input accept="image/*" id="icon-button-file" type="file" hidden onChange={handleAdd} multiple />
+          {lang.buttons.add}
+        </Button>
+      </Grid>
+    </Grid>
+  );
+};
+
 export const Receiptform = ({ isEmpty, setSelectedIndex, lang }) => {
-  const [images, setImages] = useState(null);
+  const [images, setImages] = useState([]);
   const [receipt, setReceipt] = useState({
     date: new Date(),
-    number: Number(""),
-    amount: Number(""),
+    number: "",
+    amount: Number(0),
     class: "",
     currency: "EUR",
     place: "",
@@ -46,15 +83,16 @@ export const Receiptform = ({ isEmpty, setSelectedIndex, lang }) => {
   const cancel = () => {
     setReceipt({
       date: new Date(),
-      number: Number(""),
-      amount: Number(""),
+      number: "",
+      amount: Number(0),
+      class: "",
       currency: "EUR",
       place: "",
       tax: 0.24,
       method: "CASH",
       category: "",
     });
-    setImages(null);
+    setImages([]);
     setSelectedIndex(null);
   };
 
@@ -62,21 +100,13 @@ export const Receiptform = ({ isEmpty, setSelectedIndex, lang }) => {
     <Box sx={{ mt: 2 }}>
       <Grid container spacing={1}>
         <Grid item md={4} xs={12}>
-          {images ? (
-            <Carousel autoPlay={false} animation="slide" indicators={false}>
-              {images.map((image, i) => (
-                <Image key={i} image={image} />
-              ))}
-            </Carousel>
+          {images.length > 0 ? (
+            <Imgcarousel images={images} setImages={setImages} lang={lang.carousel} />
           ) : (
             <Box
               sx={{
-                height: 400,
+                height: "100%",
                 width: "100%",
-                backgroundColor: "carnaval.gray",
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
                 cursor: "pointer",
                 "&:hover": {
                   backgroundColor: "carnaval.gray",
@@ -86,6 +116,21 @@ export const Receiptform = ({ isEmpty, setSelectedIndex, lang }) => {
               component="label"
             >
               <input type="file" multiple onChange={handleSelectimage} hidden disabled={!isEmpty} />
+              <Box
+                sx={{
+                  height: "100%",
+                  width: "100%",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  flexDirection: "column",
+                }}
+              >
+                <FileUploadIcon sx={{ fontSize: 100 }} />
+                <Typography variant="h5" sx={{}}>
+                  {lang.buttons.upload}
+                </Typography>
+              </Box>
             </Box>
           )}
         </Grid>

@@ -19,9 +19,18 @@ export const Receiptlang = {
     category: "Kategoria",
     comment: "Kommenti",
     attachments: "Liitteet",
+    class: "Luokka",
+    carousel: {
+      title: "Kuittikuvat",
+      buttons: {
+        remove: "Poista",
+        add: "Lisää",
+      },
+    },
     buttons: {
       add: "Lisää",
       cancel: "Peruuta",
+      upload: "Lataa",
     },
     methodselect: {
       cash: "Käteinen",
@@ -31,8 +40,14 @@ export const Receiptlang = {
       other: "Muu",
     },
     classes: {
-        administrativeservices: "Hallinnolliset palvelut",
-    }
+      administrativeservice: "Hallinnollinen palvelu",
+      itdeviceandsoftwareexpenses: "IT-laitteet ja -ohjelmistot",
+      marketingexpenses: "Markkinointikulut",
+      meetingexpenses: "Kokouskulut",
+      premisesexpenses: "Tilakulut",
+      travelexpenses: "Matkakulut",
+      vehicleexpenses: "Ajoneuvokulut",
+    },
   },
   list: {
     title: "Kuittilista",
