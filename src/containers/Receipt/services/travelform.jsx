@@ -1,7 +1,9 @@
-import React, { useState } from "react";
-import { Box, Grid, TextField, InputBase, Typography } from "@mui/material";
+import React, { useEffect, useState } from "react";
+import { Box, Grid, TextField, InputBase, Typography, Button, Autocomplete } from "@mui/material";
 import { LocalizationProvider, DateTimePicker } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+import { DataStore } from "aws-amplify";
+import { Worktravel } from "../../../models";
 
 const Title = ({ travel, setTravel, isEmpty }) => {
   return (
@@ -101,7 +103,108 @@ const Basic = ({ travel, setTravel, isEmpty }) => {
   );
 };
 
+const Point = ({ point, travel, setTravel, isEmpty, lang }) => {
+  const [query, setQuery] = useState("");
+  const [places, setPlaces] = useState([]);
+
+  useEffect(() => {
+    const service = new window.google.maps.places.PlacesService(document.createElement("div"));
+    if (query.length > 0) {
+      const request = {
+        query: query,
+        fields: ["formatted_address", "geometry"],
+      };
+      service.findPlaceFromQuery(request, (results, status) => {
+        if (status === window.google.maps.places.PlacesServiceStatus.OK) {
+          setPlaces(results);
+        }
+      });
+    }
+  }, [query]);
+
+  return (
+    <Grid container spacing={2} item xs={12}>
+      <Grid item xs={12} md={6}>
+        <Autocomplete
+          disabled={!isEmpty}
+          options={places}
+          getOptionLabel={(option) => option.formatted_address}
+          inputValue={query}
+          isOptionEqualToValue={(option, value) => option.formatted_address === value.formatted_address}
+          renderInput={(params) => (
+            <TextField
+              {...params}
+              label="Address"
+              value={point.address}
+              onChange={(e) => {
+                setQuery(e.target.value);
+              }}
+            />
+          )}
+          onChange={(e, value) => {
+            setQuery(value.formatted_address);
+          }}
+        />
+      </Grid>
+    </Grid>
+  );
+};
+
 const Route = ({ travel, setTravel, isEmpty }) => {
+  const [points, setPoints] = useState([]);
+
+  const geocoder = new window.google.maps.Geocoder();
+
+  const calc = () => {
+    geocoder.geocode({ address: "" }, (results, status) => {
+      console.log(results);
+      if (status === "OK") {
+        const lat1 = results[0].geometry.location.lat();
+        const lng1 = results[0].geometry.location.lng();
+        geocoder.geocode({ address: "" }, (results, status) => {
+          console.log(results);
+          if (status === "OK") {
+            const directionsService = new window.google.maps.DirectionsService();
+            const lat2 = results[0].geometry.location.lat();
+            const lng2 = results[0].geometry.location.lng();
+
+            const request = {
+              origin: { lat: lat1, lng: lng1 },
+              destination: { lat: lat2, lng: lng2 },
+              travelMode: window.google.maps.TravelMode.DRIVING,
+            };
+
+            directionsService.route(request, (result, status) => {
+              if (status === "OK") {
+                console.log(result.routes[0].legs[0].distance.value);
+              }
+            });
+          } else {
+            alert("Geocode was not successful for the following reason: " + status);
+          }
+        });
+      } else {
+        alert("Geocode was not successful for the following reason: " + status);
+      }
+    });
+  };
+
+  const addPoint = () => {
+    setTravel({
+      ...travel,
+      routePoints: [
+        ...travel.routePoints,
+        {
+          id: Date.now(),
+          comment: "",
+          address: "",
+          lat: 0,
+          lng: 0,
+        },
+      ],
+    });
+  };
+
   return (
     <Box
       sx={{
@@ -112,17 +215,17 @@ const Route = ({ travel, setTravel, isEmpty }) => {
         mb: 2,
       }}
     >
-      <Typography variant="h6">Route</Typography>
       <Grid container spacing={2}>
         <Grid item xs={12}>
-          <InputBase
-            disabled={!isEmpty}
-            fullWidth
-            multiline
-            rows={5}
-            value={travel.route}
-            onChange={(e) => setTravel({ ...travel, route: e.target.value })}
-          />
+          <Typography variant="h6">Route</Typography>
+        </Grid>
+        {travel.routePoints.map((point) => {
+          return <Point key={point.id} point={point} travel={travel} setTravel={setTravel} isEmpty={isEmpty} />;
+        })}
+        <Grid item xs={12}>
+          <Button variant="contained" disabled={!isEmpty} onClick={addPoint}>
+            Add route point
+          </Button>
         </Grid>
       </Grid>
     </Box>
