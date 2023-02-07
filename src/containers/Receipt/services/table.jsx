@@ -21,24 +21,7 @@ import { LocalizationProvider, DatePicker } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import fi from "date-fns/locale/fi";
 import { PropTypes } from "prop-types";
-
-const metodlist = (lang) => [
-  { value: PaymentMethod.CASH, label: lang.cash },
-  { value: PaymentMethod.OWNCARD, label: lang.card },
-  { value: PaymentMethod.COMPANYCARD, label: lang.companycard },
-  { value: PaymentMethod.BANKTRANSFER, label: lang.transfer },
-  { value: PaymentMethod.OTHER, label: lang.other },
-];
-
-const classlist = (lang) => [
-  { value: Classification.ADMINISTRATIVESERVICE, label: lang.administrativeservice },
-  { value: Classification.ITDEVICEANDSOFTWAREEXPENSES, label: lang.itdeviceandsoftwareexpenses },
-  { value: Classification.MARKETINGEXPENSES, label: lang.marketingexpenses },
-  { value: Classification.PREMISESEXPENSES, label: lang.premisesexpenses },
-  { value: Classification.MEETINGEXPENSES, label: lang.meetingexpenses },
-  { value: Classification.TRAVELEXPENSES, label: lang.travelexpenses },
-  { value: Classification.VEHICLEEXPENSES, label: lang.vehicleexpenses },
-];
+import { metodlist, classlist } from "./arrays";
 
 const Receiptdate = ({ data, setData, isEmpty, lang }) => {
   const handleDateChange = (value) => {
@@ -134,8 +117,8 @@ const Comment = ({ data, setData, isEmpty, lang }) => {
   );
 };
 
-const Filesave = ({ files, data, isEmpty, lang }) => {
-  const handleClick = () => addreceipt(data, files);
+const Filesave = ({ files, data, isEmpty, lang, setLoading }) => {
+  const handleClick = () => addreceipt(data, files, setLoading);
 
   return (
     <Button variant="outlined" onClick={handleClick} disabled={!isEmpty}>
@@ -240,13 +223,19 @@ const Taxselect = ({ data, setData, isEmpty, lang }) => {
   );
 };
 
-const onUpload = async (file) => {
+const onUpload = async (file, id, index, setLoading) => {
+  console.log("Uploading file: ", file.name);
+  let end = file.name.split(".").pop();
+  let newName = `${id}-${index}.${end}`;
+  console.log("newName: ", newName);
+
   try {
-    const result = await Storage.put(file.name, file, {
+    const result = await Storage.put(newName, file, {
       contentType: file.type,
       level: "protected",
       progressCallback(progress) {
         console.log(`Uploaded: ${progress.loaded}/${progress.total}`);
+        setLoading(progress.loaded !== progress.total);
       },
     });
     console.log("result: ", result);
@@ -256,11 +245,12 @@ const onUpload = async (file) => {
   }
 };
 
-const addreceipt = async (data, images) => {
+const addreceipt = async (data, images, setLoading) => {
   if (!images) return;
   const keys = [];
-  for (const image of images) {
-    const result = await onUpload(image);
+  const id = Date.now();
+  for (let i = 0; i < images.length; i++) {
+    const result = await onUpload(images[i], id, i, setLoading);
     keys.push(result.key);
   }
 
@@ -306,6 +296,7 @@ export const ReceiptTable = ({
   cancel,
   isEmpty,
   lang,
+  setLoading,
 }) => {
   return (
     <TableContainer>
@@ -379,7 +370,7 @@ export const ReceiptTable = ({
           <TableRow>
             <TableCell>
               <Box display="flex" justifyContent="space-between">
-                <Filesave files={files} data={data} lang={lang.buttons} isEmpty={isEmpty} />
+                <Filesave files={files} data={data} lang={lang.buttons} isEmpty={isEmpty} setLoading={setLoading} />
                 <Cancelsave cancel={cancel} lang={lang.buttons} isEmpty={isEmpty} />
               </Box>
             </TableCell>

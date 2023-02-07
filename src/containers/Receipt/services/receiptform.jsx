@@ -76,6 +76,7 @@ export const Receiptform = ({ isEmpty, setSelectedIndex, lang }) => {
     method: "CASH",
     category: "",
   });
+  const [loading, setLoading] = useState(false);
   const handleSelectimage = (e) => {
     const files = Array.from(e.target.files);
     setImages(files);
@@ -115,7 +116,15 @@ export const Receiptform = ({ isEmpty, setSelectedIndex, lang }) => {
               }}
               component="label"
             >
-              <input type="file" multiple onChange={handleSelectimage} hidden disabled={!isEmpty} />
+              <input
+                accept="image/*"
+                id="icon-button-file"
+                type="file"
+                hidden
+                onChange={handleSelectimage}
+                multiple
+                disabled={!isEmpty}
+              />
               <Box
                 sx={{
                   height: "100%",
@@ -142,6 +151,7 @@ export const Receiptform = ({ isEmpty, setSelectedIndex, lang }) => {
             cancel={cancel}
             lang={lang}
             isEmpty={isEmpty}
+            setLoading={setLoading}
           />
         </Grid>
       </Grid>

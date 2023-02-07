@@ -115,7 +115,7 @@ const Point = ({ point, travel, setTravel, isEmpty, lang }) => {
         fields: ["formatted_address", "geometry"],
       };
       service.findPlaceFromQuery(request, (results, status) => {
-        if (status === window.google.maps.places.PlacesServiceStatus.OK) {
+        if (status === "OK") {
           setPlaces(results);
         }
       });

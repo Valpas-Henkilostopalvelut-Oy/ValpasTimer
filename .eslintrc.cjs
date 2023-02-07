@@ -17,6 +17,6 @@ module.exports = {
     "react/jsx-uses-react": "warn",
     "react/jsx-uses-vars": "warn",
     "no-unused-vars": "warn",
-    "react/prop-types": "warn",
+    "react/prop-types": "off",
   },
 };

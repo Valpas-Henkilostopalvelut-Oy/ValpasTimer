@@ -4,17 +4,18 @@ import { Box, Grid, Collapse, Typography, Button } from "@mui/material";
 import { Receipt, Currency, PaymentMethod } from "../../../models";
 import Carousel from "react-material-ui-carousel";
 import { PropTypes } from "prop-types";
+import { ItemTable } from "./itemtable";
 
 /*
 {
-    "id": "1701d6a1-e4ce-43e9-8b91-7c78b15683e0",
+    "id": "04ffc059-80e5-473c-b64f-97d290f6fb29",
     "userId": "669172d6-f6c2-44a1-95fd-43255acdf6b4",
-    "created": "2023-01-31T09:20:05.051Z",
-    "updated": "2023-01-31T09:20:05.051Z",
-    "dateOfPurchase": "2023-01-31T09:19:41.531Z",
+    "created": "2023-01-31T12:55:34.205Z",
+    "updated": "2023-01-31T12:55:34.205Z",
+    "dateOfPurchase": "2023-01-24T12:53:30.000Z",
     "placeOfPurchase": "Turku",
     "receiptNumber": "12345678",
-    "receiptType": "INVOICE",
+    "class": null,
     "price": 12,
     "currency": "EUR",
     "receiptImage": [
@@ -23,11 +24,11 @@ import { PropTypes } from "prop-types";
     ],
     "tax": 0.24,
     "paymentMethod": "CASH",
-    "comment": null,
-    "createdAt": "2023-01-31T09:20:05.582Z",
-    "updatedAt": "2023-01-31T09:20:05.582Z",
+    "comment": "Comment",
+    "createdAt": "2023-01-31T12:55:34.532Z",
+    "updatedAt": "2023-01-31T12:55:34.532Z",
     "_version": 1,
-    "_lastChangedAt": 1675156805605,
+    "_lastChangedAt": 1675169734554,
     "_deleted": null
 }
 */
@@ -48,22 +49,15 @@ const loadimg = async (card) => {
 const Image = (props) => {
   const { image } = props;
   return (
-    <Box
-      sx={{
-        height: 400,
+    <img
+      src={image}
+      alt="receipt"
+      style={{
+        height: "100%",
         width: "100%",
+        objectFit: "contain",
       }}
-    >
-      <img
-        src={image}
-        alt="receipt"
-        style={{
-          height: "100%",
-          width: "100%",
-          objectFit: "contain",
-        }}
-      />
-    </Box>
+    />
   );
 };
 
@@ -76,21 +70,21 @@ export const Receiptlist = ({ isEmpty, lang }) => {
       setReceipts(receiptData);
     };
     fetchReceipts();
+
+    console.log(lang);
   }, [isEmpty]);
 
   return (
     <Box sx={{ mt: 2 }}>
-      <Typography variant="h4">{
-        lang.titlelist
-      }</Typography>
+      <Typography variant="h4">{lang.titlelist}</Typography>
       {receipts.map((receipt) => (
-        <Items key={receipt.id} receipt={receipt} />
+        <Items key={receipt.id} receipt={receipt} lang={lang} />
       ))}
     </Box>
   );
 };
 
-const Items = ({ receipt }) => {
+const Items = ({ receipt, lang }) => {
   const date = new Date(receipt.dateOfPurchase).toLocaleDateString();
   const time = new Date(receipt.dateOfPurchase).toLocaleTimeString();
   const [open, setOpen] = useState(false);
@@ -148,21 +142,18 @@ const Items = ({ receipt }) => {
           </Button>
         </Grid>
       </Grid>
-      <Collapse
-        in={open}
-        timeout="auto"
-        unmountOnExit
-        sx={{
-          mt: 2,
-        }}
-      >
+      <Collapse in={open} timeout="auto" unmountOnExit>
         <Grid container spacing={2} alignItems="center">
-          <Grid item xs={12} md={4}>
+          <Grid item xs={12} md={5}>
             <Carousel autoPlay={false} animation="slide" indicators={false}>
               {imgs.map((img) => (
                 <Image key={img} image={img} />
               ))}
             </Carousel>
+          </Grid>
+
+          <Grid item xs={12} md={7}>
+            <ItemTable oldReceipt={receipt} lang={lang} />
           </Grid>
         </Grid>
       </Collapse>
