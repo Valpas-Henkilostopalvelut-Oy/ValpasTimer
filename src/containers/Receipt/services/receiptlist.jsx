@@ -51,13 +51,14 @@ export const Receiptlist = ({ isEmpty, lang }) => {
     <Box sx={{ mt: 2 }}>
       <Typography variant="h4">{lang.titlelist}</Typography>
       {receipts.map((receipt) => (
-        <Items key={receipt.id} receipt={receipt} lang={lang} />
+        <Items key={receipt.id} oldReceipt={receipt} lang={lang} isEmpty={isEmpty} />
       ))}
     </Box>
   );
 };
 
-const Items = ({ receipt, lang }) => {
+const Items = ({ oldReceipt, lang, isEmpty }) => {
+  const [receipt, setReceipt] = useState(oldReceipt);
   const date = new Date(receipt.dateOfPurchase).toLocaleDateString("fi-FI");
   const [open, setOpen] = useState(false);
   const handleClick = () => setOpen(!open);
@@ -103,12 +104,22 @@ const Items = ({ receipt, lang }) => {
       </Grid>
       <Collapse in={open} timeout="auto" unmountOnExit>
         <Grid container spacing={2} alignItems="center">
-          <Grid item xs={12} md={5}>
-            <ReceiptImage receipt={receipt} />
-          </Grid>
+          <ReceiptImage
+            receipt={receipt}
+            oldReceipt={oldReceipt}
+            setReceipt={setReceipt}
+            lang={lang}
+            isEmpty={isEmpty}
+          />
 
           <Grid item xs={12} md={7}>
-            <ItemTable oldReceipt={receipt} lang={lang} />
+            <ItemTable
+              receipt={receipt}
+              oldReceipt={oldReceipt}
+              setReceipt={setReceipt}
+              lang={lang}
+              isEmpty={isEmpty}
+            />
           </Grid>
         </Grid>
       </Collapse>

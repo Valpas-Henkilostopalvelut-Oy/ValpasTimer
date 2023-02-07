@@ -297,8 +297,7 @@ const Comment = ({ receipt, setReceipt, edit = false }) => {
   );
 };
 
-export const ItemTable = ({ oldReceipt, lang }) => {
-  const [receipt, setReceipt] = useState(oldReceipt);
+export const ItemTable = ({ receipt, oldReceipt, setReceipt, lang }) => {
   const [edit, setEdit] = useState(false);
   const createdAt = new Date(receipt.created).toLocaleDateString("fi-FI");
   const updateAt = new Date(receipt.updated).toLocaleDateString("fi-FI");
