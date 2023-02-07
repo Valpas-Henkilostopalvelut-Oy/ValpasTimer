@@ -117,8 +117,8 @@ const Comment = ({ data, setData, isEmpty, lang }) => {
   );
 };
 
-const Filesave = ({ files, data, isEmpty, lang, setLoading }) => {
-  const handleClick = () => addreceipt(data, files, setLoading);
+const Filesave = ({ files, data, isEmpty, lang, setLoading, cancel }) => {
+  const handleClick = async () => addreceipt(data, files, setLoading).then(() => cancel());
 
   return (
     <Button variant="outlined" onClick={handleClick} disabled={!isEmpty}>
@@ -363,7 +363,14 @@ export const ReceiptTable = ({
           <TableRow>
             <TableCell>
               <Box display="flex" justifyContent="space-between">
-                <Filesave files={files} data={data} lang={lang.buttons} isEmpty={isEmpty} setLoading={setLoading} />
+                <Filesave
+                  files={files}
+                  data={data}
+                  lang={lang.buttons}
+                  isEmpty={isEmpty}
+                  setLoading={setLoading}
+                  cancel={cancel}
+                />
                 <Cancelsave cancel={cancel} lang={lang.buttons} isEmpty={isEmpty} />
               </Box>
             </TableCell>
