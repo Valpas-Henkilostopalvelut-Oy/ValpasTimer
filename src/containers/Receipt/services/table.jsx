@@ -21,7 +21,7 @@ import { LocalizationProvider, DatePicker } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import fi from "date-fns/locale/fi";
 import { PropTypes } from "prop-types";
-import { metodlist, classlist } from "./arrays";
+import { metodlist, classlist, taxlist } from "./arrays";
 
 const Receiptdate = ({ data, setData, isEmpty, lang }) => {
   const handleDateChange = (value) => {
@@ -190,13 +190,6 @@ const ClassificationSelect = ({ data, setData, isEmpty, lang }) => {
 };
 
 const Taxselect = ({ data, setData, isEmpty, lang }) => {
-  const taxlist = [
-    { value: 0, label: "0%" },
-    { value: 0.06, label: "6%" },
-    { value: 0.1, label: "10%" },
-    { value: 0.24, label: "24%" },
-  ];
-
   const handleTaxChange = (value) => setData({ ...data, tax: value.target.value });
 
   return (

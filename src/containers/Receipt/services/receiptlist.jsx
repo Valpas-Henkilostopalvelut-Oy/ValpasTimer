@@ -2,9 +2,10 @@ import React, { useState, useEffect } from "react";
 import { DataStore, Storage } from "aws-amplify";
 import { Box, Grid, Collapse, Typography, Button } from "@mui/material";
 import { Receipt, Currency, PaymentMethod } from "../../../models";
-import Carousel from "react-material-ui-carousel";
 import { PropTypes } from "prop-types";
 import { ItemTable } from "./itemtable";
+import { metodlist } from "./arrays";
+import { ReceiptImage } from "./receiptimage";
 
 /*
 {
@@ -33,34 +34,6 @@ import { ItemTable } from "./itemtable";
 }
 */
 
-const loadimg = async (card) => {
-  try {
-    return await Storage.get(card, {
-      level: "protected",
-      progressCallback(progress) {
-        console.log(`Uploaded: ${progress.loaded}/${progress.total}`);
-      },
-    });
-  } catch (error) {
-    console.warn("Error loading image: ", error);
-  }
-};
-
-const Image = (props) => {
-  const { image } = props;
-  return (
-    <img
-      src={image}
-      alt="receipt"
-      style={{
-        height: "100%",
-        width: "100%",
-        objectFit: "contain",
-      }}
-    />
-  );
-};
-
 export const Receiptlist = ({ isEmpty, lang }) => {
   const [receipts, setReceipts] = useState([]);
   useEffect(() => {
@@ -85,19 +58,9 @@ export const Receiptlist = ({ isEmpty, lang }) => {
 };
 
 const Items = ({ receipt, lang }) => {
-  const date = new Date(receipt.dateOfPurchase).toLocaleDateString();
-  const time = new Date(receipt.dateOfPurchase).toLocaleTimeString();
+  const date = new Date(receipt.dateOfPurchase).toLocaleDateString("fi-FI");
   const [open, setOpen] = useState(false);
-  const [imgs, setImgs] = useState([]);
   const handleClick = () => setOpen(!open);
-
-  useEffect(() => {
-    const fetchImgs = async () => {
-      const imgData = await Promise.all(receipt.receiptImage.map((card) => loadimg(card)));
-      setImgs(imgData);
-    };
-    fetchImgs();
-  }, [receipt.receiptImage]);
 
   return (
     <Box
@@ -114,7 +77,7 @@ const Items = ({ receipt, lang }) => {
           <Typography variant="p">{receipt.receiptNumber}</Typography>
         </Grid>
 
-        <Grid item xs={12} md={2}>
+        <Grid item xs={12} md={3}>
           <Typography variant="p">{receipt.placeOfPurchase}</Typography>
         </Grid>
 
@@ -122,18 +85,14 @@ const Items = ({ receipt, lang }) => {
           <Typography variant="p">{date}</Typography>
         </Grid>
 
-        <Grid item xs={6} md={1.5}>
-          <Typography variant="p">{time}</Typography>
-        </Grid>
-
-        <Grid item xs={6} md={2.5}>
+        <Grid item xs={6} md={3}>
           <Typography variant="p">
             {receipt.price} {Currency[receipt.currency]} (alv. {(receipt.tax * 100).toFixed(0)}%)
           </Typography>
         </Grid>
 
         <Grid item xs={6} md={2}>
-          <Typography variant="p">{PaymentMethod[receipt.paymentMethod]}</Typography>
+          <Typography variant="p">{metodlist().find((p) => p.value === receipt.paymentMethod).label}</Typography>
         </Grid>
 
         <Grid item xs={12} md={1}>
@@ -145,11 +104,7 @@ const Items = ({ receipt, lang }) => {
       <Collapse in={open} timeout="auto" unmountOnExit>
         <Grid container spacing={2} alignItems="center">
           <Grid item xs={12} md={5}>
-            <Carousel autoPlay={false} animation="slide" indicators={false}>
-              {imgs.map((img) => (
-                <Image key={img} image={img} />
-              ))}
-            </Carousel>
+            <ReceiptImage receipt={receipt} />
           </Grid>
 
           <Grid item xs={12} md={7}>

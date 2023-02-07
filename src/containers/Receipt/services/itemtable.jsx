@@ -17,10 +17,12 @@ import {
   Typography,
 } from "@mui/material";
 import { DataStore, Storage, Auth } from "aws-amplify";
-import { Receipt, Currency, PaymentMethod, Classification } from "../../../models";
+import { Receipt, Currency } from "../../../models";
 import { LocalizationProvider, DatePicker } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import fi from "date-fns/locale/fi";
+import { metodlist, classlist, taxlist } from "./arrays";
+import { deleteReceipt, updateReceipt } from "./itemfunctions";
 
 /*
 {
@@ -53,9 +55,8 @@ const DateOfPurchase = ({ receipt, setReceipt, edit = false }) => {
   const [dateOfPurchase, setDateOfPurchase] = useState(new Date(receipt.dateOfPurchase));
 
   return edit ? (
-    <LocalizationProvider dateAdapter={AdapterDateFns} locale={fi}>
+    <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={fi}>
       <DatePicker
-        label="Date of purchase"
         value={dateOfPurchase}
         disableMaskedInput
         onChange={(newValue) => {
@@ -81,7 +82,6 @@ const DateOfPurchase = ({ receipt, setReceipt, edit = false }) => {
 const Placeofpurchase = ({ receipt, setReceipt, edit = false }) => {
   return edit ? (
     <TextField
-      label="Place of purchase"
       value={receipt.placeOfPurchase}
       onChange={(e) => setReceipt({ ...receipt, placeOfPurchase: e.target.value })}
       variant="standard"
@@ -103,7 +103,6 @@ const Placeofpurchase = ({ receipt, setReceipt, edit = false }) => {
 const ReceiptNumber = ({ receipt, setReceipt, edit = false }) => {
   return edit ? (
     <TextField
-      label="Receipt number"
       value={receipt.receiptNumber}
       onChange={(e) => setReceipt({ ...receipt, receiptNumber: e.target.value })}
       variant="standard"
@@ -122,11 +121,199 @@ const ReceiptNumber = ({ receipt, setReceipt, edit = false }) => {
   );
 };
 
+const Class = ({ receipt, setReceipt, edit = false }) => {
+  return edit ? (
+    <FormControl fullWidth>
+      <Select
+        labelId="class-label"
+        id="class"
+        value={receipt.class}
+        onChange={(e) => setReceipt({ ...receipt, class: e.target.value })}
+        variant="standard"
+      >
+        <MenuItem value={null} hidden>
+          <em>None</em>
+        </MenuItem>
+        {classlist().map((item) => (
+          <MenuItem key={item.value} value={item.value}>
+            {item.label}
+          </MenuItem>
+        ))}
+      </Select>
+    </FormControl>
+  ) : (
+    <Typography
+      variant="body1"
+      sx={{
+        fontWeight: "bold",
+        color: "text.secondary",
+      }}
+    >
+      {classlist().find((item) => item.value === receipt.class)?.label}
+    </Typography>
+  );
+};
+
+const Price = ({ receipt, setReceipt, edit = false }) => {
+  return edit ? (
+    <TextField
+      value={receipt.price}
+      onChange={(e) => setReceipt({ ...receipt, price: e.target.value })}
+      variant="standard"
+      fullWidth
+    />
+  ) : (
+    <Typography
+      variant="body1"
+      sx={{
+        fontWeight: "bold",
+        color: "text.secondary",
+      }}
+    >
+      {receipt.price}
+    </Typography>
+  );
+};
+
+const CurrencySelect = ({ receipt, setReceipt, edit = false }) => {
+  const currencies = Object.values(Currency);
+
+  return edit ? (
+    <FormControl fullWidth>
+      <Select
+        labelId="currency-label"
+        id="currency"
+        value={receipt.currency}
+        onChange={(e) => setReceipt({ ...receipt, currency: e.target.value })}
+        variant="standard"
+      >
+        <MenuItem value={null} hidden>
+          <em>None</em>
+        </MenuItem>
+        {currencies.map((item) => (
+          <MenuItem key={item} value={item}>
+            {item}
+          </MenuItem>
+        ))}
+      </Select>
+    </FormControl>
+  ) : (
+    <Typography
+      variant="body1"
+      sx={{
+        fontWeight: "bold",
+        color: "text.secondary",
+      }}
+    >
+      {receipt.currency}
+    </Typography>
+  );
+};
+
+const TaxSelect = ({ receipt, setReceipt, edit = false }) => {
+  return edit ? (
+    <FormControl fullWidth>
+      <Select
+        labelId="tax-label"
+        id="tax"
+        value={receipt.tax}
+        onChange={(e) => setReceipt({ ...receipt, tax: e.target.value })}
+        variant="standard"
+      >
+        <MenuItem value={null} hidden>
+          <em>None</em>
+        </MenuItem>
+        {taxlist.map((item) => (
+          <MenuItem key={item.value} value={item.value}>
+            {item.label}
+          </MenuItem>
+        ))}
+      </Select>
+    </FormControl>
+  ) : (
+    <Typography
+      variant="body1"
+      sx={{
+        fontWeight: "bold",
+        color: "text.secondary",
+      }}
+    >
+      {receipt.tax}
+    </Typography>
+  );
+};
+
+const PaymentMethod = ({ receipt, setReceipt, edit = false }) => {
+  return edit ? (
+    <FormControl fullWidth>
+      <Select
+        labelId="payment-method-label"
+        id="payment-method"
+        value={receipt.paymentMethod}
+        onChange={(e) => setReceipt({ ...receipt, paymentMethod: e.target.value })}
+        variant="standard"
+      >
+        <MenuItem value={null} hidden>
+          <em>None</em>
+        </MenuItem>
+        {metodlist().map((item) => (
+          <MenuItem key={item.value} value={item.value}>
+            {item.label}
+          </MenuItem>
+        ))}
+      </Select>
+    </FormControl>
+  ) : (
+    <Typography
+      variant="body1"
+      sx={{
+        fontWeight: "bold",
+        color: "text.secondary",
+      }}
+    >
+      {metodlist().find((item) => item.value === receipt.paymentMethod)?.label}
+    </Typography>
+  );
+};
+
+const Comment = ({ receipt, setReceipt, edit = false }) => {
+  return edit ? (
+    <TextField
+      value={receipt.comment}
+      onChange={(e) => setReceipt({ ...receipt, comment: e.target.value })}
+      variant="standard"
+      fullWidth
+    />
+  ) : (
+    <Typography
+      variant="body1"
+      sx={{
+        fontWeight: "bold",
+        color: "text.secondary",
+      }}
+    >
+      {receipt.comment}
+    </Typography>
+  );
+};
+
 export const ItemTable = ({ oldReceipt, lang }) => {
   const [receipt, setReceipt] = useState(oldReceipt);
   const [edit, setEdit] = useState(false);
   const createdAt = new Date(receipt.created).toLocaleDateString("fi-FI");
   const updateAt = new Date(receipt.updated).toLocaleDateString("fi-FI");
+  const handleCancel = () => {
+    setReceipt(oldReceipt);
+    setEdit(false);
+  };
+  const handleDelete = () => {
+    deleteReceipt(oldReceipt, receipt, oldReceipt.id);
+  };
+  const handleSave = () => {
+    updateReceipt(oldReceipt, receipt, oldReceipt.id);
+    setEdit(false);
+  };
+  const handleEdit = () => setEdit(true);
 
   return (
     <TableContainer>
@@ -167,47 +354,64 @@ export const ItemTable = ({ oldReceipt, lang }) => {
           </TableRow>
           <TableRow>
             <TableCell>Class</TableCell>
-            <TableCell colSpan={2}>{receipt.class}</TableCell>
+            <TableCell colSpan={2}>
+              <Class receipt={receipt} setReceipt={setReceipt} edit={edit} />
+            </TableCell>
           </TableRow>
           <TableRow>
             <TableCell>Price</TableCell>
-            <TableCell>{receipt.price}</TableCell>
-            <TableCell>{receipt.currency}</TableCell>
+            <TableCell>
+              <Price receipt={receipt} setReceipt={setReceipt} edit={edit} />
+            </TableCell>
+            <TableCell>
+              <CurrencySelect receipt={receipt} setReceipt={setReceipt} edit={edit} />
+            </TableCell>
           </TableRow>
           <TableRow>
             <TableCell>Tax</TableCell>
-            <TableCell colSpan={2}>{receipt.tax}</TableCell>
+            <TableCell colSpan={2}>
+              <TaxSelect receipt={receipt} setReceipt={setReceipt} edit={edit} />
+            </TableCell>
           </TableRow>
           <TableRow>
             <TableCell>Payment method</TableCell>
-            <TableCell colSpan={2}>{receipt.paymentMethod}</TableCell>
+            <TableCell colSpan={2}>
+              <PaymentMethod receipt={receipt} setReceipt={setReceipt} edit={edit} />
+            </TableCell>
           </TableRow>
           <TableRow>
             <TableCell>Comment</TableCell>
-            <TableCell colSpan={2}>{receipt.comment}</TableCell>
+            <TableCell colSpan={2}>
+              <Comment receipt={receipt} setReceipt={setReceipt} edit={edit} />
+            </TableCell>
           </TableRow>
           {edit ? (
             <TableRow>
               <TableCell>
-                <Button variant="outlined" onClick={() => setEdit(false)} fullWidth>
+                <Button variant="outlined" fullWidth onClick={handleCancel}>
                   Cancel
                 </Button>
               </TableCell>
               <TableCell>
-                <Button variant="outlined" onClick={() => setEdit(false)} fullWidth>
+                <Button variant="outlined" fullWidth onClick={handleSave}>
                   Save
+                </Button>
+              </TableCell>
+              <TableCell>
+                <Button variant="outlined" fullWidth onClick={handleDelete} color="error">
+                  Delete
                 </Button>
               </TableCell>
             </TableRow>
           ) : (
             <TableRow>
               <TableCell>
-                <Button variant="outlined" fullWidth onClick={() => setEdit(true)}>
+                <Button variant="outlined" fullWidth onClick={handleEdit}>
                   Edit
                 </Button>
               </TableCell>
               <TableCell>
-                <Button variant="outlined" fullWidth>
+                <Button variant="outlined" fullWidth onClick={handleDelete} color="error">
                   Delete
                 </Button>
               </TableCell>
