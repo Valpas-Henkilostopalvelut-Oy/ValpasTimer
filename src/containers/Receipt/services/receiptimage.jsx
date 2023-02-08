@@ -4,6 +4,12 @@ import { Storage, DataStore } from "aws-amplify";
 import { Receipt } from "../../../models";
 import { Box, Grid, Button, Typography } from "@mui/material";
 
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Pagination, Navigation } from "swiper";
+import "swiper/css";
+import "swiper/css/pagination";
+import "swiper/css/navigation";
+
 /*
 {
     "id": "04ffc059-80e5-473c-b64f-97d290f6fb29",
@@ -30,21 +36,6 @@ import { Box, Grid, Button, Typography } from "@mui/material";
     "_deleted": null
 }
 */
-
-const Image = (props) => {
-  const { image } = props;
-  return (
-    <img
-      src={image}
-      alt="receipt"
-      style={{
-        height: "100%",
-        width: "100%",
-        objectFit: "contain",
-      }}
-    />
-  );
-};
 
 const loadimg = async (card) => {
   try {
@@ -134,11 +125,26 @@ export const ReceiptImage = ({ receipt, setReceipt, isEmpty }) => {
   return (
     <Grid item container xs={12} md={5} spacing={2}>
       <Grid item xs={12}>
-        <Carousel autoPlay={false} animation="fade" onChange={setIndex} index={index}>
+        <Swiper
+          onSlideChange={(swiper) => {
+            setIndex(swiper.activeIndex);
+          }}
+          modules={[Pagination, Navigation]}
+          pagination={{ clickable: true }}
+          navigation={true}
+          spaceBetween={50}
+          slidesPerView={1}
+        >
           {imgs.map((img) => (
-            <Image key={img} image={img} />
+            <SwiperSlide key={img}>
+              <img
+                src={img}
+                alt="receipt"
+                style={{ display: "block", width: "100%", height: "100%", objectFit: "cover" }}
+              />
+            </SwiperSlide>
           ))}
-        </Carousel>
+        </Swiper>
       </Grid>
       <Grid item xs={6}>
         <Button
