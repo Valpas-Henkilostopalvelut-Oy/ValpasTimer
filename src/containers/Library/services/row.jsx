@@ -2,31 +2,18 @@ import React, { useState, useEffect } from "react";
 import { Grid, Box, Collapse, Typography, IconButton } from "@mui/material";
 import { DataStore } from "aws-amplify";
 import { UserCredentials } from "../../../models";
-import { weektotal, daytotal, filterWeeks } from "./timecalc";
+import { weektotal, daytotal } from "./timecalc";
 import { shiftdate, Startdaytime, Enddaytime, Time } from "./times";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import { PropTypes } from "prop-types";
 import { Moremenuweek, Moremenutimeshift, Moremenuday } from "./morebuttons.jsx";
 
-export const Row = ({ item, all = true }) => {
-  const [worker, setWorker] = useState("");
-  useEffect(() => {
-    let isActive = true;
-    const fetchData = async () => {
-      await DataStore.query(UserCredentials).then((users) => {
-        let data = users.filter((worker) => worker.userId === item.userId);
-        if (data.length > 0) {
-          setWorker(`${data[0].profile.first_name}  ${data[0].profile.last_name}`);
-        }
-      });
-    };
-    isActive && fetchData();
-    return () => (isActive = false);
-  }, []);
+export const Row = ({ item, all = true, workers }) => {
+  let worker =
+    workers.filter((w) => w.id === item.userId).length > 0 ? workers.filter((w) => w.id === item.userId)[0] : null;
 
-  const data = item.arr;
-  return data.map((workeritem, key) => <RowWeek key={key} item={workeritem} worker={worker} />);
+  return item.arr.map((workeritem, key) => <RowWeek key={key} item={workeritem} worker={worker} />);
 };
 
 const RowWeek = ({ item, worker }) => {
@@ -41,21 +28,16 @@ const RowWeek = ({ item, worker }) => {
         margin: "15px 0px",
       }}
     >
-      <Grid
-        container
-        spacing={2}
-        alignItems="center"
-        sx={{
-          padding: "20px 40px",
-        }}
-      >
+      <Grid container spacing={2} alignItems="center" sx={{ padding: "20px 40px" }}>
         <Grid item xs={1}>
           <IconButton aria-label="expand row" size="small" onClick={() => setOpen(!open)} sx={{ cursor: "pointer" }}>
             {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
           </IconButton>
         </Grid>
         <Grid item xs={2}>
-          <Typography variant="p">{worker}</Typography>
+          <Typography variant="p">
+            {worker.first_name} {worker.last_name}
+          </Typography>
         </Grid>
         <Grid item xs={6} align="center">
           <Typography variant="p">Viikko {item.week}</Typography>
@@ -87,14 +69,7 @@ const RowDay = ({ item }) => {
         borderColor: "default.gray",
       }}
     >
-      <Grid
-        container
-        spacing={2}
-        sx={{
-          padding: "20px 40px",
-        }}
-        alignItems="center"
-      >
+      <Grid container spacing={2} sx={{ padding: "20px 40px" }} alignItems="center">
         <Grid item xs={1}>
           <IconButton aria-label="expand row" size="small" onClick={() => setOpen(!open)} sx={{ cursor: "pointer" }}>
             {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
@@ -136,14 +111,7 @@ const RowTimeshift = ({ item }) => {
         borderColor: "default.gray",
       }}
     >
-      <Grid
-        container
-        spacing={2}
-        sx={{
-          padding: "20px 40px",
-        }}
-        alignItems="center"
-      >
+      <Grid container spacing={2} sx={{ padding: "20px 40px" }} alignItems="center">
         <Grid item xs={1} />
         <Grid item xs={2}>
           <Typography variant="p">{date}</Typography>

@@ -15,45 +15,15 @@ import { useAppContext } from "../../../services/contextLib.jsx";
 
 const Breakicon = ({ item }) => {
   if (item.reason === Breakreason.DINNER) {
-    return (
-      <RestaurantIcon
-        sx={{
-          color: "default.gray",
-        }}
-      />
-    );
+    return <RestaurantIcon sx={{ color: "default.gray" }} />;
   } else if (item.reason === Breakreason.LUNCH) {
-    return (
-      <RestaurantIcon
-        sx={{
-          color: "default.gray",
-        }}
-      />
-    );
+    return <RestaurantIcon sx={{ color: "default.gray" }} />;
   } else if (item.reason === Breakreason.SHORT) {
-    return (
-      <FreeBreakfastIcon
-        sx={{
-          color: "default.gray",
-        }}
-      />
-    );
+    return <FreeBreakfastIcon sx={{ color: "default.gray" }} />;
   } else if (item.reason === Breakreason.LUNCH_L) {
-    return (
-      <RestaurantIcon
-        sx={{
-          color: "default.gray",
-        }}
-      />
-    );
+    return <RestaurantIcon sx={{ color: "default.gray" }} />;
   } else if (item.reason === Breakreason.LONG) {
-    return (
-      <FreeBreakfastIcon
-        sx={{
-          color: "default.gray",
-        }}
-      />
-    );
+    return <FreeBreakfastIcon sx={{ color: "default.gray" }} />;
   }
 };
 

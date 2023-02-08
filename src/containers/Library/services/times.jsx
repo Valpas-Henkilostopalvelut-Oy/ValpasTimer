@@ -70,7 +70,7 @@ export const Daterangestart = ({
         onChange={(newValue) => {
           setFilter({ ...filter, start: newValue });
         }}
-        renderInput={(params) => <TextField variant="standard" {...params} />}
+        renderInput={(params) => <TextField {...params} fullWidth />}
       />
     </LocalizationProvider>
   );
@@ -94,7 +94,7 @@ export const Daterangeend = ({
         onChange={(newValue) => {
           setFilter({ ...filter, end: newValue });
         }}
-        renderInput={(params) => <TextField variant="standard" {...params} />}
+        renderInput={(params) => <TextField {...params} fullWidth />}
       />
     </LocalizationProvider>
   );

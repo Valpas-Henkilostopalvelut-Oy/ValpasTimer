@@ -115,6 +115,7 @@ const Point = ({ point, travel, setTravel, isEmpty, lang }) => {
         fields: ["formatted_address", "geometry"],
       };
       service.findPlaceFromQuery(request, (results, status) => {
+        console.log(results);
         if (status === "OK") {
           setPlaces(results);
         }
@@ -126,23 +127,43 @@ const Point = ({ point, travel, setTravel, isEmpty, lang }) => {
     <Grid container spacing={2} item xs={12}>
       <Grid item xs={12} md={6}>
         <Autocomplete
+          inputValue={query}
+          onInputChange={(e, value) => {
+            setQuery(value);
+          }}
+          
           disabled={!isEmpty}
           options={places}
           getOptionLabel={(option) => option.formatted_address}
-          inputValue={query}
-          isOptionEqualToValue={(option, value) => option.formatted_address === value.formatted_address}
           renderInput={(params) => (
             <TextField
               {...params}
               label="Address"
-              value={point.address}
-              onChange={(e) => {
-                setQuery(e.target.value);
+              InputProps={{
+                ...params.InputProps,
+                endAdornment: <React.Fragment>{params.InputProps.endAdornment}</React.Fragment>,
               }}
             />
           )}
           onChange={(e, value) => {
-            setQuery(value.formatted_address);
+            console.log(value);
+            if (value) {
+              setTravel({
+                ...travel,
+                points: travel.routePoints.map((p) => {
+                  if (p.id === point.id) {
+                    return {
+                      ...p,
+                      address: value.formatted_address,
+                      lat: value.geometry.location.lat(),
+                      lng: value.geometry.location.lng(),
+                    };
+                  } else {
+                    return p;
+                  }
+                }),
+              });
+            }
           }}
         />
       </Grid>

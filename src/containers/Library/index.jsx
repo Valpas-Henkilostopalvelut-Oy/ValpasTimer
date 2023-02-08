@@ -5,17 +5,18 @@ import { DataStore, Hub } from "aws-amplify";
 import { TimeEntry, AllWorkSpaces } from "../../models/index.js";
 import { Row } from "./services/row.jsx";
 import { totalworkplacetime } from "./services/timecalc";
-import { Filter } from "./services/morebuttons.jsx";
+import { Filter } from "./services/datafilter.jsx";
 import { AddTimeShift } from "./services/addtimeshit.jsx";
-
-/**
-
- */
+import { Pdf } from "./services/pdf.jsx";
+import { UserCredentials } from "../../models/index.js";
 
 export const Library = () => {
   const [data, setData] = useState(null);
   const [works, setWorks] = useState(null);
+  const [worker, setWorker] = useState(null);
   const [filter, setFilter] = useState({
+    workerId: "",
+    workId: "",
     paid: false,
     all: true,
     start: new Date(),
@@ -26,8 +27,37 @@ export const Library = () => {
   useEffect(() => {
     let isActive = true;
     const fetchData = async () => {
+      await DataStore.query(UserCredentials).then((users) => {
+        let a = [];
+        for (let i = 0; i < users.length; i++) {
+          a.push({
+            id: users[i].userId,
+            first_name: users[i].profile.first_name,
+            last_name: users[i].profile.last_name,
+            email: users[i].profile.email,
+            status: users[i].status,
+          });
+        }
+        setWorker(a);
+      });
+    };
+    isActive && fetchData();
+    return () => (isActive = false);
+  }, []);
+
+  useEffect(() => {
+    let isActive = true;
+    const fetchData = async () => {
+      const a = [];
       const data = await DataStore.query(AllWorkSpaces);
-      setWorks(data);
+      for (let i = 0; i < data.length; i++) {
+        a.push({
+          id: data[i].id,
+          name: data[i].name,
+          hourlyRate: data[i].hourlyRate,
+        });
+      }
+      setWorks(a);
     };
 
     isActive && fetchData();
@@ -38,12 +68,12 @@ export const Library = () => {
     let isActive = true;
     const fetchData = async () => {
       const data = await DataStore.query(TimeEntry);
-      setData(sortData(data, filter.paid, filter.start, filter.end, filter.all));
+      setData(sortData(data, filter.paid, filter.start, filter.end, filter.all, filter.workerId, filter.workId));
     };
 
     isActive && fetchData();
     return () => (isActive = false);
-  }, [filter.paid, filter.start, filter.end, filter.all, isEmpty]);
+  }, [filter.paid, filter.start, filter.end, filter.all, isEmpty, filter.workerId, filter.workId]);
 
   useEffect(() => {
     Hub.listen("datastore", async (hubData) => {
@@ -60,21 +90,19 @@ export const Library = () => {
       {data && works ? (
         <Box sx={{ height: "100vh" }}>
           <Grid container spacing={2} alignItems="center">
-            <Grid item xs={8}>
-              <Typography
-                variant="h1"
-                sx={{
-                  padding: "1rem 0rem",
-                }}
-              >
+            <Grid item xs={7}>
+              <Typography variant="h1" sx={{ padding: "1rem 0rem" }}>
                 Maksua odottavat
               </Typography>
             </Grid>
-            <Grid item xs={2} align="right">
-              <AddTimeShift />
+            <Grid item xs={1} align="right">
+              <Pdf />
             </Grid>
             <Grid item xs={2} align="right">
-              <Filter filter={filter} setFilter={setFilter} />
+              <AddTimeShift workers={worker} works={works} />
+            </Grid>
+            <Grid item xs={2} align="right">
+              <Filter oldFilter={filter} setOldFilter={setFilter} workers={worker} works={works} />
             </Grid>
           </Grid>
 
@@ -110,7 +138,7 @@ export const Library = () => {
                 </Box>
 
                 {item.arr.map((item) => (
-                  <Row item={item} key={item.userId} all={filter.all} />
+                  <Row item={item} key={item.userId} all={filter.all} workers={worker} works={works} />
                 ))}
               </Box>
             );

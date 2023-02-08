@@ -15,8 +15,6 @@ export const totalworkplacetime = (data, allweeks = true) => {
   let m = 0;
   let s = 0;
 
-  data = allweeks ? data : filterWeeks(data);
-
   for (let i = 0; i < data.length; i++) {
     const element1 = data[i].arr;
     for (let ii = 0; ii < element1.length; ii++) {
@@ -131,19 +129,3 @@ export const daytotal = (data) => {
     seconds: s,
   };
 };
-
-function getWeekRN() {
-  const d = new Date();
-  const dayNum = d.getUTCDay() || 7;
-  d.setUTCDate(d.getUTCDate() + 4 - dayNum);
-  const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
-  return Math.ceil(((d - yearStart) / 86400000 + 1) / 7);
-}
-
-export function filterWeeks(weekArray) {
-  let filteredWeeks = weekArray.filter((week) => {
-    if (getWeekRN() % 2 === 0) return week.week === getWeekRN() - 1;
-    else return week.week === getWeekRN();
-  });
-  return filteredWeeks;
-}
