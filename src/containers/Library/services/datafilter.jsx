@@ -35,6 +35,9 @@ const Worker = ({ workers, filter, setFilter }) => {
         label="Worker"
         onChange={handleChange}
       >
+        <MenuItem value="">
+          <em>None</em>
+        </MenuItem>
         {workers.map((worker) => (
           <MenuItem key={worker.id} value={worker.id}>
             {worker.first_name} {worker.last_name}
@@ -59,6 +62,9 @@ const Work = ({ works, filter, setFilter }) => {
         label="Work"
         onChange={handleChange}
       >
+        <MenuItem value="">
+          <em>None</em>
+        </MenuItem>
         {works.map((work) => (
           <MenuItem key={work.id} value={work.id}>
             {work.name}

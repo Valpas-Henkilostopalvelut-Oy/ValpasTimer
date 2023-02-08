@@ -6,7 +6,7 @@ export const sortData = (data, paid, start, end, all, workerId, workId) => {
   const isSent = true;
   const isConfirmed = true;
   const isActive = false;
-  const isLocked = !!paid;
+  const isLocked = false;
 
   let sorted = data
     .filter(
@@ -14,7 +14,7 @@ export const sortData = (data, paid, start, end, all, workerId, workId) => {
         a.isSent === isSent &&
         a.isConfirmed === isConfirmed &&
         a.isActive === isActive &&
-        a.isLocked === isLocked &&
+        (!paid ? true : a.isLocked === isLocked) &&
         (workerId !== "" ? a.userId === workerId : true) &&
         (workId !== "" ? a.workspaceId === workId : true)
     )
@@ -26,6 +26,8 @@ export const sortData = (data, paid, start, end, all, workerId, workId) => {
     .filter((item) => {
       if (all) return true;
       const date = new Date(item.timeInterval.start);
+      start = new Date(start);
+      end = new Date(end);
       return date >= start && date <= end;
     })
     .reduce((res, val) => {

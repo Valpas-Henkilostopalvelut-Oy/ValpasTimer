@@ -1,3 +1,37 @@
+export const timeshifttotal = (data) => {
+  let h = 0;
+  let m = 0;
+  let s = 0;
+
+  const item = data.timeshift;
+  const breaks = calculteBreaks(item.break);
+  const start = new Date(item.timeInterval.start);
+  const end = new Date(item.timeInterval.end);
+
+  if (Date.parse(end) > Date.parse(start)) {
+    const total = Date.parse(end) - Date.parse(start) - breaks;
+
+    h = h + Math.floor(total / 1000 / 60 / 60);
+    m = m + Math.floor((total / 1000 / 60) % 60);
+    s = s + Math.floor((total / 1000) % 60);
+
+    if (m >= 60) {
+      h++;
+      m = m % 60;
+    }
+    if (s >= 60) {
+      m++;
+      s = s % 60;
+    }
+  }
+
+  return {
+    hours: h,
+    minutes: m,
+    seconds: s,
+  };
+};
+
 const calculteBreaks = (breaks) => {
   let total = 0;
   if (breaks === null) return total;

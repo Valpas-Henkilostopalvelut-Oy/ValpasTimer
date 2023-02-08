@@ -20,17 +20,6 @@ const onPaidWeek = (arr) => {
   });
 };
 
-const onDeleteWeek = (arr) => {
-  arr.forEach((element) => {
-    element.arr.forEach(async (item) => {
-      item = item.timeshift;
-      await DataStore.delete(item)
-        .catch((err) => console.log(err))
-        .then((res) => console.log(res));
-    });
-  });
-};
-
 const onPaidDay = (arr) => {
   arr.forEach(async (item) => {
     item = item.timeshift;
@@ -64,7 +53,46 @@ const onPaid = async (item) => {
     .then((res) => console.log(res));
 };
 
-export const Moremenuweek = ({ date }) => {
+const onCancelWeek = (arr) => {
+  arr.forEach((element) => {
+    element.arr.forEach(async (item) => {
+      item = item.timeshift;
+      await DataStore.save(
+        TimeEntry.copyOf(item, (updated) => {
+          updated.isLocked = false;
+        })
+      )
+        .catch((err) => console.log(err))
+        .then((res) => console.log(res));
+    });
+  });
+};
+
+const onCancelDay = (arr) => {
+  arr.forEach(async (item) => {
+    item = item.timeshift;
+    await DataStore.save(
+      TimeEntry.copyOf(item, (updated) => {
+        updated.isLocked = false;
+      })
+    )
+      .catch((err) => console.log(err))
+      .then((res) => console.log(res));
+  });
+};
+
+const onCancel = async (item) => {
+  item = item.timeshift;
+  await DataStore.save(
+    TimeEntry.copyOf(item, (updated) => {
+      updated.isLocked = false;
+    })
+  )
+    .catch((err) => console.log(err))
+    .then((res) => console.log(res));
+};
+
+export const Moremenuweek = ({ date, paid }) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => setAnchorEl(event.currentTarget);
@@ -74,8 +102,9 @@ export const Moremenuweek = ({ date }) => {
     onPaidWeek(date);
     handleClose();
   };
-  const handleDelete = () => {
-    onDeleteWeek(date);
+
+  const handleCancel = () => {
+    onCancelWeek(date);
     handleClose();
   };
 
@@ -96,14 +125,17 @@ export const Moremenuweek = ({ date }) => {
           },
         }}
       >
-        <MenuItem onClick={handlePaid}>Maksaa</MenuItem>
-        <MenuItem onClick={handleDelete}>Poista</MenuItem>
+        {!paid ? (
+          <MenuItem onClick={handlePaid}>Maksaa</MenuItem>
+        ) : (
+          <MenuItem onClick={handleCancel}>Maksamaton</MenuItem>
+        )}
       </Menu>
     </Box>
   );
 };
 
-export const Moremenuday = ({ date }) => {
+export const Moremenuday = ({ date, paid }) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => setAnchorEl(event.currentTarget);
@@ -113,8 +145,9 @@ export const Moremenuday = ({ date }) => {
     onPaidDay(date);
     handleClose();
   };
-  const handleDelete = () => {
-    onDeleteDay(date);
+
+  const handleCancel = () => {
+    onCancelDay(date);
     handleClose();
   };
 
@@ -135,14 +168,17 @@ export const Moremenuday = ({ date }) => {
           },
         }}
       >
-        <MenuItem onClick={handlePaid}>Maksaa</MenuItem>
-        <MenuItem onClick={handleDelete}>Poista</MenuItem>
+        {!paid ? (
+          <MenuItem onClick={handlePaid}>Maksaa</MenuItem>
+        ) : (
+          <MenuItem onClick={handleCancel}>Maksamaton</MenuItem>
+        )}
       </Menu>
     </Box>
   );
 };
 
-export const Moremenutimeshift = ({ date }) => {
+export const Moremenutimeshift = ({ date, paid }) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => setAnchorEl(event.currentTarget);
@@ -153,6 +189,16 @@ export const Moremenutimeshift = ({ date }) => {
     handleClose();
   };
 
+  const handleDelete = () => {
+    onDeleteDay(date);
+    handleClose();
+  };
+
+  const handleCancel = () => {
+    onCancel(date);
+    handleClose();
+  };
+
   return (
     <Box>
       <IconButton aria-label="more" aria-controls="long-menu" aria-haspopup="true" size="small" onClick={handleClick}>
@@ -170,7 +216,12 @@ export const Moremenutimeshift = ({ date }) => {
           },
         }}
       >
-        <MenuItem onClick={handlePaid}>Maksaa</MenuItem>
+        {!paid ? (
+          <MenuItem onClick={handlePaid}>Maksaa</MenuItem>
+        ) : (
+          <MenuItem onClick={handleCancel}>Maksamaton</MenuItem>
+        )}
+        <MenuItem onClick={handleDelete}>Poista</MenuItem>
       </Menu>
     </Box>
   );
