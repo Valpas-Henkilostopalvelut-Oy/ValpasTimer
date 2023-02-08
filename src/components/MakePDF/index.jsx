@@ -33,12 +33,15 @@ export const MakePDF = ({ data, isEmpty, works }) => {
   const [selected, setSelected] = useState([]);
   const [selectedWork, setSelectedWork] = useState("");
   const [newData, setNewData] = useState(null);
+  const [currentUser, setCurrentUser] = useState(null);
 
   useEffect(() => {
     let isMounted = true;
     const load = async () => {
       Auth.currentAuthenticatedUser().then((user) => {
         const toPdf = data.filter((a) => !a.isActive && a.workspaceId === selectedWork && a.isConfirmed && a.isSent);
+        setCurrentUser(user);
+        console.log(user);
         setNewData(groupBy(toPdf));
       });
     };
@@ -47,21 +50,10 @@ export const MakePDF = ({ data, isEmpty, works }) => {
     return () => (isMounted = false);
   }, [selectedWork]);
 
-  const handleSave = () => {
-    fillWeek(selected, selectedWork, works);
-  };
-  const handleOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-  const handleChangeWork = (event) => {
-    const { value } = event.target;
-    setSelectedWork(value);
-  };
-
+  const handleSave = () => fillWeek(selected, selectedWork, works, currentUser);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+  const handleChangeWork = (event) => setSelectedWork(event.target.value);
   const handleChange = (event) => {
     //max selected is 2
     const { value } = event.target;

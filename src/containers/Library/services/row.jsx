@@ -69,11 +69,11 @@ const RowWeek = ({ item, worker }) => {
         <Grid item xs={2}>
           {isPaidWeek(item.arr) ? (
             <Typography variant="p" sx={{ color: "success.main" }}>
-              Paid
+              Maksettu
             </Typography>
           ) : (
             <Typography variant="p" sx={{ color: "error.main" }}>
-              Not paid
+              Ei maksettu
             </Typography>
           )}
         </Grid>
@@ -123,11 +123,11 @@ const RowDay = ({ item }) => {
         <Grid item xs={3}>
           {isPaidDay(item.arr) ? (
             <Typography variant="p" sx={{ color: "success.main" }}>
-              Paid
+              Maksettu
             </Typography>
           ) : (
             <Typography variant="p" sx={{ color: "error.main" }}>
-              Not paid
+              Ei maksettu
             </Typography>
           )}
         </Grid>
@@ -173,11 +173,11 @@ const RowTimeshift = ({ item }) => {
         <Grid item xs={3}>
           {isPaidTimeshift(item) ? (
             <Typography variant="p" sx={{ color: "success.main" }}>
-              Paid
+              Maksettu
             </Typography>
           ) : (
             <Typography variant="p" sx={{ color: "error.main" }}>
-              Not paid
+              Ei maksettu
             </Typography>
           )}
         </Grid>

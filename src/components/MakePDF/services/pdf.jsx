@@ -1,14 +1,5 @@
 import { PDFDocument } from "pdf-lib";
 import * as contentful from "contentful";
-import { Auth } from "aws-amplify";
-
-const getWorkerName = async () => {
-  const user = await Auth.currentAuthenticatedUser();
-  var first_name = user.attributes.name;
-  var last_name = user.attributes.family_name;
-
-  return { first_name, last_name };
-};
 
 const getYear = (d) => {
   let year = new Date(d[0].arr[0].arr[0].timeInterval.start).getFullYear();
@@ -175,12 +166,12 @@ const convertArrBreaks = (arr) => {
   return h !== 0 || m !== 0 ? ` - ${(h + m / 60).toFixed(2)}` : "";
 };
 
-const setToPDF = async (form, data, workplace, works, page = "") => {
+const setToPDF = async (form, data, workplace, works, user, page = "") => {
   const days = data.arr;
 
   form.getField("year" + page).setText(String(getYear(days)));
   form.getField("client" + page).setText(getWorkName(workplace, works));
-  form.getField("worker" + page).setText((await getWorkerName()).last_name + " " + (await getWorkerName()).first_name);
+  form.getField("worker" + page).setText(user.last_name + " " + user.first_name);
   form.getField("total" + page).setText(String(getTotalWeek(days, workplace)));
   form.getField("week" + page).setText(String(data.week));
 
@@ -252,8 +243,9 @@ const setToPDF = async (form, data, workplace, works, page = "") => {
   });
 };
 
-export const fillWeek = async (data, workplace, works) => {
+export const fillWeek = async (data, workplace, works, user) => {
   if (data === undefined) return;
+  user = { last_name: user.attributes.family_name, first_name: user.attributes.name };
 
   var client = await contentful.createClient({
     space: "pqh23768z4fv",
@@ -267,9 +259,9 @@ export const fillWeek = async (data, workplace, works) => {
   if (data.length >= !0) {
     for (let i = 0; i < data.length; i++) {
       if (i === 0) {
-        await setToPDF(form, data[i], workplace, works);
+        await setToPDF(form, data[i], workplace, works, user);
       } else {
-        await setToPDF(form, data[i], workplace, works, "-2");
+        await setToPDF(form, data[i], workplace, works, user, "-2");
       }
     }
   }
@@ -280,6 +272,6 @@ export const fillWeek = async (data, workplace, works) => {
   const blob = new Blob([pdfBytes], { type: "application/pdf" });
   const link = document.createElement("a");
   link.href = window.URL.createObjectURL(blob);
-  link.download = `${(await getWorkerName()).last_name}-${(await getWorkerName()).first_name}.pdf`;
+  link.download = `${user.last_name}-${user.first_name}.pdf`;
   link.click();
 };

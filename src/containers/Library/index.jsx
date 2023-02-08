@@ -96,7 +96,7 @@ export const Library = () => {
               </Typography>
             </Grid>
             <Grid item xs={1} align="right">
-              <Pdf />
+              <Pdf data={data} works={works} workers={worker} />
             </Grid>
             <Grid item xs={2} align="right">
               <AddTimeShift workers={worker} works={works} />

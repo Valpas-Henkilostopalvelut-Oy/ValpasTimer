@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import {
-  Divider,
   Box,
   Grid,
   Popover,
@@ -8,18 +7,12 @@ import {
   Button,
   ListItemText,
   Checkbox,
-  ListSubheader,
   Select,
   FormControl,
   InputLabel,
-  InputBase,
   Typography,
 } from "@mui/material";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { Daterangestart, Daterangeend } from "./times";
-import { PropTypes } from "prop-types";
-import { TimeEntry } from "../../../models";
-import { DataStore } from "aws-amplify";
 
 const Worker = ({ workers, filter, setFilter }) => {
   const handleChange = (event) => {
@@ -27,12 +20,12 @@ const Worker = ({ workers, filter, setFilter }) => {
   };
   return (
     <FormControl fullWidth>
-      <InputLabel id="demo-simple-select-label">Worker</InputLabel>
+      <InputLabel id="demo-simple-select-label">Työntekijä</InputLabel>
       <Select
         labelId="demo-simple-select-label"
         id="demo-simple-select"
         value={filter.workerId}
-        label="Worker"
+        label="Työntekijä"
         onChange={handleChange}
       >
         <MenuItem value="">
@@ -54,12 +47,12 @@ const Work = ({ works, filter, setFilter }) => {
   };
   return (
     <FormControl fullWidth>
-      <InputLabel id="demo-simple-select-label">Work</InputLabel>
+      <InputLabel id="demo-simple-select-label">Asiakas</InputLabel>
       <Select
         labelId="demo-simple-select-label"
         id="demo-simple-select"
         value={filter.workId}
-        label="Work"
+        label="Asiakas"
         onChange={handleChange}
       >
         <MenuItem value="">

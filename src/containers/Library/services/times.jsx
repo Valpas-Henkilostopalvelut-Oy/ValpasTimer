@@ -64,7 +64,7 @@ export const Daterangestart = ({
   return (
     <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={fi}>
       <DatePicker
-        label="Start"
+        label="Alkaa"
         value={filter.start}
         disableMaskedInput
         onChange={(newValue) => {
@@ -88,7 +88,7 @@ export const Daterangeend = ({
   return (
     <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={fi}>
       <DatePicker
-        label="End"
+        label="Päättyy"
         value={filter.end}
         disableMaskedInput
         onChange={(newValue) => {
