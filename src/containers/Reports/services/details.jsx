@@ -47,5 +47,5 @@ export const Details = ({ date, isEmpty = true, lang }) => {
 Details.propTypes = {
   date: PropTypes.object.isRequired,
   isEmpty: PropTypes.bool,
-  lang: PropTypes.string.isRequired,
+  lang: PropTypes.object.isRequired,
 };

@@ -1,6 +1,32 @@
 export const eng = {
   name: "English",
   main: {
+    service: {
+      breaks: {
+        lunch: "Lunch 30 min",
+        lunch_l: "Lunch other",
+        short: "Short Break 15 min",
+        long: "Long Break 30 min",
+        going: "Own dealings",
+        accident: "Accident",
+      },
+      methodselect: {
+        cash: "Cash",
+        card: "Card",
+        companycard: "Company card",
+        transfer: "Transfer",
+        other: "Other",
+      },
+      classes: {
+        administrativeservice: "Administrative service",
+        itdeviceandsoftwareexpenses: "IT device and software expenses",
+        marketingexpenses: "Marketing expenses",
+        meetingexpenses: "Meeting expenses",
+        premisesexpenses: "Premises expenses",
+        travelexpenses: "Travel expenses",
+        vehicleexpenses: "Vehicle expenses",
+      },
+    },
     months: [
       "January",
       "February",
@@ -217,15 +243,6 @@ export const eng = {
           deleteAlert: "This entry will be deleted permanently",
         },
 
-        breaks: {
-          lunch: "Lunch 30 min",
-          lunch_l: "Lunch other",
-          short: "Short Break 15 min",
-          long: "Long Break 30 min",
-          going: "Own dealings",
-          accident: "Accident",
-        },
-
         buttons: {
           report: "Report",
           delete: "Delete",
@@ -357,22 +374,7 @@ export const eng = {
           upload: "Upload",
         },
       },
-      methodselect: {
-        cash: "Cash",
-        card: "Card",
-        companycard: "Company card",
-        transfer: "Transfer",
-        other: "Other",
-      },
-      classes: {
-        administrativeservice: "Administrative service",
-        itdeviceandsoftwareexpenses: "IT device and software expenses",
-        marketingexpenses: "Marketing expenses",
-        meetingexpenses: "Meeting expenses",
-        premisesexpenses: "Premises expenses",
-        travelexpenses: "Travel expenses",
-        vehicleexpenses: "Vehicle expenses",
-      },
+
       list: {
         title: "Receipt list",
         buttons: {

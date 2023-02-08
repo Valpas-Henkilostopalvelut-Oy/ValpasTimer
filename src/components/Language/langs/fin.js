@@ -1,6 +1,32 @@
 export const fin = {
   name: "Finnish",
   main: {
+    service: {
+      breaks: {
+        lunch: "Lounas 30 min",
+        lunch_l: "Lounas muu kesto",
+        short: "Tauko 15 min",
+        long: "Tauko 30 min",
+        going: "Oma asiointi",
+        accident: "Tapaturma",
+      },
+      methodselect: {
+        cash: "Käteinen",
+        card: "Kortti",
+        companycard: "Yrityskortti",
+        transfer: "Tilisiirto",
+        other: "Muu",
+      },
+      classes: {
+        administrativeservice: "Hallinnollinen palvelu",
+        itdeviceandsoftwareexpenses: "IT-laitteet ja -ohjelmistot",
+        marketingexpenses: "Markkinointikulut",
+        meetingexpenses: "Kokouskulut",
+        premisesexpenses: "Tilakulut",
+        travelexpenses: "Matkakulut",
+        vehicleexpenses: "Ajoneuvokulut",
+      },
+    },
     months: [
       "Tammikuu",
       "Helmikuu",
@@ -221,15 +247,6 @@ export const fin = {
           deleteAlert: "Tätä toimintoa ei voi perua",
         },
 
-        breaks: {
-          lunch: "Lounas 30 min",
-          lunch_l: "Lounas muu kesto",
-          short: "Tauko 15 min",
-          long: "Tauko 30 min",
-          going: "Oma asiointi",
-          accident: "Tapaturma",
-        },
-
         buttons: {
           report: "Raportoi",
           delete: "Poista",
@@ -362,22 +379,7 @@ export const fin = {
           upload: "Lataa",
         },
       },
-      methodselect: {
-        cash: "Käteinen",
-        card: "Kortti",
-        companycard: "Yrityskortti",
-        transfer: "Tilisiirto",
-        other: "Muu",
-      },
-      classes: {
-        administrativeservice: "Hallinnollinen palvelu",
-        itdeviceandsoftwareexpenses: "IT-laitteet ja -ohjelmistot",
-        marketingexpenses: "Markkinointikulut",
-        meetingexpenses: "Kokouskulut",
-        premisesexpenses: "Tilakulut",
-        travelexpenses: "Matkakulut",
-        vehicleexpenses: "Ajoneuvokulut",
-      },
+
       list: {
         title: "Kuittilista",
         buttons: {

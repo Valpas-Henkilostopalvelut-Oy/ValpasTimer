@@ -21,20 +21,22 @@ export const Detailsrow = ({ date }) => {
   return (
     <Table size="small" aria-label="purchases">
       <TableBody>
-        {date.arr.map((row) => (
-          <Fragment key={row.id}>
-            <TableRow key={row.id}>
-              <TableCell>{row.description ? row.description : "No description"}</TableCell>
-              <TableCell align="right">
-                <Time time={row.timeInterval.start} /> - <Time time={row.timeInterval.end} />
-              </TableCell>
-              <TableCell align="right">
-                <TotalTime date={row} />
-              </TableCell>
-            </TableRow>
-            <Breakslist date={row} />
-          </Fragment>
-        ))}
+        {date.arr
+          .sort((a, b) => new Date(a.timeInterval.start) - new Date(b.timeInterval.start))
+          .map((row) => (
+            <Fragment key={row.id}>
+              <TableRow key={row.id}>
+                <TableCell>{row.description ? row.description : "No description"}</TableCell>
+                <TableCell align="right">
+                  <Time time={row.timeInterval.start} /> - <Time time={row.timeInterval.end} />
+                </TableCell>
+                <TableCell align="right">
+                  <TotalTime date={row} />
+                </TableCell>
+              </TableRow>
+              <Breakslist date={row} />
+            </Fragment>
+          ))}
       </TableBody>
     </Table>
   );

@@ -1,6 +1,32 @@
 export const ukr = {
   name: "Українська",
   main: {
+    service: {
+      breaks: {
+        lunch: "Обід 30 хв",
+        lunch_l: "Обід",
+        short: "Короткий перерва 15 хв",
+        long: "Довгий перерва 30 хв",
+        going: "Виїзд",
+        accident: "Аварія",
+      },
+      methodselect: {
+        cash: "Готівка",
+        card: "Карта",
+        companycard: "Карта компанії",
+        transfer: "Переказ",
+        other: "Інше",
+      },
+      classes: {
+        administrativeservice: "Адміністративні послуги",
+        itdeviceandsoftwareexpenses: "IT-пристрої та програмне забезпечення",
+        marketingexpenses: "Маркетингові витрати",
+        meetingexpenses: "Витрати на зустрічі",
+        premisesexpenses: "Витрати на приміщення",
+        travelexpenses: "Витрати на подорожі",
+        vehicleexpenses: "Витрати на транспорт",
+      },
+    },
     months: [
       "Січень",
       "Лютий",
@@ -217,15 +243,6 @@ export const ukr = {
           deleteAlert: "Ви не зможете відновити цей запис!",
         },
 
-        breaks: {
-          lunch: "Обід 30 хв",
-          lunch_l: "Обід",
-          short: "Короткий перерва 15 хв",
-          long: "Довгий перерва 30 хв",
-          going: "Виїзд",
-          accident: "Аварія",
-        },
-
         buttons: {
           report: "Підтвердити",
           delete: "Видалити",
@@ -357,22 +374,7 @@ export const ukr = {
           upload: "Завантажити",
         },
       },
-      methodselect: {
-        cash: "Готівка",
-        card: "Карта",
-        companycard: "Карта компанії",
-        transfer: "Переказ",
-        other: "Інше",
-      },
-      classes: {
-        administrativeservice: "Адміністративні послуги",
-        itdeviceandsoftwareexpenses: "IT-пристрої та програмне забезпечення",
-        marketingexpenses: "Маркетингові витрати",
-        meetingexpenses: "Витрати на зустрічі",
-        premisesexpenses: "Витрати на приміщення",
-        travelexpenses: "Витрати на подорожі",
-        vehicleexpenses: "Витрати на транспорт",
-      },
+
       list: {
         title: "Список квитків",
         buttons: {

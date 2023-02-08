@@ -11,6 +11,7 @@ import RestaurantIcon from "@mui/icons-material/Restaurant";
 import FreeBreakfastIcon from "@mui/icons-material/FreeBreakfast";
 import LocalHospitalIcon from "@mui/icons-material/LocalHospital";
 import { PropTypes } from "prop-types";
+import { useAppContext } from "../../../services/contextLib.jsx";
 
 const Breakicon = ({ item }) => {
   if (item.reason === Breakreason.DINNER) {
@@ -73,8 +74,9 @@ const updateBreak = async (data, item, reason) => {
   );
 };
 
-const Breakreasonselect = ({ data, item, lang }) => {
-  const breaks = [
+const breaksArr = () => {
+  const lang = useAppContext().langValue.service.breaks;
+  return [
     { id: Breakreason.LUNCH, name: lang.lunch },
     { id: Breakreason.LUNCH_L, name: lang.lunch_l },
     { id: Breakreason.SHORT, name: lang.short },
@@ -82,6 +84,9 @@ const Breakreasonselect = ({ data, item, lang }) => {
     { id: Breakreason.GOING, name: lang.going },
     { id: Breakreason.ACCIDENT, name: lang.accident },
   ];
+};
+
+const Breakreasonselect = ({ data, item, lang }) => {
   const [reason, setReason] = useState(item.reason ? item.reason : "");
   const isSent = data.isSent;
 
@@ -90,7 +95,7 @@ const Breakreasonselect = ({ data, item, lang }) => {
     updateBreak(data, item, event.target.value);
   };
   return (
-    <FormControl fullWidth >
+    <FormControl fullWidth>
       <Select
         labelId="breakreason-select-label"
         id="breakreason-select"
@@ -101,7 +106,7 @@ const Breakreasonselect = ({ data, item, lang }) => {
         disabled={isSent}
         fullWidth
       >
-        {breaks.map((e) => {
+        {breaksArr().map((e) => {
           return (
             <MenuItem value={e.id} key={e.id}>
               <Typography variant="p">{e.name}</Typography>

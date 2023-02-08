@@ -2,7 +2,7 @@ import { PaymentMethod, Classification } from "../../../models";
 import { useAppContext } from "../../../services/contextLib.jsx";
 
 export const metodlist = () => {
-  const lang = useAppContext().langValue.receipts.methodselect;
+  const lang = useAppContext().langValue.service.methodselect;
 
   return [
     { value: PaymentMethod.CASH, label: lang.cash },
@@ -14,7 +14,7 @@ export const metodlist = () => {
 };
 
 export const classlist = () => {
-  const lang = useAppContext().langValue.receipts.classes;
+  const lang = useAppContext().langValue.service.classes;
   return [
     { value: Classification.ADMINISTRATIVESERVICE, label: lang.administrativeservice },
     { value: Classification.ITDEVICEANDSOFTWAREEXPENSES, label: lang.itdeviceandsoftwareexpenses },
