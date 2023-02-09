@@ -184,8 +184,10 @@ const getDate = (item) => {
   let day = date.getDate();
   let month = date.getMonth() + 1;
   let year = date.getFullYear();
+  let hours = date.getHours();
+  let minutes = date.getMinutes();
 
-  return `${day}.${month}.${year}`;
+  return `${day}.${month}.${year} ${hours}:${minutes}`;
 };
 
 const setToPDF = async (form, data, workplace, works, user, page = "") => {
@@ -196,7 +198,7 @@ const setToPDF = async (form, data, workplace, works, user, page = "") => {
   form.getField("worker" + page).setText(user.last_name + " " + user.first_name);
   form.getField("total" + page).setText(String(getTotalWeek(days, workplace)));
   form.getField("week" + page).setText(String(data.week));
-  form.getField("signature" + page).setText("Allekirjoitu sähköisesti");
+  form.getField("signature" + page).setText("Allekirjoitettu sähköisesti");
   form.getField("date" + page).setText(getDate(data));
 
   days.forEach((day) => {

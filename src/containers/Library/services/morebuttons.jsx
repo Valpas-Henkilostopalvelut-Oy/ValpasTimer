@@ -132,7 +132,7 @@ export const Moremenuweek = ({ date, paid }) => {
         }}
       >
         {!paid ? (
-          <MenuItem onClick={handlePaid}>Maksaa</MenuItem>
+          <MenuItem onClick={handlePaid}>Merkitse maksetuksi</MenuItem>
         ) : (
           <MenuItem onClick={handleCancel}>Maksamaton</MenuItem>
         )}
@@ -175,7 +175,7 @@ export const Moremenuday = ({ date, paid }) => {
         }}
       >
         {!paid ? (
-          <MenuItem onClick={handlePaid}>Maksaa</MenuItem>
+          <MenuItem onClick={handlePaid}>Merkitse maksetuksi</MenuItem>
         ) : (
           <MenuItem onClick={handleCancel}>Maksamaton</MenuItem>
         )}
@@ -223,7 +223,7 @@ export const Moremenutimeshift = ({ date, paid }) => {
         }}
       >
         {!paid ? (
-          <MenuItem onClick={handlePaid}>Maksaa</MenuItem>
+          <MenuItem onClick={handlePaid}>Merkitse maksetuksi</MenuItem>
         ) : (
           <MenuItem onClick={handleCancel}>Maksamaton</MenuItem>
         )}

@@ -29,11 +29,11 @@ const Worker = ({ workers, filter, setFilter }) => {
         onChange={handleChange}
       >
         <MenuItem value="">
-          <em>None</em>
+          <em>Näytä kaiki</em>
         </MenuItem>
         {workers.map((worker) => (
           <MenuItem key={worker.id} value={worker.id}>
-            {worker.first_name} {worker.last_name}
+            {worker.last_name} {worker.first_name}
           </MenuItem>
         ))}
       </Select>
@@ -56,7 +56,7 @@ const Work = ({ works, filter, setFilter }) => {
         onChange={handleChange}
       >
         <MenuItem value="">
-          <em>None</em>
+          <em>Näytä kaiki</em>
         </MenuItem>
         {works.map((work) => (
           <MenuItem key={work.id} value={work.id}>
@@ -164,7 +164,7 @@ const Form = ({ filter, setFilter, works, workers, cancel, save }) => {
         <Grid item xs={12}>
           <MenuItem onClick={() => setFilter({ ...filter, paid: !filter.paid })}>
             <Checkbox checked={filter.paid} onChange={() => setFilter({ ...filter, paid: !filter.paid })} />
-            <ListItemText primary="Maksu odottaa" />
+            <ListItemText primary="Maksu odottavat" />
           </MenuItem>
         </Grid>
         <Grid item xs={12}>
@@ -189,7 +189,7 @@ const Form = ({ filter, setFilter, works, workers, cancel, save }) => {
         </Grid>
         <Grid item xs={6}>
           <Button variant="outlined" color="success" onClick={save} fullWidth>
-            Tallenna
+            Käytä
           </Button>
         </Grid>
       </Grid>
