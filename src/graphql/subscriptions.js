@@ -413,6 +413,8 @@ export const onCreateTimeEntry = /* GraphQL */ `
       }
       isActive
       isLocked
+      paidAt
+      confirmedAt
       isSent
       isConfirmed
       isPaused
@@ -452,6 +454,8 @@ export const onUpdateTimeEntry = /* GraphQL */ `
       }
       isActive
       isLocked
+      paidAt
+      confirmedAt
       isSent
       isConfirmed
       isPaused
@@ -491,6 +495,8 @@ export const onDeleteTimeEntry = /* GraphQL */ `
       }
       isActive
       isLocked
+      paidAt
+      confirmedAt
       isSent
       isConfirmed
       isPaused

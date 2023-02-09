@@ -34,6 +34,8 @@ export default function TimeEntryCreateForm(props) {
     workspaceId: "",
     isActive: false,
     isLocked: false,
+    paidAt: "",
+    confirmedAt: "",
     isSent: false,
     isConfirmed: false,
     isPaused: false,
@@ -48,6 +50,10 @@ export default function TimeEntryCreateForm(props) {
   );
   const [isActive, setIsActive] = React.useState(initialValues.isActive);
   const [isLocked, setIsLocked] = React.useState(initialValues.isLocked);
+  const [paidAt, setPaidAt] = React.useState(initialValues.paidAt);
+  const [confirmedAt, setConfirmedAt] = React.useState(
+    initialValues.confirmedAt
+  );
   const [isSent, setIsSent] = React.useState(initialValues.isSent);
   const [isConfirmed, setIsConfirmed] = React.useState(
     initialValues.isConfirmed
@@ -61,6 +67,8 @@ export default function TimeEntryCreateForm(props) {
     setWorkspaceId(initialValues.workspaceId);
     setIsActive(initialValues.isActive);
     setIsLocked(initialValues.isLocked);
+    setPaidAt(initialValues.paidAt);
+    setConfirmedAt(initialValues.confirmedAt);
     setIsSent(initialValues.isSent);
     setIsConfirmed(initialValues.isConfirmed);
     setIsPaused(initialValues.isPaused);
@@ -73,6 +81,8 @@ export default function TimeEntryCreateForm(props) {
     workspaceId: [],
     isActive: [],
     isLocked: [],
+    paidAt: [],
+    confirmedAt: [],
     isSent: [],
     isConfirmed: [],
     isPaused: [],
@@ -125,6 +135,8 @@ export default function TimeEntryCreateForm(props) {
           workspaceId,
           isActive,
           isLocked,
+          paidAt,
+          confirmedAt,
           isSent,
           isConfirmed,
           isPaused,
@@ -188,6 +200,8 @@ export default function TimeEntryCreateForm(props) {
               workspaceId,
               isActive,
               isLocked,
+              paidAt,
+              confirmedAt,
               isSent,
               isConfirmed,
               isPaused,
@@ -220,6 +234,8 @@ export default function TimeEntryCreateForm(props) {
               workspaceId,
               isActive,
               isLocked,
+              paidAt,
+              confirmedAt,
               isSent,
               isConfirmed,
               isPaused,
@@ -252,6 +268,8 @@ export default function TimeEntryCreateForm(props) {
               workspaceId: value,
               isActive,
               isLocked,
+              paidAt,
+              confirmedAt,
               isSent,
               isConfirmed,
               isPaused,
@@ -284,6 +302,8 @@ export default function TimeEntryCreateForm(props) {
               workspaceId,
               isActive: value,
               isLocked,
+              paidAt,
+              confirmedAt,
               isSent,
               isConfirmed,
               isPaused,
@@ -316,6 +336,8 @@ export default function TimeEntryCreateForm(props) {
               workspaceId,
               isActive,
               isLocked: value,
+              paidAt,
+              confirmedAt,
               isSent,
               isConfirmed,
               isPaused,
@@ -334,6 +356,78 @@ export default function TimeEntryCreateForm(props) {
         hasError={errors.isLocked?.hasError}
         {...getOverrideProps(overrides, "isLocked")}
       ></SwitchField>
+      <TextField
+        label="Paid at"
+        isRequired={false}
+        isReadOnly={false}
+        type="datetime-local"
+        value={paidAt && convertToLocal(new Date(paidAt))}
+        onChange={(e) => {
+          let value =
+            e.target.value === "" ? "" : new Date(e.target.value).toISOString();
+          if (onChange) {
+            const modelFields = {
+              description,
+              userId,
+              workspaceId,
+              isActive,
+              isLocked,
+              paidAt: value,
+              confirmedAt,
+              isSent,
+              isConfirmed,
+              isPaused,
+              pauseStart,
+            };
+            const result = onChange(modelFields);
+            value = result?.paidAt ?? value;
+          }
+          if (errors.paidAt?.hasError) {
+            runValidationTasks("paidAt", value);
+          }
+          setPaidAt(value);
+        }}
+        onBlur={() => runValidationTasks("paidAt", paidAt)}
+        errorMessage={errors.paidAt?.errorMessage}
+        hasError={errors.paidAt?.hasError}
+        {...getOverrideProps(overrides, "paidAt")}
+      ></TextField>
+      <TextField
+        label="Confirmed at"
+        isRequired={false}
+        isReadOnly={false}
+        type="datetime-local"
+        value={confirmedAt && convertToLocal(new Date(confirmedAt))}
+        onChange={(e) => {
+          let value =
+            e.target.value === "" ? "" : new Date(e.target.value).toISOString();
+          if (onChange) {
+            const modelFields = {
+              description,
+              userId,
+              workspaceId,
+              isActive,
+              isLocked,
+              paidAt,
+              confirmedAt: value,
+              isSent,
+              isConfirmed,
+              isPaused,
+              pauseStart,
+            };
+            const result = onChange(modelFields);
+            value = result?.confirmedAt ?? value;
+          }
+          if (errors.confirmedAt?.hasError) {
+            runValidationTasks("confirmedAt", value);
+          }
+          setConfirmedAt(value);
+        }}
+        onBlur={() => runValidationTasks("confirmedAt", confirmedAt)}
+        errorMessage={errors.confirmedAt?.errorMessage}
+        hasError={errors.confirmedAt?.hasError}
+        {...getOverrideProps(overrides, "confirmedAt")}
+      ></TextField>
       <SwitchField
         label="Is sent"
         defaultChecked={false}
@@ -348,6 +442,8 @@ export default function TimeEntryCreateForm(props) {
               workspaceId,
               isActive,
               isLocked,
+              paidAt,
+              confirmedAt,
               isSent: value,
               isConfirmed,
               isPaused,
@@ -380,6 +476,8 @@ export default function TimeEntryCreateForm(props) {
               workspaceId,
               isActive,
               isLocked,
+              paidAt,
+              confirmedAt,
               isSent,
               isConfirmed: value,
               isPaused,
@@ -412,6 +510,8 @@ export default function TimeEntryCreateForm(props) {
               workspaceId,
               isActive,
               isLocked,
+              paidAt,
+              confirmedAt,
               isSent,
               isConfirmed,
               isPaused: value,
@@ -446,6 +546,8 @@ export default function TimeEntryCreateForm(props) {
               workspaceId,
               isActive,
               isLocked,
+              paidAt,
+              confirmedAt,
               isSent,
               isConfirmed,
               isPaused,

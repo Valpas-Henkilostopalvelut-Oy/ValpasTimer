@@ -589,6 +589,8 @@ type EagerTimeEntry = {
   readonly timeInterval?: TimeInterval | null;
   readonly isActive?: boolean | null;
   readonly isLocked?: boolean | null;
+  readonly paidAt?: string | null;
+  readonly confirmedAt?: string | null;
   readonly isSent?: boolean | null;
   readonly isConfirmed?: boolean | null;
   readonly isPaused?: boolean | null;
@@ -607,6 +609,8 @@ type LazyTimeEntry = {
   readonly timeInterval?: TimeInterval | null;
   readonly isActive?: boolean | null;
   readonly isLocked?: boolean | null;
+  readonly paidAt?: string | null;
+  readonly confirmedAt?: string | null;
   readonly isSent?: boolean | null;
   readonly isConfirmed?: boolean | null;
   readonly isPaused?: boolean | null;

@@ -18,6 +18,8 @@ export declare type TimeEntryCreateFormInputValues = {
     workspaceId?: string;
     isActive?: boolean;
     isLocked?: boolean;
+    paidAt?: string;
+    confirmedAt?: string;
     isSent?: boolean;
     isConfirmed?: boolean;
     isPaused?: boolean;
@@ -29,6 +31,8 @@ export declare type TimeEntryCreateFormValidationValues = {
     workspaceId?: ValidationFunction<string>;
     isActive?: ValidationFunction<boolean>;
     isLocked?: ValidationFunction<boolean>;
+    paidAt?: ValidationFunction<string>;
+    confirmedAt?: ValidationFunction<string>;
     isSent?: ValidationFunction<boolean>;
     isConfirmed?: ValidationFunction<boolean>;
     isPaused?: ValidationFunction<boolean>;
@@ -42,6 +46,8 @@ export declare type TimeEntryCreateFormOverridesProps = {
     workspaceId?: PrimitiveOverrideProps<TextFieldProps>;
     isActive?: PrimitiveOverrideProps<SwitchFieldProps>;
     isLocked?: PrimitiveOverrideProps<SwitchFieldProps>;
+    paidAt?: PrimitiveOverrideProps<TextFieldProps>;
+    confirmedAt?: PrimitiveOverrideProps<TextFieldProps>;
     isSent?: PrimitiveOverrideProps<SwitchFieldProps>;
     isConfirmed?: PrimitiveOverrideProps<SwitchFieldProps>;
     isPaused?: PrimitiveOverrideProps<SwitchFieldProps>;

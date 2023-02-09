@@ -302,6 +302,8 @@ type TimeEntry
   timeInterval: TimeInterval
   isActive: Boolean
   isLocked: Boolean
+  paidAt: AWSDateTime
+  confirmedAt: AWSDateTime
   isSent: Boolean
   isConfirmed: Boolean
   isPaused: Boolean

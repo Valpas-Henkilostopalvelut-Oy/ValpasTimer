@@ -16,25 +16,14 @@
         "valpasapplicationd66e1b4f": {},
         "userPoolGroups": {}
       },
+      "storage": {
+        "s3b5f43598": {}
+      },
       "function": {
         "AdminQueries2c95f1df": {
           "deploymentBucketName": "amplify-valpasapplication-staging-64726-deployment",
           "s3Key": "amplify-builds/AdminQueries2c95f1df-496d642b6156785a7267-build.zip"
         }
-      },
-      "api": {
-        "AdminQueries": {},
-        "valpasapplication": {}
-      },
-      "notifications": {
-        "Pinpoint": {
-          "Name": "valpasapplicationNotif-staging",
-          "Id": "90be0a16c15649f783976575df0cdbe4",
-          "Region": "eu-west-1"
-        }
-      },
-      "storage": {
-        "s3b5f43598": {}
       }
     }
   }

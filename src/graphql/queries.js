@@ -382,6 +382,8 @@ export const getTimeEntry = /* GraphQL */ `
       }
       isActive
       isLocked
+      paidAt
+      confirmedAt
       isSent
       isConfirmed
       isPaused
@@ -419,6 +421,8 @@ export const listTimeEntries = /* GraphQL */ `
         workspaceId
         isActive
         isLocked
+        paidAt
+        confirmedAt
         isSent
         isConfirmed
         isPaused
@@ -454,6 +458,8 @@ export const syncTimeEntries = /* GraphQL */ `
         workspaceId
         isActive
         isLocked
+        paidAt
+        confirmedAt
         isSent
         isConfirmed
         isPaused

@@ -283,6 +283,8 @@ type TimeEntry @aws_iam @aws_cognito_user_pools {
   timeInterval: TimeInterval
   isActive: Boolean
   isLocked: Boolean
+  paidAt: AWSDateTime
+  confirmedAt: AWSDateTime
   isSent: Boolean
   isConfirmed: Boolean
   isPaused: Boolean
@@ -980,6 +982,8 @@ input ModelTimeEntryFilterInput {
   workspaceId: ModelIDInput
   isActive: ModelBooleanInput
   isLocked: ModelBooleanInput
+  paidAt: ModelStringInput
+  confirmedAt: ModelStringInput
   isSent: ModelBooleanInput
   isConfirmed: ModelBooleanInput
   isPaused: ModelBooleanInput
@@ -995,6 +999,8 @@ input ModelTimeEntryConditionInput {
   workspaceId: ModelIDInput
   isActive: ModelBooleanInput
   isLocked: ModelBooleanInput
+  paidAt: ModelStringInput
+  confirmedAt: ModelStringInput
   isSent: ModelBooleanInput
   isConfirmed: ModelBooleanInput
   isPaused: ModelBooleanInput
@@ -1012,6 +1018,8 @@ input CreateTimeEntryInput {
   timeInterval: TimeIntervalInput
   isActive: Boolean
   isLocked: Boolean
+  paidAt: AWSDateTime
+  confirmedAt: AWSDateTime
   isSent: Boolean
   isConfirmed: Boolean
   isPaused: Boolean
@@ -1029,6 +1037,8 @@ input UpdateTimeEntryInput {
   timeInterval: TimeIntervalInput
   isActive: Boolean
   isLocked: Boolean
+  paidAt: AWSDateTime
+  confirmedAt: AWSDateTime
   isSent: Boolean
   isConfirmed: Boolean
   isPaused: Boolean
@@ -1049,6 +1059,8 @@ input ModelSubscriptionTimeEntryFilterInput {
   workspaceId: ModelSubscriptionIDInput
   isActive: ModelSubscriptionBooleanInput
   isLocked: ModelSubscriptionBooleanInput
+  paidAt: ModelSubscriptionStringInput
+  confirmedAt: ModelSubscriptionStringInput
   isSent: ModelSubscriptionBooleanInput
   isConfirmed: ModelSubscriptionBooleanInput
   isPaused: ModelSubscriptionBooleanInput
