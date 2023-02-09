@@ -186,7 +186,7 @@ export const fin = {
       home: "Kotisivu",
       track: "Seuranta",
       project: "Projekti",
-      analyze: "Analysoi",
+      analyze: "Työnjohto",
       reports: "Raportit",
       receipts: "Kuitit",
       team: "Tiimi",
@@ -194,7 +194,8 @@ export const fin = {
       projects: "Projektit",
       workers: "Työntekijät",
       workplaces: "Työpaikat",
-      history: "Historia",
+      history: "Arkisto",
+      library: "Palkat",
     },
     track: {
       recorder: {
@@ -374,7 +375,7 @@ export const fin = {
           },
         },
         buttons: {
-          add: "Lisää",
+          add: "Tallenna",
           cancel: "Peruuta",
           upload: "Lataa",
         },

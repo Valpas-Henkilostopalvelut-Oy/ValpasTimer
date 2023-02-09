@@ -117,7 +117,7 @@ export const Pdf = ({ workers, works, data }) => {
             (item) =>
               item.userId === selecredWorker &&
               item.workspaceId === selectedWork &&
-              (paid ? item.isLocked === false || item.isLocked === true : true)
+              (paid ? item.isLocked : true)
           );
           data = groupBy(data);
           setNewData(data);

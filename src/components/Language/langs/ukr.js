@@ -195,6 +195,7 @@ export const ukr = {
       workers: "Робітники",
       workplaces: "Місця роботи",
       history: "Історія",
+      library: "Зарплата",
     },
     track: {
       recorder: {

@@ -195,6 +195,7 @@ export const eng = {
       workers: "Workers",
       workplaces: "Workplaces",
       history: "History",
+      library: "Palkat",
     },
     track: {
       recorder: {

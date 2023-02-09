@@ -103,7 +103,7 @@ export const SidebarList = ({
       access: ["Admins"],
     },
     {
-      title: "Kirjasto",
+      title: "Palkat",
       type: "page",
       icon: <WorkHistoryIcon />,
       link: "/dashboard",
