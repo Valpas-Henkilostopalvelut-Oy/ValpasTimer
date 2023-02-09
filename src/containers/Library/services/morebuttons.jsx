@@ -12,10 +12,11 @@ const onPaidWeek = (arr) => {
       await DataStore.save(
         TimeEntry.copyOf(item, (updated) => {
           updated.isLocked = true;
+          updated.paidAt = new Date().toISOString();
         })
       )
         .catch((err) => console.log(err))
-        .then((res) => console.log(res));
+        .then((res) => console.warn(res));
     });
   });
 };
@@ -26,19 +27,11 @@ const onPaidDay = (arr) => {
     await DataStore.save(
       TimeEntry.copyOf(item, (updated) => {
         updated.isLocked = true;
+        updated.paidAt = new Date().toISOString();
       })
     )
       .catch((err) => console.log(err))
-      .then((res) => console.log(res));
-  });
-};
-
-const onDeleteDay = (arr) => {
-  arr.forEach(async (item) => {
-    item = item.timeshift;
-    await DataStore.delete(item)
-      .catch((err) => console.log(err))
-      .then((res) => console.log(res));
+      .then((res) => console.warn(res));
   });
 };
 
@@ -47,10 +40,20 @@ const onPaid = async (item) => {
   await DataStore.save(
     TimeEntry.copyOf(item, (updated) => {
       updated.isLocked = true;
+      updated.paidAt = new Date().toISOString();
     })
   )
     .catch((err) => console.log(err))
-    .then((res) => console.log(res));
+    .then((res) => console.warn(res));
+};
+
+const onDeleteDay = (arr) => {
+  arr.forEach(async (item) => {
+    item = item.timeshift;
+    await DataStore.delete(item)
+      .catch((err) => console.log(err))
+      .then((res) => console.warn(res));
+  });
 };
 
 const onCancelWeek = (arr) => {
@@ -60,10 +63,11 @@ const onCancelWeek = (arr) => {
       await DataStore.save(
         TimeEntry.copyOf(item, (updated) => {
           updated.isLocked = false;
+          updated.paidAt = null;
         })
       )
         .catch((err) => console.log(err))
-        .then((res) => console.log(res));
+        .then((res) => console.warn(res));
     });
   });
 };
@@ -74,10 +78,11 @@ const onCancelDay = (arr) => {
     await DataStore.save(
       TimeEntry.copyOf(item, (updated) => {
         updated.isLocked = false;
+        updated.paidAt = null;
       })
     )
       .catch((err) => console.log(err))
-      .then((res) => console.log(res));
+      .then((res) => console.warn(res));
   });
 };
 
@@ -86,10 +91,11 @@ const onCancel = async (item) => {
   await DataStore.save(
     TimeEntry.copyOf(item, (updated) => {
       updated.isLocked = false;
+      updated.paidAt = null;
     })
   )
     .catch((err) => console.log(err))
-    .then((res) => console.log(res));
+    .then((res) => console.warn(res));
 };
 
 export const Moremenuweek = ({ date, paid }) => {

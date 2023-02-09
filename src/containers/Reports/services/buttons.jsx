@@ -17,6 +17,7 @@ const handleWeekReport = (data) => {
         await DataStore.save(
           TimeEntry.copyOf(item, (updated) => {
             updated.isConfirmed = true;
+            updated.confirmedAt = new Date().toISOString();
           })
         );
       }

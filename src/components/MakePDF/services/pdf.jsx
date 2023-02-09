@@ -166,6 +166,28 @@ const convertArrBreaks = (arr) => {
   return h !== 0 || m !== 0 ? ` - ${(h + m / 60).toFixed(2)}` : "";
 };
 
+const getDate = (item) => {
+  let arr = item.arr;
+  let date = new Date();
+  for (let i = 0; i < arr.length; i++) {
+    arr = arr[i].arr;
+    for (let j = 0; j < arr.length; j++) {
+      arr = arr[j].arr;
+      for (let k = 0; k < arr.length; k++) {
+        if (arr[k].isSent && arr[k].isConfirmed && arr[k].confirmedAt) {
+          date = new Date(arr[k].confirmedAt);
+        } else return "Ilman päivämäärää";
+      }
+    }
+  }
+
+  let day = date.getDate();
+  let month = date.getMonth() + 1;
+  let year = date.getFullYear();
+
+  return `${day}.${month}.${year}`;
+};
+
 const setToPDF = async (form, data, workplace, works, user, page = "") => {
   const days = data.arr;
 
@@ -174,6 +196,8 @@ const setToPDF = async (form, data, workplace, works, user, page = "") => {
   form.getField("worker" + page).setText(user.last_name + " " + user.first_name);
   form.getField("total" + page).setText(String(getTotalWeek(days, workplace)));
   form.getField("week" + page).setText(String(data.week));
+  form.getField("signature" + page).setText("Allekirjoitu sähköisesti");
+  form.getField("date" + page).setText(getDate(data));
 
   days.forEach((day) => {
     let arr =
