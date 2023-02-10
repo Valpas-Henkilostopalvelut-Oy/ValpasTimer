@@ -1,13 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { Grid, Box, Collapse, Typography, IconButton } from "@mui/material";
-import { DataStore } from "aws-amplify";
-import { UserCredentials } from "../../../models";
 import { weektotal, daytotal, timeshifttotal } from "./timecalc";
 import { shiftdate, Startdaytime, Enddaytime, Time } from "./times";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import { PropTypes } from "prop-types";
-import { Moremenuweek, Moremenutimeshift, Moremenuday } from "./morebuttons.jsx";
+import { Payweek, Moremenutimeshift, Moremenuday } from "./morebuttons.jsx";
 
 const isPaidWeek = (arr) => {
   for (let i = 0; i < arr.length; i++) {
@@ -35,14 +33,14 @@ const isPaidTimeshift = (item) => {
   return item.timeshift.isLocked;
 };
 
-export const Row = ({ item, all = true, workers }) => {
+export const Row = ({ item, all = true, workers, workname }) => {
   let worker =
     workers.filter((w) => w.id === item.userId).length > 0 ? workers.filter((w) => w.id === item.userId)[0] : null;
 
-  return item.arr.map((workeritem, key) => <RowWeek key={key} item={workeritem} worker={worker} />);
+  return item.arr.map((workeritem, key) => <RowWeek key={key} item={workeritem} worker={worker} workname={workname} />);
 };
 
-const RowWeek = ({ item, worker }) => {
+const RowWeek = ({ item, worker, workname }) => {
   const [open, setOpen] = useState(false);
   let total = weektotal(item.arr);
   total = `${total.hours}h ${total.minutes}min`;
@@ -51,7 +49,7 @@ const RowWeek = ({ item, worker }) => {
     <Box
       sx={{
         border: "1px solid",
-        borderColor: "default.gray",
+        borderColor: "#e6e6ef",
         margin: "15px 0px",
       }}
     >
@@ -86,7 +84,12 @@ const RowWeek = ({ item, worker }) => {
           <Typography variant="p">{total}</Typography>
         </Grid>
         <Grid item xs={1} align="right">
-          <Moremenuweek date={item.arr} paid={isPaidWeek(item.arr)} />
+          <Payweek
+            date={item}
+            paid={isPaidWeek(item.arr)}
+            worker={`${worker.first_name} ${worker.last_name}`}
+            workname={workname}
+          />
         </Grid>
       </Grid>
       <Collapse in={open} timeout="auto" unmountOnExit>
@@ -103,12 +106,7 @@ const RowDay = ({ item }) => {
   total = `${total.hours}h ${total.minutes}min`;
   const [open, setOpen] = useState(false);
   return (
-    <Box
-      sx={{
-        borderTop: "1px solid",
-        borderColor: "default.gray",
-      }}
-    >
+    <Box sx={{ borderTop: "1px solid", borderColor: "#e6e6ef" }}>
       <Grid container spacing={2} sx={{ padding: "20px 40px" }} alignItems="center">
         <Grid item xs={1}>
           <IconButton aria-label="expand row" size="small" onClick={() => setOpen(!open)} sx={{ cursor: "pointer" }}>
@@ -159,12 +157,7 @@ const RowTimeshift = ({ item }) => {
   const total = timeshifttotal(item);
 
   return (
-    <Box
-      sx={{
-        borderTop: "1px solid",
-        borderColor: "default.gray",
-      }}
-    >
+    <Box sx={{ borderTop: "1px solid", borderColor: "#e6e6ef" }}>
       <Grid container spacing={2} sx={{ padding: "20px 40px" }} alignItems="center">
         <Grid item xs={1} />
         <Grid item xs={2}>

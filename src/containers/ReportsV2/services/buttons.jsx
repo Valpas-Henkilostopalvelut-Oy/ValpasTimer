@@ -1,17 +1,5 @@
 import React, { useState } from "react";
-import {
-  Box,
-  Menu,
-  MenuItem,
-  IconButton,
-  Button,
-  Tooltip,
-  useTheme,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-} from "@mui/material";
+import { Menu, MenuItem, IconButton, Tooltip } from "@mui/material";
 import { weekstatus, daystatus, timeshiftstatus } from "./status.jsx";
 import ThumbUpAltIcon from "@mui/icons-material/ThumbUpAlt";
 import MoreVertIcon from "@mui/icons-material/MoreVert";

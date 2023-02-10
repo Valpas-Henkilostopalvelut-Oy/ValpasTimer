@@ -36,24 +36,12 @@ const WeekHeadMD = ({ week, selected, lang, isEmpty, isThis, sx, isNotSent = fal
 
   return (
     <TableRow sx={sx}>
-      <CustomTableCell
-        width={"9%"}
-        sx={{
-          borderTop: "0px",
-          [theme.breakpoints.down("sm")]: {
-            display: "none",
-          },
-        }}
-      >
+      <CustomTableCell width={"9%"} sx={{ borderTop: "0px", [theme.breakpoints.down("sm")]: { display: "none" } }}>
         {isNotSent && <ErrorOutlineIcon sx={{ color: "error.light" }} />}
 
         {(isSent ? !isConfirmed : isSent) && (
           <Tooltip title="Odottaa vahvistusta">
-            <EventAvailableIcon
-              sx={{
-                color: "default.green",
-              }}
-            />
+            <EventAvailableIcon sx={{ color: "default.green" }} />
           </Tooltip>
         )}
       </CustomTableCell>
@@ -81,11 +69,7 @@ const WeekHeadMD = ({ week, selected, lang, isEmpty, isThis, sx, isNotSent = fal
           <Tooltip title="Lähetä">
             <IconButton
               size="small"
-              sx={{
-                ":focus": {
-                  outline: "0px",
-                },
-              }}
+              sx={{ ":focus": { outline: "0px" } }}
               disabled={!isEmpty}
               onClick={() => sendweek(week.arr, selected)}
             >

@@ -154,7 +154,7 @@ const Rowday = ({ item, isEmpty, selected, data }) => {
 const Rowtimeshift = ({ item, isEmpty }) => {
   item = item.timeshift;
   let breaks = item.break ? item.break : [];
-  let work = item.work ? item.work : { name: "" };
+  let work = item.work ? item.work : { name: "Ei valintaa" };
 
   return (
     <>

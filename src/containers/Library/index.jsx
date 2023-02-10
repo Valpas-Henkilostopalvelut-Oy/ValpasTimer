@@ -138,7 +138,14 @@ export const Library = () => {
                 </Box>
 
                 {item.arr.map((item) => (
-                  <Row item={item} key={item.userId} all={filter.all} workers={worker} works={works} />
+                  <Row
+                    item={item}
+                    key={item.userId}
+                    all={filter.all}
+                    workers={worker}
+                    works={works}
+                    workname={`${workname}`}
+                  />
                 ))}
               </Box>
             );
