@@ -295,12 +295,12 @@ const savetravel = async (travel) => {
           updated: new Date().toISOString(),
           title: travel.description,
           comment: null,
-          departureDateTime: travel.departureDate,
-          returnDateTime: travel.returnDate,
+          departureDateTime: travel.departureDate ? new Date(travel.departureDate).toISOString() : null,
+          returnDateTime: travel.returnDate ? new Date(travel.returnDate).toISOString() : null,
           routeCar: null,
           routePoints: travel.routePoints.map((p) => {
             return {
-              id: p.id,
+              id: String(p.id),
               address: p.address,
               lat: p.lat,
               lng: p.lng,
@@ -309,7 +309,9 @@ const savetravel = async (travel) => {
           }),
           attachments: [],
         })
-      );
+      ).then((savedtravel) => {
+        console.log("saved travel: ", savedtravel);
+      });
     })
     .catch((err) => console.warn(err));
 };
