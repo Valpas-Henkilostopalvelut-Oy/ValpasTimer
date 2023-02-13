@@ -164,6 +164,7 @@ const Paymentmethod = ({ data, setData, isEmpty, lang }) => {
 
 const ClassificationSelect = ({ data, setData, isEmpty, lang }) => {
   const handleClassificationChange = (value) => setData({ ...data, class: value.target.value });
+   console.log(data)
 
   return (
     <FormControl fullWidth>

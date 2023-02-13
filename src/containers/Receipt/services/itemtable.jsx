@@ -122,6 +122,7 @@ const ReceiptNumber = ({ receipt, setReceipt, edit = false }) => {
 };
 
 const Class = ({ receipt, setReceipt, edit = false }) => {
+  console.log(receipt.class)
   return edit ? (
     <FormControl fullWidth>
       <Select

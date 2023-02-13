@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { Box, Grid, TextField, InputBase, Typography, Button, Autocomplete } from "@mui/material";
+import { Box, Grid, TextField, InputBase, Typography, Button, Autocomplete, Tooltip, IconButton } from "@mui/material";
 import { LocalizationProvider, DateTimePicker } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
-import { DataStore } from "aws-amplify";
+import DeleteIcon from "@mui/icons-material/Delete";
+import { DataStore, Auth } from "aws-amplify";
 import { Worktravel } from "../../../models";
 
 const Title = ({ travel, setTravel, isEmpty }) => {
@@ -104,37 +105,38 @@ const Basic = ({ travel, setTravel, isEmpty }) => {
 };
 
 const Point = ({ point, travel, setTravel, isEmpty, lang }) => {
-  const [query, setQuery] = useState("");
+  const [searchAddres, setSearchAddres] = useState("");
   const [places, setPlaces] = useState([]);
 
   useEffect(() => {
     const service = new window.google.maps.places.PlacesService(document.createElement("div"));
-    if (query.length > 0) {
+    if (searchAddres.length > 0) {
       const request = {
-        query: query,
+        query: searchAddres,
         fields: ["formatted_address", "geometry"],
       };
       service.findPlaceFromQuery(request, (results, status) => {
-        console.log(results);
         if (status === "OK") {
           setPlaces(results);
         }
       });
     }
-  }, [query]);
+  }, [searchAddres]);
 
   return (
     <Grid container spacing={2} item xs={12}>
       <Grid item xs={12} md={6}>
         <Autocomplete
-          inputValue={query}
+          inputValue={searchAddres}
           onInputChange={(e, value) => {
-            setQuery(value);
+            setSearchAddres(value);
           }}
-          
           disabled={!isEmpty}
           options={places}
-          getOptionLabel={(option) => option.formatted_address}
+          getOptionLabel={(option) => {
+            return option.formatted_address;
+          }}
+          isOptionEqualToValue={(option, val) => option.formatted_address === val.formatted_address}
           renderInput={(params) => (
             <TextField
               {...params}
@@ -146,11 +148,10 @@ const Point = ({ point, travel, setTravel, isEmpty, lang }) => {
             />
           )}
           onChange={(e, value) => {
-            console.log(value);
             if (value) {
               setTravel({
                 ...travel,
-                points: travel.routePoints.map((p) => {
+                routePoints: travel.routePoints.map((p) => {
                   if (p.id === point.id) {
                     return {
                       ...p,
@@ -167,48 +168,76 @@ const Point = ({ point, travel, setTravel, isEmpty, lang }) => {
           }}
         />
       </Grid>
+
+      <Grid item xs={12} md={5}>
+        <TextField
+          disabled={!isEmpty}
+          fullWidth
+          label="Comment"
+          value={point.comment}
+          onChange={(e) => {
+            setTravel({
+              ...travel,
+              routePoints: travel.routePoints.map((p) => {
+                if (p.id === point.id) {
+                  return {
+                    ...p,
+                    comment: e.target.value,
+                  };
+                } else {
+                  return p;
+                }
+              }),
+            });
+          }}
+        />
+      </Grid>
+      <Grid item xs={12} md={1}>
+        <IconButton
+          disabled={!isEmpty}
+          onClick={() => {
+            setTravel({
+              ...travel,
+              routePoints: travel.routePoints.filter((p) => p.id !== point.id),
+            });
+          }}
+        >
+          <DeleteIcon />
+        </IconButton>
+      </Grid>
     </Grid>
   );
 };
 
-const Route = ({ travel, setTravel, isEmpty }) => {
-  const [points, setPoints] = useState([]);
+const calc = (travel, setDistance) => {
+  const lat1 = travel.routePoints[0].lat;
+  const lng1 = travel.routePoints[0].lng;
+  const lat2 = travel.routePoints[1].lat;
+  const lng2 = travel.routePoints[1].lng;
 
-  const geocoder = new window.google.maps.Geocoder();
+  const directionsService = new window.google.maps.DirectionsService();
 
-  const calc = () => {
-    geocoder.geocode({ address: "" }, (results, status) => {
-      console.log(results);
-      if (status === "OK") {
-        const lat1 = results[0].geometry.location.lat();
-        const lng1 = results[0].geometry.location.lng();
-        geocoder.geocode({ address: "" }, (results, status) => {
-          console.log(results);
-          if (status === "OK") {
-            const directionsService = new window.google.maps.DirectionsService();
-            const lat2 = results[0].geometry.location.lat();
-            const lng2 = results[0].geometry.location.lng();
-
-            const request = {
-              origin: { lat: lat1, lng: lng1 },
-              destination: { lat: lat2, lng: lng2 },
-              travelMode: window.google.maps.TravelMode.DRIVING,
-            };
-
-            directionsService.route(request, (result, status) => {
-              if (status === "OK") {
-                console.log(result.routes[0].legs[0].distance.value);
-              }
-            });
-          } else {
-            alert("Geocode was not successful for the following reason: " + status);
-          }
-        });
-      } else {
-        alert("Geocode was not successful for the following reason: " + status);
-      }
-    });
+  const request = {
+    origin: { lat: lat1, lng: lng1 },
+    destination: { lat: lat2, lng: lng2 },
+    travelMode: window.google.maps.TravelMode.DRIVING,
   };
+
+  directionsService.route(request, (result, status) => {
+    if (status === "OK") setDistance(result.routes[0].legs[0].distance.text);
+  });
+};
+
+const Route = ({ travel, setTravel, isEmpty }) => {
+  const [distance, setDistance] = useState("");
+
+  useEffect(() => {
+    if (travel.routePoints.length === 2) {
+      calc(travel, setDistance);
+    } else {
+      setDistance("");
+    }
+  }, [travel.routePoints]);
 
   const addPoint = () => {
     setTravel({
@@ -219,8 +248,8 @@ const Route = ({ travel, setTravel, isEmpty }) => {
           id: Date.now(),
           comment: "",
           address: "",
-          lat: 0,
-          lng: 0,
+          lat: null,
+          lng: null,
         },
       ],
     });
@@ -244,8 +273,64 @@ const Route = ({ travel, setTravel, isEmpty }) => {
           return <Point key={point.id} point={point} travel={travel} setTravel={setTravel} isEmpty={isEmpty} />;
         })}
         <Grid item xs={12}>
-          <Button variant="contained" disabled={!isEmpty} onClick={addPoint}>
+          <Typography variant="h6">Distance: {distance}</Typography>
+        </Grid>
+        <Grid item xs={12}>
+          <Button variant="outlined" disabled={!isEmpty} onClick={addPoint} fullWidth>
             Add route point
+          </Button>
+        </Grid>
+      </Grid>
+    </Box>
+  );
+};
+
+const savetravel = async (travel) => {
+  await Auth.currentAuthenticatedUser()
+    .then(async (user) => {
+      await DataStore.save(
+        new Worktravel({
+          userId: user.attributes.sub,
+          created: new Date().toISOString(),
+          updated: new Date().toISOString(),
+          title: travel.description,
+          comment: null,
+          departureDateTime: travel.departureDate,
+          returnDateTime: travel.returnDate,
+          routeCar: null,
+          routePoints: travel.routePoints.map((p) => {
+            return {
+              id: p.id,
+              address: p.address,
+              lat: p.lat,
+              lng: p.lng,
+              comment: p.comment,
+            };
+          }),
+          attachments: [],
+        })
+      );
+    })
+    .catch((err) => console.warn(err));
+};
+
+const Save = ({ travel, isEmpty, clear }) => {
+  const handleSave = () => savetravel(travel).then(() => clear());
+
+  return (
+    <Box
+      sx={{
+        border: 1,
+        borderColor: "grey.500",
+        borderRadius: 1,
+        p: 2,
+        mb: 2,
+      }}
+    >
+      <Grid container spacing={2}>
+        <Grid item xs={2}>
+          <Button variant="outlined" disabled={!isEmpty} onClick={handleSave} fullWidth>
+            Save
           </Button>
         </Grid>
       </Grid>
@@ -306,7 +391,7 @@ export const Travelform = ({ isEmpty, setSelectedIndex }) => {
     <Box sx={{ mt: 2 }}>
       <Basic travel={travel} setTravel={setTravel} isEmpty={isEmpty} />
       <Route travel={travel} setTravel={setTravel} isEmpty={isEmpty} />
-      <Attachments travel={travel} setTravel={setTravel} isEmpty={isEmpty} />
+      <Save travel={travel} isEmpty={isEmpty} clear={cancel} />
     </Box>
   );
 };

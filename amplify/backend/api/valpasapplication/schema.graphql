@@ -304,6 +304,7 @@ type TimeEntry
   isLocked: Boolean
   paidAt: AWSDateTime
   confirmedAt: AWSDateTime
+  confirmedBy: User
   isSent: Boolean
   isConfirmed: Boolean
   isPaused: Boolean

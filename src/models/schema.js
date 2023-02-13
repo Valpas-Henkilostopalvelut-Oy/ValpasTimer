@@ -704,6 +704,15 @@ export const schema = {
                     "isRequired": false,
                     "attributes": []
                 },
+                "confirmedBy": {
+                    "name": "confirmedBy",
+                    "isArray": false,
+                    "type": {
+                        "nonModel": "User"
+                    },
+                    "isRequired": false,
+                    "attributes": []
+                },
                 "isSent": {
                     "name": "isSent",
                     "isArray": false,
@@ -1848,5 +1857,5 @@ export const schema = {
         }
     },
     "codegenVersion": "3.3.5",
-    "version": "7ff85907ff4673f68431b0506eb1719e"
+    "version": "69e344699d100e87a12059d2224cec6c"
 };

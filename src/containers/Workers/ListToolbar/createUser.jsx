@@ -86,15 +86,13 @@ export const CreateNewUser = ({ reload }) => {
   const [password, setPassword] = useState(temporarypassword());
   const [email, setEmail] = useState("");
 
-  console.log("password", password);
-
   const handleClose = () => {
     setOpen(false);
+    setPassword(temporarypassword());
+    setCreated(false);
   };
 
-  const handleOpen = () => {
-    setOpen(true);
-  };
+  const handleOpen = () => setOpen(true);
 
   return (
     <Fragment>
@@ -177,11 +175,14 @@ export const CreateNewUser = ({ reload }) => {
                   </Grid>
                 </Grid>
                 <DialogActions>
-                  <Button onClick={handleClose} color="primary">
+                  <Button onClick={handleClose} color="primary" hidden={created}>
                     Cancel
                   </Button>
-                  <Button onClick={handleSubmit} color="primary">
+                  <Button onClick={handleSubmit} color="primary" hidden={created}>
                     Create
+                  </Button>
+                  <Button onClick={handleClose} color="primary" hidden={!created}>
+                    Close
                   </Button>
                 </DialogActions>
               </Box>

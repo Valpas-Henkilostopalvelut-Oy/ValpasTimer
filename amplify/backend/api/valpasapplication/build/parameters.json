@@ -8,7 +8,12 @@
             "Outputs.UserPoolId"
         ]
     },
-    "AuthModeLastUpdated": "2022-06-23T07:45:04.204Z",
+    "authRoleName": {
+        "Ref": "AuthRoleName"
+    },
+    "unauthRoleName": {
+        "Ref": "UnauthRoleName"
+    },
     "S3DeploymentBucket": "amplify-valpasapplication-staging-64726-deployment",
-    "S3DeploymentRootKey": "amplify-appsync-files/7bcd4350e8bc340061b969ae79485a07b9b5733e"
+    "S3DeploymentRootKey": "amplify-appsync-files/dc98e061e1eccbfac462a09d76f149bb98225bdc"
 }

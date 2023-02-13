@@ -415,6 +415,12 @@ export const createTimeEntry = /* GraphQL */ `
       isLocked
       paidAt
       confirmedAt
+      confirmedBy {
+        userId
+        name
+        family_name
+        icon
+      }
       isSent
       isConfirmed
       isPaused
@@ -456,6 +462,12 @@ export const updateTimeEntry = /* GraphQL */ `
       isLocked
       paidAt
       confirmedAt
+      confirmedBy {
+        userId
+        name
+        family_name
+        icon
+      }
       isSent
       isConfirmed
       isPaused
@@ -497,6 +509,12 @@ export const deleteTimeEntry = /* GraphQL */ `
       isLocked
       paidAt
       confirmedAt
+      confirmedBy {
+        userId
+        name
+        family_name
+        icon
+      }
       isSent
       isConfirmed
       isPaused

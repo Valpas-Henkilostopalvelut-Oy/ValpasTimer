@@ -384,6 +384,12 @@ export const getTimeEntry = /* GraphQL */ `
       isLocked
       paidAt
       confirmedAt
+      confirmedBy {
+        userId
+        name
+        family_name
+        icon
+      }
       isSent
       isConfirmed
       isPaused

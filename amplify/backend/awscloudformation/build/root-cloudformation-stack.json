@@ -152,6 +152,104 @@
         }
       }
     },
+    "apiAdminQueries": {
+      "Type": "AWS::CloudFormation::Stack",
+      "Properties": {
+        "TemplateURL": "https://s3.amazonaws.com/amplify-valpasapplication-staging-64726-deployment/amplify-cfn-templates/api/AdminQueries-cloudformation-template.json",
+        "Parameters": {
+          "authvalpasapplicationd66e1b4fUserPoolId": {
+            "Fn::GetAtt": [
+              "authvalpasapplicationd66e1b4f",
+              "Outputs.UserPoolId"
+            ]
+          },
+          "functionAdminQueries2c95f1dfArn": {
+            "Fn::GetAtt": [
+              "functionAdminQueries2c95f1df",
+              "Outputs.Arn"
+            ]
+          },
+          "functionAdminQueries2c95f1dfName": {
+            "Fn::GetAtt": [
+              "functionAdminQueries2c95f1df",
+              "Outputs.Name"
+            ]
+          },
+          "env": "staging"
+        }
+      }
+    },
+    "apivalpasapplication": {
+      "Type": "AWS::CloudFormation::Stack",
+      "Properties": {
+        "TemplateURL": "https://s3.amazonaws.com/amplify-valpasapplication-staging-64726-deployment/amplify-cfn-templates/api/cloudformation-template.json",
+        "Parameters": {
+          "AppSyncApiName": "valpasapplication",
+          "DynamoDBBillingMode": "PAY_PER_REQUEST",
+          "DynamoDBEnableServerSideEncryption": false,
+          "AuthCognitoUserPoolId": {
+            "Fn::GetAtt": [
+              "authvalpasapplicationd66e1b4f",
+              "Outputs.UserPoolId"
+            ]
+          },
+          "authRoleName": {
+            "Ref": "AuthRoleName"
+          },
+          "unauthRoleName": {
+            "Ref": "UnauthRoleName"
+          },
+          "S3DeploymentBucket": "amplify-valpasapplication-staging-64726-deployment",
+          "S3DeploymentRootKey": "amplify-appsync-files/dc98e061e1eccbfac462a09d76f149bb98225bdc",
+          "env": "staging"
+        }
+      }
+    },
+    "authuserPoolGroups": {
+      "Type": "AWS::CloudFormation::Stack",
+      "Properties": {
+        "TemplateURL": "https://s3.amazonaws.com/amplify-valpasapplication-staging-64726-deployment/amplify-cfn-templates/auth/userPoolGroups-cloudformation-template.json",
+        "Parameters": {
+          "AuthRoleArn": {
+            "Fn::GetAtt": [
+              "AuthRole",
+              "Arn"
+            ]
+          },
+          "UnauthRoleArn": {
+            "Fn::GetAtt": [
+              "UnauthRole",
+              "Arn"
+            ]
+          },
+          "authvalpasapplicationd66e1b4fUserPoolId": {
+            "Fn::GetAtt": [
+              "authvalpasapplicationd66e1b4f",
+              "Outputs.UserPoolId"
+            ]
+          },
+          "authvalpasapplicationd66e1b4fAppClientIDWeb": {
+            "Fn::GetAtt": [
+              "authvalpasapplicationd66e1b4f",
+              "Outputs.AppClientIDWeb"
+            ]
+          },
+          "authvalpasapplicationd66e1b4fAppClientID": {
+            "Fn::GetAtt": [
+              "authvalpasapplicationd66e1b4f",
+              "Outputs.AppClientID"
+            ]
+          },
+          "authvalpasapplicationd66e1b4fIdentityPoolId": {
+            "Fn::GetAtt": [
+              "authvalpasapplicationd66e1b4f",
+              "Outputs.IdentityPoolId"
+            ]
+          },
+          "env": "staging"
+        }
+      }
+    },
     "authvalpasapplicationd66e1b4f": {
       "Type": "AWS::CloudFormation::Stack",
       "Properties": {
@@ -207,51 +305,6 @@
         }
       }
     },
-    "authuserPoolGroups": {
-      "Type": "AWS::CloudFormation::Stack",
-      "Properties": {
-        "TemplateURL": "https://s3.amazonaws.com/amplify-valpasapplication-staging-64726-deployment/amplify-cfn-templates/auth/userPoolGroups-cloudformation-template.json",
-        "Parameters": {
-          "AuthRoleArn": {
-            "Fn::GetAtt": [
-              "AuthRole",
-              "Arn"
-            ]
-          },
-          "UnauthRoleArn": {
-            "Fn::GetAtt": [
-              "UnauthRole",
-              "Arn"
-            ]
-          },
-          "authvalpasapplicationd66e1b4fUserPoolId": {
-            "Fn::GetAtt": [
-              "authvalpasapplicationd66e1b4f",
-              "Outputs.UserPoolId"
-            ]
-          },
-          "authvalpasapplicationd66e1b4fAppClientIDWeb": {
-            "Fn::GetAtt": [
-              "authvalpasapplicationd66e1b4f",
-              "Outputs.AppClientIDWeb"
-            ]
-          },
-          "authvalpasapplicationd66e1b4fAppClientID": {
-            "Fn::GetAtt": [
-              "authvalpasapplicationd66e1b4f",
-              "Outputs.AppClientID"
-            ]
-          },
-          "authvalpasapplicationd66e1b4fIdentityPoolId": {
-            "Fn::GetAtt": [
-              "authvalpasapplicationd66e1b4f",
-              "Outputs.IdentityPoolId"
-            ]
-          },
-          "env": "staging"
-        }
-      }
-    },
     "functionAdminQueries2c95f1df": {
       "Type": "AWS::CloudFormation::Stack",
       "Properties": {
@@ -265,59 +318,6 @@
               "Outputs.UserPoolId"
             ]
           },
-          "env": "staging"
-        }
-      }
-    },
-    "apiAdminQueries": {
-      "Type": "AWS::CloudFormation::Stack",
-      "Properties": {
-        "TemplateURL": "https://s3.amazonaws.com/amplify-valpasapplication-staging-64726-deployment/amplify-cfn-templates/api/AdminQueries-cloudformation-template.json",
-        "Parameters": {
-          "authvalpasapplicationd66e1b4fUserPoolId": {
-            "Fn::GetAtt": [
-              "authvalpasapplicationd66e1b4f",
-              "Outputs.UserPoolId"
-            ]
-          },
-          "functionAdminQueries2c95f1dfArn": {
-            "Fn::GetAtt": [
-              "functionAdminQueries2c95f1df",
-              "Outputs.Arn"
-            ]
-          },
-          "functionAdminQueries2c95f1dfName": {
-            "Fn::GetAtt": [
-              "functionAdminQueries2c95f1df",
-              "Outputs.Name"
-            ]
-          },
-          "env": "staging"
-        }
-      }
-    },
-    "apivalpasapplication": {
-      "Type": "AWS::CloudFormation::Stack",
-      "Properties": {
-        "TemplateURL": "https://s3.amazonaws.com/amplify-valpasapplication-staging-64726-deployment/amplify-cfn-templates/api/cloudformation-template.json",
-        "Parameters": {
-          "AppSyncApiName": "valpasapplication",
-          "DynamoDBBillingMode": "PAY_PER_REQUEST",
-          "DynamoDBEnableServerSideEncryption": false,
-          "AuthCognitoUserPoolId": {
-            "Fn::GetAtt": [
-              "authvalpasapplicationd66e1b4f",
-              "Outputs.UserPoolId"
-            ]
-          },
-          "authRoleName": {
-            "Ref": "AuthRoleName"
-          },
-          "unauthRoleName": {
-            "Ref": "UnauthRoleName"
-          },
-          "S3DeploymentBucket": "amplify-valpasapplication-staging-64726-deployment",
-          "S3DeploymentRootKey": "amplify-appsync-files/7bcd4350e8bc340061b969ae79485a07b9b5733e",
           "env": "staging"
         }
       }

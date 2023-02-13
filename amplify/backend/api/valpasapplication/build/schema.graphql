@@ -285,6 +285,7 @@ type TimeEntry @aws_iam @aws_cognito_user_pools {
   isLocked: Boolean
   paidAt: AWSDateTime
   confirmedAt: AWSDateTime
+  confirmedBy: User
   isSent: Boolean
   isConfirmed: Boolean
   isPaused: Boolean
@@ -1020,6 +1021,7 @@ input CreateTimeEntryInput {
   isLocked: Boolean
   paidAt: AWSDateTime
   confirmedAt: AWSDateTime
+  confirmedBy: UserInput
   isSent: Boolean
   isConfirmed: Boolean
   isPaused: Boolean
@@ -1039,6 +1041,7 @@ input UpdateTimeEntryInput {
   isLocked: Boolean
   paidAt: AWSDateTime
   confirmedAt: AWSDateTime
+  confirmedBy: UserInput
   isSent: Boolean
   isConfirmed: Boolean
   isPaused: Boolean

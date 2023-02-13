@@ -36,15 +36,12 @@ import { ReceiptImage } from "./receiptimage";
 
 export const Receiptlist = ({ isEmpty, lang }) => {
   const [receipts, setReceipts] = useState([]);
+
   useEffect(() => {
     const fetchReceipts = async () => {
-      const receiptData = await DataStore.query(Receipt);
-      console.log("receiptData: ", receiptData);
-      setReceipts(receiptData);
+      await DataStore.query(Receipt).then((res) => setReceipts(res));
     };
     fetchReceipts();
-
-    console.log(lang);
   }, [isEmpty]);
 
   return (
