@@ -24,7 +24,7 @@ import { PropTypes } from "prop-types";
             "address": "Helsinki, Finland",
             "lat": 60.16985569999999,
             "lng": 24.9383791
-        },§
+        },
         {
             "id": "1676287559499",
             "comment": "",
@@ -77,27 +77,40 @@ const Items = ({ oldTravel, lang, isEmpty }) => {
   };
 
   return (
-    <Box sx={{ mt: 2 }}>
+    <Box
+      sx={{
+        border: 1,
+        borderColor: "default.valpas",
+        borderRadius: 1,
+        p: 2,
+        mt: 2,
+      }}
+    >
       <Grid container spacing={2}>
-        <Grid item xs={12}>
-          <Button fullWidth variant="contained" onClick={() => setOpen(!open)} sx={{ borderRadius: 0 }}>
-            {date}
+        <Grid item xs={6} md={8}>
+          <Typography variant="h6">{travel.title}</Typography>
+        </Grid>
+        <Grid item xs={6} md={2}>
+          Lähtöpäivä: {date}
+        </Grid>
+        <Grid item xs={12} md={2}>
+          <Button fullWidth variant="outlined" onClick={() => setOpen(!open)} sx={{ borderRadius: 0 }}>
+            Avaa
           </Button>
         </Grid>
+
         <Grid item xs={12}>
           <Collapse in={open} timeout="auto" unmountOnExit>
-            <Box sx={{ mt: 2 }}>
-              <Typography variant="h6">{travel.title}</Typography>
-              <Typography variant="body1">{travel.comment}</Typography>
-            </Box>
-            <Box sx={{ mt: 2 }}>
-              <Button variant="contained" onClick={handleDelete}>
-                {lang.delete}
-              </Button>
-              <Button variant="contained" onClick={handleEdit}>
-                {lang.edit}
-              </Button>
-            </Box>
+            <Grid container spacing={2}>
+              <Grid item xs={12}>
+                <Typography variant="body1">{travel.comment}</Typography>
+              </Grid>
+              {travel.routePoints.map((point) => {
+                return <Point key={point.id} point={point} />;
+              })}
+
+              <Distance points={travel} />
+            </Grid>
           </Collapse>
         </Grid>
       </Grid>
@@ -105,10 +118,45 @@ const Items = ({ oldTravel, lang, isEmpty }) => {
   );
 };
 
+const calc = (travel, setDistance) => {
+  const lat1 = travel.routePoints[0].lat;
+  const lng1 = travel.routePoints[0].lng;
+  const lat2 = travel.routePoints[1].lat;
+  const lng2 = travel.routePoints[1].lng;
+
+  const directionsService = new window.google.maps.DirectionsService();
+
+  const request = {
+    origin: { lat: lat1, lng: lng1 },
+    destination: { lat: lat2, lng: lng2 },
+    travelMode: window.google.maps.TravelMode.DRIVING,
+  };
+
+  directionsService.route(request, (result, status) => {
+    if (status === "OK") setDistance(result.routes[0].legs[0].distance.text);
+  });
+};
+
+const Distance = ({ points }) => {
+  const [distance, setDistance] = useState("");
+
+  useEffect(() => {
+    calc(points, setDistance);
+  }, [points]);
+
+  return (
+    <Grid item xs={12} md={4}>
+      <Typography variant="body1">Matka: {distance}</Typography>
+    </Grid>
+  );
+};
+
 const Point = ({ point }) => {
   return (
-    <Box sx={{ mt: 2 }}>
-      <Typography variant="body1">{point.address}</Typography>
-    </Box>
+    <Grid item xs={12}>
+      <Box sx={{ mt: 2 }}>
+        <Typography variant="body1">{point.address}</Typography>
+      </Box>
+    </Grid>
   );
 };
