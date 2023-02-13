@@ -65,7 +65,7 @@ const Items = ({ oldTravel, lang, isEmpty }) => {
   const [open, setOpen] = useState(false);
 
   const handleDelete = async () => {
-    await DataStore.delete(Worktravel, (c) => c.id("eq", travel.id));
+    await DataStore.delete(Worktravel, oldTravel.id);
   };
 
   const handleEdit = async () => {
@@ -108,8 +108,19 @@ const Items = ({ oldTravel, lang, isEmpty }) => {
               {travel.routePoints.map((point) => {
                 return <Point key={point.id} point={point} />;
               })}
-
               <Distance points={travel} />
+
+              <Grid item xs={6} md={2}>
+                <Button fullWidth variant="outlined">
+                  Muokkaa
+                </Button>
+              </Grid>
+
+              <Grid item xs={6} md={2}>
+                <Button fullWidth variant="outlined" onClick={handleDelete} color="error">
+                  Poista
+                </Button>
+              </Grid>
             </Grid>
           </Collapse>
         </Grid>
@@ -145,7 +156,7 @@ const Distance = ({ points }) => {
   }, [points]);
 
   return (
-    <Grid item xs={12} md={4}>
+    <Grid item xs={12}>
       <Typography variant="body1">Matka: {distance}</Typography>
     </Grid>
   );

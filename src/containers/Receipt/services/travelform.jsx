@@ -293,8 +293,8 @@ const savetravel = async (travel) => {
           userId: user.attributes.sub,
           created: new Date().toISOString(),
           updated: new Date().toISOString(),
-          title: travel.description,
-          comment: null,
+          title: travel.title,
+          comment: travel.comment,
           departureDateTime: travel.departureDate ? new Date(travel.departureDate).toISOString() : null,
           returnDateTime: travel.returnDate ? new Date(travel.returnDate).toISOString() : null,
           routeCar: null,
@@ -316,7 +316,7 @@ const savetravel = async (travel) => {
     .catch((err) => console.warn(err));
 };
 
-const Save = ({ travel, isEmpty, clear }) => {
+const Save = ({ travel, isEmpty, clear, disabled }) => {
   const handleSave = () => savetravel(travel).then(() => clear());
 
   return (
@@ -331,7 +331,7 @@ const Save = ({ travel, isEmpty, clear }) => {
     >
       <Grid container spacing={2}>
         <Grid item xs={2}>
-          <Button variant="outlined" disabled={!isEmpty} onClick={handleSave} fullWidth>
+          <Button variant="outlined" disabled={!isEmpty || disabled} onClick={handleSave} fullWidth>
             Save
           </Button>
         </Grid>
@@ -393,7 +393,12 @@ export const Travelform = ({ isEmpty, setSelectedIndex }) => {
     <Box sx={{ mt: 2 }}>
       <Basic travel={travel} setTravel={setTravel} isEmpty={isEmpty} />
       <Route travel={travel} setTravel={setTravel} isEmpty={isEmpty} />
-      <Save travel={travel} isEmpty={isEmpty} clear={cancel} />
+      <Save
+        travel={travel}
+        isEmpty={isEmpty}
+        clear={cancel}
+        disabled={travel.title === "" || travel.routePoints.length < 2}
+      />
     </Box>
   );
 };
