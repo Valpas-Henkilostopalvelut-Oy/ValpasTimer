@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { Box, Grid, TextField, InputBase, Typography, Button, Autocomplete, Tooltip, IconButton } from "@mui/material";
-import { LocalizationProvider, DateTimePicker } from "@mui/x-date-pickers";
+import { LocalizationProvider, DatePicker } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { DataStore, Auth } from "aws-amplify";
 import { Worktravel } from "../../../models";
+import fi from "date-fns/locale/fi";
 
 const Title = ({ travel, setTravel, isEmpty }) => {
   return (
@@ -23,8 +24,8 @@ const Departuredate = ({ travel, setTravel, isEmpty }) => {
     setTravel({ ...travel, departureDate: value });
   };
   return (
-    <LocalizationProvider dateAdapter={AdapterDateFns}>
-      <DateTimePicker
+    <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={fi}>
+      <DatePicker
         disabled={!isEmpty}
         disableMaskedInput
         label="Departure date"
@@ -43,8 +44,8 @@ const Returndate = ({ travel, setTravel, isEmpty }) => {
     setTravel({ ...travel, returnDate: value });
   };
   return (
-    <LocalizationProvider dateAdapter={AdapterDateFns}>
-      <DateTimePicker
+    <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={fi}>
+      <DatePicker
         disabled={!isEmpty}
         disableMaskedInput
         label="Return date"
@@ -332,7 +333,12 @@ const Save = ({ travel, isEmpty, clear, disabled }) => {
       <Grid container spacing={2}>
         <Grid item xs={2}>
           <Button variant="outlined" disabled={!isEmpty || disabled} onClick={handleSave} fullWidth>
-            Save
+            Talenna
+          </Button>
+        </Grid>
+        <Grid item xs={2}>
+          <Button variant="outlined" disabled={!isEmpty} onClick={clear} fullWidth>
+            Perutta
           </Button>
         </Grid>
       </Grid>

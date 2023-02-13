@@ -64,10 +64,6 @@ const Items = ({ oldTravel, lang, isEmpty }) => {
   const date = new Date(travel.departureDateTime).toLocaleDateString("fi-FI");
   const [open, setOpen] = useState(false);
 
-  const handleDelete = async () => {
-    await DataStore.delete(Worktravel, oldTravel.id);
-  };
-
   const handleEdit = async () => {
     await DataStore.save(
       Worktravel.copyOf(travel, (updated) => {
@@ -86,14 +82,14 @@ const Items = ({ oldTravel, lang, isEmpty }) => {
         mt: 2,
       }}
     >
-      <Grid container spacing={2}>
+      <Grid container spacing={2} alignItems="center">
         <Grid item xs={6} md={8}>
           <Typography variant="h6">{travel.title}</Typography>
         </Grid>
-        <Grid item xs={6} md={2}>
+        <Grid item xs={6} md={3}>
           Lähtöpäivä: {date}
         </Grid>
-        <Grid item xs={12} md={2}>
+        <Grid item xs={12} md={1}>
           <Button fullWidth variant="outlined" onClick={() => setOpen(!open)} sx={{ borderRadius: 0 }}>
             Avaa
           </Button>
@@ -101,31 +97,40 @@ const Items = ({ oldTravel, lang, isEmpty }) => {
 
         <Grid item xs={12}>
           <Collapse in={open} timeout="auto" unmountOnExit>
-            <Grid container spacing={2}>
-              <Grid item xs={12}>
-                <Typography variant="body1">{travel.comment}</Typography>
-              </Grid>
-              {travel.routePoints.map((point) => {
-                return <Point key={point.id} point={point} />;
-              })}
-              <Distance points={travel} />
-
-              <Grid item xs={6} md={2}>
-                <Button fullWidth variant="outlined">
-                  Muokkaa
-                </Button>
-              </Grid>
-
-              <Grid item xs={6} md={2}>
-                <Button fullWidth variant="outlined" onClick={handleDelete} color="error">
-                  Poista
-                </Button>
-              </Grid>
-            </Grid>
+            <Details travel={travel} oldTravel={oldTravel} />
           </Collapse>
         </Grid>
       </Grid>
     </Box>
+  );
+};
+
+const Details = ({ travel, oldTravel }) => {
+  const handleDelete = async () => await DataStore.delete(Worktravel, oldTravel.id);
+
+  return (
+    <Grid container spacing={2}>
+      <Grid item xs={12}>
+        <Typography variant="body1">{travel.comment}</Typography>
+      </Grid>
+      {travel.routePoints.map((point) => (
+        <Point key={point.id} point={point} />
+      ))}
+
+      <Distance points={travel} />
+
+      <Grid item xs={6} md={2}>
+        <Button fullWidth variant="outlined">
+          Muokkaa
+        </Button>
+      </Grid>
+
+      <Grid item xs={6} md={2}>
+        <Button fullWidth variant="outlined" onClick={handleDelete} color="error">
+          Poista
+        </Button>
+      </Grid>
+    </Grid>
   );
 };
 
@@ -151,9 +156,7 @@ const calc = (travel, setDistance) => {
 const Distance = ({ points }) => {
   const [distance, setDistance] = useState("");
 
-  useEffect(() => {
-    calc(points, setDistance);
-  }, [points]);
+  useEffect(() => calc(points, setDistance), [points]);
 
   return (
     <Grid item xs={12}>
@@ -165,9 +168,8 @@ const Distance = ({ points }) => {
 const Point = ({ point }) => {
   return (
     <Grid item xs={12}>
-      <Box sx={{ mt: 2 }}>
-        <Typography variant="body1">{point.address}</Typography>
-      </Box>
+      <Typography variant="p">{point.address}</Typography>
+      <Typography variant="p">{point.comment}</Typography>
     </Grid>
   );
 };
