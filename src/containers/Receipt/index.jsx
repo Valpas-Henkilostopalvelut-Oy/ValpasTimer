@@ -1,13 +1,17 @@
 import React, { useState, useEffect } from "react";
-import { Box, Container, Grid, Typography, Button, Collapse } from "@mui/material";
+import { Box, Container, Grid, Typography, Button, Collapse, Tab } from "@mui/material";
+import TabContext from "@mui/lab/TabContext";
+import TabList from "@mui/lab/TabList";
+import TabPanel from "@mui/lab/TabPanel";
 import { Hub, DataStore, Auth } from "aws-amplify";
 import { Receiptform } from "./services/receiptform.jsx";
-import { Receiptlist } from "./services/receiptlist.jsx";
 import { Moreadd } from "./services/moremenu.jsx";
 import { Travelform } from "./services/travelform.jsx";
 import { Receiptlang as lang } from "./services/lang.jsx";
 import { useAppContext } from "../../services/contextLib.jsx";
 import { UserCredentials } from "../../models/index.js";
+
+import { Receiptlist } from "./services/receiptlist.jsx";
 import { Travellist } from "./services/travellist.jsx";
 
 /*
@@ -64,11 +68,35 @@ import { Travellist } from "./services/travellist.jsx";
 }
 */
 
+const ReceiptTabs = ({ isEmpty, lang }) => {
+  const [value, setValue] = useState("1");
+  const handleChange = (event, newValue) => setValue(newValue);
+
+  return (
+    <Box sx={{ width: "100%" }}>
+      <TabContext value={value}>
+        <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+          <TabList onChange={handleChange} aria-label="Receipt and travel tabs" variant="fullWidth">
+            <Tab label="Kuitti" value="1" />
+            <Tab label="Matkalasku" value="2" />
+          </TabList>
+        </Box>
+        <TabPanel value="1" sx={{p: "30px 0px"}}>
+          <Receiptlist isEmpty={isEmpty} lang={lang} />
+        </TabPanel>
+        <TabPanel value="2" sx={{p: "30px 0px"}}>
+          <Travellist isEmpty={isEmpty} lang={lang} />
+        </TabPanel>
+      </TabContext>
+    </Box>
+  );
+};
+
 export const Receipt = () => {
   const [isEmpty, setIsEmpty] = useState(true);
   const [selectedIndex, setSelectedIndex] = useState(null);
   const lang = useAppContext().langValue.receipts;
-  const [workers, setWorkers] = useState([]);
+  const [workers, setWorkers] = useState(null);
   const [currentWorker, setCurrentWorker] = useState(null);
 
   useEffect(() => {
@@ -87,12 +115,7 @@ export const Receipt = () => {
         .then(async (res) => {
           await Auth.currentAuthenticatedUser().then(async (authuser) => {
             await Auth.currentCredentials().then(async (credentials) => {
-              setCurrentWorker({
-                id: authuser.attributes.sub,
-                email: authuser.attributes.email,
-                name: `${authuser.attributes.given_name} ${authuser.attributes.family_name}`,
-                token: credentials.sessionToken,
-              });
+              console.log(credentials, authuser);
             });
           });
 
@@ -143,8 +166,8 @@ export const Receipt = () => {
         <Collapse in={selectedIndex === 1}>
           <Travelform isEmpty={isEmpty} setSelectedIndex={setSelectedIndex} />
         </Collapse>
-        <Receiptlist isEmpty={isEmpty} lang={lang} />
-        <Travellist isEmpty={isEmpty} lang={lang} />
+
+        <ReceiptTabs isEmpty={isEmpty} lang={lang} />
       </Box>
     </Container>
   );

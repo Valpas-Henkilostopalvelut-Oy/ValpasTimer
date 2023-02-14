@@ -46,10 +46,11 @@ export const Receiptlist = ({ isEmpty, lang }) => {
 
   return (
     <Box sx={{ mt: 2 }}>
-      <Typography variant="h4">{lang.titlelist}</Typography>
-      {receipts.map((receipt) => (
-        <Items key={receipt.id} oldReceipt={receipt} lang={lang} isEmpty={isEmpty} />
-      ))}
+      {receipts.length !== 0 ? (
+        receipts.map((receipt) => <Items key={receipt.id} oldReceipt={receipt} lang={lang} isEmpty={isEmpty} />)
+      ) : (
+        <Typography variant="h4">{lang.title}</Typography>
+      )}
     </Box>
   );
 };

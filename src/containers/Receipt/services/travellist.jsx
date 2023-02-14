@@ -50,11 +50,14 @@ export const Travellist = ({ isEmpty, lang }) => {
 
   return (
     <Box sx={{ mt: 2 }}>
-      <Typography variant="h4">Työmatka</Typography>
-      {travels.map((travel) => {
-        console.log("travel", travel);
-        return <Items key={travel.id} oldTravel={travel} lang={lang} isEmpty={isEmpty} />;
-      })}
+      {travels.length !== 0 ? (
+        travels.map((travel) => {
+          console.log("travel", travel);
+          return <Items key={travel.id} oldTravel={travel} lang={lang} isEmpty={isEmpty} />;
+        })
+      ) : (
+        <Typography variant="h4">Ei työmatkoja</Typography>
+      )}
     </Box>
   );
 };
