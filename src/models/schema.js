@@ -1902,6 +1902,13 @@ export const schema = {
                     "isRequired": false,
                     "attributes": []
                 },
+                "dateOfPurchase": {
+                    "name": "dateOfPurchase",
+                    "isArray": false,
+                    "type": "AWSDateTime",
+                    "isRequired": false,
+                    "attributes": []
+                },
                 "price": {
                     "name": "price",
                     "isArray": false,
@@ -1936,5 +1943,5 @@ export const schema = {
         }
     },
     "codegenVersion": "3.3.5",
-    "version": "6bb0f309cb0aa3f80ef4f02fff7ae8ff"
+    "version": "afcccd123e9a4a8eae7dfc65744f9be2"
 };

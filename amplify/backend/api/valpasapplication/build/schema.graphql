@@ -204,6 +204,7 @@ type Attachments @aws_iam @aws_cognito_user_pools {
   receiptId: String
   userId: String
   placeOfPurchase: String
+  dateOfPurchase: AWSDateTime
   price: Float
   currency: Currency
   tax: Float
@@ -511,6 +512,7 @@ input AttachmentsInput {
   receiptId: String
   userId: String
   placeOfPurchase: String
+  dateOfPurchase: AWSDateTime
   price: Float
   currency: Currency
   tax: Float

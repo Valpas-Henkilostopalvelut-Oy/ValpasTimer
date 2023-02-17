@@ -55,7 +55,7 @@ export const Attachments = (props) => {
               receiptId: receipt.id,
               userId: receipt.userId,
               placeOfPurchase: receipt.placeOfPurchase,
-              dateOfPurchase: receipt.dateOfPurchase,
+              dateOfPurchase: new Date(receipt.dateOfPurchase).toISOString(),
               price: receipt.price,
               currency: receipt.currency,
               tax: receipt.tax,

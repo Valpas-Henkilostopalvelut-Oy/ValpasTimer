@@ -203,6 +203,7 @@ type Attachments {
   receiptId: String
   userId: String
   placeOfPurchase: String
+  dateOfPurchase: AWSDateTime
   price: Float
   currency: Currency
   tax: Float

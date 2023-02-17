@@ -25,6 +25,7 @@ export const getWorktravel = /* GraphQL */ `
         receiptId
         userId
         placeOfPurchase
+        dateOfPurchase
         price
         currency
         tax

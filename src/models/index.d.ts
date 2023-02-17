@@ -406,6 +406,7 @@ type EagerAttachments = {
   readonly receiptId?: string | null;
   readonly userId?: string | null;
   readonly placeOfPurchase?: string | null;
+  readonly dateOfPurchase?: string | null;
   readonly price?: number | null;
   readonly currency?: Currency | keyof typeof Currency | null;
   readonly tax?: number | null;
@@ -417,6 +418,7 @@ type LazyAttachments = {
   readonly receiptId?: string | null;
   readonly userId?: string | null;
   readonly placeOfPurchase?: string | null;
+  readonly dateOfPurchase?: string | null;
   readonly price?: number | null;
   readonly currency?: Currency | keyof typeof Currency | null;
   readonly tax?: number | null;

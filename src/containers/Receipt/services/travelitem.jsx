@@ -6,12 +6,43 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  TableFooter,
+  InputBase,
+  TextField,
   Button,
   Box,
   Grid,
   Typography,
   Collapse,
+  IconButton,
+  List,
+  ListItem,
+  ListItemText,
+  ListItemIcon,
+  ListItemSecondaryAction,
 } from "@mui/material";
+import { DataStore, Storage, Auth } from "aws-amplify";
+import { Worktravel, Receipt } from "../../../models";
+import { LocalizationProvider, DatePicker } from "@mui/x-date-pickers";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+import fi from "date-fns/locale/fi";
+import DeleteIcon from "@mui/icons-material/Delete";
+
+const deleteTravel = async (travel) => {
+  travel = await DataStore.query(Worktravel, travel.id);
+  const receipts = travel.attachments;
+  await DataStore.delete(travel).then(async () => {
+    receipts.forEach(async (r) => {
+      await DataStore.query(Receipt, r.receiptId).then(async (receipt) => {
+        await DataStore.save(
+          Receipt.copyOf(receipt, (updated) => {
+            updated.isTravel = false;
+          })
+        );
+      });
+    });
+  });
+};
 
 export const Travelitem = (props) => {
   const { oldTravel } = props;
@@ -19,6 +50,9 @@ export const Travelitem = (props) => {
   const [travel, setTravel] = useState(oldTravel);
   const date = new Date(travel.departureDateTime).toLocaleDateString("fi-FI");
   const [open, setOpen] = useState(false);
+
+  const handleEdit = () => setEdit(!edit);
+  const handleDelete = () => deleteTravel(travel);
 
   return (
     <Box
@@ -48,17 +82,17 @@ export const Travelitem = (props) => {
         <Box sx={{ mt: 2 }}>
           <Grid container spacing={2}>
             <Grid item xs={12} sm={7}>
-              <Traveldetails travel={travel} edit={edit} />
+              <Traveldetails travel={travel} edit={edit} setTravel={setTravel} />
             </Grid>
             <Grid item xs={12} sm={5}>
               <Travelreceipts travel={travel} receipts={travel.attachments} edit={edit} />
             </Grid>
             <Grid item xs={12} md={6}>
-              <Button fullWidth variant="outlined" onClick={() => setEdit(!edit)} sx={{ borderRadius: 0 }}>
+              <Button fullWidth variant="outlined" onClick={handleEdit} sx={{ borderRadius: 0 }}>
                 {edit ? "Tallenna" : "Muokkaa"}
               </Button>
             </Grid>
-            <Grid item xs={12} md={6}>
+            <Grid item xs={12} md={6} onClick={handleDelete}>
               <Button fullWidth variant="outlined" sx={{ borderRadius: 0 }} color="error">
                 Poista
               </Button>
@@ -119,19 +153,6 @@ const Travelreceipts = (props) => {
 
 const Travelreceiptitem = (props) => {
   const { receipt } = props;
-  /**
-   * receipt: {
-        "id": "1676546517526",
-        "receiptId": "d826fce5-753c-448b-8d0e-7d740ffd21c6",
-        "userId": "669172d6-f6c2-44a1-95fd-43255acdf6b4",
-        "placeOfPurchase": "",
-        "dateOfPurchase": "2023-02-13T10:55:19.793Z",
-        "price": 0,
-        "currency": "EUR",
-        "tax": 0.24,
-        "isTravel": null
-    }
-   */
   const [file, setFile] = useState(null);
   const [url, setUrl] = useState(null);
   let date = new Date(receipt.dateOfPurchase).toLocaleDateString("fi-FI");
@@ -155,12 +176,176 @@ const Travelreceiptitem = (props) => {
   );
 };
 
+const Leavedate = (props) => {
+  const { travel, edit, setTravel } = props;
+  const [date, setDate] = useState(new Date(travel.departureDateTime));
+  let departure = new Date(date).toLocaleDateString("fi-FI");
+
+  if (edit) {
+    return (
+      <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={fi}>
+        <DatePicker
+          label="Lähtöpäivä"
+          value={date}
+          disableMaskedInput
+          onChange={(newValue) => {
+            setDate(newValue);
+            setTravel({ ...travel, departureDateTime: newValue });
+          }}
+          renderInput={(params) => <TextField {...params} variant="standard" />}
+        />
+      </LocalizationProvider>
+    );
+  } else {
+    return <Typography variant="span">{departure}</Typography>;
+  }
+};
+
+const Returndate = (props) => {
+  const { travel, edit, setTravel } = props;
+  const [date, setDate] = useState(new Date(travel.returnDateTime));
+  let returndate = travel.returnDateTime ? new Date(date).toLocaleDateString("fi-FI") : "Ei paluuta";
+
+  if (edit) {
+    return (
+      <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={fi}>
+        <DatePicker
+          label="Paluupäivä"
+          value={date}
+          disableMaskedInput
+          onChange={(newValue) => {
+            setDate(newValue);
+            setTravel({ ...travel, returnDateTime: newValue });
+          }}
+          renderInput={(params) => <TextField {...params} variant="standard" />}
+        />
+      </LocalizationProvider>
+    );
+  } else {
+    return <Typography variant="span">{returndate}</Typography>;
+  }
+};
+
+const RenderRoutes = (props) => {
+  const { routes, setRoutes, travel, edit, setTravel } = props;
+  const points = travel.routePoints;
+
+  /**
+   * point: {
+    "id": "1676627921394",
+    "comment": "",
+    "address": "Turku, Finland",
+    "lat": 60.4518126,
+    "lng": 22.2666302
+}
+   */
+
+  if (edit) {
+    return (
+      <Table size="small" aria-label="a dense table">
+        <TableHead>
+          <TableRow>
+            <TableCell>
+              <Typography variant="span">Reitti</Typography>
+            </TableCell>
+
+            <TableCell>
+              <Typography variant="span">Poista</Typography>
+            </TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {points.map((point, index) => (
+            <RoutesPoint {...props} index={index} key={index} point={point} />
+          ))}
+        </TableBody>
+      </Table>
+    );
+  } else {
+    return (
+      <Table size="small" aria-label="a dense table">
+        <TableBody>
+          {routes.map((route, index) => {
+            return (
+              <TableRow key={index}>
+                <TableCell>
+                  <Typography variant="span">{route.trip}</Typography>
+                </TableCell>
+                <TableCell>
+                  <Typography variant="span">{route.distance.distancetext}</Typography>
+                </TableCell>
+              </TableRow>
+            );
+          })}
+        </TableBody>
+      </Table>
+    );
+  }
+};
+
+const RoutesPoint = (props) => {
+  const { travel, setTravel, index, point } = props;
+  const [distance, setDistance] = useState("");
+
+  //if not first point, calculate distance
+  if (index > 0) {
+    const point1 = travel.routePoints[index - 1];
+    const point2 = travel.routePoints[index];
+    if (point1.lat && point2.lat) {
+      calc(point1, point2).then((result) => {
+        setDistance(result.distancetext);
+      });
+    }
+  }
+
+  const handleDeletepoint = () => {
+    let newPoints = travel.routePoints;
+    newPoints.splice(index, 1);
+    setTravel({ ...travel, routePoints: newPoints });
+  };
+
+  return (
+    <TableRow>
+      <TableCell>
+        <Typography variant="span">{point.address}</Typography>
+      </TableCell>
+      <TableCell>
+        <IconButton onClick={handleDeletepoint}>
+          <DeleteIcon />
+        </IconButton>
+      </TableCell>
+    </TableRow>
+  );
+};
+
+const Travelcomments = (props) => {
+  const { travel, edit, setTravel } = props;
+  const [comment, setComment] = useState(travel.comment);
+
+  if (edit) {
+    return (
+      <TextField
+        label="Kommentti"
+        multiline
+        rows={4}
+        value={comment}
+        onChange={(e) => {
+          setComment(e.target.value);
+          setTravel({ ...travel, comment: e.target.value });
+        }}
+        variant="standard"
+      />
+    );
+  } else {
+    return <Typography variant="span">{comment}</Typography>;
+  }
+};
+
 const Traveldetails = (props) => {
-  const { travel, edit } = props;
+  const { travel } = props;
   let created = new Date(travel.created).toLocaleDateString("fi-FI");
   let modified = new Date(travel.updated).toLocaleDateString("fi-FI");
-  let departure = new Date(travel.departureDateTime).toLocaleDateString("fi-FI");
-  let returnDate = travel.returnDateTime ? new Date(travel.returnDateTime).toLocaleDateString("fi-FI") : "";
+
   const [routes, setRoutes] = useState([]); //[{trip: Turku-Helsinki, distance: 100km}, {trip: Helsinki-Turku, distance: 100km}]
 
   useEffect(() => {
@@ -178,21 +363,6 @@ const Traveldetails = (props) => {
     };
     getRoutes();
   }, [travel]);
-
-  const renderRoutes = () => {
-    return routes.map((route, index) => {
-      return (
-        <TableRow key={index}>
-          <TableCell>
-            <Typography variant="span">{route.trip}</Typography>
-          </TableCell>
-          <TableCell>
-            <Typography variant="span">{route.distance.distancetext}</Typography>
-          </TableCell>
-        </TableRow>
-      );
-    });
-  };
 
   return (
     <TableContainer>
@@ -215,18 +385,20 @@ const Traveldetails = (props) => {
           </TableRow>
           <TableRow>
             <TableCell>Lähtöpäivä</TableCell>
-            <TableCell colSpan={2}>{departure}</TableCell>
+            <TableCell colSpan={2}>
+              <Leavedate {...props} />
+            </TableCell>
           </TableRow>
           <TableRow>
             <TableCell>Paluupäivä</TableCell>
-            <TableCell colSpan={2}>{returnDate}</TableCell>
+            <TableCell colSpan={2}>
+              <Returndate {...props} />
+            </TableCell>
           </TableRow>
           <TableRow>
             <TableCell>Reitti</TableCell>
             <TableCell colSpan={2}>
-              <Table size="small" aria-label="a dense table">
-                <TableBody>{renderRoutes()}</TableBody>
-              </Table>
+              <RenderRoutes {...props} routes={routes} setRoutes={setRoutes} />
             </TableCell>
           </TableRow>
           <TableRow>
@@ -242,7 +414,9 @@ const Traveldetails = (props) => {
           </TableRow>
           <TableRow>
             <TableCell>Kommentti</TableCell>
-            <TableCell colSpan={2}>{travel.comment}</TableCell>
+            <TableCell colSpan={2}>
+              <Travelcomments {...props} />
+            </TableCell>
           </TableRow>
         </TableBody>
       </Table>

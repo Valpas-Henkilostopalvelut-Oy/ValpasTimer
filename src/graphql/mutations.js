@@ -28,6 +28,7 @@ export const createWorktravel = /* GraphQL */ `
         receiptId
         userId
         placeOfPurchase
+        dateOfPurchase
         price
         currency
         tax
@@ -68,6 +69,7 @@ export const updateWorktravel = /* GraphQL */ `
         receiptId
         userId
         placeOfPurchase
+        dateOfPurchase
         price
         currency
         tax
@@ -108,6 +110,7 @@ export const deleteWorktravel = /* GraphQL */ `
         receiptId
         userId
         placeOfPurchase
+        dateOfPurchase
         price
         currency
         tax
