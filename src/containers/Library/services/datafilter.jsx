@@ -68,19 +68,20 @@ const Work = ({ works, filter, setFilter }) => {
   );
 };
 
-export const Filter = ({
-  oldFilter = {
-    workerId: "",
-    workId: "",
-    paid: false,
-    all: true,
-    start: new Date(),
-    end: new Date(),
-  },
-  setOldFilter,
-  works,
-  workers,
-}) => {
+export const Filter = (props) => {
+  const {
+    oldFilter = {
+      workerId: "",
+      workId: "",
+      paid: false,
+      all: true,
+      start: new Date(),
+      end: new Date(),
+    },
+    setOldFilter,
+    works,
+    workers,
+  } = props;
   const [filter, setFilter] = useState(oldFilter);
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
@@ -151,7 +152,8 @@ export const Filter = ({
   );
 };
 
-const Form = ({ filter, setFilter, works, workers, cancel, save }) => {
+const Form = (props) => {
+  const { filter, setFilter, works, workers, cancel, save } = props;
   return (
     <Box sx={{ p: 2, width: 300 }}>
       <Grid container spacing={2}>

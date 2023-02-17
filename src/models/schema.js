@@ -79,7 +79,9 @@ export const schema = {
                 "attachments": {
                     "name": "attachments",
                     "isArray": true,
-                    "type": "String",
+                    "type": {
+                        "nonModel": "Attachments"
+                    },
                     "isRequired": false,
                     "attributes": [],
                     "isArrayNullable": true
@@ -260,6 +262,13 @@ export const schema = {
                     "name": "comment",
                     "isArray": false,
                     "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "isTravel": {
+                    "name": "isTravel",
+                    "isArray": false,
+                    "type": "Boolean",
                     "isRequired": false,
                     "attributes": []
                 },
@@ -983,6 +992,13 @@ export const schema = {
                     "isArray": false,
                     "type": "ID",
                     "isRequired": true,
+                    "attributes": []
+                },
+                "identityId": {
+                    "name": "identityId",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
                     "attributes": []
                 },
                 "userId": {
@@ -1854,8 +1870,71 @@ export const schema = {
                     "attributes": []
                 }
             }
+        },
+        "Attachments": {
+            "name": "Attachments",
+            "fields": {
+                "id": {
+                    "name": "id",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "receiptId": {
+                    "name": "receiptId",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "userId": {
+                    "name": "userId",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "placeOfPurchase": {
+                    "name": "placeOfPurchase",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "price": {
+                    "name": "price",
+                    "isArray": false,
+                    "type": "Float",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "currency": {
+                    "name": "currency",
+                    "isArray": false,
+                    "type": {
+                        "enum": "Currency"
+                    },
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "tax": {
+                    "name": "tax",
+                    "isArray": false,
+                    "type": "Float",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "isTravel": {
+                    "name": "isTravel",
+                    "isArray": false,
+                    "type": "Boolean",
+                    "isRequired": false,
+                    "attributes": []
+                }
+            }
         }
     },
     "codegenVersion": "3.3.5",
-    "version": "69e344699d100e87a12059d2224cec6c"
+    "version": "6bb0f309cb0aa3f80ef4f02fff7ae8ff"
 };

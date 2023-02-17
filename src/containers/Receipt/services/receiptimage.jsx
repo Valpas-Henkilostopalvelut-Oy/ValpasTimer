@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import Carousel from "react-material-ui-carousel";
 import { Storage, DataStore } from "aws-amplify";
 import { Receipt } from "../../../models";
 import { Box, Grid, Button, Typography } from "@mui/material";
@@ -37,10 +36,12 @@ import "swiper/css/navigation";
 }
 */
 
-const loadimg = async (card) => {
+const loadimg = async (card, workerdata) => {
+  console.log(workerdata);
   try {
     return await Storage.get(card, {
       level: "protected",
+      identityId: workerdata ? workerdata.identityId : null,
       progressCallback(progress) {
         console.log(`Uploaded: ${progress.loaded}/${progress.total}`);
       },
@@ -91,14 +92,15 @@ const upload = async (file, data, index, dataid, setLoading) => {
   }
 };
 
-export const ReceiptImage = ({ receipt, setReceipt, isEmpty }) => {
+export const ReceiptImage = (props) => {
+  const { receipt, isEmpty, workerdata } = props;
   const [imgs, setImgs] = useState([]);
   const [index, setIndex] = useState(0);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const fetchImgs = async () => {
-      const imgData = await Promise.all(receipt.receiptImage.map((card) => loadimg(card)));
+      const imgData = await Promise.all(receipt.receiptImage.map((card) => loadimg(card, workerdata)));
       setImgs(imgData);
     };
     fetchImgs();

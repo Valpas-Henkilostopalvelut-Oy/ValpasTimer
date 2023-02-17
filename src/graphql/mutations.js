@@ -23,7 +23,16 @@ export const createWorktravel = /* GraphQL */ `
         lat
         lng
       }
-      attachments
+      attachments {
+        id
+        receiptId
+        userId
+        placeOfPurchase
+        price
+        currency
+        tax
+        isTravel
+      }
       createdAt
       updatedAt
       _version
@@ -54,7 +63,16 @@ export const updateWorktravel = /* GraphQL */ `
         lat
         lng
       }
-      attachments
+      attachments {
+        id
+        receiptId
+        userId
+        placeOfPurchase
+        price
+        currency
+        tax
+        isTravel
+      }
       createdAt
       updatedAt
       _version
@@ -85,7 +103,16 @@ export const deleteWorktravel = /* GraphQL */ `
         lat
         lng
       }
-      attachments
+      attachments {
+        id
+        receiptId
+        userId
+        placeOfPurchase
+        price
+        currency
+        tax
+        isTravel
+      }
       createdAt
       updatedAt
       _version
@@ -114,6 +141,7 @@ export const createReceipt = /* GraphQL */ `
       tax
       paymentMethod
       comment
+      isTravel
       createdAt
       updatedAt
       _version
@@ -142,6 +170,7 @@ export const updateReceipt = /* GraphQL */ `
       tax
       paymentMethod
       comment
+      isTravel
       createdAt
       updatedAt
       _version
@@ -170,6 +199,7 @@ export const deleteReceipt = /* GraphQL */ `
       tax
       paymentMethod
       comment
+      isTravel
       createdAt
       updatedAt
       _version
@@ -659,6 +689,7 @@ export const createUserCredentials = /* GraphQL */ `
   ) {
     createUserCredentials(input: $input, condition: $condition) {
       id
+      identityId
       userId
       activeTimeEntry
       status
@@ -720,6 +751,7 @@ export const updateUserCredentials = /* GraphQL */ `
   ) {
     updateUserCredentials(input: $input, condition: $condition) {
       id
+      identityId
       userId
       activeTimeEntry
       status
@@ -781,6 +813,7 @@ export const deleteUserCredentials = /* GraphQL */ `
   ) {
     deleteUserCredentials(input: $input, condition: $condition) {
       id
+      identityId
       userId
       activeTimeEntry
       status

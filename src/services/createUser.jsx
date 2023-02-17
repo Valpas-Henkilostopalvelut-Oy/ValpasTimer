@@ -5,6 +5,7 @@ import { onError } from "./errorLib.jsx";
 export async function createUser() {
   try {
     const userAuth = await Auth.currentAuthenticatedUser();
+    const userCredentials = await Auth.currentCredentials();
     const userProfile = await DataStore.query(UserCredentials, userAuth.attributes["custom:UserCreditails"]);
 
     if (userProfile === undefined || userAuth.attributes["custom:UserCreditails"] === null) {
@@ -15,7 +16,7 @@ export async function createUser() {
           status: "ACTIVE",
           defaultWorkspace: null,
           memberships: [],
-
+          identityId: userCredentials.identityId,
           profile: {
             iban: userAuth.attributes["custom:iban"] !== undefined ? userAuth.attributes["custom:iban"] : null,
             id_number:
@@ -47,6 +48,15 @@ export async function createUser() {
       await Auth.updateUserAttributes(userAuth, {
         "custom:UserCreditails": createdUserSettings.id,
       });
+    }
+
+    //add to old user profile identityId
+    if (userProfile !== undefined && userProfile.identityId === null) {
+      await DataStore.save(
+        UserCredentials.copyOf(userProfile, (updated) => {
+          updated.identityId = userCredentials.identityId;
+        })
+      );
     }
   } catch (error) {
     onError(error);

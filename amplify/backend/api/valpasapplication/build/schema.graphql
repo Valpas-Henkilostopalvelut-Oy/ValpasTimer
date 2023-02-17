@@ -199,6 +199,17 @@ enum Currency {
   NOK
 }
 
+type Attachments @aws_iam @aws_cognito_user_pools {
+  id: String
+  receiptId: String
+  userId: String
+  placeOfPurchase: String
+  price: Float
+  currency: Currency
+  tax: Float
+  isTravel: Boolean
+}
+
 type Worktravel @aws_iam @aws_cognito_user_pools {
   id: ID!
   userId: String
@@ -210,7 +221,7 @@ type Worktravel @aws_iam @aws_cognito_user_pools {
   returnDateTime: AWSDateTime
   routeCar: String
   routePoints: [RoutePoints]
-  attachments: [String]
+  attachments: [Attachments]
   createdAt: AWSDateTime!
   updatedAt: AWSDateTime!
   _version: Int!
@@ -233,6 +244,7 @@ type Receipt @aws_iam @aws_cognito_user_pools {
   tax: Float
   paymentMethod: PaymentMethod
   comment: String
+  isTravel: Boolean
   createdAt: AWSDateTime!
   updatedAt: AWSDateTime!
   _version: Int!
@@ -318,6 +330,7 @@ type AllWorkSpaces @aws_iam @aws_cognito_user_pools {
 
 type UserCredentials @aws_iam @aws_cognito_user_pools {
   id: ID!
+  identityId: String
   userId: String
   activeTimeEntry: ID
   status: UserAgreementStatus
@@ -493,6 +506,17 @@ input RoutePointsInput {
   lng: Float
 }
 
+input AttachmentsInput {
+  id: String
+  receiptId: String
+  userId: String
+  placeOfPurchase: String
+  price: Float
+  currency: Currency
+  tax: Float
+  isTravel: Boolean
+}
+
 type ModelWorktravelConnection @aws_iam @aws_cognito_user_pools {
   items: [Worktravel]!
   nextToken: String
@@ -509,7 +533,6 @@ input ModelWorktravelFilterInput {
   departureDateTime: ModelStringInput
   returnDateTime: ModelStringInput
   routeCar: ModelStringInput
-  attachments: ModelStringInput
   and: [ModelWorktravelFilterInput]
   or: [ModelWorktravelFilterInput]
   not: ModelWorktravelFilterInput
@@ -548,7 +571,6 @@ input ModelWorktravelConditionInput {
   departureDateTime: ModelStringInput
   returnDateTime: ModelStringInput
   routeCar: ModelStringInput
-  attachments: ModelStringInput
   and: [ModelWorktravelConditionInput]
   or: [ModelWorktravelConditionInput]
   not: ModelWorktravelConditionInput
@@ -565,7 +587,7 @@ input CreateWorktravelInput {
   returnDateTime: AWSDateTime
   routeCar: String
   routePoints: [RoutePointsInput]
-  attachments: [String]
+  attachments: [AttachmentsInput]
   _version: Int
 }
 
@@ -580,7 +602,7 @@ input UpdateWorktravelInput {
   returnDateTime: AWSDateTime
   routeCar: String
   routePoints: [RoutePointsInput]
-  attachments: [String]
+  attachments: [AttachmentsInput]
   _version: Int
 }
 
@@ -622,7 +644,6 @@ input ModelSubscriptionWorktravelFilterInput {
   departureDateTime: ModelSubscriptionStringInput
   returnDateTime: ModelSubscriptionStringInput
   routeCar: ModelSubscriptionStringInput
-  attachments: ModelSubscriptionStringInput
   and: [ModelSubscriptionWorktravelFilterInput]
   or: [ModelSubscriptionWorktravelFilterInput]
 }
@@ -687,6 +708,7 @@ input ModelReceiptFilterInput {
   tax: ModelFloatInput
   paymentMethod: ModelPaymentMethodInput
   comment: ModelStringInput
+  isTravel: ModelBooleanInput
   and: [ModelReceiptFilterInput]
   or: [ModelReceiptFilterInput]
   not: ModelReceiptFilterInput
@@ -706,6 +728,7 @@ input ModelReceiptConditionInput {
   tax: ModelFloatInput
   paymentMethod: ModelPaymentMethodInput
   comment: ModelStringInput
+  isTravel: ModelBooleanInput
   and: [ModelReceiptConditionInput]
   or: [ModelReceiptConditionInput]
   not: ModelReceiptConditionInput
@@ -726,6 +749,7 @@ input CreateReceiptInput {
   tax: Float
   paymentMethod: PaymentMethod
   comment: String
+  isTravel: Boolean
   _version: Int
 }
 
@@ -744,6 +768,7 @@ input UpdateReceiptInput {
   tax: Float
   paymentMethod: PaymentMethod
   comment: String
+  isTravel: Boolean
   _version: Int
 }
 
@@ -766,6 +791,7 @@ input ModelSubscriptionReceiptFilterInput {
   tax: ModelSubscriptionFloatInput
   paymentMethod: ModelSubscriptionStringInput
   comment: ModelSubscriptionStringInput
+  isTravel: ModelSubscriptionBooleanInput
   and: [ModelSubscriptionReceiptFilterInput]
   or: [ModelSubscriptionReceiptFilterInput]
 }
@@ -1222,6 +1248,7 @@ input ModelUserAgreementStatusInput {
 
 input ModelUserCredentialsFilterInput {
   id: ModelIDInput
+  identityId: ModelStringInput
   userId: ModelStringInput
   activeTimeEntry: ModelIDInput
   status: ModelUserAgreementStatusInput
@@ -1233,6 +1260,7 @@ input ModelUserCredentialsFilterInput {
 }
 
 input ModelUserCredentialsConditionInput {
+  identityId: ModelStringInput
   userId: ModelStringInput
   activeTimeEntry: ModelIDInput
   status: ModelUserAgreementStatusInput
@@ -1245,6 +1273,7 @@ input ModelUserCredentialsConditionInput {
 
 input CreateUserCredentialsInput {
   id: ID
+  identityId: String
   userId: String
   activeTimeEntry: ID
   status: UserAgreementStatus
@@ -1260,6 +1289,7 @@ input CreateUserCredentialsInput {
 
 input UpdateUserCredentialsInput {
   id: ID!
+  identityId: String
   userId: String
   activeTimeEntry: ID
   status: UserAgreementStatus
@@ -1280,6 +1310,7 @@ input DeleteUserCredentialsInput {
 
 input ModelSubscriptionUserCredentialsFilterInput {
   id: ModelSubscriptionIDInput
+  identityId: ModelSubscriptionStringInput
   activeTimeEntry: ModelSubscriptionIDInput
   status: ModelSubscriptionStringInput
   defaultWorkspace: ModelSubscriptionIDInput

@@ -5,7 +5,7 @@
  **************************************************************************/
 
 import * as React from "react";
-import { GridProps, SelectFieldProps, TextFieldProps } from "@aws-amplify/ui-react";
+import { GridProps, SelectFieldProps, SwitchFieldProps, TextFieldProps } from "@aws-amplify/ui-react";
 import { EscapeHatchProps } from "@aws-amplify/ui-react/internal";
 import { Receipt } from "../models";
 export declare type ValidationResponse = {
@@ -27,6 +27,7 @@ export declare type ReceiptUpdateFormInputValues = {
     tax?: number;
     paymentMethod?: string;
     comment?: string;
+    isTravel?: boolean;
 };
 export declare type ReceiptUpdateFormValidationValues = {
     userId?: ValidationFunction<string>;
@@ -42,6 +43,7 @@ export declare type ReceiptUpdateFormValidationValues = {
     tax?: ValidationFunction<number>;
     paymentMethod?: ValidationFunction<string>;
     comment?: ValidationFunction<string>;
+    isTravel?: ValidationFunction<boolean>;
 };
 export declare type PrimitiveOverrideProps<T> = Partial<T> & React.DOMAttributes<HTMLDivElement>;
 export declare type ReceiptUpdateFormOverridesProps = {
@@ -59,6 +61,7 @@ export declare type ReceiptUpdateFormOverridesProps = {
     tax?: PrimitiveOverrideProps<TextFieldProps>;
     paymentMethod?: PrimitiveOverrideProps<SelectFieldProps>;
     comment?: PrimitiveOverrideProps<TextFieldProps>;
+    isTravel?: PrimitiveOverrideProps<SwitchFieldProps>;
 } & EscapeHatchProps;
 export declare type ReceiptUpdateFormProps = React.PropsWithChildren<{
     overrides?: ReceiptUpdateFormOverridesProps | undefined | null;

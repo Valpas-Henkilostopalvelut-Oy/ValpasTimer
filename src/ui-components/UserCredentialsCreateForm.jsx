@@ -182,12 +182,14 @@ export default function UserCredentialsCreateForm(props) {
     ...rest
   } = props;
   const initialValues = {
+    identityId: "",
     userId: "",
     activeTimeEntry: "",
     status: undefined,
     defaultWorkspace: "",
     formChecked: [],
   };
+  const [identityId, setIdentityId] = React.useState(initialValues.identityId);
   const [userId, setUserId] = React.useState(initialValues.userId);
   const [activeTimeEntry, setActiveTimeEntry] = React.useState(
     initialValues.activeTimeEntry
@@ -201,6 +203,7 @@ export default function UserCredentialsCreateForm(props) {
   );
   const [errors, setErrors] = React.useState({});
   const resetStateValues = () => {
+    setIdentityId(initialValues.identityId);
     setUserId(initialValues.userId);
     setActiveTimeEntry(initialValues.activeTimeEntry);
     setStatus(initialValues.status);
@@ -213,6 +216,7 @@ export default function UserCredentialsCreateForm(props) {
     React.useState("");
   const formCheckedRef = React.createRef();
   const validations = {
+    identityId: [],
     userId: [],
     activeTimeEntry: [],
     status: [],
@@ -244,6 +248,7 @@ export default function UserCredentialsCreateForm(props) {
       onSubmit={async (event) => {
         event.preventDefault();
         let modelFields = {
+          identityId,
           userId,
           activeTimeEntry,
           status,
@@ -295,6 +300,35 @@ export default function UserCredentialsCreateForm(props) {
       {...rest}
     >
       <TextField
+        label="Identity id"
+        isRequired={false}
+        isReadOnly={false}
+        value={identityId}
+        onChange={(e) => {
+          let { value } = e.target;
+          if (onChange) {
+            const modelFields = {
+              identityId: value,
+              userId,
+              activeTimeEntry,
+              status,
+              defaultWorkspace,
+              formChecked,
+            };
+            const result = onChange(modelFields);
+            value = result?.identityId ?? value;
+          }
+          if (errors.identityId?.hasError) {
+            runValidationTasks("identityId", value);
+          }
+          setIdentityId(value);
+        }}
+        onBlur={() => runValidationTasks("identityId", identityId)}
+        errorMessage={errors.identityId?.errorMessage}
+        hasError={errors.identityId?.hasError}
+        {...getOverrideProps(overrides, "identityId")}
+      ></TextField>
+      <TextField
         label="User id"
         isRequired={false}
         isReadOnly={false}
@@ -303,6 +337,7 @@ export default function UserCredentialsCreateForm(props) {
           let { value } = e.target;
           if (onChange) {
             const modelFields = {
+              identityId,
               userId: value,
               activeTimeEntry,
               status,
@@ -331,6 +366,7 @@ export default function UserCredentialsCreateForm(props) {
           let { value } = e.target;
           if (onChange) {
             const modelFields = {
+              identityId,
               userId,
               activeTimeEntry: value,
               status,
@@ -359,6 +395,7 @@ export default function UserCredentialsCreateForm(props) {
           let { value } = e.target;
           if (onChange) {
             const modelFields = {
+              identityId,
               userId,
               activeTimeEntry,
               status: value,
@@ -403,6 +440,7 @@ export default function UserCredentialsCreateForm(props) {
           let { value } = e.target;
           if (onChange) {
             const modelFields = {
+              identityId,
               userId,
               activeTimeEntry,
               status,
@@ -427,6 +465,7 @@ export default function UserCredentialsCreateForm(props) {
           let values = items;
           if (onChange) {
             const modelFields = {
+              identityId,
               userId,
               activeTimeEntry,
               status,

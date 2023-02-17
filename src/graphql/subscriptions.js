@@ -23,7 +23,16 @@ export const onCreateWorktravel = /* GraphQL */ `
         lat
         lng
       }
-      attachments
+      attachments {
+        id
+        receiptId
+        userId
+        placeOfPurchase
+        price
+        currency
+        tax
+        isTravel
+      }
       createdAt
       updatedAt
       _version
@@ -54,7 +63,16 @@ export const onUpdateWorktravel = /* GraphQL */ `
         lat
         lng
       }
-      attachments
+      attachments {
+        id
+        receiptId
+        userId
+        placeOfPurchase
+        price
+        currency
+        tax
+        isTravel
+      }
       createdAt
       updatedAt
       _version
@@ -85,7 +103,16 @@ export const onDeleteWorktravel = /* GraphQL */ `
         lat
         lng
       }
-      attachments
+      attachments {
+        id
+        receiptId
+        userId
+        placeOfPurchase
+        price
+        currency
+        tax
+        isTravel
+      }
       createdAt
       updatedAt
       _version
@@ -114,6 +141,7 @@ export const onCreateReceipt = /* GraphQL */ `
       tax
       paymentMethod
       comment
+      isTravel
       createdAt
       updatedAt
       _version
@@ -142,6 +170,7 @@ export const onUpdateReceipt = /* GraphQL */ `
       tax
       paymentMethod
       comment
+      isTravel
       createdAt
       updatedAt
       _version
@@ -170,6 +199,7 @@ export const onDeleteReceipt = /* GraphQL */ `
       tax
       paymentMethod
       comment
+      isTravel
       createdAt
       updatedAt
       _version
@@ -656,6 +686,7 @@ export const onCreateUserCredentials = /* GraphQL */ `
   ) {
     onCreateUserCredentials(filter: $filter, userId: $userId) {
       id
+      identityId
       userId
       activeTimeEntry
       status
@@ -717,6 +748,7 @@ export const onUpdateUserCredentials = /* GraphQL */ `
   ) {
     onUpdateUserCredentials(filter: $filter, userId: $userId) {
       id
+      identityId
       userId
       activeTimeEntry
       status
@@ -778,6 +810,7 @@ export const onDeleteUserCredentials = /* GraphQL */ `
   ) {
     onDeleteUserCredentials(filter: $filter, userId: $userId) {
       id
+      identityId
       userId
       activeTimeEntry
       status

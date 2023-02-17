@@ -401,6 +401,32 @@ export declare type RoutePoints = LazyLoading extends LazyLoadingDisabled ? Eage
 
 export declare const RoutePoints: (new (init: ModelInit<RoutePoints>) => RoutePoints)
 
+type EagerAttachments = {
+  readonly id?: string | null;
+  readonly receiptId?: string | null;
+  readonly userId?: string | null;
+  readonly placeOfPurchase?: string | null;
+  readonly price?: number | null;
+  readonly currency?: Currency | keyof typeof Currency | null;
+  readonly tax?: number | null;
+  readonly isTravel?: boolean | null;
+}
+
+type LazyAttachments = {
+  readonly id?: string | null;
+  readonly receiptId?: string | null;
+  readonly userId?: string | null;
+  readonly placeOfPurchase?: string | null;
+  readonly price?: number | null;
+  readonly currency?: Currency | keyof typeof Currency | null;
+  readonly tax?: number | null;
+  readonly isTravel?: boolean | null;
+}
+
+export declare type Attachments = LazyLoading extends LazyLoadingDisabled ? EagerAttachments : LazyAttachments
+
+export declare const Attachments: (new (init: ModelInit<Attachments>) => Attachments)
+
 type WorktravelMetaData = {
   readOnlyFields: 'createdAt' | 'updatedAt';
 }
@@ -440,7 +466,7 @@ type EagerWorktravel = {
   readonly returnDateTime?: string | null;
   readonly routeCar?: string | null;
   readonly routePoints?: (RoutePoints | null)[] | null;
-  readonly attachments?: (string | null)[] | null;
+  readonly attachments?: (Attachments | null)[] | null;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
 }
@@ -456,7 +482,7 @@ type LazyWorktravel = {
   readonly returnDateTime?: string | null;
   readonly routeCar?: string | null;
   readonly routePoints?: (RoutePoints | null)[] | null;
-  readonly attachments?: (string | null)[] | null;
+  readonly attachments?: (Attachments | null)[] | null;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
 }
@@ -482,6 +508,7 @@ type EagerReceipt = {
   readonly tax?: number | null;
   readonly paymentMethod?: PaymentMethod | keyof typeof PaymentMethod | null;
   readonly comment?: string | null;
+  readonly isTravel?: boolean | null;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
 }
@@ -501,6 +528,7 @@ type LazyReceipt = {
   readonly tax?: number | null;
   readonly paymentMethod?: PaymentMethod | keyof typeof PaymentMethod | null;
   readonly comment?: string | null;
+  readonly isTravel?: boolean | null;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
 }
@@ -665,6 +693,7 @@ export declare const AllWorkSpaces: (new (init: ModelInit<AllWorkSpaces, AllWork
 
 type EagerUserCredentials = {
   readonly id: string;
+  readonly identityId?: string | null;
   readonly userId?: string | null;
   readonly activeTimeEntry?: string | null;
   readonly status?: UserAgreementStatus | keyof typeof UserAgreementStatus | null;
@@ -681,6 +710,7 @@ type EagerUserCredentials = {
 
 type LazyUserCredentials = {
   readonly id: string;
+  readonly identityId?: string | null;
   readonly userId?: string | null;
   readonly activeTimeEntry?: string | null;
   readonly status?: UserAgreementStatus | keyof typeof UserAgreementStatus | null;

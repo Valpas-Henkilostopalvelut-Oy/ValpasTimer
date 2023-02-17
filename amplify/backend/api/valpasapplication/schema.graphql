@@ -198,6 +198,17 @@ enum Currency {
   NOK
 }
 
+type Attachments {
+  id: String
+  receiptId: String
+  userId: String
+  placeOfPurchase: String
+  price: Float
+  currency: Currency
+  tax: Float
+  isTravel: Boolean
+}
+
 type Worktravel
   @model
   @auth(
@@ -217,7 +228,7 @@ type Worktravel
   returnDateTime: AWSDateTime
   routeCar: String
   routePoints: [RoutePoints]
-  attachments: [String]
+  attachments: [Attachments]
 }
 
 type Receipt
@@ -243,6 +254,7 @@ type Receipt
   tax: Float
   paymentMethod: PaymentMethod
   comment: String
+  isTravel: Boolean
 }
 
 type Agreement
@@ -343,6 +355,7 @@ type UserCredentials
     ]
   ) {
   id: ID!
+  identityId: String
   userId: String
   activeTimeEntry: ID
   status: UserAgreementStatus

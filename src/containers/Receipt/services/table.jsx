@@ -164,7 +164,6 @@ const Paymentmethod = ({ data, setData, isEmpty, lang }) => {
 
 const ClassificationSelect = ({ data, setData, isEmpty, lang }) => {
   const handleClassificationChange = (value) => setData({ ...data, class: value.target.value });
-   console.log(data)
 
   return (
     <FormControl fullWidth>
@@ -218,10 +217,8 @@ const Taxselect = ({ data, setData, isEmpty, lang }) => {
 };
 
 const onUpload = async (file, id, index, setLoading) => {
-  console.log("Uploading file: ", file.name);
   let end = file.name.split(".").pop();
   let newName = `${id}-${index}.${end}`;
-  console.log("newName: ", newName);
 
   try {
     const result = await Storage.put(newName, file, {
@@ -232,7 +229,6 @@ const onUpload = async (file, id, index, setLoading) => {
         setLoading(progress.loaded !== progress.total);
       },
     });
-    console.log("result: ", result);
     return result;
   } catch (error) {
     console.warn("Error uploading file: ", error);
@@ -265,6 +261,7 @@ const addreceipt = async (data, images, setLoading) => {
       tax: Number(data.tax),
       paymentMethod: data.method,
       comment: data.comment,
+      isTravel: false,
     };
 
     await DataStore.save(new Receipt(newReceipt));

@@ -15,6 +15,7 @@ import {
   Icon,
   ScrollView,
   SelectField,
+  SwitchField,
   Text,
   TextField,
   useTheme,
@@ -195,6 +196,7 @@ export default function ReceiptCreateForm(props) {
     tax: "",
     paymentMethod: undefined,
     comment: "",
+    isTravel: false,
   };
   const [userId, setUserId] = React.useState(initialValues.userId);
   const [created, setCreated] = React.useState(initialValues.created);
@@ -219,6 +221,7 @@ export default function ReceiptCreateForm(props) {
     initialValues.paymentMethod
   );
   const [comment, setComment] = React.useState(initialValues.comment);
+  const [isTravel, setIsTravel] = React.useState(initialValues.isTravel);
   const [errors, setErrors] = React.useState({});
   const resetStateValues = () => {
     setUserId(initialValues.userId);
@@ -235,6 +238,7 @@ export default function ReceiptCreateForm(props) {
     setTax(initialValues.tax);
     setPaymentMethod(initialValues.paymentMethod);
     setComment(initialValues.comment);
+    setIsTravel(initialValues.isTravel);
     setErrors({});
   };
   const [currentReceiptImageValue, setCurrentReceiptImageValue] =
@@ -254,6 +258,7 @@ export default function ReceiptCreateForm(props) {
     tax: [],
     paymentMethod: [],
     comment: [],
+    isTravel: [],
   };
   const runValidationTasks = async (
     fieldName,
@@ -310,6 +315,7 @@ export default function ReceiptCreateForm(props) {
           tax,
           paymentMethod,
           comment,
+          isTravel,
         };
         const validationResponses = await Promise.all(
           Object.keys(validations).reduce((promises, fieldName) => {
@@ -377,6 +383,7 @@ export default function ReceiptCreateForm(props) {
               tax,
               paymentMethod,
               comment,
+              isTravel,
             };
             const result = onChange(modelFields);
             value = result?.userId ?? value;
@@ -415,6 +422,7 @@ export default function ReceiptCreateForm(props) {
               tax,
               paymentMethod,
               comment,
+              isTravel,
             };
             const result = onChange(modelFields);
             value = result?.created ?? value;
@@ -453,6 +461,7 @@ export default function ReceiptCreateForm(props) {
               tax,
               paymentMethod,
               comment,
+              isTravel,
             };
             const result = onChange(modelFields);
             value = result?.updated ?? value;
@@ -491,6 +500,7 @@ export default function ReceiptCreateForm(props) {
               tax,
               paymentMethod,
               comment,
+              isTravel,
             };
             const result = onChange(modelFields);
             value = result?.dateOfPurchase ?? value;
@@ -527,6 +537,7 @@ export default function ReceiptCreateForm(props) {
               tax,
               paymentMethod,
               comment,
+              isTravel,
             };
             const result = onChange(modelFields);
             value = result?.placeOfPurchase ?? value;
@@ -563,6 +574,7 @@ export default function ReceiptCreateForm(props) {
               tax,
               paymentMethod,
               comment,
+              isTravel,
             };
             const result = onChange(modelFields);
             value = result?.receiptNumber ?? value;
@@ -599,6 +611,7 @@ export default function ReceiptCreateForm(props) {
               tax,
               paymentMethod,
               comment,
+              isTravel,
             };
             const result = onChange(modelFields);
             value = result?.class ?? value;
@@ -675,6 +688,7 @@ export default function ReceiptCreateForm(props) {
               tax,
               paymentMethod,
               comment,
+              isTravel,
             };
             const result = onChange(modelFields);
             value = result?.price ?? value;
@@ -711,6 +725,7 @@ export default function ReceiptCreateForm(props) {
               tax,
               paymentMethod,
               comment,
+              isTravel,
             };
             const result = onChange(modelFields);
             value = result?.currency ?? value;
@@ -774,6 +789,7 @@ export default function ReceiptCreateForm(props) {
               tax,
               paymentMethod,
               comment,
+              isTravel,
             };
             const result = onChange(modelFields);
             values = result?.receiptImage ?? values;
@@ -837,6 +853,7 @@ export default function ReceiptCreateForm(props) {
               tax: value,
               paymentMethod,
               comment,
+              isTravel,
             };
             const result = onChange(modelFields);
             value = result?.tax ?? value;
@@ -873,6 +890,7 @@ export default function ReceiptCreateForm(props) {
               tax,
               paymentMethod: value,
               comment,
+              isTravel,
             };
             const result = onChange(modelFields);
             value = result?.paymentMethod ?? value;
@@ -935,6 +953,7 @@ export default function ReceiptCreateForm(props) {
               tax,
               paymentMethod,
               comment: value,
+              isTravel,
             };
             const result = onChange(modelFields);
             value = result?.comment ?? value;
@@ -949,6 +968,43 @@ export default function ReceiptCreateForm(props) {
         hasError={errors.comment?.hasError}
         {...getOverrideProps(overrides, "comment")}
       ></TextField>
+      <SwitchField
+        label="Is travel"
+        defaultChecked={false}
+        isDisabled={false}
+        isChecked={isTravel}
+        onChange={(e) => {
+          let value = e.target.checked;
+          if (onChange) {
+            const modelFields = {
+              userId,
+              created,
+              updated,
+              dateOfPurchase,
+              placeOfPurchase,
+              receiptNumber,
+              class: class1,
+              price,
+              currency,
+              receiptImage,
+              tax,
+              paymentMethod,
+              comment,
+              isTravel: value,
+            };
+            const result = onChange(modelFields);
+            value = result?.isTravel ?? value;
+          }
+          if (errors.isTravel?.hasError) {
+            runValidationTasks("isTravel", value);
+          }
+          setIsTravel(value);
+        }}
+        onBlur={() => runValidationTasks("isTravel", isTravel)}
+        errorMessage={errors.isTravel?.errorMessage}
+        hasError={errors.isTravel?.hasError}
+        {...getOverrideProps(overrides, "isTravel")}
+      ></SwitchField>
       <Flex
         justifyContent="space-between"
         {...getOverrideProps(overrides, "CTAFlex")}

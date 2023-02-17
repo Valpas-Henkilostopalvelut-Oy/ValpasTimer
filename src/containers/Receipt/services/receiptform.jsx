@@ -64,6 +64,7 @@ const Imgcarousel = ({ images, setImages, lang }) => {
 };
 
 export const Receiptform = ({ isEmpty, setSelectedIndex, lang }) => {
+  lang = lang.addreceipt;
   const [images, setImages] = useState([]);
   const [receipt, setReceipt] = useState({
     date: new Date(),

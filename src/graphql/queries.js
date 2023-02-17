@@ -20,7 +20,16 @@ export const getWorktravel = /* GraphQL */ `
         lat
         lng
       }
-      attachments
+      attachments {
+        id
+        receiptId
+        userId
+        placeOfPurchase
+        price
+        currency
+        tax
+        isTravel
+      }
       createdAt
       updatedAt
       _version
@@ -46,7 +55,6 @@ export const listWorktravels = /* GraphQL */ `
         departureDateTime
         returnDateTime
         routeCar
-        attachments
         createdAt
         updatedAt
         _version
@@ -81,7 +89,6 @@ export const syncWorktravels = /* GraphQL */ `
         departureDateTime
         returnDateTime
         routeCar
-        attachments
         createdAt
         updatedAt
         _version
@@ -110,6 +117,7 @@ export const getReceipt = /* GraphQL */ `
       tax
       paymentMethod
       comment
+      isTravel
       createdAt
       updatedAt
       _version
@@ -140,6 +148,7 @@ export const listReceipts = /* GraphQL */ `
         tax
         paymentMethod
         comment
+        isTravel
         createdAt
         updatedAt
         _version
@@ -179,6 +188,7 @@ export const syncReceipts = /* GraphQL */ `
         tax
         paymentMethod
         comment
+        isTravel
         createdAt
         updatedAt
         _version
@@ -574,6 +584,7 @@ export const getUserCredentials = /* GraphQL */ `
   query GetUserCredentials($id: ID!) {
     getUserCredentials(id: $id) {
       id
+      identityId
       userId
       activeTimeEntry
       status
@@ -637,6 +648,7 @@ export const listUserCredentials = /* GraphQL */ `
     listUserCredentials(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
+        identityId
         userId
         activeTimeEntry
         status
@@ -668,6 +680,7 @@ export const syncUserCredentials = /* GraphQL */ `
     ) {
       items {
         id
+        identityId
         userId
         activeTimeEntry
         status

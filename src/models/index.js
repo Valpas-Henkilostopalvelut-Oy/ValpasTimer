@@ -75,7 +75,7 @@ const Currency = {
   "NOK": "NOK"
 };
 
-const { Worktravel, Receipt, Agreement, Tasks, TimeEntry, AllWorkSpaces, UserCredentials, UserAgreement, User, AditionalInfo, Comment, Workplace, Profile, UserSettings, CostRate, UserMemberships, HourlyRate, TimeInterval, Break, WorkspaceSettings, Membership, Work, WorkCard, OwnCar, RoutePoints } = initSchema(schema);
+const { Worktravel, Receipt, Agreement, Tasks, TimeEntry, AllWorkSpaces, UserCredentials, UserAgreement, User, AditionalInfo, Comment, Workplace, Profile, UserSettings, CostRate, UserMemberships, HourlyRate, TimeInterval, Break, WorkspaceSettings, Membership, Work, WorkCard, OwnCar, RoutePoints, Attachments } = initSchema(schema);
 
 export {
   Worktravel,
@@ -110,5 +110,6 @@ export {
   Work,
   WorkCard,
   OwnCar,
-  RoutePoints
+  RoutePoints,
+  Attachments
 };

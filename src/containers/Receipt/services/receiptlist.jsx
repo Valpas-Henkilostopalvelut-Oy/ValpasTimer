@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { DataStore, Storage } from "aws-amplify";
+import { DataStore, Storage, Auth } from "aws-amplify";
 import { Box, Grid, Collapse, Typography, Button } from "@mui/material";
 import { Receipt, Currency, PaymentMethod } from "../../../models";
 import { PropTypes } from "prop-types";
@@ -34,28 +34,37 @@ import { ReceiptImage } from "./receiptimage";
 }
 */
 
-export const Receiptlist = ({ isEmpty, lang }) => {
+export const Receiptlist = (props) => {
+  const { isEmpty, workerdata } = props;
   const [receipts, setReceipts] = useState([]);
 
   useEffect(() => {
     const fetchReceipts = async () => {
-      await DataStore.query(Receipt).then((res) => setReceipts(res));
+      const user = await Auth.currentAuthenticatedUser();
+      await DataStore.query(Receipt).then((res) =>
+        setReceipts(
+          res.filter((receipt) =>
+            props.workerdata ? receipt.userId === workerdata.userId : user.attributes.sub === receipt.userId
+          )
+        )
+      );
     };
     fetchReceipts();
-  }, [isEmpty]);
+  }, [isEmpty, workerdata]);
 
   return (
     <Box sx={{ mt: 2 }}>
       {receipts.length !== 0 ? (
-        receipts.map((receipt) => <Items key={receipt.id} oldReceipt={receipt} lang={lang} isEmpty={isEmpty} />)
+        receipts.map((receipt) => <Items key={receipt.id} oldReceipt={receipt} {...props} />)
       ) : (
-        <Typography variant="h4">{lang.title}</Typography>
+        <Typography variant="h4">Ei ole kuittia</Typography>
       )}
     </Box>
   );
 };
 
-const Items = ({ oldReceipt, lang, isEmpty }) => {
+const Items = (props) => {
+  const { oldReceipt } = props;
   const [receipt, setReceipt] = useState(oldReceipt);
   const date = new Date(receipt.dateOfPurchase).toLocaleDateString("fi-FI");
   const [open, setOpen] = useState(false);
@@ -96,28 +105,16 @@ const Items = ({ oldReceipt, lang, isEmpty }) => {
 
         <Grid item xs={12} md={1}>
           <Button variant="outlined" fullWidth onClick={handleClick}>
-            Show
+            {open ? "Piilota" : "Näytä"}
           </Button>
         </Grid>
       </Grid>
       <Collapse in={open} timeout="auto" unmountOnExit>
         <Grid container spacing={2} alignItems="center">
-          <ReceiptImage
-            receipt={receipt}
-            oldReceipt={oldReceipt}
-            setReceipt={setReceipt}
-            lang={lang}
-            isEmpty={isEmpty}
-          />
+          <ReceiptImage receipt={receipt} setReceipt={setReceipt} {...props} />
 
           <Grid item xs={12} md={7}>
-            <ItemTable
-              receipt={receipt}
-              oldReceipt={oldReceipt}
-              setReceipt={setReceipt}
-              lang={lang}
-              isEmpty={isEmpty}
-            />
+            <ItemTable receipt={receipt} setReceipt={setReceipt} {...props} />
           </Grid>
         </Grid>
       </Collapse>

@@ -1,290 +1,10 @@
-import React, { useEffect, useState } from "react";
-import { Box, Grid, TextField, InputBase, Typography, Button, Autocomplete, Tooltip, IconButton } from "@mui/material";
-import { LocalizationProvider, DatePicker } from "@mui/x-date-pickers";
-import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
-import DeleteIcon from "@mui/icons-material/Delete";
+import React, { useState } from "react";
+import { Box, Grid, Button } from "@mui/material";
 import { DataStore, Auth } from "aws-amplify";
-import { Worktravel } from "../../../models";
-import fi from "date-fns/locale/fi";
-
-const Title = ({ travel, setTravel, isEmpty }) => {
-  return (
-    <TextField
-      disabled={!isEmpty}
-      fullWidth
-      label="Title"
-      value={travel.title}
-      onChange={(e) => setTravel({ ...travel, title: e.target.value })}
-    />
-  );
-};
-
-const Departuredate = ({ travel, setTravel, isEmpty }) => {
-  const handleDateChange = (value) => {
-    setTravel({ ...travel, departureDate: value });
-  };
-  return (
-    <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={fi}>
-      <DatePicker
-        disabled={!isEmpty}
-        disableMaskedInput
-        label="Departure date"
-        value={travel.departureDate}
-        onChange={handleDateChange}
-        renderInput={(params) => {
-          return <TextField {...params} fullWidth />;
-        }}
-      />
-    </LocalizationProvider>
-  );
-};
-
-const Returndate = ({ travel, setTravel, isEmpty }) => {
-  const handleDateChange = (value) => {
-    setTravel({ ...travel, returnDate: value });
-  };
-  return (
-    <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={fi}>
-      <DatePicker
-        disabled={!isEmpty}
-        disableMaskedInput
-        label="Return date"
-        value={travel.returnDate}
-        onChange={handleDateChange}
-        renderInput={(params) => {
-          return <TextField {...params} fullWidth />;
-        }}
-      />
-    </LocalizationProvider>
-  );
-};
-
-const Comment = ({ travel, setTravel, isEmpty }) => {
-  return (
-    <TextField
-      disabled={!isEmpty}
-      fullWidth
-      multiline
-      rows={5}
-      label="Comment"
-      value={travel.comment}
-      onChange={(e) => setTravel({ ...travel, comment: e.target.value })}
-    />
-  );
-};
-
-const Basic = ({ travel, setTravel, isEmpty }) => {
-  return (
-    <Box
-      sx={{
-        border: 1,
-        borderColor: "grey.500",
-        borderRadius: 1,
-        p: 2,
-        mb: 2,
-      }}
-    >
-      <Typography variant="h6">Basic information</Typography>
-      <Grid container spacing={2}>
-        <Grid container item xs={12} md={6} spacing={2}>
-          <Grid item xs={12}>
-            <Title travel={travel} setTravel={setTravel} isEmpty={isEmpty} />
-          </Grid>
-          <Grid item xs={12}>
-            <Departuredate travel={travel} setTravel={setTravel} isEmpty={isEmpty} />
-          </Grid>
-          <Grid item xs={12}>
-            <Returndate travel={travel} setTravel={setTravel} isEmpty={isEmpty} />
-          </Grid>
-        </Grid>
-        <Grid item xs={12} md={6}>
-          <Comment travel={travel} setTravel={setTravel} isEmpty={isEmpty} />
-        </Grid>
-      </Grid>
-    </Box>
-  );
-};
-
-const Point = ({ point, travel, setTravel, isEmpty, lang }) => {
-  const [searchAddres, setSearchAddres] = useState("");
-  const [places, setPlaces] = useState([]);
-
-  useEffect(() => {
-    const service = new window.google.maps.places.PlacesService(document.createElement("div"));
-    if (searchAddres.length > 0) {
-      const request = {
-        query: searchAddres,
-        fields: ["formatted_address", "geometry"],
-      };
-      service.findPlaceFromQuery(request, (results, status) => {
-        if (status === "OK") {
-          setPlaces(results);
-        }
-      });
-    }
-  }, [searchAddres]);
-
-  return (
-    <Grid container spacing={2} item xs={12}>
-      <Grid item xs={12} md={6}>
-        <Autocomplete
-          inputValue={searchAddres}
-          onInputChange={(e, value) => {
-            setSearchAddres(value);
-          }}
-          disabled={!isEmpty}
-          options={places}
-          getOptionLabel={(option) => {
-            return option.formatted_address;
-          }}
-          isOptionEqualToValue={(option, val) => option.formatted_address === val.formatted_address}
-          renderInput={(params) => (
-            <TextField
-              {...params}
-              label="Address"
-              InputProps={{
-                ...params.InputProps,
-                endAdornment: <React.Fragment>{params.InputProps.endAdornment}</React.Fragment>,
-              }}
-            />
-          )}
-          onChange={(e, value) => {
-            if (value) {
-              setTravel({
-                ...travel,
-                routePoints: travel.routePoints.map((p) => {
-                  if (p.id === point.id) {
-                    return {
-                      ...p,
-                      address: value.formatted_address,
-                      lat: value.geometry.location.lat(),
-                      lng: value.geometry.location.lng(),
-                    };
-                  } else {
-                    return p;
-                  }
-                }),
-              });
-            }
-          }}
-        />
-      </Grid>
-
-      <Grid item xs={12} md={5}>
-        <TextField
-          disabled={!isEmpty}
-          fullWidth
-          label="Comment"
-          value={point.comment}
-          onChange={(e) => {
-            setTravel({
-              ...travel,
-              routePoints: travel.routePoints.map((p) => {
-                if (p.id === point.id) {
-                  return {
-                    ...p,
-                    comment: e.target.value,
-                  };
-                } else {
-                  return p;
-                }
-              }),
-            });
-          }}
-        />
-      </Grid>
-      <Grid item xs={12} md={1}>
-        <IconButton
-          disabled={!isEmpty}
-          onClick={() => {
-            setTravel({
-              ...travel,
-              routePoints: travel.routePoints.filter((p) => p.id !== point.id),
-            });
-          }}
-        >
-          <DeleteIcon />
-        </IconButton>
-      </Grid>
-    </Grid>
-  );
-};
-
-const calc = (travel, setDistance) => {
-  const lat1 = travel.routePoints[0].lat;
-  const lng1 = travel.routePoints[0].lng;
-  const lat2 = travel.routePoints[1].lat;
-  const lng2 = travel.routePoints[1].lng;
-
-  const directionsService = new window.google.maps.DirectionsService();
-
-  const request = {
-    origin: { lat: lat1, lng: lng1 },
-    destination: { lat: lat2, lng: lng2 },
-    travelMode: window.google.maps.TravelMode.DRIVING,
-  };
-
-  directionsService.route(request, (result, status) => {
-    if (status === "OK") setDistance(result.routes[0].legs[0].distance.text);
-  });
-};
-
-const Route = ({ travel, setTravel, isEmpty }) => {
-  const [distance, setDistance] = useState("");
-
-  useEffect(() => {
-    if (travel.routePoints.length === 2) {
-      calc(travel, setDistance);
-    } else {
-      setDistance("");
-    }
-  }, [travel.routePoints]);
-
-  const addPoint = () => {
-    setTravel({
-      ...travel,
-      routePoints: [
-        ...travel.routePoints,
-        {
-          id: Date.now(),
-          comment: "",
-          address: "",
-          lat: null,
-          lng: null,
-        },
-      ],
-    });
-  };
-
-  return (
-    <Box
-      sx={{
-        border: 1,
-        borderColor: "grey.500",
-        borderRadius: 1,
-        p: 2,
-        mb: 2,
-      }}
-    >
-      <Grid container spacing={2}>
-        <Grid item xs={12}>
-          <Typography variant="h6">Route</Typography>
-        </Grid>
-        {travel.routePoints.map((point) => {
-          return <Point key={point.id} point={point} travel={travel} setTravel={setTravel} isEmpty={isEmpty} />;
-        })}
-        <Grid item xs={12}>
-          <Typography variant="h6">Distance: {distance}</Typography>
-        </Grid>
-        <Grid item xs={12}>
-          <Button variant="outlined" disabled={!isEmpty} onClick={addPoint} fullWidth>
-            Add route point
-          </Button>
-        </Grid>
-      </Grid>
-    </Box>
-  );
-};
+import { Worktravel, Receipt } from "../../../models";
+import { Route } from "./travelroute";
+import { Basic } from "./travelformbasic";
+import { Attachments } from "./travelattachreceipt";
 
 const savetravel = async (travel) => {
   await Auth.currentAuthenticatedUser()
@@ -308,10 +28,18 @@ const savetravel = async (travel) => {
               comment: p.comment,
             };
           }),
-          attachments: [],
+          attachments: travel.attachments,
         })
       ).then((savedtravel) => {
-        console.log("saved travel: ", savedtravel);
+        savedtravel.attachments.forEach(async (a) => {
+          await DataStore.query(Receipt, a.id).then(async (receipt) => {
+            await DataStore.save(
+              Receipt.copyOf(receipt, (updated) => {
+                updated.isTravel = true;
+              })
+            );
+          });
+        });
       });
     })
     .catch((err) => console.warn(err));
@@ -331,43 +59,15 @@ const Save = ({ travel, isEmpty, clear, disabled }) => {
       }}
     >
       <Grid container spacing={2}>
-        <Grid item xs={2}>
+        <Grid item sm={2} xs={6}>
           <Button variant="outlined" disabled={!isEmpty || disabled} onClick={handleSave} fullWidth>
             Talenna
           </Button>
         </Grid>
-        <Grid item xs={2}>
+        <Grid item sm={2} xs={6}>
           <Button variant="outlined" disabled={!isEmpty} onClick={clear} fullWidth>
             Perutta
           </Button>
-        </Grid>
-      </Grid>
-    </Box>
-  );
-};
-
-const Attachments = ({ travel, setTravel, isEmpty }) => {
-  return (
-    <Box
-      sx={{
-        border: 1,
-        borderColor: "grey.500",
-        borderRadius: 1,
-        p: 2,
-        mb: 2,
-      }}
-    >
-      <Typography variant="h6">Attachments</Typography>
-      <Grid container spacing={2}>
-        <Grid item xs={12}>
-          <InputBase
-            disabled={!isEmpty}
-            fullWidth
-            multiline
-            rows={5}
-            value={travel.attachments}
-            onChange={(e) => setTravel({ ...travel, attachments: e.target.value })}
-          />
         </Grid>
       </Grid>
     </Box>
@@ -382,6 +82,7 @@ export const Travelform = ({ isEmpty, setSelectedIndex }) => {
     returnDate: null,
     routePoints: [],
     route: "",
+    attachments: [],
   });
 
   const cancel = () => {
@@ -392,6 +93,7 @@ export const Travelform = ({ isEmpty, setSelectedIndex }) => {
       returnDate: null,
       routePoints: [],
       route: "",
+      attachments: [],
     });
     setSelectedIndex(null);
   };
@@ -399,6 +101,7 @@ export const Travelform = ({ isEmpty, setSelectedIndex }) => {
     <Box sx={{ mt: 2 }}>
       <Basic travel={travel} setTravel={setTravel} isEmpty={isEmpty} />
       <Route travel={travel} setTravel={setTravel} isEmpty={isEmpty} />
+      <Attachments travel={travel} setTravel={setTravel} isEmpty={isEmpty} />
       <Save
         travel={travel}
         isEmpty={isEmpty}

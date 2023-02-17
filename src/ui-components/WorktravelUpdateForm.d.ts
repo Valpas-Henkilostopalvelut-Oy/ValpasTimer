@@ -22,7 +22,6 @@ export declare type WorktravelUpdateFormInputValues = {
     departureDateTime?: string;
     returnDateTime?: string;
     routeCar?: string;
-    attachments?: string[];
 };
 export declare type WorktravelUpdateFormValidationValues = {
     userId?: ValidationFunction<string>;
@@ -33,7 +32,6 @@ export declare type WorktravelUpdateFormValidationValues = {
     departureDateTime?: ValidationFunction<string>;
     returnDateTime?: ValidationFunction<string>;
     routeCar?: ValidationFunction<string>;
-    attachments?: ValidationFunction<string>;
 };
 export declare type PrimitiveOverrideProps<T> = Partial<T> & React.DOMAttributes<HTMLDivElement>;
 export declare type WorktravelUpdateFormOverridesProps = {
@@ -46,7 +44,6 @@ export declare type WorktravelUpdateFormOverridesProps = {
     departureDateTime?: PrimitiveOverrideProps<TextFieldProps>;
     returnDateTime?: PrimitiveOverrideProps<TextFieldProps>;
     routeCar?: PrimitiveOverrideProps<TextFieldProps>;
-    attachments?: PrimitiveOverrideProps<TextFieldProps>;
 } & EscapeHatchProps;
 export declare type WorktravelUpdateFormProps = React.PropsWithChildren<{
     overrides?: WorktravelUpdateFormOverridesProps | undefined | null;
