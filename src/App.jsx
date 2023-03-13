@@ -29,7 +29,10 @@ function App() {
 
     const onLoad = async () => {
       try {
-        await Auth.currentSession();
+        await Auth.currentCredentials().then((session) => {
+          console.log(session);
+        });
+        await Auth.currentSession()
         userHasAuthenticated(true);
         setAppLoading(false);
         await DataStore.start();

@@ -30,5 +30,6 @@ export const taxlist = [
   { value: 0, label: "0%" },
   { value: 0.06, label: "6%" },
   { value: 0.1, label: "10%" },
+  { value: 0.14, label: "14%" },
   { value: 0.24, label: "24%" },
 ];
