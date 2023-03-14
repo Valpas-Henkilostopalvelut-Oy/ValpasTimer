@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Table,
   TableBody,
@@ -15,9 +15,11 @@ import {
   Button,
   Box,
   Typography,
+  Collapse,
+  InputAdornment,
 } from "@mui/material";
 import { DataStore, Storage, Auth } from "aws-amplify";
-import { Receipt, Currency } from "../../../models";
+import { Receipt, Currency, PaymentMethod as PaymentData } from "../../../models";
 import { LocalizationProvider, DatePicker } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import fi from "date-fns/locale/fi";
@@ -122,7 +124,7 @@ const ReceiptNumber = ({ receipt, setReceipt, edit = false }) => {
 };
 
 const Class = ({ receipt, setReceipt, edit = false }) => {
-  console.log(receipt.class)
+  console.log(receipt.class);
   return edit ? (
     <FormControl fullWidth>
       <Select
@@ -161,6 +163,7 @@ const Price = ({ receipt, setReceipt, edit = false }) => {
       value={receipt.price}
       onChange={(e) => setReceipt({ ...receipt, price: e.target.value })}
       variant="standard"
+      type={"number"}
       fullWidth
     />
   ) : (
@@ -212,25 +215,57 @@ const CurrencySelect = ({ receipt, setReceipt, edit = false }) => {
 };
 
 const TaxSelect = ({ receipt, setReceipt, edit = false }) => {
+  const [tax, setTax] = useState(receipt.tax);
+  const [manual, setManual] = useState(0);
+
+  const handleChange = (event) => {
+    setTax(event.target.value);
+  };
+
+  const handleChangeManual = (event) => {
+    let tax = event.target.value;
+    let taxlength = tax.length;
+    if (taxlength > 2) tax = tax.slice(0, 2);
+    setManual(tax);
+  };
+
+  useEffect(() => {
+    let tax = manual / 100;
+    setReceipt({ ...receipt, tax: tax });
+  }, [manual]);
+
+  useEffect(() => setReceipt({ ...receipt, tax: tax }), [tax]);
+
   return edit ? (
-    <FormControl fullWidth>
-      <Select
-        labelId="tax-label"
-        id="tax"
-        value={receipt.tax}
-        onChange={(e) => setReceipt({ ...receipt, tax: e.target.value })}
-        variant="standard"
-      >
-        <MenuItem value={null} hidden>
-          <em>None</em>
-        </MenuItem>
-        {taxlist.map((item) => (
-          <MenuItem key={item.value} value={item.value}>
-            {item.label}
+    <>
+      <FormControl fullWidth>
+        <Select labelId="tax-label" id="tax" value={receipt.tax} onChange={handleChange} variant="standard">
+          <MenuItem value={null} hidden>
+            <em>None</em>
           </MenuItem>
-        ))}
-      </Select>
-    </FormControl>
+          <MenuItem value={receipt.tax}>{receipt.tax * 100} %</MenuItem>
+          {taxlist.map((item) => (
+            <MenuItem key={item.value} value={item.value}>
+              {item.label}
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
+
+      <Collapse in={tax === 0}>
+        <TextField
+          value={manual}
+          onChange={handleChangeManual}
+          id="tax"
+          label="Manualinen vero"
+          mt={1}
+          type="number"
+          InputProps={{
+            endAdornment: <InputAdornment position="end">%</InputAdornment>,
+          }}
+        />
+      </Collapse>
+    </>
   ) : (
     <Typography
       variant="body1"
@@ -245,35 +280,56 @@ const TaxSelect = ({ receipt, setReceipt, edit = false }) => {
 };
 
 const PaymentMethod = ({ receipt, setReceipt, edit = false }) => {
+  const [paymentMethod, setPaymentMethod] = useState(receipt.paymentMethod);
+  const [manual, setManual] = useState("");
+  const handleChange = (event) => {
+    setPaymentMethod(event.target.value);
+  };
+  const handleChangeManual = (event) => {
+    setManual(event.target.value);
+  };
+
+  useEffect(() => setReceipt({ ...receipt, otherPayment: manual }), [manual]);
+
+  useEffect(() => setReceipt({ ...receipt, paymentMethod: paymentMethod }), [paymentMethod]);
   return edit ? (
-    <FormControl fullWidth>
-      <Select
-        labelId="payment-method-label"
-        id="payment-method"
-        value={receipt.paymentMethod}
-        onChange={(e) => setReceipt({ ...receipt, paymentMethod: e.target.value })}
-        variant="standard"
-      >
-        <MenuItem value={null} hidden>
-          <em>None</em>
-        </MenuItem>
-        {metodlist().map((item) => (
-          <MenuItem key={item.value} value={item.value}>
-            {item.label}
+    <>
+      <FormControl fullWidth>
+        <Select
+          labelId="payment-method-label"
+          id="payment-method"
+          value={paymentMethod}
+          onChange={handleChange}
+          variant="standard"
+        >
+          <MenuItem value={null} hidden>
+            <em>None</em>
           </MenuItem>
-        ))}
-      </Select>
-    </FormControl>
+          {metodlist().map((item) => (
+            <MenuItem key={item.value} value={item.value}>
+              {item.label}
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
+      <TextField
+        value={manual}
+        id="other-payment"
+        onChange={handleChangeManual}
+        label="Muu maksutapa"
+        mt={1}
+        hidden={receipt.paymentMethod !== PaymentData.OTHER}
+      />
+    </>
   ) : (
-    <Typography
-      variant="body1"
-      sx={{
-        fontWeight: "bold",
-        color: "text.secondary",
-      }}
-    >
-      {metodlist().find((item) => item.value === receipt.paymentMethod)?.label}
-    </Typography>
+    <>
+      <Typography variant="body1" sx={{ fontWeight: "bold", color: "text.secondary" }}>
+        {metodlist().find((item) => item.value === receipt.paymentMethod)?.label}
+      </Typography>
+      <Typography variant="body1" sx={{ fontWeight: "bold", color: "text.secondary" }} hidden={receipt.otherPayment}>
+        {receipt.otherPayment}
+      </Typography>
+    </>
   );
 };
 

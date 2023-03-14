@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   Table,
   TableBody,
@@ -14,6 +14,8 @@ import {
   MenuItem,
   Button,
   Box,
+  Collapse,
+  InputAdornment,
 } from "@mui/material";
 import { DataStore, Storage, Auth } from "aws-amplify";
 import { Receipt, Currency, PaymentMethod, Classification } from "../../../models";
@@ -67,6 +69,7 @@ const Amount = ({ data, setData, isEmpty, lang }) => {
       label="Amount"
       value={data.amount}
       onChange={(e) => handleAmountChange(e.target.value)}
+      type="number"
       fullWidth
       disabled={!isEmpty}
     />
@@ -136,29 +139,49 @@ const Cancelsave = ({ cancel, isEmpty, lang }) => {
 };
 
 const Paymentmethod = ({ data, setData, isEmpty, lang }) => {
-  const handleMethodChange = (value) => setData({ ...data, method: value.target.value });
+  const [method, setMethod] = useState("");
+  const [other, setOther] = useState("");
+
+  const handleMethodChange = (value) => {
+    let method = value.target.value;
+    setMethod(method);
+  };
+
+  const handleChange = (value) => {
+    let method = value.target.value;
+    setOther(method);
+  };
+
+  useEffect(() => setData({ ...data, otherMethod: other }), [other]);
+
+  useEffect(() => setData({ ...data, method: method }), [method]);
 
   return (
-    <FormControl fullWidth>
-      <InputLabel id="method-label">{lang.method}</InputLabel>
-      <Select
-        labelId="method-label"
-        id="method"
-        disabled={!isEmpty}
-        label={lang.method}
-        value={data.method}
-        onChange={handleMethodChange}
-        input={<InputBase />}
-      >
-        {metodlist(lang.methodselect).map((method) => {
-          return (
-            <MenuItem key={method.value} value={method.value}>
-              {method.label}
-            </MenuItem>
-          );
-        })}
-      </Select>
-    </FormControl>
+    <>
+      <FormControl fullWidth>
+        <InputLabel id="method-label">{lang.method}</InputLabel>
+        <Select
+          labelId="method-label"
+          id="method"
+          disabled={!isEmpty}
+          label={lang.method}
+          value={method}
+          onChange={handleMethodChange}
+          input={<InputBase />}
+        >
+          {metodlist(lang.methodselect).map((method) => {
+            return (
+              <MenuItem key={method.value} value={method.value}>
+                {method.label}
+              </MenuItem>
+            );
+          })}
+        </Select>
+      </FormControl>
+      <Collapse in={method === PaymentMethod.OTHER}>
+        <TextField id="other" value={other} label={"toinen"} onChange={handleChange} disabled={!isEmpty} />
+      </Collapse>
+    </>
   );
 };
 
@@ -190,29 +213,62 @@ const ClassificationSelect = ({ data, setData, isEmpty, lang }) => {
 };
 
 const Taxselect = ({ data, setData, isEmpty, lang }) => {
-  const handleTaxChange = (value) => setData({ ...data, tax: value.target.value });
+  const [tax, setTax] = useState(0.24);
+  const [otherManualTax, setOtherManualTax] = useState(0);
+
+  const handleTaxChange = (value) => setTax(value.target.value);
+  const handleChange = (value) => {
+    let tax = value.target.value;
+    let taxlength = tax.length;
+
+    if (taxlength > 2) tax = tax.slice(0, 2);
+    setOtherManualTax(tax);
+  };
+
+  useEffect(() => {
+    let tax = otherManualTax / 100;
+    setData({ ...data, tax: tax });
+  }, [otherManualTax]);
+
+  useEffect(() => setData({ ...data, tax: tax }), [tax]);
 
   return (
-    <FormControl fullWidth>
-      <InputLabel id="tax-label">{lang.tax}</InputLabel>
-      <Select
-        labelId="tax-label"
-        id="tax"
-        disabled={!isEmpty}
-        label={lang.tax}
-        value={data.tax}
-        onChange={handleTaxChange}
-        input={<InputBase />}
-      >
-        {taxlist.map((tax) => {
-          return (
-            <MenuItem key={tax.value} value={tax.value}>
-              {tax.label}
-            </MenuItem>
-          );
-        })}
-      </Select>
-    </FormControl>
+    <>
+      <FormControl fullWidth>
+        <InputLabel id="tax-label">{lang.tax}</InputLabel>
+        <Select
+          labelId="tax-label"
+          id="tax"
+          disabled={!isEmpty}
+          label={lang.tax}
+          value={tax}
+          onChange={handleTaxChange}
+          input={<InputBase />}
+        >
+          {taxlist.map((tax) => {
+            return (
+              <MenuItem key={tax.value} value={tax.value}>
+                {tax.label}
+              </MenuItem>
+            );
+          })}
+        </Select>
+      </FormControl>
+      <Collapse in={tax === 0}>
+        <TextField
+          id="tax"
+          label="Manualinen vero"
+          mt={1}
+          value={otherManualTax}
+          onChange={handleChange}
+          disabled={!isEmpty}
+          type="number"
+          InputProps={{
+            endAdornment: <InputAdornment position="end">%</InputAdornment>,
+          }}
+        />
+      </Collapse>
+    </>
   );
 };
 
@@ -245,6 +301,8 @@ const addreceipt = async (data, images, setLoading) => {
   }
 
   try {
+    console.log(data);
+
     const user = await Auth.currentAuthenticatedUser();
 
     const newReceipt = {
@@ -255,11 +313,12 @@ const addreceipt = async (data, images, setLoading) => {
       placeOfPurchase: data.place,
       receiptNumber: data.number,
       receiptType: "INVOICE",
-      price: Number(data.amount),
+      price: Number.parseFloat(data.amount),
       currency: data.currency,
       receiptImage: keys,
       tax: Number(data.tax),
       paymentMethod: data.method,
+      otherPayment: data.otherMethod,
       comment: data.comment,
       isTravel: false,
     };
@@ -280,6 +339,7 @@ export const ReceiptTable = ({
     place: "",
     tax: "",
     method: "CASH",
+    otherMethod: "",
     category: "",
   },
   setData,

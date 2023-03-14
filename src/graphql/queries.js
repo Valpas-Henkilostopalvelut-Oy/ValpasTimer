@@ -117,6 +117,7 @@ export const getReceipt = /* GraphQL */ `
       receiptImage
       tax
       paymentMethod
+      otherPayment
       comment
       isTravel
       createdAt
@@ -148,6 +149,7 @@ export const listReceipts = /* GraphQL */ `
         receiptImage
         tax
         paymentMethod
+        otherPayment
         comment
         isTravel
         createdAt
@@ -188,6 +190,7 @@ export const syncReceipts = /* GraphQL */ `
         receiptImage
         tax
         paymentMethod
+        otherPayment
         comment
         isTravel
         createdAt

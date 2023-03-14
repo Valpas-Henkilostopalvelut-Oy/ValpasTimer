@@ -75,6 +75,7 @@ export const Receiptform = ({ isEmpty, setSelectedIndex, lang }) => {
     place: "",
     tax: 0.24,
     method: "CASH",
+    otherMethod: "",
     category: "",
   });
   const [loading, setLoading] = useState(false);
@@ -91,6 +92,7 @@ export const Receiptform = ({ isEmpty, setSelectedIndex, lang }) => {
       currency: "EUR",
       place: "",
       tax: 0.24,
+      otherMethod: "",
       method: "CASH",
       category: "",
     });

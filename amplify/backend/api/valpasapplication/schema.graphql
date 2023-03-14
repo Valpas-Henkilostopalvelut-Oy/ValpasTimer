@@ -254,6 +254,7 @@ type Receipt
   receiptImage: [String]
   tax: Float
   paymentMethod: PaymentMethod
+  otherPayment: String
   comment: String
   isTravel: Boolean
 }

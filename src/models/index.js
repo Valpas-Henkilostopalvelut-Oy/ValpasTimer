@@ -2,31 +2,14 @@
 import { initSchema } from '@aws-amplify/datastore';
 import { schema } from './schema.js';
 
-const Status = {
-  "COMPLETE": "COMPLETE",
-  "ACTIVE": "ACTIVE",
-  "INWAITTING": "INWAITTING"
-};
-
-const Breakreason = {
-  "LUNCH": "LUNCH",
-  "LUNCH_L": "LUNCH_L",
-  "SHORT": "SHORT",
-  "LONG": "LONG",
-  "GOING": "GOING",
-  "ACCIDENT": "ACCIDENT"
-};
-
-const Cardtype = {
-  "ID": "ID",
-  "PASSPORT": "PASSPORT",
-  "DRIVING": "DRIVING",
-  "HYGIENEPASS": "HYGIENEPASS",
-  "WORKSAFETYPASS": "WORKSAFETYPASS",
-  "FIREWORKCARD": "FIREWORKCARD",
-  "ELECTRICALSAFETYPASS": "ELECTRICALSAFETYPASS",
-  "VISA": "VISA",
-  "OTHER": "OTHER"
+const Classification = {
+  "ADMINISTRATIVESERVICE": "ADMINISTRATIVESERVICE",
+  "ITDEVICEANDSOFTWAREEXPENSES": "ITDEVICEANDSOFTWAREEXPENSES",
+  "MARKETINGEXPENSES": "MARKETINGEXPENSES",
+  "MEETINGEXPENSES": "MEETINGEXPENSES",
+  "PREMISESEXPENSES": "PREMISESEXPENSES",
+  "TRAVELEXPENSES": "TRAVELEXPENSES",
+  "VEHICLEEXPENSES": "VEHICLEEXPENSES"
 };
 
 const Drivingtype = {
@@ -42,14 +25,31 @@ const Drivingtype = {
   "D1": "D1"
 };
 
-const Classification = {
-  "ADMINISTRATIVESERVICE": "ADMINISTRATIVESERVICE",
-  "ITDEVICEANDSOFTWAREEXPENSES": "ITDEVICEANDSOFTWAREEXPENSES",
-  "MARKETINGEXPENSES": "MARKETINGEXPENSES",
-  "MEETINGEXPENSES": "MEETINGEXPENSES",
-  "PREMISESEXPENSES": "PREMISESEXPENSES",
-  "TRAVELEXPENSES": "TRAVELEXPENSES",
-  "VEHICLEEXPENSES": "VEHICLEEXPENSES"
+const Cardtype = {
+  "ID": "ID",
+  "PASSPORT": "PASSPORT",
+  "DRIVING": "DRIVING",
+  "HYGIENEPASS": "HYGIENEPASS",
+  "WORKSAFETYPASS": "WORKSAFETYPASS",
+  "FIREWORKCARD": "FIREWORKCARD",
+  "ELECTRICALSAFETYPASS": "ELECTRICALSAFETYPASS",
+  "VISA": "VISA",
+  "OTHER": "OTHER"
+};
+
+const Status = {
+  "COMPLETE": "COMPLETE",
+  "ACTIVE": "ACTIVE",
+  "INWAITTING": "INWAITTING"
+};
+
+const Breakreason = {
+  "LUNCH": "LUNCH",
+  "LUNCH_L": "LUNCH_L",
+  "SHORT": "SHORT",
+  "LONG": "LONG",
+  "GOING": "GOING",
+  "ACCIDENT": "ACCIDENT"
 };
 
 const UserAgreementStatus = {
@@ -75,7 +75,7 @@ const Currency = {
   "NOK": "NOK"
 };
 
-const { Worktravel, Receipt, Agreement, Tasks, TimeEntry, AllWorkSpaces, UserCredentials, UserAgreement, User, AditionalInfo, Comment, Workplace, Profile, UserSettings, CostRate, UserMemberships, HourlyRate, TimeInterval, Break, WorkspaceSettings, Membership, Work, WorkCard, OwnCar, RoutePoints, Attachments } = initSchema(schema);
+const { Worktravel, Receipt, Agreement, Tasks, TimeEntry, AllWorkSpaces, UserCredentials, UserAgreement, AditionalInfo, Comment, Workplace, User, Profile, UserSettings, CostRate, UserMemberships, TimeInterval, Break, WorkspaceSettings, Membership, HourlyRate, Work, WorkCard, OwnCar, RoutePoints, Attachments } = initSchema(schema);
 
 export {
   Worktravel,
@@ -85,28 +85,28 @@ export {
   TimeEntry,
   AllWorkSpaces,
   UserCredentials,
+  Classification,
+  Drivingtype,
+  Cardtype,
   Status,
   Breakreason,
-  Cardtype,
-  Drivingtype,
-  Classification,
   UserAgreementStatus,
   PaymentMethod,
   Currency,
   UserAgreement,
-  User,
   AditionalInfo,
   Comment,
   Workplace,
+  User,
   Profile,
   UserSettings,
   CostRate,
   UserMemberships,
-  HourlyRate,
   TimeInterval,
   Break,
   WorkspaceSettings,
   Membership,
+  HourlyRate,
   Work,
   WorkCard,
   OwnCar,

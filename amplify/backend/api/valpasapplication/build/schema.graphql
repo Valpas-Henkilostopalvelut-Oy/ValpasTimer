@@ -244,6 +244,7 @@ type Receipt @aws_iam @aws_cognito_user_pools {
   receiptImage: [String]
   tax: Float
   paymentMethod: PaymentMethod
+  otherPayment: String
   comment: String
   isTravel: Boolean
   createdAt: AWSDateTime!
@@ -709,6 +710,7 @@ input ModelReceiptFilterInput {
   receiptImage: ModelStringInput
   tax: ModelFloatInput
   paymentMethod: ModelPaymentMethodInput
+  otherPayment: ModelStringInput
   comment: ModelStringInput
   isTravel: ModelBooleanInput
   and: [ModelReceiptFilterInput]
@@ -729,6 +731,7 @@ input ModelReceiptConditionInput {
   receiptImage: ModelStringInput
   tax: ModelFloatInput
   paymentMethod: ModelPaymentMethodInput
+  otherPayment: ModelStringInput
   comment: ModelStringInput
   isTravel: ModelBooleanInput
   and: [ModelReceiptConditionInput]
@@ -750,6 +753,7 @@ input CreateReceiptInput {
   receiptImage: [String]
   tax: Float
   paymentMethod: PaymentMethod
+  otherPayment: String
   comment: String
   isTravel: Boolean
   _version: Int
@@ -769,6 +773,7 @@ input UpdateReceiptInput {
   receiptImage: [String]
   tax: Float
   paymentMethod: PaymentMethod
+  otherPayment: String
   comment: String
   isTravel: Boolean
   _version: Int
@@ -792,6 +797,7 @@ input ModelSubscriptionReceiptFilterInput {
   receiptImage: ModelSubscriptionStringInput
   tax: ModelSubscriptionFloatInput
   paymentMethod: ModelSubscriptionStringInput
+  otherPayment: ModelSubscriptionStringInput
   comment: ModelSubscriptionStringInput
   isTravel: ModelSubscriptionBooleanInput
   and: [ModelSubscriptionReceiptFilterInput]

@@ -41,11 +41,12 @@ export const updateReceipt = async (oldReceipt, newReceipt, id) => {
       updated.placeOfPurchase = newReceipt.placeOfPurchase;
       updated.receiptNumber = newReceipt.receiptNumber;
       updated.class = newReceipt.class;
-      updated.price = newReceipt.price;
+      updated.price = Number.parseFloat(newReceipt.price);
       updated.currency = newReceipt.currency;
       updated.tax = newReceipt.tax;
       updated.paymentMethod = newReceipt.paymentMethod;
       updated.comment = newReceipt.comment;
+      updated.otherPayment = newReceipt.otherPayment;
     })
   )
     .then((e) => {

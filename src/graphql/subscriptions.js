@@ -143,6 +143,7 @@ export const onCreateReceipt = /* GraphQL */ `
       receiptImage
       tax
       paymentMethod
+      otherPayment
       comment
       isTravel
       createdAt
@@ -172,6 +173,7 @@ export const onUpdateReceipt = /* GraphQL */ `
       receiptImage
       tax
       paymentMethod
+      otherPayment
       comment
       isTravel
       createdAt
@@ -201,6 +203,7 @@ export const onDeleteReceipt = /* GraphQL */ `
       receiptImage
       tax
       paymentMethod
+      otherPayment
       comment
       isTravel
       createdAt

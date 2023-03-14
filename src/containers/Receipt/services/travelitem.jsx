@@ -304,17 +304,28 @@ const RoutesPoint = (props) => {
     setTravel({ ...travel, routePoints: newPoints });
   };
 
+  const disable = travel.routePoints.length > 2 ? false : true;
+
   return (
-    <TableRow>
-      <TableCell>
-        <Typography variant="span">{point.address}</Typography>
-      </TableCell>
-      <TableCell>
-        <IconButton onClick={handleDeletepoint}>
-          <DeleteIcon />
-        </IconButton>
-      </TableCell>
-    </TableRow>
+    <>
+      {distance && (
+        <TableRow>
+          <TableCell colSpan={2}>
+            <Typography variant="span">{distance}</Typography>
+          </TableCell>
+        </TableRow>
+      )}
+      <TableRow>
+        <TableCell>
+          <Typography variant="span">{point.address}</Typography>
+        </TableCell>
+        <TableCell>
+          <IconButton onClick={handleDeletepoint} disabled={disable}>
+            <DeleteIcon />
+          </IconButton>
+        </TableCell>
+      </TableRow>
+    </>
   );
 };
 

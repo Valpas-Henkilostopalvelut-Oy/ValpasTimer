@@ -2,31 +2,14 @@ import { ModelInit, MutableModel } from "@aws-amplify/datastore";
 // @ts-ignore
 import { LazyLoading, LazyLoadingDisabled } from "@aws-amplify/datastore";
 
-export enum Status {
-  COMPLETE = "COMPLETE",
-  ACTIVE = "ACTIVE",
-  INWAITTING = "INWAITTING"
-}
-
-export enum Breakreason {
-  LUNCH = "LUNCH",
-  LUNCH_L = "LUNCH_L",
-  SHORT = "SHORT",
-  LONG = "LONG",
-  GOING = "GOING",
-  ACCIDENT = "ACCIDENT"
-}
-
-export enum Cardtype {
-  ID = "ID",
-  PASSPORT = "PASSPORT",
-  DRIVING = "DRIVING",
-  HYGIENEPASS = "HYGIENEPASS",
-  WORKSAFETYPASS = "WORKSAFETYPASS",
-  FIREWORKCARD = "FIREWORKCARD",
-  ELECTRICALSAFETYPASS = "ELECTRICALSAFETYPASS",
-  VISA = "VISA",
-  OTHER = "OTHER"
+export enum Classification {
+  ADMINISTRATIVESERVICE = "ADMINISTRATIVESERVICE",
+  ITDEVICEANDSOFTWAREEXPENSES = "ITDEVICEANDSOFTWAREEXPENSES",
+  MARKETINGEXPENSES = "MARKETINGEXPENSES",
+  MEETINGEXPENSES = "MEETINGEXPENSES",
+  PREMISESEXPENSES = "PREMISESEXPENSES",
+  TRAVELEXPENSES = "TRAVELEXPENSES",
+  VEHICLEEXPENSES = "VEHICLEEXPENSES"
 }
 
 export enum Drivingtype {
@@ -42,14 +25,31 @@ export enum Drivingtype {
   D1 = "D1"
 }
 
-export enum Classification {
-  ADMINISTRATIVESERVICE = "ADMINISTRATIVESERVICE",
-  ITDEVICEANDSOFTWAREEXPENSES = "ITDEVICEANDSOFTWAREEXPENSES",
-  MARKETINGEXPENSES = "MARKETINGEXPENSES",
-  MEETINGEXPENSES = "MEETINGEXPENSES",
-  PREMISESEXPENSES = "PREMISESEXPENSES",
-  TRAVELEXPENSES = "TRAVELEXPENSES",
-  VEHICLEEXPENSES = "VEHICLEEXPENSES"
+export enum Cardtype {
+  ID = "ID",
+  PASSPORT = "PASSPORT",
+  DRIVING = "DRIVING",
+  HYGIENEPASS = "HYGIENEPASS",
+  WORKSAFETYPASS = "WORKSAFETYPASS",
+  FIREWORKCARD = "FIREWORKCARD",
+  ELECTRICALSAFETYPASS = "ELECTRICALSAFETYPASS",
+  VISA = "VISA",
+  OTHER = "OTHER"
+}
+
+export enum Status {
+  COMPLETE = "COMPLETE",
+  ACTIVE = "ACTIVE",
+  INWAITTING = "INWAITTING"
+}
+
+export enum Breakreason {
+  LUNCH = "LUNCH",
+  LUNCH_L = "LUNCH_L",
+  SHORT = "SHORT",
+  LONG = "LONG",
+  GOING = "GOING",
+  ACCIDENT = "ACCIDENT"
 }
 
 export enum UserAgreementStatus {
@@ -90,24 +90,6 @@ type LazyUserAgreement = {
 export declare type UserAgreement = LazyLoading extends LazyLoadingDisabled ? EagerUserAgreement : LazyUserAgreement
 
 export declare const UserAgreement: (new (init: ModelInit<UserAgreement>) => UserAgreement)
-
-type EagerUser = {
-  readonly userId?: string | null;
-  readonly name?: string | null;
-  readonly family_name?: string | null;
-  readonly icon?: string | null;
-}
-
-type LazyUser = {
-  readonly userId?: string | null;
-  readonly name?: string | null;
-  readonly family_name?: string | null;
-  readonly icon?: string | null;
-}
-
-export declare type User = LazyLoading extends LazyLoadingDisabled ? EagerUser : LazyUser
-
-export declare const User: (new (init: ModelInit<User>) => User)
 
 type EagerAditionalInfo = {
   readonly name?: string | null;
@@ -154,6 +136,24 @@ type LazyWorkplace = {
 export declare type Workplace = LazyLoading extends LazyLoadingDisabled ? EagerWorkplace : LazyWorkplace
 
 export declare const Workplace: (new (init: ModelInit<Workplace>) => Workplace)
+
+type EagerUser = {
+  readonly userId?: string | null;
+  readonly name?: string | null;
+  readonly family_name?: string | null;
+  readonly icon?: string | null;
+}
+
+type LazyUser = {
+  readonly userId?: string | null;
+  readonly name?: string | null;
+  readonly family_name?: string | null;
+  readonly icon?: string | null;
+}
+
+export declare type User = LazyLoading extends LazyLoadingDisabled ? EagerUser : LazyUser
+
+export declare const User: (new (init: ModelInit<User>) => User)
 
 type EagerProfile = {
   readonly iban?: string | null;
@@ -243,20 +243,6 @@ export declare type UserMemberships = LazyLoading extends LazyLoadingDisabled ? 
 
 export declare const UserMemberships: (new (init: ModelInit<UserMemberships>) => UserMemberships)
 
-type EagerHourlyRate = {
-  readonly amount?: number | null;
-  readonly currency?: string | null;
-}
-
-type LazyHourlyRate = {
-  readonly amount?: number | null;
-  readonly currency?: string | null;
-}
-
-export declare type HourlyRate = LazyLoading extends LazyLoadingDisabled ? EagerHourlyRate : LazyHourlyRate
-
-export declare const HourlyRate: (new (init: ModelInit<HourlyRate>) => HourlyRate)
-
 type EagerTimeInterval = {
   readonly end?: string | null;
   readonly start?: string | null;
@@ -322,6 +308,20 @@ type LazyMembership = {
 export declare type Membership = LazyLoading extends LazyLoadingDisabled ? EagerMembership : LazyMembership
 
 export declare const Membership: (new (init: ModelInit<Membership>) => Membership)
+
+type EagerHourlyRate = {
+  readonly amount?: number | null;
+  readonly currency?: string | null;
+}
+
+type LazyHourlyRate = {
+  readonly amount?: number | null;
+  readonly currency?: string | null;
+}
+
+export declare type HourlyRate = LazyLoading extends LazyLoadingDisabled ? EagerHourlyRate : LazyHourlyRate
+
+export declare const HourlyRate: (new (init: ModelInit<HourlyRate>) => HourlyRate)
 
 type EagerWork = {
   readonly name?: string | null;
@@ -509,6 +509,7 @@ type EagerReceipt = {
   readonly receiptImage?: (string | null)[] | null;
   readonly tax?: number | null;
   readonly paymentMethod?: PaymentMethod | keyof typeof PaymentMethod | null;
+  readonly otherPayment?: string | null;
   readonly comment?: string | null;
   readonly isTravel?: boolean | null;
   readonly createdAt?: string | null;
@@ -529,6 +530,7 @@ type LazyReceipt = {
   readonly receiptImage?: (string | null)[] | null;
   readonly tax?: number | null;
   readonly paymentMethod?: PaymentMethod | keyof typeof PaymentMethod | null;
+  readonly otherPayment?: string | null;
   readonly comment?: string | null;
   readonly isTravel?: boolean | null;
   readonly createdAt?: string | null;

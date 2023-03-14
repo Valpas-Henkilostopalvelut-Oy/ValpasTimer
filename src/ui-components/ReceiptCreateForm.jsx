@@ -36,9 +36,16 @@ function ArrayField({
   defaultFieldValue,
   lengthLimit,
   getBadgeText,
+  errorMessage,
 }) {
   const labelElement = <Text>{label}</Text>;
-  const { tokens } = useTheme();
+  const {
+    tokens: {
+      components: {
+        fieldmessages: { error: errorStyles },
+      },
+    },
+  } = useTheme();
   const [selectedBadgeIndex, setSelectedBadgeIndex] = React.useState();
   const [isEditing, setIsEditing] = React.useState();
   React.useEffect(() => {
@@ -141,6 +148,11 @@ function ArrayField({
           >
             Add item
           </Button>
+          {errorMessage && hasError && (
+            <Text color={errorStyles.color} fontSize={errorStyles.fontSize}>
+              {errorMessage}
+            </Text>
+          )}
         </>
       ) : (
         <Flex justifyContent="flex-end">
@@ -159,7 +171,6 @@ function ArrayField({
           <Button
             size="small"
             variation="link"
-            color={tokens.colors.brand.primary[80]}
             isDisabled={hasError}
             onClick={addItem}
           >
@@ -195,6 +206,7 @@ export default function ReceiptCreateForm(props) {
     receiptImage: [],
     tax: "",
     paymentMethod: undefined,
+    otherPayment: "",
     comment: "",
     isTravel: false,
   };
@@ -220,6 +232,9 @@ export default function ReceiptCreateForm(props) {
   const [paymentMethod, setPaymentMethod] = React.useState(
     initialValues.paymentMethod
   );
+  const [otherPayment, setOtherPayment] = React.useState(
+    initialValues.otherPayment
+  );
   const [comment, setComment] = React.useState(initialValues.comment);
   const [isTravel, setIsTravel] = React.useState(initialValues.isTravel);
   const [errors, setErrors] = React.useState({});
@@ -237,6 +252,7 @@ export default function ReceiptCreateForm(props) {
     setCurrentReceiptImageValue("");
     setTax(initialValues.tax);
     setPaymentMethod(initialValues.paymentMethod);
+    setOtherPayment(initialValues.otherPayment);
     setComment(initialValues.comment);
     setIsTravel(initialValues.isTravel);
     setErrors({});
@@ -257,6 +273,7 @@ export default function ReceiptCreateForm(props) {
     receiptImage: [],
     tax: [],
     paymentMethod: [],
+    otherPayment: [],
     comment: [],
     isTravel: [],
   };
@@ -265,9 +282,10 @@ export default function ReceiptCreateForm(props) {
     currentValue,
     getDisplayValue
   ) => {
-    const value = getDisplayValue
-      ? getDisplayValue(currentValue)
-      : currentValue;
+    const value =
+      currentValue && getDisplayValue
+        ? getDisplayValue(currentValue)
+        : currentValue;
     let validationResponse = validateField(value, validations[fieldName]);
     const customValidator = fetchByPath(onValidate, fieldName);
     if (customValidator) {
@@ -285,7 +303,7 @@ export default function ReceiptCreateForm(props) {
       minute: "2-digit",
       calendar: "iso8601",
       numberingSystem: "latn",
-      hour12: false,
+      hourCycle: "h23",
     });
     const parts = df.formatToParts(date).reduce((acc, part) => {
       acc[part.type] = part.value;
@@ -314,6 +332,7 @@ export default function ReceiptCreateForm(props) {
           receiptImage,
           tax,
           paymentMethod,
+          otherPayment,
           comment,
           isTravel,
         };
@@ -382,6 +401,7 @@ export default function ReceiptCreateForm(props) {
               receiptImage,
               tax,
               paymentMethod,
+              otherPayment,
               comment,
               isTravel,
             };
@@ -421,6 +441,7 @@ export default function ReceiptCreateForm(props) {
               receiptImage,
               tax,
               paymentMethod,
+              otherPayment,
               comment,
               isTravel,
             };
@@ -460,6 +481,7 @@ export default function ReceiptCreateForm(props) {
               receiptImage,
               tax,
               paymentMethod,
+              otherPayment,
               comment,
               isTravel,
             };
@@ -499,6 +521,7 @@ export default function ReceiptCreateForm(props) {
               receiptImage,
               tax,
               paymentMethod,
+              otherPayment,
               comment,
               isTravel,
             };
@@ -536,6 +559,7 @@ export default function ReceiptCreateForm(props) {
               receiptImage,
               tax,
               paymentMethod,
+              otherPayment,
               comment,
               isTravel,
             };
@@ -573,6 +597,7 @@ export default function ReceiptCreateForm(props) {
               receiptImage,
               tax,
               paymentMethod,
+              otherPayment,
               comment,
               isTravel,
             };
@@ -610,6 +635,7 @@ export default function ReceiptCreateForm(props) {
               receiptImage,
               tax,
               paymentMethod,
+              otherPayment,
               comment,
               isTravel,
             };
@@ -687,6 +713,7 @@ export default function ReceiptCreateForm(props) {
               receiptImage,
               tax,
               paymentMethod,
+              otherPayment,
               comment,
               isTravel,
             };
@@ -724,6 +751,7 @@ export default function ReceiptCreateForm(props) {
               receiptImage,
               tax,
               paymentMethod,
+              otherPayment,
               comment,
               isTravel,
             };
@@ -788,6 +816,7 @@ export default function ReceiptCreateForm(props) {
               receiptImage: values,
               tax,
               paymentMethod,
+              otherPayment,
               comment,
               isTravel,
             };
@@ -800,7 +829,8 @@ export default function ReceiptCreateForm(props) {
         currentFieldValue={currentReceiptImageValue}
         label={"Receipt image"}
         items={receiptImage}
-        hasError={errors.receiptImage?.hasError}
+        hasError={errors?.receiptImage?.hasError}
+        errorMessage={errors?.receiptImage?.errorMessage}
         setFieldValue={setCurrentReceiptImageValue}
         inputFieldRef={receiptImageRef}
         defaultFieldValue={""}
@@ -852,6 +882,7 @@ export default function ReceiptCreateForm(props) {
               receiptImage,
               tax: value,
               paymentMethod,
+              otherPayment,
               comment,
               isTravel,
             };
@@ -889,6 +920,7 @@ export default function ReceiptCreateForm(props) {
               receiptImage,
               tax,
               paymentMethod: value,
+              otherPayment,
               comment,
               isTravel,
             };
@@ -932,6 +964,44 @@ export default function ReceiptCreateForm(props) {
         ></option>
       </SelectField>
       <TextField
+        label="Other payment"
+        isRequired={false}
+        isReadOnly={false}
+        value={otherPayment}
+        onChange={(e) => {
+          let { value } = e.target;
+          if (onChange) {
+            const modelFields = {
+              userId,
+              created,
+              updated,
+              dateOfPurchase,
+              placeOfPurchase,
+              receiptNumber,
+              class: class1,
+              price,
+              currency,
+              receiptImage,
+              tax,
+              paymentMethod,
+              otherPayment: value,
+              comment,
+              isTravel,
+            };
+            const result = onChange(modelFields);
+            value = result?.otherPayment ?? value;
+          }
+          if (errors.otherPayment?.hasError) {
+            runValidationTasks("otherPayment", value);
+          }
+          setOtherPayment(value);
+        }}
+        onBlur={() => runValidationTasks("otherPayment", otherPayment)}
+        errorMessage={errors.otherPayment?.errorMessage}
+        hasError={errors.otherPayment?.hasError}
+        {...getOverrideProps(overrides, "otherPayment")}
+      ></TextField>
+      <TextField
         label="Comment"
         isRequired={false}
         isReadOnly={false}
@@ -952,6 +1022,7 @@ export default function ReceiptCreateForm(props) {
               receiptImage,
               tax,
               paymentMethod,
+              otherPayment,
               comment: value,
               isTravel,
             };
@@ -989,6 +1060,7 @@ export default function ReceiptCreateForm(props) {
               receiptImage,
               tax,
               paymentMethod,
+              otherPayment,
               comment,
               isTravel: value,
             };

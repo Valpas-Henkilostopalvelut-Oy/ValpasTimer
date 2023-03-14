@@ -26,6 +26,7 @@ export declare type ReceiptUpdateFormInputValues = {
     receiptImage?: string[];
     tax?: number;
     paymentMethod?: string;
+    otherPayment?: string;
     comment?: string;
     isTravel?: boolean;
 };
@@ -42,6 +43,7 @@ export declare type ReceiptUpdateFormValidationValues = {
     receiptImage?: ValidationFunction<string>;
     tax?: ValidationFunction<number>;
     paymentMethod?: ValidationFunction<string>;
+    otherPayment?: ValidationFunction<string>;
     comment?: ValidationFunction<string>;
     isTravel?: ValidationFunction<boolean>;
 };
@@ -60,6 +62,7 @@ export declare type ReceiptUpdateFormOverridesProps = {
     receiptImage?: PrimitiveOverrideProps<TextFieldProps>;
     tax?: PrimitiveOverrideProps<TextFieldProps>;
     paymentMethod?: PrimitiveOverrideProps<SelectFieldProps>;
+    otherPayment?: PrimitiveOverrideProps<TextFieldProps>;
     comment?: PrimitiveOverrideProps<TextFieldProps>;
     isTravel?: PrimitiveOverrideProps<SwitchFieldProps>;
 } & EscapeHatchProps;

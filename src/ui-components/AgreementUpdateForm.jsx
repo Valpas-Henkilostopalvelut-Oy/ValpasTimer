@@ -34,9 +34,16 @@ function ArrayField({
   defaultFieldValue,
   lengthLimit,
   getBadgeText,
+  errorMessage,
 }) {
   const labelElement = <Text>{label}</Text>;
-  const { tokens } = useTheme();
+  const {
+    tokens: {
+      components: {
+        fieldmessages: { error: errorStyles },
+      },
+    },
+  } = useTheme();
   const [selectedBadgeIndex, setSelectedBadgeIndex] = React.useState();
   const [isEditing, setIsEditing] = React.useState();
   React.useEffect(() => {
@@ -139,6 +146,11 @@ function ArrayField({
           >
             Add item
           </Button>
+          {errorMessage && hasError && (
+            <Text color={errorStyles.color} fontSize={errorStyles.fontSize}>
+              {errorMessage}
+            </Text>
+          )}
         </>
       ) : (
         <Flex justifyContent="flex-end">
@@ -157,7 +169,6 @@ function ArrayField({
           <Button
             size="small"
             variation="link"
-            color={tokens.colors.brand.primary[80]}
             isDisabled={hasError}
             onClick={addItem}
           >
@@ -244,9 +255,10 @@ export default function AgreementUpdateForm(props) {
     currentValue,
     getDisplayValue
   ) => {
-    const value = getDisplayValue
-      ? getDisplayValue(currentValue)
-      : currentValue;
+    const value =
+      currentValue && getDisplayValue
+        ? getDisplayValue(currentValue)
+        : currentValue;
     let validationResponse = validateField(value, validations[fieldName]);
     const customValidator = fetchByPath(onValidate, fieldName);
     if (customValidator) {
@@ -264,7 +276,7 @@ export default function AgreementUpdateForm(props) {
       minute: "2-digit",
       calendar: "iso8601",
       numberingSystem: "latn",
-      hour12: false,
+      hourCycle: "h23",
     });
     const parts = df.formatToParts(date).reduce((acc, part) => {
       acc[part.type] = part.value;
@@ -383,7 +395,8 @@ export default function AgreementUpdateForm(props) {
         currentFieldValue={currentWorkersValue}
         label={"Workers"}
         items={workers}
-        hasError={errors.workers?.hasError}
+        hasError={errors?.workers?.hasError}
+        errorMessage={errors?.workers?.errorMessage}
         setFieldValue={setCurrentWorkersValue}
         inputFieldRef={workersRef}
         defaultFieldValue={""}
@@ -429,7 +442,8 @@ export default function AgreementUpdateForm(props) {
         currentFieldValue={currentClientValue}
         label={"Client"}
         items={client}
-        hasError={errors.client?.hasError}
+        hasError={errors?.client?.hasError}
+        errorMessage={errors?.client?.errorMessage}
         setFieldValue={setCurrentClientValue}
         inputFieldRef={clientRef}
         defaultFieldValue={""}
@@ -535,7 +549,8 @@ export default function AgreementUpdateForm(props) {
         currentFieldValue={currentWorkspaceIdValue}
         label={"Workspace id"}
         items={workspaceId}
-        hasError={errors.workspaceId?.hasError}
+        hasError={errors?.workspaceId?.hasError}
+        errorMessage={errors?.workspaceId?.errorMessage}
         setFieldValue={setCurrentWorkspaceIdValue}
         inputFieldRef={workspaceIdRef}
         defaultFieldValue={""}

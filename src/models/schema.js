@@ -258,6 +258,13 @@ export const schema = {
                     "isRequired": false,
                     "attributes": []
                 },
+                "otherPayment": {
+                    "name": "otherPayment",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
                 "comment": {
                     "name": "comment",
                     "isArray": false,
@@ -1159,37 +1166,16 @@ export const schema = {
         }
     },
     "enums": {
-        "Status": {
-            "name": "Status",
+        "Classification": {
+            "name": "Classification",
             "values": [
-                "COMPLETE",
-                "ACTIVE",
-                "INWAITTING"
-            ]
-        },
-        "Breakreason": {
-            "name": "Breakreason",
-            "values": [
-                "LUNCH",
-                "LUNCH_L",
-                "SHORT",
-                "LONG",
-                "GOING",
-                "ACCIDENT"
-            ]
-        },
-        "Cardtype": {
-            "name": "Cardtype",
-            "values": [
-                "ID",
-                "PASSPORT",
-                "DRIVING",
-                "HYGIENEPASS",
-                "WORKSAFETYPASS",
-                "FIREWORKCARD",
-                "ELECTRICALSAFETYPASS",
-                "VISA",
-                "OTHER"
+                "ADMINISTRATIVESERVICE",
+                "ITDEVICEANDSOFTWAREEXPENSES",
+                "MARKETINGEXPENSES",
+                "MEETINGEXPENSES",
+                "PREMISESEXPENSES",
+                "TRAVELEXPENSES",
+                "VEHICLEEXPENSES"
             ]
         },
         "Drivingtype": {
@@ -1207,16 +1193,37 @@ export const schema = {
                 "D1"
             ]
         },
-        "Classification": {
-            "name": "Classification",
+        "Cardtype": {
+            "name": "Cardtype",
             "values": [
-                "ADMINISTRATIVESERVICE",
-                "ITDEVICEANDSOFTWAREEXPENSES",
-                "MARKETINGEXPENSES",
-                "MEETINGEXPENSES",
-                "PREMISESEXPENSES",
-                "TRAVELEXPENSES",
-                "VEHICLEEXPENSES"
+                "ID",
+                "PASSPORT",
+                "DRIVING",
+                "HYGIENEPASS",
+                "WORKSAFETYPASS",
+                "FIREWORKCARD",
+                "ELECTRICALSAFETYPASS",
+                "VISA",
+                "OTHER"
+            ]
+        },
+        "Status": {
+            "name": "Status",
+            "values": [
+                "COMPLETE",
+                "ACTIVE",
+                "INWAITTING"
+            ]
+        },
+        "Breakreason": {
+            "name": "Breakreason",
+            "values": [
+                "LUNCH",
+                "LUNCH_L",
+                "SHORT",
+                "LONG",
+                "GOING",
+                "ACCIDENT"
             ]
         },
         "UserAgreementStatus": {
@@ -1275,39 +1282,6 @@ export const schema = {
                     "type": {
                         "nonModel": "User"
                     },
-                    "isRequired": false,
-                    "attributes": []
-                }
-            }
-        },
-        "User": {
-            "name": "User",
-            "fields": {
-                "userId": {
-                    "name": "userId",
-                    "isArray": false,
-                    "type": "ID",
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "name": {
-                    "name": "name",
-                    "isArray": false,
-                    "type": "String",
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "family_name": {
-                    "name": "family_name",
-                    "isArray": false,
-                    "type": "String",
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "icon": {
-                    "name": "icon",
-                    "isArray": false,
-                    "type": "AWSURL",
                     "isRequired": false,
                     "attributes": []
                 }
@@ -1381,6 +1355,39 @@ export const schema = {
                     "name": "name",
                     "isArray": false,
                     "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                }
+            }
+        },
+        "User": {
+            "name": "User",
+            "fields": {
+                "userId": {
+                    "name": "userId",
+                    "isArray": false,
+                    "type": "ID",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "name": {
+                    "name": "name",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "family_name": {
+                    "name": "family_name",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "icon": {
+                    "name": "icon",
+                    "isArray": false,
+                    "type": "AWSURL",
                     "isRequired": false,
                     "attributes": []
                 }
@@ -1578,25 +1585,6 @@ export const schema = {
                 }
             }
         },
-        "HourlyRate": {
-            "name": "HourlyRate",
-            "fields": {
-                "amount": {
-                    "name": "amount",
-                    "isArray": false,
-                    "type": "Int",
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "currency": {
-                    "name": "currency",
-                    "isArray": false,
-                    "type": "String",
-                    "isRequired": false,
-                    "attributes": []
-                }
-            }
-        },
         "TimeInterval": {
             "name": "TimeInterval",
             "fields": {
@@ -1705,6 +1693,25 @@ export const schema = {
                 },
                 "targetId": {
                     "name": "targetId",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                }
+            }
+        },
+        "HourlyRate": {
+            "name": "HourlyRate",
+            "fields": {
+                "amount": {
+                    "name": "amount",
+                    "isArray": false,
+                    "type": "Int",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "currency": {
+                    "name": "currency",
                     "isArray": false,
                     "type": "String",
                     "isRequired": false,
@@ -1942,6 +1949,6 @@ export const schema = {
             }
         }
     },
-    "codegenVersion": "3.3.5",
-    "version": "afcccd123e9a4a8eae7dfc65744f9be2"
+    "codegenVersion": "3.3.6",
+    "version": "33cb614cfe72e29990a4ac30550f5b99"
 };

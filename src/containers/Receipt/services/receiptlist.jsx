@@ -69,6 +69,8 @@ const Items = (props) => {
   const date = new Date(receipt.dateOfPurchase).toLocaleDateString("fi-FI");
   const [open, setOpen] = useState(false);
   const handleClick = () => setOpen(!open);
+  const metod = metodlist().find((p) => p.value === receipt.paymentMethod).label;
+  const other = receipt.paymentMethod === "OTHER" ? `(${receipt.otherPayment})` : "";
 
   return (
     <Box
@@ -100,7 +102,9 @@ const Items = (props) => {
         </Grid>
 
         <Grid item xs={6} md={2}>
-          <Typography variant="p">{metodlist().find((p) => p.value === receipt.paymentMethod).label}</Typography>
+          <Typography variant="p">
+            {metod} {other}
+          </Typography>
         </Grid>
 
         <Grid item xs={12} md={1}>
