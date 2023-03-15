@@ -46,7 +46,7 @@ Hub.listen("datastore", async (data) => {
   const { payload: event } = data;
   switch (event.event) {
     case "ready":
-      console.log("ready");
+      console.log(event.event);
       createUser();
       break;
     default:

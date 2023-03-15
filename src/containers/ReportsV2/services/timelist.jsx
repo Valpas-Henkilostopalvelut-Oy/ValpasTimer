@@ -7,6 +7,20 @@ import React, { useState } from "react";
 import { weekstatus } from "./status.jsx";
 import { Weekconfirm, Daymorebutton, Timeshiftmorebutton } from "./buttons.jsx";
 import { STime, ETime, Time, SDate, Totalweek, Totalday, Totaltimeshift, Totalbreak } from "./times.jsx";
+import { useAppContext } from "../../../services/contextLib.jsx";
+import { Breakreason } from "../../../models/index.js";
+
+const breaksArr = () => {
+  const lang = useAppContext().langValue.service.breaks;
+  return [
+    { id: Breakreason.LUNCH, name: lang.lunch },
+    { id: Breakreason.LUNCH_L, name: lang.lunch_l },
+    { id: Breakreason.SHORT, name: lang.short },
+    { id: Breakreason.LONG, name: lang.long },
+    { id: Breakreason.GOING, name: lang.going },
+    { id: Breakreason.ACCIDENT, name: lang.accident },
+  ];
+};
 
 const Issent = ({ isSent }) => {
   return (
@@ -184,6 +198,20 @@ const Rowtimeshift = ({ item, isEmpty }) => {
         </Grid>
       </Box>
 
+      <Box hidden={!item.description} sx={{ borderTop: "1px solid", borderColor: "#e6e6ef" }}>
+        <Grid container sx={{ padding: "20px 40px" }} alignItems="center">
+          <Grid item md={1} align="left" />
+
+          <Grid item md={10} align="left">
+            <Typography variant="p" fontWeight="bold">
+              {item.description}
+            </Typography>
+          </Grid>
+
+          <Grid item md={1} align="right" />
+        </Grid>
+      </Box>
+
       {breaks.map((item) => {
         return <Rowbreaks item={item} isEmpty={isEmpty} key={item.id} />;
       })}
@@ -192,6 +220,7 @@ const Rowtimeshift = ({ item, isEmpty }) => {
 };
 
 const Rowbreaks = ({ item, isEmpty }) => {
+  let reasone = breaksArr().find((breaks) => breaks.id === item.reason).name;
   return (
     <Box sx={{ borderTop: "1px solid", borderColor: "#e6e6ef" }}>
       <Grid container spacing={2} sx={{ padding: "20px 40px" }} alignItems="center">
@@ -200,7 +229,7 @@ const Rowbreaks = ({ item, isEmpty }) => {
         <Grid item md={2} align="left" />
 
         <Grid item md={3} align="center">
-          <Typography variant="p">{item.reason}</Typography>
+          <Typography variant="p">{reasone}</Typography>
         </Grid>
 
         <Grid item md={3} align="center">
@@ -211,7 +240,7 @@ const Rowbreaks = ({ item, isEmpty }) => {
           <Totalbreak item={item} />
         </Grid>
 
-        <Grid item md={1} align="right"></Grid>
+        <Grid item md={1} align="right" />
       </Grid>
     </Box>
   );
