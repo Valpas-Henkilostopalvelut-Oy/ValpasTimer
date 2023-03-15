@@ -1,24 +1,12 @@
 import React from "react";
 import { DataStore } from "aws-amplify";
 import { TimeEntry } from "../../../models/index.js";
-import {
-  TextField,
-  Typography,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  Button,
-  Box,
-  useTheme,
-  InputBase,
-} from "@mui/material";
+import { Typography, InputBase } from "@mui/material";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { MobileDatePicker } from "@mui/x-date-pickers/MobileDatePicker";
 import fiLocale from "date-fns/locale/fi";
 import { PropTypes } from "prop-types";
-import { CustomTableCell } from "./tablecell.jsx";
 
 const updateDate = async ({ value, data }) => {
   let year = new Date(value).getFullYear();
@@ -45,7 +33,7 @@ export const EditDate = ({ data, lang = { date: "Date" } }) => {
     <Typography variant="p">{sentDate}</Typography>
   ) : (
     <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={fiLocale}>
-      <DatePicker
+      <MobileDatePicker
         disabled={isSent}
         disableFuture
         disableMaskedInput
@@ -53,9 +41,8 @@ export const EditDate = ({ data, lang = { date: "Date" } }) => {
         value={value}
         onChange={setValue}
         onAccept={(e) => updateDate({ value: e, data: data })}
-        renderInput={(params) => {
-          const { InputProps, ...otherProps } = params;
-          return <InputBase {...otherProps} fullWidth />;
+        slots={{
+          textField: InputBase,
         }}
       />
     </LocalizationProvider>

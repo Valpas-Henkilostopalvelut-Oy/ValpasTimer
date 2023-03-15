@@ -2,20 +2,19 @@
 import React, { useEffect, useState } from "react";
 import { Auth, DataStore } from "aws-amplify";
 import { TimeEntry } from "../../../../models/index.js";
-import { TextField, Typography, Button, Box, InputBase } from "@mui/material";
+import { Typography, Button, Box } from "@mui/material";
 
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
-import { DatePicker, TimePicker, LocalizationProvider } from "@mui/x-date-pickers";
+import { MobileDatePicker, TimeField, LocalizationProvider } from "@mui/x-date-pickers";
 import {} from "@mui/x-date-pickers";
 import fi from "date-fns/locale/fi";
-import { timeMaker } from "../../../../services/time.jsx";
 import { PropTypes } from "prop-types";
 import { SnackSuccess } from "../../../../components/Alert/index.jsx";
 
 export const Editdate = ({ date = null, setDate, sTime, eTime, setSTime, setETime, lang = { date: "Date" } }) => {
   return (
     <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={fi}>
-      <DatePicker
+      <MobileDatePicker
         disableMaskedInput
         disableFuture
         label={lang.date}
@@ -23,7 +22,6 @@ export const Editdate = ({ date = null, setDate, sTime, eTime, setSTime, setETim
         onChange={(newValue) => {
           setDate(newValue);
         }}
-        renderInput={(params) => <TextField variant="outlined" {...params} />}
       />
     </LocalizationProvider>
   );
@@ -36,29 +34,17 @@ const isInvalid = (timeStart, timeEnd, minRage, maxRange) => {
   return false;
 };
 
-export const Edittime = ({
-  date,
-  time,
-  time2,
-  setTime,
-  label = "Time",
-  maxTime = null,
-  minTime = null,
-  error,
-  setError,
-}) => {
+export const Edittime = ({ time, setTime, label = "Time", setError }) => {
   return (
     <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={fi}>
-      <TimePicker
+      <TimeField
         label={label}
         value={time}
-        disableOpenPicker
         onChange={(newValue) => {
           setTime(newValue);
           if (!(isNaN(newValue) || newValue === null)) setError(false);
         }}
         onError={(error) => setError(isNaN(error) || error === null)}
-        renderInput={(params) => <TextField variant="outlined" {...params} />}
       />
     </LocalizationProvider>
   );
@@ -114,7 +100,7 @@ export const Totaltime = ({ sTime = null, eTime = null }) => {
   );
 };
 
-const createTimeentry = async ({ description = "", sel = "", sTime, eTime, workit, date = new Date() }) => {
+const createTimeentry = async (description = "", sel = "", sTime, eTime, workit, date = new Date()) => {
   sTime = new Date(date.getFullYear(), date.getMonth(), date.getDate(), sTime.getHours(), sTime.getMinutes(), 0);
   eTime = new Date(date.getFullYear(), date.getMonth(), date.getDate(), eTime.getHours(), eTime.getMinutes(), 0);
   return (
@@ -172,9 +158,9 @@ export const Createtimeentry = ({
         fullWidth
         variant="contained"
         color="primary"
-        disabled={error}
-        onClick={() => {
-          createTimeentry({ description, sel, sTime, eTime, workit }).then(() => {
+        disabled={error || sel === ""}
+        onClick={async () => {
+          await createTimeentry(description, sel, sTime, eTime, workit, date).then(() => {
             setDescription("");
             setETime(new Date());
             setSTime(new Date());
