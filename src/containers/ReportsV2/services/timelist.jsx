@@ -25,14 +25,14 @@ const breaksArr = () => {
 const Issent = ({ isSent }) => {
   return (
     <>
-      <IconButton disabled hidden={!isSent}>
+      <Box disabled hidden={!isSent}>
         <Typography variant="p">Lähetetty: </Typography>
         <TaskAltIcon sx={{ color: "green" }} />
-      </IconButton>
-      <IconButton disabled hidden={isSent}>
+      </Box>
+      <Box hidden={isSent}>
         <Typography variant="p">Lähetetty: </Typography>
         <ClearIcon sx={{ color: "red" }} />
-      </IconButton>
+      </Box>
     </>
   );
 };
@@ -40,14 +40,14 @@ const Issent = ({ isSent }) => {
 const Isconfirmed = ({ isConfirmed }) => {
   return (
     <>
-      <IconButton disabled hidden={!isConfirmed}>
+      <Box disabled hidden={!isConfirmed}>
         <Typography variant="p">Vahvistettu: </Typography>
         <TaskAltIcon sx={{ color: "green" }} />
-      </IconButton>
-      <IconButton disabled hidden={isConfirmed}>
+      </Box>
+      <Box disabled hidden={isConfirmed}>
         <Typography variant="p">Vahvistettu: </Typography>
         <ClearIcon sx={{ color: "red" }} />
-      </IconButton>
+      </Box>
     </>
   );
 };
@@ -62,31 +62,45 @@ export const Rowweek = ({ timeList, isEmpty, selected, data }) => {
       <Grid item xs={12}>
         <Box sx={{ border: "3px solid", borderColor: "default.orange", padding: "20px 40px" }}>
           <Grid container spacing={2} alignItems="center">
-            <Grid item md={1} sx={{ [theme.breakpoints.down("md")]: { display: "none" } }} />
+            <Grid item sm={1} />
 
-            <Grid item md={2} xs={6} align="center">
+            <Grid item sm={2} xs={12}>
               <Typography variant="p">Viikko {timeList.week}</Typography>
             </Grid>
 
-            <Grid item md={3} xs={6} align="center">
+            <Grid
+              item
+              sm={3}
+              xs={12}
+              sx={{
+                [theme.breakpoints.up("sm")]: { textAlign: "center" },
+              }}
+            >
               <Typography variant="p">{timeList.period}</Typography>
             </Grid>
 
-            <Grid item md={1.5} xs={3} align="right">
+            <Grid item sm={1.5} xs={6} align="left">
               <Issent isSent={status.isSent} />
             </Grid>
 
-            <Grid item md={1.5} xs={3} align="left">
+            <Grid item sm={1.5} xs={6} align="left">
               <Isconfirmed isConfirmed={status.isConfirmed} />
             </Grid>
 
-            <Grid item md={2} xs={3} align="right">
+            <Grid
+              item
+              sm={2}
+              xs={6}
+              sx={{
+                [theme.breakpoints.up("sm")]: { textAlign: "right" },
+              }}
+            >
               <Typography variant="p">
                 <Totalweek timeList={timeList} />
               </Typography>
             </Grid>
 
-            <Grid item md={1} xs={3} align="right">
+            <Grid item sm={1} xs={6} align="right">
               <Weekconfirm week={timeList} isEmpty={isEmpty} />
             </Grid>
           </Grid>
@@ -107,38 +121,68 @@ export const Rowweek = ({ timeList, isEmpty, selected, data }) => {
 const Rowday = ({ item, isEmpty, selected, data }) => {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(!open);
+  const theme = useTheme();
   let currentworkplace = data.works.find((workplace) => workplace.id === selected.work).name;
 
   return (
     <Box sx={{ border: "1px solid", borderColor: "#e6e6ef" }}>
       <Grid container spacing={2} sx={{ padding: "20px 40px" }} alignItems="center">
-        <Grid item md={1} align="left">
-          <IconButton onClick={handleOpen} sx={{ cursor: "pointer" }} aria-label="expand row" size="mdall">
+        <Grid item sm={1} xs={6}>
+          <IconButton onClick={handleOpen} sx={{ cursor: "pointer" }} aria-label="expand row" size="sdall">
             {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
           </IconButton>
         </Grid>
 
-        <Grid item md={2} align="left">
+        <Grid
+          item
+          sm={2}
+          xs={6}
+          sx={{
+            [theme.breakpoints.down("sm")]: { textAlign: "right" },
+            [theme.breakpoints.up("sm")]: { textAlign: "left" },
+          }}
+        >
           <Typography variant="p" fontWeight="bold">
             {item.date}
           </Typography>
         </Grid>
 
-        <Grid item md={3} align="center">
+        <Grid
+          item
+          sm={3}
+          xs={12}
+          sx={{
+            [theme.breakpoints.up("sm")]: { textAlign: "center" },
+          }}
+        >
           <Typography variant="p" fontWeight="bold">
             {currentworkplace}
           </Typography>
         </Grid>
 
-        <Grid item md={3} align="center">
+        <Grid
+          item
+          sm={3}
+          xs={12}
+          sx={{
+            [theme.breakpoints.up("sm")]: { textAlign: "center" },
+          }}
+        >
           <STime date={item} fontWeight="bold" /> - <ETime date={item} fontWeight="bold" />
         </Grid>
 
-        <Grid item md={2} align="right">
+        <Grid
+          item
+          sm={2}
+          xs={6}
+          sx={{
+            [theme.breakpoints.up("sm")]: { textAlign: "right" },
+          }}
+        >
           <Totalday item={item} fontWeight="bold" />
         </Grid>
 
-        <Grid item md={1} align="right">
+        <Grid item sm={1} xs={6} align={"right"}>
           <Daymorebutton day={item} isEmpty={isEmpty} />
         </Grid>
       </Grid>
@@ -169,37 +213,38 @@ const Rowtimeshift = ({ item, isEmpty }) => {
   item = item.timeshift;
   let breaks = item.break ? item.break : [];
   let work = item.work ? item.work : { name: "Ei valintaa" };
+  const theme = useTheme();
 
   return (
     <>
-      <Box sx={{ borderTop: "1px solid", borderColor: "#e6e6ef" }}>
-        <Grid container spacing={2} sx={{ padding: "20px 40px" }} alignItems="center">
-          <Grid item md={1} align="left" />
+      <Box sx={{ borderTop: "1px solid", borderColor: "#e6e6ef", padding: "20px 40px" }}>
+        <Grid container spacing={2} alignItems="center">
+          <Grid item sm={1} align="left" xs={12} />
 
-          <Grid item md={2} align="left">
+          <Grid item sm={2} xs={12}>
             <SDate date={item.timeInterval.start} />
           </Grid>
 
-          <Grid item md={3} align="center">
+          <Grid item sm={3} xs={12} sx={{ [theme.breakpoints.up("sm")]: { textAlign: "center" } }}>
             <Typography variant="p">{work.name}</Typography>
           </Grid>
 
-          <Grid item md={3} align="center">
+          <Grid item sm={3} xs={12} sx={{ [theme.breakpoints.up("sm")]: { textAlign: "center" } }}>
             <Time time={item.timeInterval.start} /> - <Time time={item.timeInterval.end} />
           </Grid>
 
-          <Grid item md={2} align="right">
+          <Grid item sm={2} xs={6} sx={{ [theme.breakpoints.up("sm")]: { textAlign: "right" } }}>
             <Totaltimeshift item={item} />
           </Grid>
 
-          <Grid item md={1} align="right">
+          <Grid item sm={1} xs={6} align={"right"}>
             <Timeshiftmorebutton timeshift={item} isEmpty={isEmpty} />
           </Grid>
         </Grid>
       </Box>
 
-      <Box hidden={!item.description} sx={{ borderTop: "1px solid", borderColor: "#e6e6ef" }}>
-        <Grid container sx={{ padding: "20px 40px" }} alignItems="center">
+      <Box hidden={!item.description} sx={{ borderTop: "1px solid", borderColor: "#e6e6ef", padding: "20px 40px" }}>
+        <Grid container alignItems="center">
           <Grid item md={1} align="left" />
 
           <Grid item md={10} align="left">
@@ -221,26 +266,49 @@ const Rowtimeshift = ({ item, isEmpty }) => {
 
 const Rowbreaks = ({ item, isEmpty }) => {
   let reasone = breaksArr().find((breaks) => breaks.id === item.reason).name;
+  const theme = useTheme();
+
   return (
     <Box sx={{ borderTop: "1px solid", borderColor: "#e6e6ef" }}>
       <Grid container spacing={2} sx={{ padding: "20px 40px" }} alignItems="center">
-        <Grid item md={1} align="left" />
+        <Grid item md={1} align="left" xs={12} />
 
-        <Grid item md={2} align="left" />
+        <Grid item md={2} align="left" xs={12} />
 
-        <Grid item md={3} align="center">
+        <Grid
+          item
+          md={3}
+          xs={12}
+          sx={{
+            [theme.breakpoints.up("sm")]: { textAlign: "center" },
+          }}
+        >
           <Typography variant="p">{reasone}</Typography>
         </Grid>
 
-        <Grid item md={3} align="center">
+        <Grid
+          item
+          md={3}
+          xs={12}
+          sx={{
+            [theme.breakpoints.up("sm")]: { textAlign: "center" },
+          }}
+        >
           <Time time={item.start} /> - <Time time={item.end} />
         </Grid>
 
-        <Grid item md={2} align="right">
+        <Grid
+          item
+          md={2}
+          xs={12}
+          sx={{
+            [theme.breakpoints.up("sm")]: { textAlign: "right" },
+          }}
+        >
           <Totalbreak item={item} />
         </Grid>
 
-        <Grid item md={1} align="right" />
+        <Grid item md={1} xs={12} />
       </Grid>
     </Box>
   );
