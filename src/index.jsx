@@ -13,6 +13,13 @@ import * as Sentry from "@sentry/react";
 import { BrowserTracing } from "@sentry/tracing";
 import { Provider } from "react-redux";
 import { store } from "./app/store.js";
+import AWS from "aws-sdk";
+
+AWS.config.update({
+  region: "eu-west-1",
+  accessKeyId: process.env.REACT_APP_ACCESS_KEY_ID,
+  secretAccessKey: process.env.REACT_APP_SECRET_ACCESS_KEY,
+});
 
 const rootElement = document.getElementById("root");
 const root = createRoot(rootElement);
