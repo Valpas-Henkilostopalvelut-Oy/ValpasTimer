@@ -60,7 +60,7 @@ export const Rowweek = ({ timeList, isEmpty, selected, data }) => {
     <>
       <Grid item xs={12}>
         <Box sx={{ border: "3px solid", borderColor: "default.orange", padding: "20px 40px" }}>
-          <Grid container spacing={2} alignItems="center">
+          <Grid container spacing={2} alignItems="center" justifyContent="space-between">
             <Grid item sm={1} xs={12} />
 
             <Grid item sm={2}>
@@ -81,7 +81,7 @@ export const Rowweek = ({ timeList, isEmpty, selected, data }) => {
               </Typography>
             </Grid>
 
-            <Grid item sm={1}>
+            <Grid item sm={1} align="right">
               <Weekconfirm week={timeList} isEmpty={isEmpty} />
             </Grid>
           </Grid>
@@ -106,7 +106,7 @@ const Rowday = ({ item, isEmpty, selected, data }) => {
 
   return (
     <Box sx={{ border: "1px solid", borderColor: "#e6e6ef" }}>
-      <Grid container spacing={2} sx={{ padding: "20px 40px" }} alignItems="center">
+      <Grid container spacing={2} sx={{ padding: "20px 40px" }} alignItems="center" justifyContent="space-between">
         <Grid item sm={1}>
           <IconButton onClick={handleOpen} sx={{ cursor: "pointer" }} aria-label="expand row" size="mdall">
             {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
@@ -119,7 +119,7 @@ const Rowday = ({ item, isEmpty, selected, data }) => {
           </Typography>
         </Grid>
 
-        <Grid item sm={3}>
+        <Grid item sm={3} xs={12}>
           <Typography variant="p" fontWeight="bold">
             {currentworkplace}
           </Typography>
@@ -133,7 +133,7 @@ const Rowday = ({ item, isEmpty, selected, data }) => {
           <Totalday item={item} fontWeight="bold" />
         </Grid>
 
-        <Grid item sm={1}>
+        <Grid item sm={1} align="right">
           <Daymorebutton day={item} isEmpty={isEmpty} />
         </Grid>
       </Grid>
@@ -168,14 +168,14 @@ const Rowtimeshift = ({ item, isEmpty }) => {
   return (
     <>
       <Box sx={{ borderTop: "1px solid", borderColor: "#e6e6ef" }}>
-        <Grid container spacing={2} sx={{ padding: "20px 40px" }} alignItems="center">
+        <Grid container spacing={2} sx={{ padding: "20px 40px" }} alignItems="center" justifyContent="space-between">
           <Grid item sm={1} xs={12} />
 
           <Grid item sm={2}>
             <SDate date={item.timeInterval.start} />
           </Grid>
 
-          <Grid item sm={3}>
+          <Grid item sm={3} >
             <Typography variant="p">{work.name}</Typography>
           </Grid>
 
