@@ -26,6 +26,10 @@ yarn-debug.log*
 yarn-error.log*
 firebase.js
 
+
+#other
+node_modules
+
 #amplify-do-not-edit-begin
 amplify/\#current-cloud-backend
 amplify/.config/local-*
@@ -47,6 +51,3 @@ amplifytools.xcconfig
 .secret-*
 **.sample
 #amplify-do-not-edit-end
-
-#other
-node_modules
