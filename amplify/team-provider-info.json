@@ -16,18 +16,14 @@
         "valpasapplicationd66e1b4f": {},
         "userPoolGroups": {}
       },
-      "storage": {
-        "s3b5f43598": {}
-      },
       "function": {
         "AdminQueries2c95f1df": {
           "deploymentBucketName": "amplify-valpasapplication-staging-64726-deployment",
           "s3Key": "amplify-builds/AdminQueries2c95f1df-496d642b6156785a7267-build.zip"
         }
       },
-      "api": {
-        "AdminQueries": {},
-        "valpasapplication": {}
+      "storage": {
+        "s3b5f43598": {}
       }
     }
   }

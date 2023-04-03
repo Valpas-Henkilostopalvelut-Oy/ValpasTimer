@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Container, CssBaseline, TextField, Typography } from "@mui/material";
+import { Box, CssBaseline, TextField, Typography } from "@mui/material";
 import { Formik } from "formik";
 import { Auth } from "aws-amplify";
 import { useNavigate } from "react-router-dom";
@@ -30,7 +30,7 @@ export const CompleteNewPassword = ({ user }) => {
     confirmPassword: Yup.string().required("Confirm Password is required"),
   });
   return (
-    <Container component="main" maxWidth="xs">
+    <Box>
       <CssBaseline />
       <Box
         sx={{
@@ -41,7 +41,7 @@ export const CompleteNewPassword = ({ user }) => {
         }}
       >
         <Typography component="h1" variant="h5">
-          Complete your new password
+          Tee uusi salasana ja kirjaudu sisään
         </Typography>
         <Formik
           initialValues={{ password: "", confirmPassword: "" }}
@@ -54,10 +54,10 @@ export const CompleteNewPassword = ({ user }) => {
                 margin="normal"
                 required
                 fullWidth
-                name="password"
-                label="Password"
+                name="password-change"
+                label="Salasana"
                 type="password"
-                id="password"
+                id="password-change"
                 autoComplete="current-password"
                 onChange={handleChange}
                 onBlur={handleBlur}
@@ -68,10 +68,10 @@ export const CompleteNewPassword = ({ user }) => {
                 margin="normal"
                 required
                 fullWidth
-                name="confirmPassword"
-                label="Confirm Password"
+                name="confirmPassword-change"
+                label="Vahvista salasana"
                 type="password"
-                id="confirmPassword"
+                id="confirmPassword-change"
                 autoComplete="current-password"
                 onChange={handleChange}
                 onBlur={handleBlur}
@@ -83,15 +83,15 @@ export const CompleteNewPassword = ({ user }) => {
                 fullWidth
                 variant="contained"
                 sx={{ mt: 3, mb: 2 }}
-                loading={isSubmitting}
+                isLoading={isSubmitting}
                 disabled={!dirty || !isValid || isSubmitting || values.password !== values.confirmPassword}
-                text="Complete"
-                loadingText="Completing…"
+                text="Vaida salasana"
+                loadingText="Vahvistetaan..."
               />
             </Box>
           )}
         </Formik>
       </Box>
-    </Container>
+    </Box>
   );
 };

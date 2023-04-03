@@ -10,7 +10,7 @@ import Team from "./containers/Team/index.jsx";
 import Workspaces from "./containers/Workspaces/index.jsx";
 import Home from "./containers/Home/index.jsx";
 import { Reports } from "./containers/ReportsV2/index.jsx";
-import Workers from "./containers/WorkersV2/index.jsx";
+import Workers from "./containers/Workers/index.jsx";
 import NoAccessPage from "./components/NoAccessPage/index.jsx";
 import ForgotPassword from "./containers/ForgotPassword/index.jsx";
 import TasksPage from "./containers/Work/index.jsx";
