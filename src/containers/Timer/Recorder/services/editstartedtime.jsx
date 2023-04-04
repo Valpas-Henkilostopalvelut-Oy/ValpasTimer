@@ -1,11 +1,13 @@
 import React, { useState } from "react";
-import { TextField, Button, Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Typography } from "@mui/material";
 import { Auth, DataStore } from "aws-amplify";
 import { TimeEntry, UserCredentials } from "../../../../models/index.js";
-import { timeMaker } from "../../../../services/time.jsx";
 import { PropTypes } from "prop-types";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+import { TimeField, LocalizationProvider } from "@mui/x-date-pickers";
+import fi from "date-fns/locale/fi";
 
-const editDataStoreStartTime = async ({ newTime }) => {
+const editDataStoreStartTime = async (newTime) => {
   await Auth.currentAuthenticatedUser()
     .then(async (user) => {
       const creditailsId = user.attributes["custom:UserCreditails"];
@@ -29,71 +31,71 @@ const editDataStoreStartTime = async ({ newTime }) => {
     .catch((e) => console.warn(e));
 };
 
-export const EditStartTime = ({
-  open = false,
-  setOpen,
-  timerTime = null,
-  lang = {
-    edit_start: {
-      title: "Edit start time",
-      start_time: "Start time",
-      save: "Save",
-      cancel: "Cancel",
+export const EditStartTime = (props) => {
+  const {
+    isStarted,
+    time,
+    timerTime = null,
+    lang = {
+      edit_start: {
+        title: "Edit start time",
+        start_time: "Start time",
+        save: "Save",
+        cancel: "Cancel",
+      },
     },
-  },
-}) => {
-  const [tempTime, setTempTime] = useState(new Date(timerTime.timeInterval.start));
-  const handleClose = async () => {
-    setOpen(false);
-  };
+  } = props;
 
-  const d = new Date(timerTime.timeInterval.start);
-  const [value, setValue] = useState(
-    `${String("0" + d.getHours()).slice(-2)}:${String("0" + d.getMinutes()).slice(-2)}`
-  );
+  const [open, setOpen] = useState(false);
+  const handleClose = async () => setOpen(false);
+  const d = timerTime ? new Date(timerTime.timeInterval.start) : new Date();
+  const [value, setValue] = useState(d);
 
   return (
-    <Dialog
-      open={open}
-      onClose={handleClose}
-      aria-labelledby="alert-dialog-title"
-      aria-describedby="alert-dialog-description"
-    >
-      <DialogTitle id="alert-dialog-title">{lang.edit_start.title}</DialogTitle>
-      <DialogContent>
-        {timerTime !== null && (
-          <TextField
-            margin="dense"
-            label={lang.edit_start.start_time}
-            value={value}
-            onChange={(e) => setValue(e.target.value)}
-            onBlur={(e) => {
-              let val = timeMaker(e, timerTime.timeInterval.start);
-              setValue(`${String("0" + val.h).slice(-2)}:${String("0" + val.m).slice(-2)}`);
-              setTempTime(new Date(timerTime.timeInterval.start).setHours(val.h, val.m, 0, 0));
+    <>
+      <Typography
+        variant="h5"
+        align="center"
+        onClick={() => setOpen(true)}
+        sx={{
+          [isStarted ? "&:hover" : ""]: {
+            cursor: "pointer",
+            textDecoration: "underline",
+          },
+        }}
+      >
+        {time.hours < 10 ? "0" + time.hours : time.hours}:{time.minutes < 10 ? "0" + time.minutes : time.minutes}:
+        {time.seconds < 10 ? "0" + time.seconds : time.seconds}
+      </Typography>
+      <Dialog
+        open={open && isStarted}
+        onClose={handleClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">{lang.edit_start.title}</DialogTitle>
+        <DialogContent>
+          <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={fi}>
+            <TimeField label={lang.edit_start.start_time} value={value} onChange={(e) => setValue(e.target.value)} />
+          </LocalizationProvider>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose}>{lang.edit_start.cancel}</Button>
+          <Button
+            onClick={() => {
+              editDataStoreStartTime(value);
+              handleClose();
             }}
-          />
-        )}
-      </DialogContent>
-      <DialogActions>
-        <Button onClick={handleClose}>{lang.edit_start.cancel}</Button>
-        <Button
-          onClick={() => {
-            editDataStoreStartTime({ newTime: tempTime });
-            handleClose();
-          }}
-        >
-          {lang.edit_start.save}
-        </Button>
-      </DialogActions>
-    </Dialog>
+          >
+            {lang.edit_start.save}
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </>
   );
 };
 
 EditStartTime.propTypes = {
-  open: PropTypes.bool,
-  setOpen: PropTypes.func,
   timerTime: PropTypes.object,
   lang: PropTypes.object,
 };
-

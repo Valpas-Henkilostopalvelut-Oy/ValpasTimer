@@ -12,18 +12,19 @@ const updateWork = async (data, sel) => {
   ).catch((e) => console.warn(e));
 };
 
-export const EditWorkplaceTimer = ({
-  setSel,
-  sel,
-  works = null,
-  isStarted = false,
-  data,
-  lang = { workplace: "Workplace" },
-  setWorkitem,
-}) => {
+export const EditWorkplaceTimer = (props) => {
+  const {
+    setSel,
+    sel,
+    works = null,
+    isStarted = false,
+    timerTimer,
+    lang = { workplace: "Workplace" },
+    setWorkitem,
+  } = props;
   const handleChange = (event) => {
-    if (data && isStarted) {
-      updateWork(data, event.target.value);
+    if (timerTimer && isStarted) {
+      updateWork(timerTimer, event.target.value);
     }
     setWorkitem("");
     setSel(event.target.value);

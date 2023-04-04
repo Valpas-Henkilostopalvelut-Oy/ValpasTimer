@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { DataStore, Auth } from "aws-amplify";
-import { TimeEntry, UserCredentials } from "../../../../models/index.js";
+import { TimeEntry, UserCredentials, Breakreason, Break } from "../../../../models/index.js";
 import { Button } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 
@@ -29,7 +29,7 @@ const continueTime = async (data) => {
           start: updated.pauseStart,
           end: new Date().toISOString(),
           id: Date.now().toString(),
-          reason: "GOING",
+          reason: Breakreason.LUNCH_L,
         });
       })
     );
@@ -43,24 +43,25 @@ const continueTime = async (data) => {
   }
 };
 
-export const Timerbreak = ({ data, lang, isEmpty, disabled = true, setTimer, isPaused = false, setIsPaused }) => {
+export const Timerbreak = (props) => {
+  const { timerTime, isEmpty, disabled = true, setTimer, isPaused = false, setIsPaused } = props;
   const onPause = async () => {
-    await pauseTime(data, setTimer);
+    await pauseTime(timerTime, setTimer);
     setIsPaused(true);
   };
 
   const onContinue = async () => {
-    await continueTime(data);
+    await continueTime(timerTime);
     setIsPaused(false);
   };
 
   return !isPaused ? (
     <Button variant="text" color="primary" onClick={onPause} disabled={!isEmpty || disabled}>
-      Pause
+      Tauko
     </Button>
   ) : (
     <Button variant="text" color="primary" onClick={onContinue} disabled={!isEmpty || disabled}>
-      Continue
+      Jatka
     </Button>
   );
 };

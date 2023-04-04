@@ -58,7 +58,7 @@ const Selectworker = ({ workers, handleChangeWorker, selectedWorker, disabled = 
   );
 };
 
-export const Reports = ({ lang }) => {
+const Reports = ({ lang }) => {
   const [selected, setSelected] = useState({ work: "", worker: "" });
   const [data, setData] = useState({ works: null, workers: null });
   const [timeList, setTimeList] = useState(null);
@@ -187,3 +187,5 @@ export const Reports = ({ lang }) => {
     </Container>
   );
 };
+
+export default Reports;

@@ -9,9 +9,8 @@ import { MobileDatePicker, TimeField, LocalizationProvider } from "@mui/x-date-p
 import {} from "@mui/x-date-pickers";
 import fi from "date-fns/locale/fi";
 import { PropTypes } from "prop-types";
-import { SnackSuccess } from "../../../../components/Alert/index.jsx";
 
-export const Editdate = ({ date = null, setDate, sTime, eTime, setSTime, setETime, lang = { date: "Date" } }) => {
+export const Editdate = ({ date = null, setDate, lang = { date: "Date" } }) => {
   return (
     <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={fi}>
       <MobileDatePicker
@@ -133,46 +132,42 @@ const createTimeentry = async (description = "", sel = "", sTime, eTime, workit,
   );
 };
 
-export const Createtimeentry = ({
-  error,
-  setDescription,
-  setETime,
-  setSTime,
-  setWorkit,
-  setSel,
-  description = "",
-  sel = "",
-  sTime,
-  eTime,
-  workit,
-  lang = {
-    create: "Create",
-  },
-  date,
-}) => {
+export const Createtimeentry = (props) => {
   const [open, setOpen] = useState(false);
 
-  return (
-    <>
-      <Button
-        fullWidth
-        variant="contained"
-        color="primary"
-        disabled={error || sel === ""}
-        onClick={async () => {
-          await createTimeentry(description, sel, sTime, eTime, workit, date).then(() => {
-            setDescription("");
-            setETime(new Date());
-            setSTime(new Date());
-            setOpen(true);
-          });
-        }}
-      >
-        {lang.create}
-      </Button>
+  const {
+    error,
+    setDescription,
+    setETime,
+    setSTime,
+    setWorkit,
+    setSel,
+    description = "",
+    sel = "",
+    sTime,
+    eTime,
+    workit,
+    lang = { create: "Create" },
+    date,
+  } = props;
 
-      <SnackSuccess open={open} setOpen={setOpen} message="Success" />
-    </>
+  return (
+    <Button
+      fullWidth
+      variant="contained"
+      color="primary"
+      disabled={error || sel === ""}
+      onClick={async () => {
+        await createTimeentry(description, sel, sTime, eTime, workit, date).then(() => {
+          setDescription("");
+          setETime(new Date());
+          setSTime(new Date());
+          setOpen(true);
+        });
+      }}
+    >
+      {lang.create}
+    </Button>
   );
 };
 Editdate.propTypes = {

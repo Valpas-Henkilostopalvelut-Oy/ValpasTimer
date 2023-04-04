@@ -4,7 +4,7 @@ import { Auth, DataStore } from "aws-amplify";
 import { UserCredentials, TimeEntry } from "../../../../models/index.js";
 import { PropTypes } from "prop-types";
 
-const startTimer = async ({ description, workplace, setTimer, work = null }) => {
+const startTimer = async (description, workplace, setTimer, work) => {
   await Auth.currentAuthenticatedUser().then(async (user) => {
     await DataStore.save(
       new TimeEntry({
@@ -73,25 +73,27 @@ const stopTimer = async () => {
     .catch((err) => console.warn(err));
 };
 
-export const StartTimer = ({
-  workitem,
-  workitems,
-  description = "",
-  workplace = "",
-  isStarted = false,
-  setStarted,
-  setTimer,
-  setTime,
-  lang = {
-    start: "Start",
-    stop: "Stop",
-  },
-  setIsPaused,
-}) => {
+export const StartTimer = (props) => {
+  const {
+    workitem,
+    workitems,
+    description = "",
+    sel = "",
+    isStarted = false,
+    setStarted,
+    setTimer,
+    setTime,
+    lang = {
+      start: "Aloita",
+      stop: "Lopeta",
+    },
+    setIsPaused,
+  } = props;
+
   const handleStart = () => {
     if (!isStarted) {
       let work = workitems && workitems.find((item) => item.id === workitem);
-      startTimer({ description, workplace, setTimer: (e) => setTimer(e), work });
+      startTimer(description, sel, (e) => setTimer(e), work);
       setStarted(true);
     }
   };
@@ -113,11 +115,11 @@ export const StartTimer = ({
   };
 
   return !isStarted ? (
-    <Button onClick={handleStart} disabled={workplace === ""}>
+    <Button onClick={handleStart} disabled={sel === ""}>
       {lang.start}
     </Button>
   ) : (
-    <Button onClick={handleStop} disabled={workplace === ""} color="error">
+    <Button onClick={handleStop} disabled={sel === ""} color="error">
       {lang.stop}
     </Button>
   );

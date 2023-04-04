@@ -1,9 +1,11 @@
-import React, { useState } from "react";
-import { TextToTime } from "../../../services/time.jsx";
+import React, { useEffect, useState } from "react";
 import { DataStore } from "aws-amplify";
 import { TimeEntry } from "../../../models/index.js";
 import { PropTypes } from "prop-types";
-import { SnackSuccess } from "../../../components/Alert/index.jsx";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+import { DesktopTimePicker, LocalizationProvider } from "@mui/x-date-pickers";
+import { InputBase } from "@mui/material";
+import fi from "date-fns/locale/fi";
 
 export const Time = ({ time }) => {
   let t = new Date(time);
@@ -12,54 +14,69 @@ export const Time = ({ time }) => {
   return `${hours}:${minutes}`;
 };
 
-const updateSTime = async (data, time) => {
-  let sTime = new Date(data.timeInterval.start).setHours(time.h, time.min, 0, 0);
+export const EditSTime = (props) => {
+  const { date } = props;
+  const [value, setValue] = useState(new Date(date.timeInterval.start));
 
-  await DataStore.save(
-    TimeEntry.copyOf(data, (update) => {
-      update.timeInterval.start = new Date(sTime).toISOString();
-    })
-  ).catch((e) => console.warn(e));
-};
+  useEffect(() => {
+    const updateSTime = async () => {
+      try {
+        await DataStore.save(
+          TimeEntry.copyOf(date, (update) => {
+            update.timeInterval.start = value.toISOString();
+          })
+        );
+      } catch (error) {
+        console.warn(error);
+      }
+    };
 
-export const EditSTime = ({ date }) => {
-  const [snack, setSnack] = useState(false);
+    updateSTime();
+  }, [value]);
+
   return (
     <>
-      <TextToTime
-        date={new Date(date.timeInterval.start)}
-        onChange={async (t) => await updateSTime(date, t)}
-        isSent={date.isSent}
-      />
-      <SnackSuccess message="Time updated" open={snack} setOpen={setSnack} />
+      <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={fi}>
+        <DesktopTimePicker
+          value={value}
+          onChange={(newValue) => setValue(newValue)}
+          slots={{ textField: InputBase }}
+          sx={{ maxWidth: 36 }}
+        />
+      </LocalizationProvider>
     </>
   );
 };
 
-const updateETime = async (data, time, setSnack) => {
-  let eTime = new Date(data.timeInterval.end).setHours(time.h, time.min, 0, 0);
-  return await DataStore.save(
-    TimeEntry.copyOf(data, (update) => {
-      update.timeInterval.end = new Date(eTime).toISOString();
-    })
-  ).catch((e) => console.warn(e));
-};
+export const EditETime = (props) => {
+  const { date } = props;
+  const [value, setValue] = useState(new Date(date.timeInterval.end));
 
-export const EditETime = ({ date }) => {
-  const [snack, setSnack] = useState(false);
-  return (
-    <>
-      <TextToTime
-        date={new Date(date.timeInterval.end)}
-        onChange={async (t) =>
-          await updateETime(date, t, setSnack).then((e) => {
-            setSnack(true);
+  useEffect(() => {
+    const updateETime = async () => {
+      try {
+        await DataStore.save(
+          TimeEntry.copyOf(date, (update) => {
+            update.timeInterval.end = value.toISOString();
           })
-        }
-        isSent={date.isSent}
+        );
+      } catch (error) {
+        console.warn(error);
+      }
+    };
+
+    updateETime();
+  }, [value]);
+
+  return (
+    <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={fi}>
+      <DesktopTimePicker
+        value={value}
+        onChange={(newValue) => setValue(newValue)}
+        slots={{ textField: InputBase }}
+        sx={{ maxWidth: 36 }}
       />
-      <SnackSuccess message="Time updated" open={snack} setOpen={setSnack} />
-    </>
+    </LocalizationProvider>
   );
 };
 

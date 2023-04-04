@@ -44,75 +44,36 @@ const minRange = (d, date) => {
   } else return null;
 };
 
-export const Manual = ({
-  thisweek,
-  description,
-  sel,
-  setDescription,
-  setSel,
-  works,
-  lang,
-  workitems,
-  workitem,
-  setWorkitem,
-}) => {
+export const Manual = (props) => {
+  const { works, lang, workitem } = props;
+
   const [date, setDate] = useState(new Date());
   const [sTime, setSTime] = useState(new Date());
   const [eTime, setETime] = useState(new Date());
   const workit = workitem ? findWork(works, workitem) : null;
   const [error, setError] = useState(false);
-  const maxTime = new Date(maxRange(thisweek, date));
-  const minTime = new Date(minRange(thisweek, date));
 
   return (
     <Grid container spacing={2} display="flex" alignItems="center" justifyContent="space-around">
       <Grid item xs={6}>
-        <EditWorkplaceManual sel={sel} setSel={setSel} works={works} lang={lang} />
+        <EditWorkplaceManual {...props} />
       </Grid>
       <Grid item xs={6}>
-        <EditWorkitemManual workitem={workitem} setWorkitem={setWorkitem} workitems={workitems} lang={lang} />
+        <EditWorkitemManual {...props} />
       </Grid>
 
       <Grid item xs={12}>
-        <EditDescription description={description} setDescription={setDescription} lang={lang} />
+        <EditDescription {...props} />
       </Grid>
 
       <Grid item xs={4} md={2.4}>
-        <Editdate
-          date={date}
-          setDate={setDate}
-          sTime={sTime}
-          eTime={eTime}
-          setSTime={setSTime}
-          setETime={setETime}
-          lang={lang}
-        />
+        <Editdate date={date} setDate={setDate} {...props} />
       </Grid>
       <Grid item xs={4} md={2.4}>
-        <Edittime
-          time={sTime}
-          time2={eTime}
-          setTime={setSTime}
-          label={lang.start_time}
-          date={date}
-          minTime={minTime}
-          maxTime={maxTime}
-          error={error}
-          setError={setError}
-        />
+        <Edittime time={sTime} setTime={setSTime} label={lang.start_time} setError={setError} />
       </Grid>
       <Grid item xs={4} md={2.4}>
-        <Edittime
-          time={eTime}
-          time2={sTime}
-          setTime={setETime}
-          label={lang.end_time}
-          date={date}
-          minTime={minTime}
-          maxTime={maxTime}
-          error={error}
-          setError={setError}
-        />
+        <Edittime time={eTime} setTime={setETime} label={lang.end_time} setError={setError} />
       </Grid>
       <Grid item xs={12} md={2.4}>
         <Totaltime sTime={sTime} eTime={eTime} />
@@ -120,18 +81,13 @@ export const Manual = ({
       <Grid item xs={12} md={2.4}>
         <Createtimeentry
           error={error}
-          description={description}
-          sel={sel}
           sTime={sTime}
           eTime={eTime}
           workit={workit}
-          lang={lang}
-          setWorkit={setWorkitem}
-          setDescription={setDescription}
-          setSel={setSel}
           setSTime={setSTime}
           setETime={setETime}
           date={date}
+          {...props}
         />
       </Grid>
     </Grid>

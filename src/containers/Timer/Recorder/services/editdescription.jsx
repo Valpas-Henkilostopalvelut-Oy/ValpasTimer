@@ -17,17 +17,12 @@ export const EditDescription = ({ description, setDescription, lang = { descript
   );
 };
 
-export const EditDescriptionTimer = ({
-  description,
-  setDescription,
-  data,
-  isStarted,
-  lang = { description: "Description" },
-}) => {
+export const EditDescriptionTimer = (props) => {
+  const { description, setDescription, timerTime, isStarted, lang = { description: "Description" } } = props;
   const handleEdit = async (e) => {
     isStarted &&
       (await DataStore.save(
-        TimeEntry.copyOf(data, (updated) => {
+        TimeEntry.copyOf(timerTime, (updated) => {
           updated.description = e.target.value;
         })
       ).catch((e) => console.warn(e)));

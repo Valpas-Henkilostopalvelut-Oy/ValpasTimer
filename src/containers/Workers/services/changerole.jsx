@@ -1,18 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {
-  Box,
-  Grid,
-  Typography,
-  Button,
-  TextField,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
-  Checkbox,
-  ListItemText,
-  InputBase,
-} from "@mui/material";
+import { Box, FormControl, InputLabel, Select, MenuItem, Checkbox, ListItemText } from "@mui/material";
 import { Auth, API } from "aws-amplify";
 
 const list = (lang) => [
@@ -29,18 +16,6 @@ const list = (lang) => [
     label: lang.worker,
   },
 ];
-
-const manage = async ({ group, username, path }) => {
-  let apiName = "AdminQueries";
-  let myInit = {
-    body: { username: username, groupname: group },
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `${(await Auth.currentSession()).getAccessToken().getJwtToken()}`,
-    },
-  };
-  return await API.post(apiName, path, myInit);
-};
 
 const Usergroup = (props) => {
   const { Username, isEmpty } = props;

@@ -24,7 +24,7 @@ export const Recorder = (props) => {
           <Timer lang={lang.timer} {...otherProps} />
         </TabPanel>
         <TabPanel value="2" sx={{ paddingLeft: 0, paddingRight: 0 }}>
-          <Manual lang={lang.manual} {...otherProps}/>
+          <Manual lang={lang.manual} {...otherProps} />
         </TabPanel>
       </TabContext>
     </Box>

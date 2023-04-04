@@ -7,7 +7,7 @@ import { Details } from "./services/details.jsx";
 import { Cards } from "./services/cards.jsx";
 import { useAppContext } from "../../services/contextLib";
 
-export const Profile = () => {
+const Profile = () => {
   const [value, setValue] = useState("1");
   const [isEmpty, setEmpty] = useState(true);
   const [user, setUser] = useState({
@@ -127,3 +127,5 @@ export const Profile = () => {
     </Container>
   );
 };
+
+export default Profile;

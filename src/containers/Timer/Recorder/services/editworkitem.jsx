@@ -12,11 +12,12 @@ const updateworkitem = async (data, item) => {
   ).catch((e) => console.warn(e));
 };
 
-export const EditWorkitemTimer = ({ workitems, workitem, setWorkitem, isStarted, data, lang }) => {
+export const EditWorkitemTimer = (props) => {
+  const { workitems, workitem, setWorkitem, isStarted, timerTime, lang } = props;
   const handleChange = (event) => {
-    if (data && isStarted) {
+    if (timerTime && isStarted) {
       const item = workitems ? workitems.find((item) => item.id === event.target.value) : null;
-      updateworkitem(data, item);
+      updateworkitem(timerTime, item);
     }
     setWorkitem(event.target.value);
   };
