@@ -4,9 +4,8 @@ This project is a simple timer application built with React, Material-UI library
 
 ## Features
 
-- Countdown timer that can be set to a specific time.
-- Stopwatch that can be started, stopped, and reset.
-- Audio notification when the timer or stopwatch reaches zero.
+- Start and stop buttons to track work time for employees.
+- Pause button to take breaks or interruptions into account.
 - Material-UI styling for a modern and clean user interface.
 - AWS services for authentication, data storage, and deployment.
 
@@ -32,11 +31,10 @@ To deploy the application to AWS, follow these steps:
 
 To use the application, follow these instructions:
 
-1. Set the timer or stopwatch by clicking the appropriate button.
-2. Start the timer or stopwatch.
-3. Wait for the timer or stopwatch to reach zero.
-4. Listen for the audio notification.
-5. Reset the timer or stopwatch if necessary.
+1. Click the "Start" button to begin tracking work time.
+2. If a worker takes a break or is interrupted, they can click the "Pause" button.
+3. Click the "Stop" button to end work time tracking.
+4. Reset the timer if necessary.
 
 ## License
 
