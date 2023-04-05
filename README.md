@@ -1,70 +1,43 @@
-# Getting Started with Create React App
+# React Timer Project
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This project is a simple timer application built with React, Material-UI library, and AWS services such as AWS DataStore, AWS Cognito, and Storage. It is written in JavaScript and uses Yarn for installation and starting the project.
 
-## Available Scripts
+## Features
 
-In the project directory, you can run:
+- Countdown timer that can be set to a specific time.
+- Stopwatch that can be started, stopped, and reset.
+- Audio notification when the timer or stopwatch reaches zero.
+- Material-UI styling for a modern and clean user interface.
+- AWS services for authentication, data storage, and deployment.
 
-### `npm start`
+## Setup
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+To run the project on your local machine, follow these steps:
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+1. Clone the repository: `git clone https://github.com/valpaseu/valpasWeb.git`
+2. Install the dependencies using Yarn: `yarn install`
+3. Start the development server using Yarn: `yarn start`
+4. Open [http://localhost:3000](http://localhost:3000) to view the app in the browser.
 
-### `npm test`
+## Deployment
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+To deploy the application to AWS, follow these steps:
 
-### `npm run build`
+1. Install the AWS Amplify CLI by running `npm install -g @aws-amplify/cli`.
+2. Initialize the Amplify project by running `amplify init`.
+3. Add the necessary AWS services to the project by running `amplify add auth`, `amplify add api`, `amplify add storage`, etc.
+4. Push the changes to the cloud by running `amplify push`.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## Usage
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+To use the application, follow these instructions:
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+1. Set the timer or stopwatch by clicking the appropriate button.
+2. Start the timer or stopwatch.
+3. Wait for the timer or stopwatch to reach zero.
+4. Listen for the audio notification.
+5. Reset the timer or stopwatch if necessary.
 
-### `npm run eject`
+## License
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+This project is licensed under the [MIT License](https://opensource.org/licenses/MIT).
