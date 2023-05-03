@@ -74,27 +74,21 @@ const Save = ({ travel, isEmpty, clear, disabled }) => {
   );
 };
 
+const travelTemp = {
+  title: "",
+  description: "",
+  departureDate: new Date(),
+  returnDate: null,
+  routePoints: [],
+  route: "",
+  attachments: [],
+};
+
 export const Travelform = ({ isEmpty, setSelectedIndex }) => {
-  const [travel, setTravel] = useState({
-    title: "",
-    description: "",
-    departureDate: new Date(),
-    returnDate: null,
-    routePoints: [],
-    route: "",
-    attachments: [],
-  });
+  const [travel, setTravel] = useState(travelTemp);
 
   const cancel = () => {
-    setTravel({
-      title: "",
-      description: "",
-      departureDate: new Date(),
-      returnDate: null,
-      routePoints: [],
-      route: "",
-      attachments: [],
-    });
+    setTravel(travelTemp);
     setSelectedIndex(null);
   };
   return (

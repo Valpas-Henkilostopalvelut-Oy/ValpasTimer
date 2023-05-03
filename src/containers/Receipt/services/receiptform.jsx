@@ -63,39 +63,30 @@ const Imgcarousel = ({ images, setImages, lang }) => {
   );
 };
 
+const receiptTemp = {
+  date: new Date(),
+  number: "",
+  amount: Number(0),
+  class: "",
+  currency: "EUR",
+  place: "",
+  tax: 0.24,
+  method: "",
+  otherMethod: "",
+  category: "",
+};
+
 export const Receiptform = ({ isEmpty, setSelectedIndex, lang }) => {
   lang = lang.addreceipt;
   const [images, setImages] = useState([]);
-  const [receipt, setReceipt] = useState({
-    date: new Date(),
-    number: "",
-    amount: Number(0),
-    class: "",
-    currency: "EUR",
-    place: "",
-    tax: 0.24,
-    method: "CASH",
-    otherMethod: "",
-    category: "",
-  });
-  const [loading, setLoading] = useState(false);
+  const [receipt, setReceipt] = useState(receiptTemp);
+
   const handleSelectimage = (e) => {
     const files = Array.from(e.target.files);
     setImages(files);
   };
   const cancel = () => {
-    setReceipt({
-      date: new Date(),
-      number: "",
-      amount: Number(0),
-      class: "",
-      currency: "EUR",
-      place: "",
-      tax: 0.24,
-      otherMethod: "",
-      method: "CASH",
-      category: "",
-    });
+    setReceipt(receiptTemp);
     setImages([]);
     setSelectedIndex(null);
   };
@@ -154,7 +145,6 @@ export const Receiptform = ({ isEmpty, setSelectedIndex, lang }) => {
             cancel={cancel}
             lang={lang}
             isEmpty={isEmpty}
-            setLoading={setLoading}
           />
         </Grid>
       </Grid>
