@@ -16,9 +16,10 @@ import {
   Box,
   Collapse,
   InputAdornment,
+  OutlinedInput,
 } from "@mui/material";
 import { DataStore, Storage, Auth } from "aws-amplify";
-import { Receipt, Currency, PaymentMethod, Classification } from "../../../models";
+import { Receipt, Currency, PaymentMethod } from "../../../models";
 import { LocalizationProvider, DatePicker } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import fi from "date-fns/locale/fi";
@@ -37,8 +38,8 @@ const Receiptdate = ({ data, setData, isEmpty, lang }) => {
         label={lang.date}
         value={data.date}
         onChange={handleDateChange}
-        renderInput={(params) => {
-          return <TextField {...params} variant="standard" />;
+        slots={{
+          textField: TextField,
         }}
       />
     </LocalizationProvider>
@@ -120,12 +121,12 @@ const Comment = ({ data, setData, isEmpty, lang }) => {
   );
 };
 
-const Filesave = ({ files, data, isEmpty, lang, setLoading, cancel }) => {
-  const handleClick = async () => addreceipt(data, files, setLoading).then(() => cancel());
+const Filesave = ({ files, data, isEmpty, lang, cancel }) => {
+  const handleClick = async () => addreceipt(data, files).then(() => cancel());
 
   return (
     <Button variant="outlined" onClick={handleClick} disabled={!isEmpty}>
-      {lang.add}
+      {lang.buttons.add}
     </Button>
   );
 };
@@ -133,31 +134,24 @@ const Filesave = ({ files, data, isEmpty, lang, setLoading, cancel }) => {
 const Cancelsave = ({ cancel, isEmpty, lang }) => {
   return (
     <Button variant="outlined" onClick={cancel} disabled={!isEmpty}>
-      {lang.cancel}
+      {lang.buttons.cancel}
     </Button>
   );
 };
 
 const Paymentmethod = ({ data, setData, isEmpty, lang }) => {
-  const [method, setMethod] = useState("");
-  const [other, setOther] = useState("");
-
-  const handleMethodChange = (value) => {
-    let method = value.target.value;
-    setMethod(method);
+  const handleMethodChange = (e) => {
+    let value = e.target.value;
+    setData({ ...data, method: value });
   };
 
-  const handleChange = (value) => {
-    let method = value.target.value;
-    setOther(method);
+  const handleChange = (e) => {
+    let value = e.target.value;
+    setData({ ...data, otherMethod: value });
   };
-
-  useEffect(() => setData({ ...data, otherMethod: other }), [other]);
-
-  useEffect(() => setData({ ...data, method: method }), [method]);
 
   return (
-    <>
+    <Box>
       <FormControl fullWidth>
         <InputLabel id="method-label">{lang.method}</InputLabel>
         <Select
@@ -165,7 +159,7 @@ const Paymentmethod = ({ data, setData, isEmpty, lang }) => {
           id="method"
           disabled={!isEmpty}
           label={lang.method}
-          value={method}
+          value={data.method}
           onChange={handleMethodChange}
           input={<InputBase />}
         >
@@ -178,10 +172,10 @@ const Paymentmethod = ({ data, setData, isEmpty, lang }) => {
           })}
         </Select>
       </FormControl>
-      <Collapse in={method === PaymentMethod.OTHER}>
-        <TextField id="other" value={other} label={"toinen"} onChange={handleChange} disabled={!isEmpty} />
+      <Collapse in={data.method === PaymentMethod.OTHER}>
+        <TextField id="other" value={data.otherMethod} label={"toinen"} onChange={handleChange} disabled={!isEmpty} />
       </Collapse>
-    </>
+    </Box>
   );
 };
 
@@ -272,7 +266,7 @@ const Taxselect = ({ data, setData, isEmpty, lang }) => {
   );
 };
 
-const onUpload = async (file, id, index, setLoading) => {
+const onUpload = async (file, id, index) => {
   let end = file.name.split(".").pop();
   let newName = `${id}-${index}.${end}`;
 
@@ -282,7 +276,6 @@ const onUpload = async (file, id, index, setLoading) => {
       level: "protected",
       progressCallback(progress) {
         console.log(`Uploaded: ${progress.loaded}/${progress.total}`);
-        setLoading(progress.loaded !== progress.total);
       },
     });
     return result;
@@ -291,12 +284,12 @@ const onUpload = async (file, id, index, setLoading) => {
   }
 };
 
-const addreceipt = async (data, images, setLoading) => {
+const addreceipt = async (data, images) => {
   if (!images) return;
   const keys = [];
   const id = Date.now();
   for (let i = 0; i < images.length; i++) {
-    const result = await onUpload(images[i], id, i, setLoading);
+    const result = await onUpload(images[i], id, i);
     keys.push(result.key);
   }
 
@@ -321,6 +314,7 @@ const addreceipt = async (data, images, setLoading) => {
       otherPayment: data.otherMethod,
       comment: data.comment,
       isTravel: false,
+      class: data.class,
     };
 
     await DataStore.save(new Receipt(newReceipt));
@@ -329,26 +323,8 @@ const addreceipt = async (data, images, setLoading) => {
   }
 };
 
-export const ReceiptTable = ({
-  data = {
-    date: new Date(),
-    number: Number(""),
-    amount: Number(""),
-    class: "",
-    currency: "EUR",
-    place: "",
-    tax: "",
-    method: "CASH",
-    otherMethod: "",
-    category: "",
-  },
-  setData,
-  files,
-  cancel,
-  isEmpty,
-  lang,
-  setLoading,
-}) => {
+export const ReceiptTable = (props) => {
+  const { lang } = props;
   return (
     <TableContainer>
       <Table size="small">
@@ -362,74 +338,67 @@ export const ReceiptTable = ({
           <TableRow>
             <TableCell>{lang.date}</TableCell>
             <TableCell colSpan={2}>
-              <Receiptdate data={data} setData={setData} lang={lang} isEmpty={isEmpty} />
+              <Receiptdate {...props} />
             </TableCell>
           </TableRow>
 
           <TableRow>
             <TableCell>{lang.number}</TableCell>
             <TableCell colSpan={2}>
-              <Receiptnumber data={data} setData={setData} lang={lang} isEmpty={isEmpty} />
+              <Receiptnumber {...props} />
             </TableCell>
           </TableRow>
 
           <TableRow>
             <TableCell>{lang.place}</TableCell>
             <TableCell colSpan={2}>
-              <Placeofpurchase data={data} setData={setData} lang={lang} isEmpty={isEmpty} />
+              <Placeofpurchase {...props} />
             </TableCell>
           </TableRow>
 
           <TableRow>
             <TableCell>{lang.method}</TableCell>
             <TableCell colSpan={2}>
-              <Paymentmethod data={data} setData={setData} lang={lang} isEmpty={isEmpty} />
+              <Paymentmethod {...props} />
             </TableCell>
           </TableRow>
 
           <TableRow>
             <TableCell>{lang.class}</TableCell>
             <TableCell colSpan={2}>
-              <ClassificationSelect data={data} setData={setData} lang={lang} isEmpty={isEmpty} />
+              <ClassificationSelect {...props} />
             </TableCell>
           </TableRow>
 
           <TableRow>
             <TableCell>{lang.amount}</TableCell>
             <TableCell>
-              <Amount data={data} setData={setData} lang={lang} isEmpty={isEmpty} />
+              <Amount {...props} />
             </TableCell>
             <TableCell>
-              <Selectcurrency data={data} setData={setData} lang={lang} isEmpty={isEmpty} />
+              <Selectcurrency {...props} />
             </TableCell>
           </TableRow>
 
           <TableRow>
             <TableCell>{lang.tax}</TableCell>
             <TableCell colSpan={2}>
-              <Taxselect data={data} setData={setData} lang={lang} isEmpty={isEmpty} />
+              <Taxselect {...props} />
             </TableCell>
           </TableRow>
 
           <TableRow>
             <TableCell>{lang.comment}</TableCell>
             <TableCell colSpan={2}>
-              <Comment data={data} setData={setData} lang={lang} isEmpty={isEmpty} />
+              <Comment {...props} />
             </TableCell>
           </TableRow>
 
           <TableRow>
             <TableCell>
               <Box display="flex" justifyContent="space-between">
-                <Filesave
-                  files={files}
-                  data={data}
-                  lang={lang.buttons}
-                  isEmpty={isEmpty}
-                  setLoading={setLoading}
-                  cancel={cancel}
-                />
-                <Cancelsave cancel={cancel} lang={lang.buttons} isEmpty={isEmpty} />
+                <Filesave {...props} />
+                <Cancelsave {...props} />
               </Box>
             </TableCell>
             <TableCell colSpan={2} />

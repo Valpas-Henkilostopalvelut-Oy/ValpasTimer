@@ -37,25 +37,36 @@ import { ReceiptImage } from "./receiptimage";
 export const Receiptlist = (props) => {
   const { isEmpty, workerdata } = props;
   const [receipts, setReceipts] = useState([]);
+  const [filteredReceipts, setFilteredReceipts] = useState([]);
 
   useEffect(() => {
     const fetchReceipts = async () => {
-      const user = await Auth.currentAuthenticatedUser();
-      await DataStore.query(Receipt).then((res) =>
-        setReceipts(
-          res.filter((receipt) =>
-            props.workerdata ? receipt.userId === workerdata.userId : user.attributes.sub === receipt.userId
-          )
-        )
-      );
+      await DataStore.query(Receipt)
+        .then((res) => setReceipts(res.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))))
+        .catch((err) => console.warn(err));
     };
     fetchReceipts();
-  }, [isEmpty, workerdata]);
+  }, [isEmpty]);
+
+  useEffect(() => {
+    const filterReceipts = async () => {
+      const user = await Auth.currentAuthenticatedUser();
+      const filtered = receipts.filter((i) => {
+        if (workerdata) return i.userId === workerdata.userId;
+        if (user) return i.userId === user.attributes.sub;
+      });
+
+      console.log(filtered);
+      setFilteredReceipts(filtered);
+    };
+
+    filterReceipts();
+  }, [receipts, workerdata]);
 
   return (
     <Box sx={{ mt: 2 }}>
-      {receipts.length !== 0 ? (
-        receipts.map((receipt) => <Items key={receipt.id} oldReceipt={receipt} {...props} />)
+      {filteredReceipts.length !== 0 ? (
+        filteredReceipts.map((receipt) => <Items key={receipt.id} oldReceipt={receipt} {...props} />)
       ) : (
         <Typography variant="h4">Ei ole kuittia</Typography>
       )}

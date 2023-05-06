@@ -28,9 +28,6 @@ const Departuredate = ({ travel, setTravel, isEmpty }) => {
         label="Departure date"
         value={travel.departureDate}
         onChange={handleDateChange}
-        renderInput={(params) => {
-          return <TextField {...params} fullWidth />;
-        }}
       />
     </LocalizationProvider>
   );
@@ -48,9 +45,6 @@ const Returndate = ({ travel, setTravel, isEmpty }) => {
         label="Return date"
         value={travel.returnDate}
         onChange={handleDateChange}
-        renderInput={(params) => {
-          return <TextField {...params} fullWidth />;
-        }}
       />
     </LocalizationProvider>
   );
@@ -70,7 +64,7 @@ const Comment = ({ travel, setTravel, isEmpty }) => {
   );
 };
 
-export const Basic = ({ travel, setTravel, isEmpty }) => {
+export const Basic = (props) => {
   return (
     <Box
       sx={{
@@ -85,17 +79,17 @@ export const Basic = ({ travel, setTravel, isEmpty }) => {
       <Grid container spacing={2}>
         <Grid container item xs={12} md={6} spacing={2}>
           <Grid item xs={12}>
-            <Title travel={travel} setTravel={setTravel} isEmpty={isEmpty} />
+            <Title {...props} />
           </Grid>
           <Grid item xs={12}>
-            <Departuredate travel={travel} setTravel={setTravel} isEmpty={isEmpty} />
+            <Departuredate {...props} />
           </Grid>
           <Grid item xs={12}>
-            <Returndate travel={travel} setTravel={setTravel} isEmpty={isEmpty} />
+            <Returndate {...props} />
           </Grid>
         </Grid>
         <Grid item xs={12} md={6}>
-          <Comment travel={travel} setTravel={setTravel} isEmpty={isEmpty} />
+          <Comment {...props} />
         </Grid>
       </Grid>
     </Box>
