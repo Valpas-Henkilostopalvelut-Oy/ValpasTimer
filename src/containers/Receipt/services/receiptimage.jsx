@@ -9,33 +9,6 @@ import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
 
-/*
-{
-    "id": "04ffc059-80e5-473c-b64f-97d290f6fb29",
-    "userId": "669172d6-f6c2-44a1-95fd-43255acdf6b4",
-    "created": "2023-01-31T12:55:34.205Z",
-    "updated": "2023-01-31T12:55:34.205Z",
-    "dateOfPurchase": "2023-01-24T12:53:30.000Z",
-    "placeOfPurchase": "Turku",
-    "receiptNumber": "12345678",
-    "class": null,
-    "price": 12,
-    "currency": "EUR",
-    "receiptImage": [
-        "Toimistosiivous.jpg",
-        "työntekijä.jpg"
-    ],
-    "tax": 0.24,
-    "paymentMethod": "CASH",
-    "comment": "Comment",
-    "createdAt": "2023-01-31T12:55:34.532Z",
-    "updatedAt": "2023-01-31T12:55:34.532Z",
-    "_version": 1,
-    "_lastChangedAt": 1675169734554,
-    "_deleted": null
-}
-*/
-
 const loadimg = async (card, workerdata) => {
   console.log(workerdata);
   try {
@@ -92,7 +65,7 @@ const upload = async (file, data, index, dataid, setLoading) => {
   }
 };
 
-export const ReceiptImage = (props) => {
+const ReceiptImage = (props) => {
   const { receipt, isEmpty, workerdata } = props;
   const [imgs, setImgs] = useState([]);
   const [index, setIndex] = useState(0);
@@ -168,3 +141,5 @@ export const ReceiptImage = (props) => {
     </Grid>
   );
 };
+
+export default ReceiptImage;

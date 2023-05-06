@@ -5,7 +5,7 @@ const options = (lang) => {
   return [lang.receipt, lang.travel];
 };
 
-export const Moreadd = ({ isEmpty, selectedIndex, setSelectedIndex, lang }) => {
+const MoreAdd = ({ isEmpty, selectedIndex, setSelectedIndex, lang }) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => setAnchorEl(event.currentTarget);
@@ -46,3 +46,5 @@ export const Moreadd = ({ isEmpty, selectedIndex, setSelectedIndex, lang }) => {
     </Box>
   );
 };
+
+export default MoreAdd;

@@ -12,7 +12,7 @@ import {
   ListItemText,
 } from "@mui/material";
 
-export const Filter = (props) => {
+const Filter = (props) => {
   const [anchorEl, setAnchorEl] = useState(null);
 
   const handleClick = (event) => setAnchorEl(event.currentTarget);
@@ -21,7 +21,7 @@ export const Filter = (props) => {
   const id = open ? "simple-popover" : undefined;
 
   return (
-    <>
+    <Box>
       <Button aria-describedby={id} variant="outlined" onClick={handleClick} fullWidth>
         Suodata
       </Button>
@@ -39,21 +39,15 @@ export const Filter = (props) => {
           horizontal: "center",
         }}
       >
-        <Form {...props} />
+        <Box sx={{ p: 2, width: 300 }}>
+          <Typography variant="h6">Suodata</Typography>
+          <Grid container spacing={2}>
+            <Grid item xs={12}>
+              <Selectworker {...props} />
+            </Grid>
+          </Grid>
+        </Box>
       </Popover>
-    </>
-  );
-};
-
-const Form = (props) => {
-  return (
-    <Box sx={{ p: 2, width: 300 }}>
-      <Typography variant="h6">Suodata</Typography>
-      <Grid container spacing={2}>
-        <Grid item xs={12}>
-          <Selectworker {...props} />
-        </Grid>
-      </Grid>
     </Box>
   );
 };
@@ -91,3 +85,5 @@ const Selectworker = (props) => {
     </Box>
   );
 };
+
+export default Filter;

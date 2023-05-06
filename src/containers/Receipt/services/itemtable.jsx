@@ -124,7 +124,6 @@ const ReceiptNumber = ({ receipt, setReceipt, edit = false }) => {
 };
 
 const Class = ({ receipt, setReceipt, edit = false }) => {
-  console.log(receipt.class);
   return edit ? (
     <FormControl fullWidth>
       <Select
@@ -290,10 +289,10 @@ const PaymentMethod = ({ receipt, setReceipt, edit = false }) => {
   };
 
   useEffect(() => setReceipt({ ...receipt, otherPayment: manual }), [manual]);
-
   useEffect(() => setReceipt({ ...receipt, paymentMethod: paymentMethod }), [paymentMethod]);
+
   return edit ? (
-    <>
+    <Box>
       <FormControl fullWidth>
         <Select
           labelId="payment-method-label"
@@ -312,15 +311,18 @@ const PaymentMethod = ({ receipt, setReceipt, edit = false }) => {
           ))}
         </Select>
       </FormControl>
-      <TextField
-        value={manual}
-        id="other-payment"
-        onChange={handleChangeManual}
-        label="Muu maksutapa"
-        mt={1}
-        hidden={receipt.paymentMethod !== PaymentData.OTHER}
-      />
-    </>
+      <Collapse in={paymentMethod === "OTHER"}>
+        <TextField
+          value={manual}
+          id="other-payment"
+          onChange={handleChangeManual}
+          label="Muu maksutapa"
+          mt={1}
+          variant="standard"
+          fullWidth
+        />
+      </Collapse>
+    </Box>
   ) : (
     <>
       <Typography variant="body1" sx={{ fontWeight: "bold", color: "text.secondary" }}>
@@ -354,17 +356,17 @@ const Comment = ({ receipt, setReceipt, edit = false }) => {
   );
 };
 
-export const ItemTable = ({ receipt, oldReceipt, setReceipt, lang }) => {
+const ItemTable = (props) => {
+  const { receipt, oldReceipt, setReceipt } = props;
   const [edit, setEdit] = useState(false);
   const createdAt = new Date(receipt.created).toLocaleDateString("fi-FI");
   const updateAt = new Date(receipt.updated).toLocaleDateString("fi-FI");
+
   const handleCancel = () => {
     setReceipt(oldReceipt);
     setEdit(false);
   };
-  const handleDelete = () => {
-    deleteReceipt(oldReceipt, receipt, oldReceipt.id);
-  };
+  const handleDelete = () => deleteReceipt(oldReceipt, receipt, oldReceipt.id);
   const handleSave = () => {
     updateReceipt(oldReceipt, receipt, oldReceipt.id);
     setEdit(false);
@@ -376,46 +378,46 @@ export const ItemTable = ({ receipt, oldReceipt, setReceipt, lang }) => {
       <Table size="small" aria-label="a dense table">
         <TableHead>
           <TableRow>
-            <TableCell width={"40%"}>Receipt details</TableCell>
+            <TableCell width={"40%"}>Kuitin tiedot</TableCell>
             <TableCell colSpan={2} />
           </TableRow>
         </TableHead>
 
         <TableBody>
           <TableRow>
-            <TableCell>Receipt created</TableCell>
+            <TableCell>Kuitin luonti</TableCell>
             <TableCell colSpan={2}>{createdAt}</TableCell>
           </TableRow>
           <TableRow>
-            <TableCell>Receipt updated</TableCell>
+            <TableCell>Kuittin päivitys</TableCell>
             <TableCell colSpan={2}>{updateAt}</TableCell>
           </TableRow>
           <TableRow>
-            <TableCell>Date of purchase</TableCell>
+            <TableCell>Ostopäivä</TableCell>
             <TableCell colSpan={2}>
               <DateOfPurchase receipt={receipt} setReceipt={setReceipt} edit={edit} />
             </TableCell>
           </TableRow>
           <TableRow>
-            <TableCell>Place of purchase</TableCell>
+            <TableCell>Ostopaikka</TableCell>
             <TableCell colSpan={2}>
               <Placeofpurchase receipt={receipt} setReceipt={setReceipt} edit={edit} />
             </TableCell>
           </TableRow>
           <TableRow>
-            <TableCell>Receipt number</TableCell>
+            <TableCell>Kuitin numero</TableCell>
             <TableCell colSpan={2}>
               <ReceiptNumber receipt={receipt} setReceipt={setReceipt} edit={edit} />
             </TableCell>
           </TableRow>
           <TableRow>
-            <TableCell>Class</TableCell>
+            <TableCell>Typpi</TableCell>
             <TableCell colSpan={2}>
               <Class receipt={receipt} setReceipt={setReceipt} edit={edit} />
             </TableCell>
           </TableRow>
           <TableRow>
-            <TableCell>Price</TableCell>
+            <TableCell>Hinta</TableCell>
             <TableCell>
               <Price receipt={receipt} setReceipt={setReceipt} edit={edit} />
             </TableCell>
@@ -424,19 +426,19 @@ export const ItemTable = ({ receipt, oldReceipt, setReceipt, lang }) => {
             </TableCell>
           </TableRow>
           <TableRow>
-            <TableCell>Tax</TableCell>
+            <TableCell>Vero</TableCell>
             <TableCell colSpan={2}>
               <TaxSelect receipt={receipt} setReceipt={setReceipt} edit={edit} />
             </TableCell>
           </TableRow>
           <TableRow>
-            <TableCell>Payment method</TableCell>
+            <TableCell>Ostotapa</TableCell>
             <TableCell colSpan={2}>
               <PaymentMethod receipt={receipt} setReceipt={setReceipt} edit={edit} />
             </TableCell>
           </TableRow>
           <TableRow>
-            <TableCell>Comment</TableCell>
+            <TableCell>Kuvaus</TableCell>
             <TableCell colSpan={2}>
               <Comment receipt={receipt} setReceipt={setReceipt} edit={edit} />
             </TableCell>
@@ -445,17 +447,17 @@ export const ItemTable = ({ receipt, oldReceipt, setReceipt, lang }) => {
             <TableRow>
               <TableCell>
                 <Button variant="outlined" fullWidth onClick={handleCancel}>
-                  Cancel
+                  Peruuta
                 </Button>
               </TableCell>
               <TableCell>
                 <Button variant="outlined" fullWidth onClick={handleSave}>
-                  Save
+                  Tallenna
                 </Button>
               </TableCell>
               <TableCell>
                 <Button variant="outlined" fullWidth onClick={handleDelete} color="error">
-                  Delete
+                  Poista
                 </Button>
               </TableCell>
             </TableRow>
@@ -463,12 +465,12 @@ export const ItemTable = ({ receipt, oldReceipt, setReceipt, lang }) => {
             <TableRow>
               <TableCell>
                 <Button variant="outlined" fullWidth onClick={handleEdit}>
-                  Edit
+                  Muokkaa
                 </Button>
               </TableCell>
               <TableCell>
                 <Button variant="outlined" fullWidth onClick={handleDelete} color="error">
-                  Delete
+                  Poista
                 </Button>
               </TableCell>
             </TableRow>
@@ -478,3 +480,5 @@ export const ItemTable = ({ receipt, oldReceipt, setReceipt, lang }) => {
     </TableContainer>
   );
 };
+
+export default ItemTable;

@@ -30,23 +30,11 @@ export const Attachments = (props) => {
   const [receipts, setReceipts] = useState([]);
 
   const [isAdding, setIsAdding] = useState(false);
-  /**
-   * attachedReceipt: {
-    "id": Date.now(),
-    "receiptId": "1",
-    "userId": "669172d6-f6c2-44a1-95fd-43255acdf6b4",
-    "placeOfPurchase": "",
-    "price": 0,
-    "currency": "EUR",
-    "tax": 0.24,
-    "isTravel": null,
-}
-   */
+
   useEffect(() => {
     const fetchReceipts = async () => {
       const user = await Auth.currentAuthenticatedUser();
       await DataStore.query(Receipt).then((res) => {
-        console.log(res);
         setReceipts(
           res
             .filter((receipt) => receipt.userId === user.attributes.sub)

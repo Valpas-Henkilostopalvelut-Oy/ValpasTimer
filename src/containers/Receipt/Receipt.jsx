@@ -4,14 +4,14 @@ import TabContext from "@mui/lab/TabContext";
 import TabList from "@mui/lab/TabList";
 import TabPanel from "@mui/lab/TabPanel";
 import { Hub, DataStore, Auth } from "aws-amplify";
-import { Receiptform } from "./services/receiptform.jsx";
-import { Moreadd } from "./services/moremenu.jsx";
-import { Travelform } from "./services/travelform.jsx";
+import ReceiptForm from "./services/ReceiptForm.jsx";
+import MoreAdd from "./services/MoreAdd.jsx";
+import TravelForm from "./services/TravelForm.jsx";
+import Filter from "./services/Filter.jsx";
+import ReceiptList from "./services/ReceiptList.jsx";
+import TravelList from "./services/TravelList.jsx";
 import { useAppContext } from "../../services/contextLib.jsx";
 import { UserCredentials } from "../../models/index.js";
-import { Filter } from "./services/filter.jsx";
-import { Receiptlist } from "./services/receiptlist.jsx";
-import { Travellist } from "./services/travellist.jsx";
 
 const ReceiptTabs = (props) => {
   const [value, setValue] = useState("1");
@@ -27,10 +27,10 @@ const ReceiptTabs = (props) => {
           </TabList>
         </Box>
         <TabPanel value="1" sx={{ p: "30px 0px" }}>
-          <Receiptlist {...props} />
+          <ReceiptList {...props} />
         </TabPanel>
         <TabPanel value="2" sx={{ p: "30px 0px" }}>
-          <Travellist {...props} />
+          <TravelList {...props} />
         </TabPanel>
       </TabContext>
     </Box>
@@ -49,7 +49,7 @@ const Forms = (props) => {
           <Filter {...props} />
         </Grid>
         <Grid item xs={6} md={1.5}>
-          <Moreadd
+          <MoreAdd
             isEmpty={isEmpty}
             selectedIndex={selectedIndex}
             setSelectedIndex={setSelectedIndex}
@@ -62,19 +62,19 @@ const Forms = (props) => {
         <Typography variant="h5" sx={{ mt: 2 }}>
           Kuitti
         </Typography>
-        <Receiptform {...props} setSelectedIndex={setSelectedIndex} />
+        <ReceiptForm {...props} setSelectedIndex={setSelectedIndex} />
       </Collapse>
       <Collapse in={selectedIndex === 1}>
         <Typography variant="h5" sx={{ mt: 2 }}>
           Matkalasku
         </Typography>
-        <Travelform {...props} setSelectedIndex={setSelectedIndex} />
+        <TravelForm {...props} setSelectedIndex={setSelectedIndex} />
       </Collapse>
     </Box>
   );
 };
 
-export const Receipt = () => {
+const Receipt = () => {
   const [isEmpty, setIsEmpty] = useState(true);
   const lang = useAppContext().langValue.receipts;
   const [workers, setWorkers] = useState([]);
@@ -126,3 +126,5 @@ export const Receipt = () => {
     </Container>
   );
 };
+
+export default Receipt;

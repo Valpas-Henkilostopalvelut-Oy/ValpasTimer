@@ -3,38 +3,11 @@ import { DataStore, Storage, Auth } from "aws-amplify";
 import { Box, Grid, Collapse, Typography, Button } from "@mui/material";
 import { Receipt, Currency, PaymentMethod } from "../../../models";
 import { PropTypes } from "prop-types";
-import { ItemTable } from "./itemtable";
+import ItemTable from "./ItemTable";
 import { metodlist } from "./arrays";
-import { ReceiptImage } from "./receiptimage";
+import ReceiptImage from "./ReceiptImage";
 
-/*
-{
-    "id": "04ffc059-80e5-473c-b64f-97d290f6fb29",
-    "userId": "669172d6-f6c2-44a1-95fd-43255acdf6b4",
-    "created": "2023-01-31T12:55:34.205Z",
-    "updated": "2023-01-31T12:55:34.205Z",
-    "dateOfPurchase": "2023-01-24T12:53:30.000Z",
-    "placeOfPurchase": "Turku",
-    "receiptNumber": "12345678",
-    "class": null,
-    "price": 12,
-    "currency": "EUR",
-    "receiptImage": [
-        "Toimistosiivous.jpg",
-        "työntekijä.jpg"
-    ],
-    "tax": 0.24,
-    "paymentMethod": "CASH",
-    "comment": "Comment",
-    "createdAt": "2023-01-31T12:55:34.532Z",
-    "updatedAt": "2023-01-31T12:55:34.532Z",
-    "_version": 1,
-    "_lastChangedAt": 1675169734554,
-    "_deleted": null
-}
-*/
-
-export const Receiptlist = (props) => {
+const ReceiptList = (props) => {
   const { isEmpty, workerdata } = props;
   const [receipts, setReceipts] = useState([]);
   const [filteredReceipts, setFilteredReceipts] = useState([]);
@@ -56,7 +29,6 @@ export const Receiptlist = (props) => {
         if (user) return i.userId === user.attributes.sub;
       });
 
-      console.log(filtered);
       setFilteredReceipts(filtered);
     };
 
@@ -80,7 +52,7 @@ const Items = (props) => {
   const date = new Date(receipt.dateOfPurchase).toLocaleDateString("fi-FI");
   const [open, setOpen] = useState(false);
   const handleClick = () => setOpen(!open);
-  const metod = metodlist().find((p) => p.value === receipt.paymentMethod).label;
+  const metod = metodlist().find((p) => p.value === receipt.paymentMethod)?.label;
   const other = receipt.paymentMethod === "OTHER" ? `(${receipt.otherPayment})` : "";
 
   return (
@@ -125,14 +97,18 @@ const Items = (props) => {
         </Grid>
       </Grid>
       <Collapse in={open} timeout="auto" unmountOnExit>
-        <Grid container spacing={2} alignItems="center">
-          <ReceiptImage receipt={receipt} setReceipt={setReceipt} {...props} />
+        <Box sx={{ mt: 2 }}>
+          <Grid container spacing={2} alignItems="center">
+            <ReceiptImage receipt={receipt} setReceipt={setReceipt} {...props} />
 
-          <Grid item xs={12} md={7}>
-            <ItemTable receipt={receipt} setReceipt={setReceipt} {...props} />
+            <Grid item xs={12} md={7}>
+              <ItemTable receipt={receipt} setReceipt={setReceipt} {...props} />
+            </Grid>
           </Grid>
-        </Grid>
+        </Box>
       </Collapse>
     </Box>
   );
 };
+
+export default ReceiptList;

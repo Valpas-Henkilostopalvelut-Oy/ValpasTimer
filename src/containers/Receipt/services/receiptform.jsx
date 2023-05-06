@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Box, Grid, Button, Typography } from "@mui/material";
 import Carousel from "react-material-ui-carousel";
-import { ReceiptTable } from "./table.jsx";
+import ReceiptTable from "./ReceiptTable.jsx";
 import FileUploadIcon from "@mui/icons-material/FileUpload";
 
 const Image = (props) => {
@@ -76,7 +76,7 @@ const receiptTemp = {
   category: "",
 };
 
-export const Receiptform = ({ isEmpty, setSelectedIndex, lang }) => {
+const ReceiptForm = ({ isEmpty, setSelectedIndex, lang }) => {
   lang = lang.addreceipt;
   const [images, setImages] = useState([]);
   const [receipt, setReceipt] = useState(receiptTemp);
@@ -151,3 +151,5 @@ export const Receiptform = ({ isEmpty, setSelectedIndex, lang }) => {
     </Box>
   );
 };
+
+export default ReceiptForm;

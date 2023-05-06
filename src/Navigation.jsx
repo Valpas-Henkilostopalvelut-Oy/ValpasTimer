@@ -9,7 +9,7 @@ import Settings from "./containers/Settings/index.jsx";
 import Team from "./containers/Team/index.jsx";
 import Workspaces from "./containers/Workspaces/index.jsx";
 import Home from "./containers/Home/index.jsx";
-import  Reports from "./containers/Reports/index.jsx";
+import Reports from "./containers/Reports/index.jsx";
 import Workers from "./containers/Workers/index.jsx";
 import NoAccessPage from "./components/NoAccessPage/index.jsx";
 import ForgotPassword from "./containers/ForgotPassword/index.jsx";
@@ -22,7 +22,7 @@ import { AgreementAdminPanel } from "./containers/Agreement/AdminPanel/index.jsx
 import { AgreementPage } from "./containers/Agreement/index.jsx";
 import { LandingPage } from "./containers/Landing/index.jsx";
 import { Library } from "./containers/Library/index.jsx";
-import { Receipt } from "./containers/Receipt/index.jsx";
+import Receipt from "./containers/Receipt/Receipt.jsx";
 
 const Navigation = ({ isAuthenticated, groups }) => {
   const Redirect = () => <Navigate replace to="/login" />;

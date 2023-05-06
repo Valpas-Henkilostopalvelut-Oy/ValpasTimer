@@ -84,7 +84,7 @@ const travelTemp = {
   attachments: [],
 };
 
-export const Travelform = ({ isEmpty, setSelectedIndex }) => {
+const Travelform = ({ isEmpty, setSelectedIndex }) => {
   const [travel, setTravel] = useState(travelTemp);
 
   const cancel = () => {
@@ -105,3 +105,5 @@ export const Travelform = ({ isEmpty, setSelectedIndex }) => {
     </Box>
   );
 };
+
+export default Travelform;

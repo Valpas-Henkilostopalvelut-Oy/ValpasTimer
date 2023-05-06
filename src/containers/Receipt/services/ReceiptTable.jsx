@@ -151,7 +151,11 @@ const Paymentmethod = ({ data, setData, isEmpty, lang }) => {
   };
 
   return (
-    <Box>
+    <Box
+      sx={{
+        mt: 1,
+      }}
+    >
       <FormControl fullWidth>
         <InputLabel id="method-label">{lang.method}</InputLabel>
         <Select
@@ -173,7 +177,16 @@ const Paymentmethod = ({ data, setData, isEmpty, lang }) => {
         </Select>
       </FormControl>
       <Collapse in={data.method === PaymentMethod.OTHER}>
-        <TextField id="other" value={data.otherMethod} label={"toinen"} onChange={handleChange} disabled={!isEmpty} />
+        <TextField
+          id="other"
+          value={data.otherMethod}
+          label="Muu maksutapa"
+          placeholder="Mikä?"
+          onChange={handleChange}
+          disabled={!isEmpty}
+          variant="standard"
+          fullWidth
+        />
       </Collapse>
     </Box>
   );
@@ -323,7 +336,7 @@ const addreceipt = async (data, images) => {
   }
 };
 
-export const ReceiptTable = (props) => {
+const ReceiptTable = (props) => {
   const { lang } = props;
   return (
     <TableContainer>
@@ -408,6 +421,8 @@ export const ReceiptTable = (props) => {
     </TableContainer>
   );
 };
+
+export default ReceiptTable;
 
 ReceiptTable.propTypes = {
   data: PropTypes.object,

@@ -5,7 +5,7 @@ import { Worktravel } from "../../../models";
 import { PropTypes } from "prop-types";
 import { Travelitem } from "./travelitem";
 
-export const Travellist = (props) => {
+const TravelList = (props) => {
   const [travels, setTravels] = useState([]);
   const { workerdata, isEmpty } = props;
 
@@ -33,3 +33,5 @@ export const Travellist = (props) => {
     </Box>
   );
 };
+
+export default TravelList;
