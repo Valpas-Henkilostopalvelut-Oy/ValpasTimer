@@ -24,6 +24,10 @@
       },
       "storage": {
         "s3b5f43598": {}
+      },
+      "api": {
+        "AdminQueries": {},
+        "valpasapplication": {}
       }
     }
   }

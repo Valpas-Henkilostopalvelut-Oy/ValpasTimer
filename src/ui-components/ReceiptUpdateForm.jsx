@@ -210,6 +210,8 @@ export default function ReceiptUpdateForm(props) {
     otherPayment: "",
     comment: "",
     isTravel: false,
+    isConfirmed: false,
+    isPaid: false,
   };
   const [userId, setUserId] = React.useState(initialValues.userId);
   const [created, setCreated] = React.useState(initialValues.created);
@@ -238,6 +240,10 @@ export default function ReceiptUpdateForm(props) {
   );
   const [comment, setComment] = React.useState(initialValues.comment);
   const [isTravel, setIsTravel] = React.useState(initialValues.isTravel);
+  const [isConfirmed, setIsConfirmed] = React.useState(
+    initialValues.isConfirmed
+  );
+  const [isPaid, setIsPaid] = React.useState(initialValues.isPaid);
   const [errors, setErrors] = React.useState({});
   const resetStateValues = () => {
     const cleanValues = receiptRecord
@@ -259,6 +265,8 @@ export default function ReceiptUpdateForm(props) {
     setOtherPayment(cleanValues.otherPayment);
     setComment(cleanValues.comment);
     setIsTravel(cleanValues.isTravel);
+    setIsConfirmed(cleanValues.isConfirmed);
+    setIsPaid(cleanValues.isPaid);
     setErrors({});
   };
   const [receiptRecord, setReceiptRecord] = React.useState(receipt);
@@ -289,6 +297,8 @@ export default function ReceiptUpdateForm(props) {
     otherPayment: [],
     comment: [],
     isTravel: [],
+    isConfirmed: [],
+    isPaid: [],
   };
   const runValidationTasks = async (
     fieldName,
@@ -348,6 +358,8 @@ export default function ReceiptUpdateForm(props) {
           otherPayment,
           comment,
           isTravel,
+          isConfirmed,
+          isPaid,
         };
         const validationResponses = await Promise.all(
           Object.keys(validations).reduce((promises, fieldName) => {
@@ -418,6 +430,8 @@ export default function ReceiptUpdateForm(props) {
               otherPayment,
               comment,
               isTravel,
+              isConfirmed,
+              isPaid,
             };
             const result = onChange(modelFields);
             value = result?.userId ?? value;
@@ -458,6 +472,8 @@ export default function ReceiptUpdateForm(props) {
               otherPayment,
               comment,
               isTravel,
+              isConfirmed,
+              isPaid,
             };
             const result = onChange(modelFields);
             value = result?.created ?? value;
@@ -498,6 +514,8 @@ export default function ReceiptUpdateForm(props) {
               otherPayment,
               comment,
               isTravel,
+              isConfirmed,
+              isPaid,
             };
             const result = onChange(modelFields);
             value = result?.updated ?? value;
@@ -538,6 +556,8 @@ export default function ReceiptUpdateForm(props) {
               otherPayment,
               comment,
               isTravel,
+              isConfirmed,
+              isPaid,
             };
             const result = onChange(modelFields);
             value = result?.dateOfPurchase ?? value;
@@ -576,6 +596,8 @@ export default function ReceiptUpdateForm(props) {
               otherPayment,
               comment,
               isTravel,
+              isConfirmed,
+              isPaid,
             };
             const result = onChange(modelFields);
             value = result?.placeOfPurchase ?? value;
@@ -614,6 +636,8 @@ export default function ReceiptUpdateForm(props) {
               otherPayment,
               comment,
               isTravel,
+              isConfirmed,
+              isPaid,
             };
             const result = onChange(modelFields);
             value = result?.receiptNumber ?? value;
@@ -652,6 +676,8 @@ export default function ReceiptUpdateForm(props) {
               otherPayment,
               comment,
               isTravel,
+              isConfirmed,
+              isPaid,
             };
             const result = onChange(modelFields);
             value = result?.class ?? value;
@@ -730,6 +756,8 @@ export default function ReceiptUpdateForm(props) {
               otherPayment,
               comment,
               isTravel,
+              isConfirmed,
+              isPaid,
             };
             const result = onChange(modelFields);
             value = result?.price ?? value;
@@ -768,6 +796,8 @@ export default function ReceiptUpdateForm(props) {
               otherPayment,
               comment,
               isTravel,
+              isConfirmed,
+              isPaid,
             };
             const result = onChange(modelFields);
             value = result?.currency ?? value;
@@ -833,6 +863,8 @@ export default function ReceiptUpdateForm(props) {
               otherPayment,
               comment,
               isTravel,
+              isConfirmed,
+              isPaid,
             };
             const result = onChange(modelFields);
             values = result?.receiptImage ?? values;
@@ -899,6 +931,8 @@ export default function ReceiptUpdateForm(props) {
               otherPayment,
               comment,
               isTravel,
+              isConfirmed,
+              isPaid,
             };
             const result = onChange(modelFields);
             value = result?.tax ?? value;
@@ -937,6 +971,8 @@ export default function ReceiptUpdateForm(props) {
               otherPayment,
               comment,
               isTravel,
+              isConfirmed,
+              isPaid,
             };
             const result = onChange(modelFields);
             value = result?.paymentMethod ?? value;
@@ -1001,6 +1037,8 @@ export default function ReceiptUpdateForm(props) {
               otherPayment: value,
               comment,
               isTravel,
+              isConfirmed,
+              isPaid,
             };
             const result = onChange(modelFields);
             value = result?.otherPayment ?? value;
@@ -1039,6 +1077,8 @@ export default function ReceiptUpdateForm(props) {
               otherPayment,
               comment: value,
               isTravel,
+              isConfirmed,
+              isPaid,
             };
             const result = onChange(modelFields);
             value = result?.comment ?? value;
@@ -1077,6 +1117,8 @@ export default function ReceiptUpdateForm(props) {
               otherPayment,
               comment,
               isTravel: value,
+              isConfirmed,
+              isPaid,
             };
             const result = onChange(modelFields);
             value = result?.isTravel ?? value;
@@ -1090,6 +1132,86 @@ export default function ReceiptUpdateForm(props) {
         errorMessage={errors.isTravel?.errorMessage}
         hasError={errors.isTravel?.hasError}
         {...getOverrideProps(overrides, "isTravel")}
+      ></SwitchField>
+      <SwitchField
+        label="Is confirmed"
+        defaultChecked={false}
+        isDisabled={false}
+        isChecked={isConfirmed}
+        onChange={(e) => {
+          let value = e.target.checked;
+          if (onChange) {
+            const modelFields = {
+              userId,
+              created,
+              updated,
+              dateOfPurchase,
+              placeOfPurchase,
+              receiptNumber,
+              class: class1,
+              price,
+              currency,
+              receiptImage,
+              tax,
+              paymentMethod,
+              otherPayment,
+              comment,
+              isTravel,
+              isConfirmed: value,
+              isPaid,
+            };
+            const result = onChange(modelFields);
+            value = result?.isConfirmed ?? value;
+          }
+          if (errors.isConfirmed?.hasError) {
+            runValidationTasks("isConfirmed", value);
+          }
+          setIsConfirmed(value);
+        }}
+        onBlur={() => runValidationTasks("isConfirmed", isConfirmed)}
+        errorMessage={errors.isConfirmed?.errorMessage}
+        hasError={errors.isConfirmed?.hasError}
+        {...getOverrideProps(overrides, "isConfirmed")}
+      ></SwitchField>
+      <SwitchField
+        label="Is paid"
+        defaultChecked={false}
+        isDisabled={false}
+        isChecked={isPaid}
+        onChange={(e) => {
+          let value = e.target.checked;
+          if (onChange) {
+            const modelFields = {
+              userId,
+              created,
+              updated,
+              dateOfPurchase,
+              placeOfPurchase,
+              receiptNumber,
+              class: class1,
+              price,
+              currency,
+              receiptImage,
+              tax,
+              paymentMethod,
+              otherPayment,
+              comment,
+              isTravel,
+              isConfirmed,
+              isPaid: value,
+            };
+            const result = onChange(modelFields);
+            value = result?.isPaid ?? value;
+          }
+          if (errors.isPaid?.hasError) {
+            runValidationTasks("isPaid", value);
+          }
+          setIsPaid(value);
+        }}
+        onBlur={() => runValidationTasks("isPaid", isPaid)}
+        errorMessage={errors.isPaid?.errorMessage}
+        hasError={errors.isPaid?.hasError}
+        {...getOverrideProps(overrides, "isPaid")}
       ></SwitchField>
       <Flex
         justifyContent="space-between"

@@ -7,10 +7,8 @@ import {
   TableHead,
   TableRow,
   TextField,
-  InputBase,
   Select,
   FormControl,
-  InputLabel,
   MenuItem,
   Button,
   Box,
@@ -18,40 +16,12 @@ import {
   Collapse,
   InputAdornment,
 } from "@mui/material";
-import { DataStore, Storage, Auth } from "aws-amplify";
-import { Receipt, Currency, PaymentMethod as PaymentData } from "../../../models";
+import { Currency } from "../../../models";
 import { LocalizationProvider, DatePicker } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import fi from "date-fns/locale/fi";
 import { metodlist, classlist, taxlist } from "./arrays";
-import { deleteReceipt, updateReceipt } from "./itemfunctions";
-
-/*
-{
-    "id": "04ffc059-80e5-473c-b64f-97d290f6fb29",
-    "userId": "669172d6-f6c2-44a1-95fd-43255acdf6b4",
-    "created": "2023-01-31T12:55:34.205Z",
-    "updated": "2023-01-31T12:55:34.205Z",
-    "dateOfPurchase": "2023-01-24T12:53:30.000Z",
-    "placeOfPurchase": "Turku",
-    "receiptNumber": "12345678",
-    "class": null,
-    "price": 12,
-    "currency": "EUR",
-    "receiptImage": [
-        "Toimistosiivous.jpg",
-        "työntekijä.jpg"
-    ],
-    "tax": 0.24,
-    "paymentMethod": "CASH",
-    "comment": "Comment",
-    "createdAt": "2023-01-31T12:55:34.532Z",
-    "updatedAt": "2023-01-31T12:55:34.532Z",
-    "_version": 1,
-    "_lastChangedAt": 1675169734554,
-    "_deleted": null
-}
-*/
+import { deleteReceipt, updateReceipt, onConfirm, onUnconfirm } from "./itemfunctions";
 
 const DateOfPurchase = ({ receipt, setReceipt, edit = false }) => {
   const [dateOfPurchase, setDateOfPurchase] = useState(new Date(receipt.dateOfPurchase));
@@ -359,8 +329,9 @@ const Comment = ({ receipt, setReceipt, edit = false }) => {
 const ItemTable = (props) => {
   const { receipt, oldReceipt, setReceipt } = props;
   const [edit, setEdit] = useState(false);
-  const createdAt = new Date(receipt.created).toLocaleDateString("fi-FI");
-  const updateAt = new Date(receipt.updated).toLocaleDateString("fi-FI");
+  const { created, updated, isConfirmed } = receipt;
+  const createdAt = new Date(created).toLocaleDateString("fi-FI");
+  const updateAt = new Date(updated).toLocaleDateString("fi-FI");
 
   const handleCancel = () => {
     setReceipt(oldReceipt);
@@ -372,6 +343,14 @@ const ItemTable = (props) => {
     setEdit(false);
   };
   const handleEdit = () => setEdit(true);
+  const handleConfirm = () => {
+    onConfirm(oldReceipt, receipt, oldReceipt.id);
+  };
+
+  const handleUncorfim = () => {
+    onUnconfirm(oldReceipt, receipt, oldReceipt.id);
+    setEdit(false);
+  };
 
   return (
     <TableContainer>
@@ -445,9 +424,12 @@ const ItemTable = (props) => {
           </TableRow>
           {edit ? (
             <TableRow>
-              <TableCell>
-                <Button variant="outlined" fullWidth onClick={handleCancel}>
+              <TableCell sx={{ display: "flex", justifyContent: "space-between" }}>
+                <Button variant="outlined" onClick={handleCancel}>
                   Peruuta
+                </Button>
+                <Button variant="outlined" onClick={handleUncorfim} color="error" hidden={!isConfirmed}>
+                  Peru vahvistus
                 </Button>
               </TableCell>
               <TableCell>
@@ -463,6 +445,11 @@ const ItemTable = (props) => {
             </TableRow>
           ) : (
             <TableRow>
+              <TableCell hidden={isConfirmed}>
+                <Button variant="outlined" fullWidth onClick={handleConfirm} color="success">
+                  Vahvista
+                </Button>
+              </TableCell>
               <TableCell>
                 <Button variant="outlined" fullWidth onClick={handleEdit}>
                   Muokkaa

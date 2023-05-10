@@ -29,6 +29,8 @@ export declare type ReceiptUpdateFormInputValues = {
     otherPayment?: string;
     comment?: string;
     isTravel?: boolean;
+    isConfirmed?: boolean;
+    isPaid?: boolean;
 };
 export declare type ReceiptUpdateFormValidationValues = {
     userId?: ValidationFunction<string>;
@@ -46,6 +48,8 @@ export declare type ReceiptUpdateFormValidationValues = {
     otherPayment?: ValidationFunction<string>;
     comment?: ValidationFunction<string>;
     isTravel?: ValidationFunction<boolean>;
+    isConfirmed?: ValidationFunction<boolean>;
+    isPaid?: ValidationFunction<boolean>;
 };
 export declare type PrimitiveOverrideProps<T> = Partial<T> & React.DOMAttributes<HTMLDivElement>;
 export declare type ReceiptUpdateFormOverridesProps = {
@@ -65,6 +69,8 @@ export declare type ReceiptUpdateFormOverridesProps = {
     otherPayment?: PrimitiveOverrideProps<TextFieldProps>;
     comment?: PrimitiveOverrideProps<TextFieldProps>;
     isTravel?: PrimitiveOverrideProps<SwitchFieldProps>;
+    isConfirmed?: PrimitiveOverrideProps<SwitchFieldProps>;
+    isPaid?: PrimitiveOverrideProps<SwitchFieldProps>;
 } & EscapeHatchProps;
 export declare type ReceiptUpdateFormProps = React.PropsWithChildren<{
     overrides?: ReceiptUpdateFormOverridesProps | undefined | null;

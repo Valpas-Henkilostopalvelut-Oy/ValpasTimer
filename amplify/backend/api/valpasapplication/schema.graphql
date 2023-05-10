@@ -257,6 +257,8 @@ type Receipt
   otherPayment: String
   comment: String
   isTravel: Boolean
+  isConfirmed: Boolean
+  isPaid: Boolean
 }
 
 type Agreement

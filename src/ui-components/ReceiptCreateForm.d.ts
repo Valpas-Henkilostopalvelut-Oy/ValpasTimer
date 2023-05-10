@@ -28,6 +28,8 @@ export declare type ReceiptCreateFormInputValues = {
     otherPayment?: string;
     comment?: string;
     isTravel?: boolean;
+    isConfirmed?: boolean;
+    isPaid?: boolean;
 };
 export declare type ReceiptCreateFormValidationValues = {
     userId?: ValidationFunction<string>;
@@ -45,6 +47,8 @@ export declare type ReceiptCreateFormValidationValues = {
     otherPayment?: ValidationFunction<string>;
     comment?: ValidationFunction<string>;
     isTravel?: ValidationFunction<boolean>;
+    isConfirmed?: ValidationFunction<boolean>;
+    isPaid?: ValidationFunction<boolean>;
 };
 export declare type PrimitiveOverrideProps<T> = Partial<T> & React.DOMAttributes<HTMLDivElement>;
 export declare type ReceiptCreateFormOverridesProps = {
@@ -64,6 +68,8 @@ export declare type ReceiptCreateFormOverridesProps = {
     otherPayment?: PrimitiveOverrideProps<TextFieldProps>;
     comment?: PrimitiveOverrideProps<TextFieldProps>;
     isTravel?: PrimitiveOverrideProps<SwitchFieldProps>;
+    isConfirmed?: PrimitiveOverrideProps<SwitchFieldProps>;
+    isPaid?: PrimitiveOverrideProps<SwitchFieldProps>;
 } & EscapeHatchProps;
 export declare type ReceiptCreateFormProps = React.PropsWithChildren<{
     overrides?: ReceiptCreateFormOverridesProps | undefined | null;

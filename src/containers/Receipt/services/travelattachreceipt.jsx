@@ -39,7 +39,7 @@ export const Attachments = (props) => {
           res
             .filter((receipt) => receipt.userId === user.attributes.sub)
             .map((receipt) => ({
-              id: String(Date.now()),
+              id: receipt.id,
               receiptId: receipt.id,
               userId: receipt.userId,
               placeOfPurchase: receipt.placeOfPurchase,

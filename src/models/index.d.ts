@@ -512,6 +512,8 @@ type EagerReceipt = {
   readonly otherPayment?: string | null;
   readonly comment?: string | null;
   readonly isTravel?: boolean | null;
+  readonly isConfirmed?: boolean | null;
+  readonly isPaid?: boolean | null;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
 }
@@ -533,6 +535,8 @@ type LazyReceipt = {
   readonly otherPayment?: string | null;
   readonly comment?: string | null;
   readonly isTravel?: boolean | null;
+  readonly isConfirmed?: boolean | null;
+  readonly isPaid?: boolean | null;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
 }

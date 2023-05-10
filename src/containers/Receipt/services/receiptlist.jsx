@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { DataStore, Storage, Auth } from "aws-amplify";
+import { DataStore, Auth } from "aws-amplify";
 import { Box, Grid, Collapse, Typography, Button } from "@mui/material";
-import { Receipt, Currency, PaymentMethod } from "../../../models";
-import { PropTypes } from "prop-types";
+import { Receipt, Currency } from "../../../models";
 import ItemTable from "./ItemTable";
 import { metodlist } from "./arrays";
 import ReceiptImage from "./ReceiptImage";
+import CheckIcon from "@mui/icons-material/Check";
 
 const ReceiptList = (props) => {
   const { isEmpty, workerdata } = props;
@@ -15,7 +15,8 @@ const ReceiptList = (props) => {
   useEffect(() => {
     const fetchReceipts = async () => {
       await DataStore.query(Receipt)
-        .then((res) => setReceipts(res.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))))
+        .then((res) => res.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)))
+        .then((res) => setReceipts(res))
         .catch((err) => console.warn(err));
     };
     fetchReceipts();
@@ -54,6 +55,7 @@ const Items = (props) => {
   const handleClick = () => setOpen(!open);
   const metod = metodlist().find((p) => p.value === receipt.paymentMethod)?.label;
   const other = receipt.paymentMethod === "OTHER" ? `(${receipt.otherPayment})` : "";
+  const isConfirmed = receipt.isConfirmed;
 
   return (
     <Box
@@ -66,11 +68,14 @@ const Items = (props) => {
       }}
     >
       <Grid container spacing={2} alignItems="center">
+        <Grid item xs={isConfirmed ? 1 : 12} md={1}>
+          {isConfirmed && <CheckIcon sx={{ color: "success.main", fontSize: 40 }} />}
+        </Grid>
         <Grid item xs={6} md={1.5}>
           <Typography variant="p">{receipt.receiptNumber}</Typography>
         </Grid>
 
-        <Grid item xs={12} md={3}>
+        <Grid item xs={12} md={2.5}>
           <Typography variant="p">{receipt.placeOfPurchase}</Typography>
         </Grid>
 
@@ -78,7 +83,7 @@ const Items = (props) => {
           <Typography variant="p">{date}</Typography>
         </Grid>
 
-        <Grid item xs={6} md={3}>
+        <Grid item xs={6} md={2.5}>
           <Typography variant="p">
             {receipt.price} {Currency[receipt.currency]} (alv. {(receipt.tax * 100).toFixed(0)}%)
           </Typography>

@@ -279,6 +279,20 @@ export const schema = {
                     "isRequired": false,
                     "attributes": []
                 },
+                "isConfirmed": {
+                    "name": "isConfirmed",
+                    "isArray": false,
+                    "type": "Boolean",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "isPaid": {
+                    "name": "isPaid",
+                    "isArray": false,
+                    "type": "Boolean",
+                    "isRequired": false,
+                    "attributes": []
+                },
                 "createdAt": {
                     "name": "createdAt",
                     "isArray": false,
@@ -1950,5 +1964,5 @@ export const schema = {
         }
     },
     "codegenVersion": "3.3.6",
-    "version": "33cb614cfe72e29990a4ac30550f5b99"
+    "version": "e9ad0e9d7df10338a0aad70061f620a2"
 };
