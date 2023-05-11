@@ -345,10 +345,12 @@ const ItemTable = (props) => {
   const handleEdit = () => setEdit(true);
   const handleConfirm = () => {
     onConfirm(oldReceipt, receipt, oldReceipt.id);
+    setReceipt({ ...receipt, isConfirmed: true });
   };
 
   const handleUncorfim = () => {
     onUnconfirm(oldReceipt, receipt, oldReceipt.id);
+    setReceipt({ ...receipt, isConfirmed: false });
     setEdit(false);
   };
 

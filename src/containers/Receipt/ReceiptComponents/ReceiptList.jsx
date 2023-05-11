@@ -34,7 +34,7 @@ const ReceiptList = (props) => {
     };
 
     filterReceipts();
-  }, [receipts, workerdata]);
+  }, [receipts, workerdata, isEmpty]);
 
   return (
     <Box sx={{ mt: 2 }}>
