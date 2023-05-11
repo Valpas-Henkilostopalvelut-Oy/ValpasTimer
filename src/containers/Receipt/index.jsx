@@ -4,12 +4,12 @@ import TabContext from "@mui/lab/TabContext";
 import TabList from "@mui/lab/TabList";
 import TabPanel from "@mui/lab/TabPanel";
 import { Hub, DataStore, Auth } from "aws-amplify";
-import ReceiptForm from "./services/ReceiptForm.jsx";
-import MoreAdd from "./services/MoreAdd.jsx";
-import TravelForm from "./services/TravelForm.jsx";
-import Filter from "./services/Filter.jsx";
-import ReceiptList from "./services/ReceiptList.jsx";
-import TravelList from "./services/TravelList.jsx";
+import ReceiptForm from "./ReceiptComponents/ReceiptForm.jsx";
+import MoreAdd from "./ReceiptComponents/MoreAdd.jsx";
+import TravelForm from "./TravelComponents/TravelForm.jsx";
+import Filter from "./components/Filter.jsx";
+import ReceiptList from "./ReceiptComponents/ReceiptList.jsx";
+import TravelList from "./TravelComponents/TravelList.jsx";
 import { useAppContext } from "../../services/contextLib.jsx";
 import { UserCredentials } from "../../models/index.js";
 

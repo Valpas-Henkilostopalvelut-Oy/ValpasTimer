@@ -152,3 +152,5 @@ export const ConfirmPage = () => {
     </Formik>
   );
 };
+
+export default ConfirmPage;

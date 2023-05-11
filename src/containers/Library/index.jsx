@@ -159,3 +159,5 @@ export const Library = () => {
     </Container>
   );
 };
+
+export default Library;

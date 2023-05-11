@@ -65,3 +65,5 @@ export const AgreementPage = () => {
     </Container>
   );
 };
+
+export default AgreementPage;

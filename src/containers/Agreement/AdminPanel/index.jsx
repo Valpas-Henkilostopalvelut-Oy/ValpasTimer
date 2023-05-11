@@ -653,3 +653,5 @@ AditionalInfo.propTypes = {
   expanded: PropTypes.bool,
   handleOpen: PropTypes.func,
 };
+
+export default AgreementAdminPanel;

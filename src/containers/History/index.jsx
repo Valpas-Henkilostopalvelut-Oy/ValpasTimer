@@ -145,3 +145,5 @@ export const History = () => {
     </Container>
   );
 };
+
+export default History;
