@@ -15,10 +15,11 @@ export function groupBy(array) {
       var startOfWeek = getDateOfISOWeek(weekn, d.getFullYear());
       var endOfWeek = getEndOfISOWeek(startOfWeek);
 
-      let week = res.find((w) => w.week === weekn);
+      let week = res.find((w) => w.week === weekn && w.year === d.getFullYear());
       if (!week) {
         // create new week object if it does not exist
         week = {
+          year: d.getFullYear(),
           week: weekn,
           period: `${startOfWeek.getDate()}.${startOfWeek.getMonth() + 1} - ${endOfWeek.getDate()}.${
             endOfWeek.getMonth() + 1
