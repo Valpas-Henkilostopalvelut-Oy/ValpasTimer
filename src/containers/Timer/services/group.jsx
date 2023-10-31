@@ -11,14 +11,16 @@ export function groupBy(array, works = Array(), lang = Object()) {
       const dat = new Date(val.timeInterval.start);
       const by = dat.toDateString();
       const day = dat.getUTCDay();
+      const year = dat.getFullYear();
 
       const week = getWeekNumber(dat);
 
-      var startOfWeek = getDateOfISOWeek(week, dat.getFullYear());
+      var startOfWeek = getDateOfISOWeek(week, year);
       var endOfWeek = getEndOfISOWeek(startOfWeek);
 
-      if (res.filter((w) => w.week === week).length === 0) {
+      if (res.filter((w) => w.week === week && w.year === year).length === 0) {
         res.push({
+          year: year,
           week: week,
           period: `${startOfWeek.getDate()}.${startOfWeek.getMonth() + 1} - ${endOfWeek.getDate()}.${
             endOfWeek.getMonth() + 1
@@ -31,9 +33,9 @@ export function groupBy(array, works = Array(), lang = Object()) {
             },
           ],
         });
-      } else if (res.find((w) => w.week === week).arr.filter((f) => f.id === by).length === 0) {
+      } else if (res.find((w) => w.week === week && w.year === year).arr.filter((f) => f.id === by).length === 0) {
         res
-          .find((w) => w.week === week)
+          .find((w) => w.week === week && w.year === year)
           .arr.push({
             date: `${days[day]} ${dat.getUTCDate()}.${dat.getMonth() + 1}`,
             id: by,
@@ -41,17 +43,17 @@ export function groupBy(array, works = Array(), lang = Object()) {
           });
       } else if (
         res
-          .find((w) => w.week === week)
+          .find((w) => w.week === week && w.year === year)
           .arr.find((f) => f.id === by)
           .arr.filter((f) => f.workId === val.workspaceId).length === 0
       ) {
         res
-          .find((w) => w.week === week)
+          .find((w) => w.week === week && w.year === year)
           .arr.find((f) => f.id === by)
           .arr.push({ workId: val.workspaceId, arr: [val] });
       } else {
         res
-          .find((w) => w.week === week)
+          .find((w) => w.week === week && w.year === year)
           .arr.find((f) => f.id === by)
           .arr.find((f) => f.workId === val.workspaceId)
           .arr.push(val);

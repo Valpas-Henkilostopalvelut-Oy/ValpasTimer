@@ -167,7 +167,7 @@ export const WeekRow = ({
   const theme = useTheme();
   return grouped.map((week) => {
     return (
-      <Fragment key={week.week}>
+      <Fragment key={week.week + "-" + week.year}>
         <Box
           sx={{
             padding: "10px",
