@@ -168,7 +168,7 @@ const Reports = ({ lang }) => {
               timeList.map((item) => {
                 return (
                   <Rowweek
-                    key={item.week}
+                    key={item.week + "-" + item.year}
                     timeList={item}
                     lang={lang}
                     isEmpty={isEmpty}
